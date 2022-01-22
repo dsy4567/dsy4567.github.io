@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title></title>
+        <script>
+            var urls = {
+                fcm: "aHR0cHM6Ly9ncmVhc3lmb3JrLm9yZy96aC1DTi9zY3JpcHRzLzQzNzIzMy0lRTklOTglQjIlRTYlQjIlODklRTglQkYlQjclRTUlODclOEYlRTclODIlQjklRTYlOTYlOTk=",
+                fcm_gayhub:
+                    "aHR0cHM6Ly9naXRodWIuY29tL2RzeTQ1NjcvRnVja2luZy1BbnRpLUluZHVsZ2VuY2U=",
+                fcm_gitee:
+                    "aHR0cHM6Ly9naXRlZS5jb20vZHN5NDU2Ny9GdWNraW5nLUFudGktSW5kdWxnZW5jZQ==",
+                gayhub: "aHR0cHM6Ly9naXRodWIuY29tL2RzeTQ1Njc=",
+            };
+        </script>
+        <script>
+            (function () {
+                var go = location.href.substring(
+                    location.href.indexOf("?") + 1,
+                    location.href.length
+                );
+                if (go == "fcm") {
+                    location.href = atob(urls.fcm);
+                } else if (go == "fcm_gayhub") {
+                    location.href = atob(urls.fcm_gayhub);
+                } else if (go == "fcm_gitee") {
+                    location.href = atob(urls.fcm_gitee);
+                } else if (go == "gayhub") {
+                    location.href = atob(urls.gayhub);
+                } else if (self == top) {
+                    document.title = "我的第一个网页";
+                    document.write(
+                        "<h1>这是我的第一个网页</h1><h1>你好, 世界!</h1>"
+                    );
+                } else if (self != top) {
+                    document.title = "Fucking Anti Indulgence";
+                    document.write("ctmd防沉迷");
+                } else {
+                    return;
+                }
+            })();
+        </script>
+    </head>
+    <body></body>
+</html>
