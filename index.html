@@ -11,18 +11,17 @@
         <script>
             var urls = [
                 {
-                    name: "fcm",
-                    url: "aHR0cHM6Ly9ncmVhc3lmb3JrLm9yZy96aC1DTi9zY3JpcHRzLzQzNzIzMy0lRTklOTglQjIlRTYlQjIlODklRTglQkYlQjclRTUlODclOEYlRTclODIlQjklRTYlOTYlOTk=",
+                    fcm: "aHR0cHM6Ly9ncmVhc3lmb3JrLm9yZy96aC1DTi9zY3JpcHRzLzQzNzIzMy0lRTklOTglQjIlRTYlQjIlODklRTglQkYlQjclRTUlODclOEYlRTclODIlQjklRTYlOTYlOTk=",
                 },
                 {
-                    name: "fcm_gayhub",
-                    url: "aHR0cHM6Ly9naXRodWIuY29tL2RzeTQ1NjcvRnVja2luZy1BbnRpLUluZHVsZ2VuY2U=",
+                    fcm_gayhub:
+                        "aHR0cHM6Ly9naXRodWIuY29tL2RzeTQ1NjcvRnVja2luZy1BbnRpLUluZHVsZ2VuY2U=",
                 },
                 {
-                    name: "fcm_gitee",
-                    url: "aHR0cHM6Ly9naXRlZS5jb20vZHN5NDU2Ny9GdWNraW5nLUFudGktSW5kdWxnZW5jZQ==",
+                    fcm_gitee:
+                        "aHR0cHM6Ly9naXRlZS5jb20vZHN5NDU2Ny9GdWNraW5nLUFudGktSW5kdWxnZW5jZQ==",
                 },
-                { name: "gayhub", url: "aHR0cHM6Ly9naXRodWIuY29tL2RzeTQ1Njc=" },
+                { gayhub: "aHR0cHM6Ly9naXRodWIuY29tL2RzeTQ1Njc=" },
             ];
         </script>
         <script>
@@ -31,8 +30,8 @@
                 location.href.length
             );
             urls.forEach((element) => {
-                if (go == element.name) {
-                    location.href = atob(element.url);
+                if (element[go]) {
+                    location.href = atob(element[go]);
                 }
             });
             if (self == top) {
