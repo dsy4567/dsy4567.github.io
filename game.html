@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>防沉迷和屎</title>
+        <style>
+            @media (prefers-color-scheme: light) {
+                :root {
+                    --theme-color1: white;
+                    --theme-color2: black;
+                }
+            }
+
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --theme-color1: rgb(36, 36, 36);
+                    --theme-color2: white;
+                }
+            }
+
+            html {
+                user-select: none;
+                -webkit-user-drag: none;
+                background-color: var(--theme-color1);
+                color: var(--theme-color2);
+            }
+            ::-webkit-scrollbar {
+                display: none;
+            }
+            .游戏 {
+                width: 100%;
+                height: 100vh;
+            }
+            .屎,
+            .手指 {
+                z-index: 999;
+                position: absolute;
+            }
+            .屎 {
+                bottom: 75px;
+                font-size: 50px;
+            }
+            .手指 {
+                font-size: 100px;
+                bottom: 0;
+            }
+        </style>
+        <style>
+            /* .fcm {
+                display: none;
+            } */
+
+            .mysdkDialog * {
+                margin: 0;
+                padding: 0;
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            .fl {
+                float: left;
+            }
+
+            .fr {
+                float: right;
+            }
+
+            .mysdkDialog {
+                position: absolute;
+                left: 50%;
+                top: 210px;
+                margin: -210px 0 0 -309px;
+                width: 618px;
+                z-index: 8;
+            }
+
+            .mysdkDialog .myfcmdialog {
+                color: black;
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 620px;
+                padding-bottom: 30px;
+                font-family: "microsoft yahei";
+                font-size: 14px;
+                background: #fff;
+                border-radius: 8px;
+            }
+
+            .mysdkDialog .myfcmdialog .close-btn {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 40px;
+                height: 40px;
+                background-color: red;
+                line-height: 40px;
+                cursor: pointer;
+                display: none;
+            }
+
+            .mysdkDialog .myfcmdialog .title {
+                line-height: 30px;
+                text-align: center;
+                font-size: 22px;
+                font-weight: 700;
+                padding: 25px 0 0;
+                margin: 0 40px;
+                color: #454545;
+                border: 0;
+                height: auto;
+                float: none;
+                width: auto;
+                text-indent: 0;
+            }
+
+            .mysdkDialog .myfcmdialog .stitle {
+                text-align: left;
+                line-height: 1.6;
+                margin: 15px 40px 0;
+                font-size: 16px;
+            }
+
+            .mysdkDialog .myfcmdialog .stitle span {
+                color: #ffa92d;
+            }
+
+            .mysdkDialog .myfcmdialog .mod-tip {
+                margin: 20px 40px 0;
+                background: #f0f0f0;
+                padding: 12px 15px;
+                border-radius: 4px;
+                color: #333;
+                text-align: left;
+            }
+
+            .mysdkDialog .myfcmdialog .tip-title {
+                font-size: 16px;
+                font-weight: 400;
+            }
+
+            .mysdkDialog .myfcmdialog .tip-info {
+                margin-top: 5px;
+                line-height: 26px;
+                font-size: 14px;
+            }
+
+            .mysdkDialog .myfcmdialog .tip-info li {
+                font-size: 16px;
+                line-height: 26px;
+            }
+
+            .mysdkDialog .myfcmdialog .tip-info a {
+                color: #faa61b;
+                text-decoration: underline;
+                margin: 0 4px;
+                cursor: pointer;
+            }
+
+            .mysdkDialog .myfcmdialog .mod-btn {
+                text-align: center;
+                font-size: 0;
+                line-height: 0;
+                margin: 25px 40px 0;
+            }
+
+            .mysdkDialog .myfcmdialog .mod-btn .btn-fcmprimary {
+                display: inline-block;
+                width: 140px;
+                height: 38px;
+                line-height: 38px;
+                border: 1px solid #69bb01;
+                color: #69bb01;
+                font-size: 14px;
+                margin: 0 15px;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+
+            .mysdkDialog .myfcmdialog .mod-btn .fr,
+            .mysdkDialog .myfcmdialog .mod-btn .fl {
+                width: 250px;
+                margin: 0;
+            }
+
+            .mysdkDialog .myfcmdialog .mod-btn .btn-fcmprimary:hover {
+                -webkit-filter: brightness(1);
+                filter: brightness(1);
+            }
+
+            .mysdkDialog .myfcmdialog .mod-btn .btn-identity {
+                background-color: #69bb01;
+                color: #f8ffef;
+            }
+
+            .fcmIframe {
+                position: absolute;
+                left: 50%;
+                top: 270px;
+                margin: 0 0 0 -309px;
+                width: 618px;
+                height: 354px;
+                z-index: 7;
+                border: 0 none;
+                background-color: #000;
+            }
+
+            .countDown {
+                background: #eee;
+                border-radius: 3px;
+                padding: 10px;
+                text-align: center;
+                margin: 20px 40px 0;
+                font-size: 16px;
+                color: #666;
+            }
+
+            .countDown .txt1 {
+                font-size: 16px;
+                height: 28px;
+                line-height: 28px;
+                color: #717171;
+            }
+
+            .countDown .txt2 {
+                height: 40px;
+                line-height: 40px;
+                font-size: 26px;
+                font-weight: bold;
+                color: #54ba3d;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="游戏">
+            <div class="mysdkDialog fcm 攻击对象2">
+                <div class="myfcmdialog">
+                    <span class="close-btn">关闭</span>
+                    <h2 class="title 攻击对象">未成年限制登录提醒</h2>
+                    <div class="stitle 攻击对象">
+                        <style>
+                            .stitle span {
+                                color: black !important;
+                            }
+                        </style>
+                        <span>您使用的是未成年账号</span>
+                        <span>，仅周五</span><span>、周六、</span
+                        ><span>周日及法定节假日晚上8:00-9:00可以游戏！</span
+                        ><span>当前已被限制！</span>
+                    </div>
+                    <div class="countDown 攻击对象">
+                        <p class="txt1">下次可玩游戏时段</p>
+                        <p class="txt2">本周五晚上8:00-9:00</p>
+                    </div>
+                    <div class="countDown 攻击对象" style="display: none">
+                        当前已限制游戏
+                    </div>
+                    <div class="mod-tip 攻击对象">
+                        <h3 class="tip-title">温馨提示：</h3>
+                        <ul class="tip-info">
+                            1.如果身份信息有误，请点击<a href="#"
+                                >》》申请修改《《</a
+                            ><br />2.如果您身份信息已经变动，可点击<a href="#"
+                                >》》刷新身份《《</a
+                            >
+                        </ul>
+                    </div>
+                    <div class="mod-btn">
+                        <span class="btn-fcmprimary 攻击对象">更换账号</span
+                        ><span class="btn-fcmprimary 攻击对象">确定</span>
+                    </div>
+                </div>
+            </div>
+            <div class="手指">👆</div>
+            <!-- <div class="屎">💩</div> -->
+        </div>
+        <script>
+            var 游戏 = document.querySelector("div.游戏"),
+                屎 = document.querySelector("div.屎");
+
+            function 移动(e) {
+                try {
+                    document.querySelector(".手指").style.left =
+                        e.touches[0].pageX - 75 + "px";
+                } catch (err) {
+                    document.querySelector(".手指").style.left =
+                        e.pageX - 75 + "px";
+                }
+                e.preventDefault();
+                return false;
+            }
+            function 发射(e) {
+                let 屎_bottom = 50,
+                    屎_left = document.querySelector(".手指").offsetLeft + 75;
+                let 屎 = document.createElement("div");
+                屎.className = "屎";
+                屎.innerText = "💩";
+                屎.style.bottom = 屎_bottom + "px";
+                屎.style.left = 屎_left - 50 + "px";
+                游戏.appendChild(屎);
+                let interval = setInterval(() => {
+                    屎_bottom += 10;
+                    if (屎_bottom >= document.body.offsetHeight) {
+                        if (document.querySelector(".攻击对象")) {
+                            document.querySelector(".攻击对象").remove();
+                        } else if (document.querySelector(".攻击对象2")) {
+                            document.querySelector(".攻击对象2").remove();
+                        } else {
+                            setTimeout(() => {
+                                document.body.innerHTML = "<h1>你赢了</h1>";
+                            });
+                        }
+                        clearInterval(interval);
+                        屎.remove();
+                    }
+                    屎.style.bottom = 屎_bottom + "px";
+                    屎.style.left = 屎_left - 50 + "px";
+                }, 1000 / 30);
+                e.preventDefault();
+                return false;
+            }
+
+            游戏.addEventListener("touchmove", 移动);
+            游戏.addEventListener("mousemove", 移动);
+            游戏.addEventListener("touchend", 发射);
+            游戏.addEventListener("click", 发射);
+        </script>
+    </body>
+</html>
