@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html style="height: 100%; margin: 0; padding: 0">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>flash 播放器</title>
+        <script>
+            window.play = function (url) {
+                var html =
+                    '<object id="flashgame" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="//download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=10,0,0,0" width="100%" height="100%"><param id="game" name="movie" value="' +
+                    url +
+                    '" /><embed id="flashgame1" name="flashgame" src="' +
+                    url +
+                    '" quality="high" pluginspage="//www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="100%" height="100%" /> <param name="quality" value="high" /></object>';
+                document.body.innerHTML = html;
+            };
+        </script>
+    </head>
+    <body style="height: 100%; margin: 0; padding: 0">
+        <a href="https://fcmsb250.github.io/no-anti.html"
+            >没防沉迷的游戏平台(作者没有收钱)</a
+        >
+        <a href="https://fcmsb250.github.io/flash2.html"
+            >如果播放出现问题, 试试这个</a
+        >
+        <p>按下CTRL + S 可以将播放器保存到本地</p>
+        <p>请选择一个.swf文件</p>
+        <input type="file" accept=".swf" /><button>确定</button>
+        <p class="example">示例文件</p>
+        <script>
+            document.querySelector("button").onclick = function () {
+                window.play(
+                    URL.createObjectURL(
+                        document.querySelector("input").files[0]
+                    )
+                );
+            };
+            document.querySelector(".example").onclick = function () {
+                window.play("https://fcmsb250.github.io/bmzz.swf");
+            };
+        </script>
+    </body>
+</html>
