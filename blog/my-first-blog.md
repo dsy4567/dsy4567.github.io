@@ -5,8 +5,11 @@ title: hello
 ```javascript
 import
 123;
+true
+null
+
 "ggg"
-if(ggg){
+if(/regexp/.test("fff")){
     g
 }
 // gg
