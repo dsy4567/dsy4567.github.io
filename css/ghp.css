@@ -17,9 +17,13 @@ div.highlight {
 
 .markdown-body blockquote {
     color: #6a737d;
-    border-left: 0.25em solid rgb(100,100,100);
+    border-left: 0.25em solid rgb(100,100,100) !important;
 }
 
 .markdown-body code, .markdown-body tt {
     background-color: rgba(100,100,100,0.5);
+}
+
+.highlight .k, .highlight .kv {
+    color: white !important;
 }
