@@ -1,0 +1,16 @@
+body > div.container-lg.px-3.my-5.markdown-body > h1 {
+    display: none !important;
+}
+
+body,html {
+    background-color: rgb(30,30,30);
+}
+
+pre.highlight {
+    color: white !important;
+    background-color: rgb(50,50,50) !important;
+}
+
+div.highlight {
+    background-color: transparent !important;
+}
