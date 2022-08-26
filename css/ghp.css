@@ -24,6 +24,6 @@ div.highlight {
     background-color: rgba(100,100,100,0.5);
 }
 
-.highlight .k, .highlight .kv {
+.highlight .k, .highlight .kv , .highlight .kc {
     color: white !important;
 }
