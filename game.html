@@ -356,7 +356,6 @@
                     document.querySelector(".手指").style.left =
                         e.pageX - 75 + "px";
                 }
-                return false;
             }
             function 发射(e) {
                 let 屎_bottom = 50,
@@ -381,12 +380,12 @@
                     屎.style.bottom = 屎_bottom + "px";
                     屎.style.left = 屎_left - 50 + "px";
                 }, 1000 / 30);
-                return false;
+                e?.preventDefault();
             }
 
-            // addEventListener("touchmove", 移动);
+            addEventListener("touchmove", 移动);
             addEventListener("mousemove", 移动);
-            // addEventListener("touchend", 发射);
+            addEventListener("touchend", 发射);
             addEventListener("mouseup", 发射);
             addEventListener("contextmenu", 发射);
             addEventListener("keyup", 发射);
