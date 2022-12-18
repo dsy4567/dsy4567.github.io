@@ -238,8 +238,8 @@
     </head>
     <body>
         <p>
-            <button onclick="添加防沉迷弹窗()">添加防沉迷弹窗</button>
-            <button onclick="let i=setInterval(发射,500)">自动发射</button>
+            <button ontouchend="添加防沉迷弹窗()" onclick="添加防沉迷弹窗()">添加防沉迷弹窗</button>
+            <button ontouchend="var i=setInterval(发射,500)" onclick="var i=setInterval(发射,500)">自动发射</button>
             <script>
                 if (navigator.userAgent.includes("Edg/"))
                     document.write(
