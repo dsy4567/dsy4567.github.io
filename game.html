@@ -331,13 +331,13 @@
                             </div>
                         </div>
                     </div>`;
-                防沉迷弹窗.style.zIndex = zIndex++;
+                防沉迷弹窗.style.zIndex = zIndex--;
                 document.querySelector(".游戏").appendChild(防沉迷弹窗);
             }
 
             var 游戏 = document.querySelector("div.游戏"),
                 屎 = document.querySelector("div.屎"),
-                zIndex = 10;
+                zIndex = 999;
 
             function 移动(e) {
                 try {
