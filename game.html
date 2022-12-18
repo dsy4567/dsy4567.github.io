@@ -236,6 +236,14 @@
     </head>
     <body>
         <p>
+            <script>
+                if (navigator.userAgent.includes("Edg/"))
+                    document.write(
+                        "<br />如果你正在使用 Edge 浏览器, 请<br />在设置中关闭效率模式, 以提升游<br />戏体验"
+                    );
+            </script>
+        </p>
+        <p>
             <button ontouchend="添加防沉迷弹窗()" onclick="添加防沉迷弹窗()">
                 添加防沉迷弹窗
             </button>
@@ -245,14 +253,6 @@
             >
                 自动发射
             </button>
-        </p>
-        <p>
-            <script>
-                if (navigator.userAgent.includes("Edg/"))
-                    document.write(
-                        "<br />如果你正在使用 Edge 浏览器, 请<br />在设置中关闭效率模式, 以提升游<br />戏体验"
-                    );
-            </script>
         </p>
         <div class="游戏">
             <!-- 从四位数小游戏那里偷来的代码 -->
