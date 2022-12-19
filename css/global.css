@@ -1,0 +1,64 @@
+@charset "utf-8";
+@keyframes 加载圆圈 {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.小尺寸 {
+    width: 32px;
+    height: 32px;
+}
+.头像 {
+    border-radius: 50%;
+}
+#loading {
+    background-color: #fff;
+}
+
+#加载界面 {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+}
+#加载界面 img {
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    animation-name: 加载圆圈;
+    width: 32px;
+    height: 32px;
+}
+
+#导航栏 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 48px;
+    border-bottom: 1px solid;
+}
+#导航栏 .左,
+#导航栏 .右 {
+    display: flex;
+}
+#导航栏 .左 *,
+#导航栏 .右 * {
+    margin-left: 8px;
+    margin-right: 8px;
+}

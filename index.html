@@ -2,46 +2,33 @@
 <html lang="zh-CN">
     <head>
         <meta charset="UTF-8" />
-        <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"
-        />
-        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-        <meta name="description" content="dsy4567 的小站" />
-        <link rel="shortcut icon" href="/img/logo.svg" type="image/x-icon" />
-        <title>我的第一个网页</title>
-        <!-- <title t="dsy4567 的小站">...</title> -->
-        <!-- <script src="/js/index.js"></script> -->
-        <!-- <link rel="stylesheet" href="/css/global.css" />
-        <link rel="stylesheet" href="/css/index.css" /> -->
-        <script>
-            var urls = [
-                {
-                    fcm: "aHR0cHM6Ly9ncmVhc3lmb3JrLm9yZy96aC1DTi9zY3JpcHRzLzQzNzIzMy0lRTklOTglQjIlRTYlQjIlODklRTglQkYlQjclRTUlODclOEYlRTclODIlQjklRTYlOTYlOTk=",
-                },
-                {
-                    fcm_gayhub:
-                        "aHR0cHM6Ly9naXRodWIuY29tL2RzeTQ1NjcvRnVja2luZy1BbnRpLUluZHVsZ2VuY2U=",
-                },
-                {
-                    fcm_gitee:
-                        "aHR0cHM6Ly9naXRlZS5jb20vZHN5NDU2Ny9GdWNraW5nLUFudGktSW5kdWxnZW5jZQ==",
-                },
-                { gayhub: "aHR0cHM6Ly9naXRodWIuY29tL2RzeTQ1Njc=" },
-            ];
-            var go = location.href.substring(
-                location.href.indexOf("?") + 1,
-                location.href.length
-            );
-            urls.forEach((element) => {
-                if (element[go]) {
-                    location.href = atob(element[go]);
-                }
-            });
-        </script>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>首页 | dsy4567 的小站</title>
+        <link rel="stylesheet" href="/css/global.css" />
+        <link rel="stylesheet" href="/css/index.css" />
     </head>
     <body>
-        <h1>这是我的第一个网页</h1>
-        <p>你好, 世界!</p>
+        <div id="加载界面">
+            <img src="/img/loading.svg" alt="加载中" title="加载中" />
+        </div>
+        <nav id="导航栏">
+            <div class="左">
+                <!-- <img class="小尺寸 头像" src="/img/portrait.jpg" alt="头像(一个蘑菇头揍防沉迷弹窗)" title="头像"> -->
+                <h1><a href="/">dsy4567 的小站</a></h1>
+            </div>
+            <div class="右">
+                <span>mmm</span>
+                <span>vvb</span>
+            </div>
+        </nav>
+        <div id="main"></div>
+        <!-- <noscript> -->
+        <style>
+            #加载界面 {
+                display: none !important;
+            }
+        </style>
+        <!-- </noscript> -->
     </body>
 </html>
