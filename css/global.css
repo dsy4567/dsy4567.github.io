@@ -9,6 +9,12 @@
     }
 }
 
+:root {
+    --theme-color-brighter: #75d1ff;
+    --theme-color-darker: #5bb7e5;
+    --theme-color: #66ccff;
+}
+
 html,
 body {
     margin: 0;
@@ -22,36 +28,50 @@ body {
 .头像 {
     border-radius: 50%;
 }
-#loading {
-    background-color: #fff;
+#加载界面 {
+    background-color: var(--theme-color);
 }
 
 #加载界面 {
-    display: flex;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
+    z-index: 999;
 }
-#加载界面 img {
+#加载界面 * {
+    position: absolute;
+    top: 50vh;
+    left: 50%;
+}
+#加载界面 .头像 {
+    width: 36px;
+    height: 36px;
+    margin-top: 6px;
+    margin-left: 6px;
+}
+#加载界面 .加载圆圈 {
     animation-duration: 1s;
+    stroke: var(--theme-color-darker);
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-name: 加载圆圈;
-    width: 32px;
-    height: 32px;
+    width: 48px;
+    height: 48px;
 }
 
 #导航栏 {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     width: 100%;
     height: 48px;
-    border-bottom: 1px solid;
+    position: sticky;
+    top: 0;
 }
 #导航栏 .左,
 #导航栏 .右 {

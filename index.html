@@ -10,11 +10,28 @@
     </head>
     <body>
         <div id="加载界面">
-            <img src="/img/loading.svg" alt="加载中" title="加载中" />
+            <svg
+                class="加载圆圈"
+                viewBox="0 0 48 48"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                <path
+                    d="M4 24C4 35.0457 12.9543 44 24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4"
+                    stroke-width="4"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                />
+            </svg>
+            <img
+                class="头像"
+                src="/img/avatar.jpg"
+                alt="头像(一个蘑菇头揍防沉迷弹窗)"
+                title="头像"
+            />
         </div>
         <nav id="导航栏">
             <div class="左">
-                <!-- <img class="小尺寸 头像" src="/img/portrait.jpg" alt="头像(一个蘑菇头揍防沉迷弹窗)" title="头像"> -->
                 <h1><a href="/">dsy4567 的小站</a></h1>
             </div>
             <div class="右">
@@ -22,13 +39,17 @@
                 <span>vvb</span>
             </div>
         </nav>
-        <div id="main"></div>
+
+        <div id="main">
+            <div style="height: 200vh">foo bar</div>
+        </div>
+
         <!-- <noscript> -->
-        <style>
-            #加载界面 {
-                display: none !important;
-            }
-        </style>
+            <style>
+                #加载界面 {
+                    display: none !important;
+                }
+            </style>
         <!-- </noscript> -->
     </body>
 </html>
