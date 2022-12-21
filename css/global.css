@@ -82,7 +82,7 @@ nav h1 {
 }
 #加载界面 .加载圆圈 {
     animation-duration: 1s;
-    stroke: var(--theme-color-darker);
+    stroke: var(--theme-color-brighter);
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     animation-name: 加载圆圈;

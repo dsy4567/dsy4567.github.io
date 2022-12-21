@@ -1,0 +1,32 @@
+{
+    "深色": {
+        "--theme-color-brighter": "#444",
+        "--theme-color-darker": "#000",
+        "--theme-color": "#222",
+        "--text-color": "#ddd"
+    },
+    "浅色": {
+        "--theme-color-brighter": "#444",
+        "--theme-color-darker": "#000",
+        "--theme-color": "#222",
+        "--text-color": "#ddd"
+    },
+    "天依蓝": {
+        "--theme-color-brighter": "#75d1ff",
+        "--theme-color-darker": "#5bb7e5",
+        "--theme-color": "#6cf",
+        "--text-color": "#fff"
+    },
+    "初音绿": {
+        "--theme-color-brighter": "#4ccac1",
+        "--theme-color-darker": "#33b1a8",
+        "--theme-color": "#39C5BB",
+        "--text-color": "#fff"
+    },
+    "中国红": {
+        "--theme-color-brighter": "#eb3232",
+        "--theme-color-darker": "#cf0000",
+        "--theme-color": "#e60000",
+        "--text-color": "#fff"
+    }
+}
