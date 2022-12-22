@@ -58,7 +58,7 @@ section {
 }
 #main {
     display: flex;
-    width: 100%;
+    width: 90%;
     max-width: 1270px;
     align-items: flex-start;
     justify-content: space-around;
