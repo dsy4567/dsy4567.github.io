@@ -56,15 +56,25 @@ section {
     border-radius: 8px;
     background-color: var(--theme-color-brighter);
 }
-.main .左,
-.main .右 {
+#main {
+    display: flex;
+    width: 100%;
+    max-width: 1270px;
+    align-items: flex-start;
+    justify-content: space-around;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+#main .左 {
+    width: 20%;
+}
+#main .右 {
+    width: 70%;
+}
+.左 > section {
     width: 100%;
 }
-.左 section {
-    width: 100%;
-    max-width: 256px;
-}
-.右 section {
+.右 > section {
     width: 100%;
 }
 section:hover {
