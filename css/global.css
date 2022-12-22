@@ -45,20 +45,55 @@ a:hover {
 nav h1 {
     color: var(--theme-color);
 }
+section,
+div {
+    transition: 0.5s;
+}
+section {
+    margin: 8px;
+    padding: 8px;
+    border: 1px solid var(--theme-color-darker);
+    border-radius: 8px;
+    background-color: var(--theme-color-brighter);
+}
+.main .左,
+.main .右 {
+    width: 100%;
+}
+.左 section {
+    width: 100%;
+    max-width: 256px;
+}
+.右 section {
+    width: 100%;
+}
+section:hover {
+    box-shadow: 3px 3px 5px grey;
+}
+section h2 {
+    font-size: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+section h2 svg {
+    margin-right: 8px;
+}
 
 .小尺寸 {
     width: 32px;
     height: 32px;
 }
 .中尺寸 {
+    width: 48px;
+    height: 48px;
+}
+.大尺寸 {
     width: 128px;
     height: 128px;
 }
 .头像 {
     border-radius: 50%;
-}
-#加载界面 {
-    background-color: var(--theme-color);
 }
 
 #加载界面 {
@@ -88,6 +123,9 @@ nav h1 {
     animation-name: 加载圆圈;
     width: 48px;
     height: 48px;
+}
+.背景图片 > div > * {
+    filter: brightness(1.3);
 }
 
 #导航栏 {
