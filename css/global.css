@@ -20,9 +20,9 @@
 }
 
 :root {
+    --theme-color: #66ccff;
     --theme-color-brighter: #75d1ff;
     --theme-color-darker: #5bb7e5;
-    --theme-color: #66ccff;
     --text-color: white;
 }
 
@@ -50,20 +50,20 @@ div {
     transition: 0.5s;
 }
 section {
-    margin: 8px;
-    padding: 8px;
+    background-color: var(--theme-color-brighter);
     border: 1px solid var(--theme-color-darker);
     border-radius: 8px;
-    background-color: var(--theme-color-brighter);
+    margin: 8px;
+    padding: 8px;
 }
 #main {
     display: flex;
-    width: 100%;
-    max-width: 1270px;
     align-items: flex-start;
     justify-content: space-around;
     padding-left: 5%;
     padding-right: 5%;
+    width: 100%;
+    max-width: 1270px;
 }
 #main .左 {
     width: 20%;
@@ -81,10 +81,10 @@ section:hover {
     box-shadow: 3px 3px 5px grey;
 }
 section h2 {
-    font-size: 32px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    font-size: 32px;
 }
 section h2 svg {
     margin-right: 8px;
@@ -120,36 +120,33 @@ section h2 svg {
     left: 50%;
 }
 #加载界面 .头像 {
-    width: 36px;
-    height: 36px;
     margin-top: 6px;
     margin-left: 6px;
+    width: 36px;
+    height: 36px;
 }
 #加载界面 .加载圆圈 {
     animation-duration: 1s;
-    stroke: var(--theme-color-brighter);
+    animation-name: 加载圆圈;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
-    animation-name: 加载圆圈;
+    stroke: var(--theme-color-brighter);
     width: 48px;
     height: 48px;
-}
-.背景图片 > div > * {
-    filter: brightness(1.3);
 }
 
 #导航栏 {
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0));
     color: var(--theme-color);
     display: flex;
+    align-items: center;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-around;
-    align-items: center;
-    width: 100%;
-    height: 48px;
     position: fixed;
     top: 0;
+    width: 100%;
+    height: 48px;
     z-index: 998;
 }
 #导航栏 .左,
@@ -160,35 +157,4 @@ section h2 svg {
 #导航栏 .右 * {
     margin-left: 8px;
     margin-right: 8px;
-}
-
-.背景图片 {
-    background: url(https://bing.img.run/rand.php) no-repeat;
-    background-size: cover;
-    background-position: center 0;
-    width: 100%;
-    height: 100vh;
-}
-.背景图片 > div {
-    -webkit-backdrop-filter: brightness(0.7);
-    backdrop-filter: brightness(0.7);
-    color: var(--theme-color);
-    filter: brightness(0.7);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
-    stroke: white;
-    width: 100%;
-    height: 100vh;
-}
-.背景图片 svg {
-    animation-duration: 3s;
-    stroke: var(--theme-color-darker);
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    animation-name: 上下晃悠;
-}
-#个性签名 {
-    font-size: larger;
 }
