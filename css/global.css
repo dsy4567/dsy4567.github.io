@@ -34,6 +34,9 @@ body {
 }
 body {
     background-color: var(--theme-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 a {
     color: var(--theme-color-darker);
@@ -60,22 +63,23 @@ section {
     display: flex;
     align-items: flex-start;
     justify-content: space-around;
-    padding-left: 5%;
-    padding-right: 5%;
-    width: 90%;
-    max-width: 1270px;
+    width: 100%;
+    max-width: 1280px;
 }
 #main .左 {
-    width: 20%;
+    width: 25%;
 }
 #main .右 {
-    width: 70%;
+    width: 75%;
 }
-.左 > section {
-    width: 100%;
+.组 {
+    display: flex;
+    max-width: 100%;
+    overflow: auto;
 }
-.右 > section {
-    width: 100%;
+.组 > section {
+    max-width: 256px;
+    min-width: 256px;
 }
 section:hover {
     box-shadow: 3px 3px 5px grey;
@@ -88,6 +92,27 @@ section h2 {
 }
 section h2 svg {
     margin-right: 8px;
+}
+@media only screen and (max-width: 960px) {
+    #main {
+        flex-direction: column;
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
+    }
+    section {
+        margin: calc(2.5% - 7px);
+        margin-top: unset;
+        padding: 8px;
+    }
+    #main .左,
+    #main .右 {
+        width: 100%;
+    }
+    .左 > section,
+    .右 > section {
+        width: unset;
+    }
 }
 
 .小尺寸 {
@@ -107,6 +132,7 @@ section h2 svg {
 }
 
 #加载界面 {
+    background-color: var(--theme-color);
     position: fixed;
     top: 0;
     left: 0;
@@ -130,7 +156,7 @@ section h2 svg {
     animation-name: 加载圆圈;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
-    stroke: var(--theme-color-brighter);
+    stroke: var(--theme-color-darker);
     width: 48px;
     height: 48px;
 }
