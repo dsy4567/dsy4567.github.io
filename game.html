@@ -20,6 +20,22 @@
                     --theme-color2: white;
                 }
             }
+            @keyframes 屎 {
+                from {
+                    transform: translate(0, 0);
+                }
+                to {
+                    transform: translate(0, -100vh);
+                }
+            }
+
+            .屎 {
+                animation: 屎;
+                animation-duration: 5s;
+                animation-iteration-count: 1;
+                animation-timing-function: linear;
+                animation-fill-mode: forwards;
+            }
 
             html {
                 touch-action: none;
@@ -39,7 +55,7 @@
             .屎,
             .手指 {
                 z-index: 8888888;
-                position: absolute;
+                position: fixed;
             }
             .屎 {
                 bottom: 75px;
@@ -368,20 +384,14 @@
                 屎.style.bottom = 屎_bottom + "px";
                 屎.style.left = 屎_left - 50 + "px";
                 游戏.appendChild(屎);
-                let interval = setInterval(() => {
-                    屎_bottom += 10;
-                    if (屎_bottom >= document.body.offsetHeight) {
-                        if (document.querySelector(".攻击对象")) {
-                            document.querySelector(".攻击对象").remove();
-                        } else if (document.querySelector(".攻击对象2")) {
-                            document.querySelector(".攻击对象2").remove();
-                        }
-                        clearInterval(interval);
-                        屎.remove();
+                let interval = setTimeout(() => {
+                    if (document.querySelector(".攻击对象")) {
+                        document.querySelector(".攻击对象").remove();
+                    } else if (document.querySelector(".攻击对象2")) {
+                        document.querySelector(".攻击对象2").remove();
                     }
-                    屎.style.bottom = 屎_bottom + "px";
-                    屎.style.left = 屎_left - 50 + "px";
-                }, 1000 / 30);
+                    屎.remove();
+                }, 5000);
                 e?.preventDefault();
             }
 
