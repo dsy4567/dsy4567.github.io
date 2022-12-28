@@ -1,14 +1,14 @@
 .背景图片 {
     background: url(https://bing.img.run/rand.php) no-repeat;
-    background-position: center 0;
+    background-position: center center;
     background-size: cover;
     margin-bottom: 8px;
     width: 100%;
     height: 30vh;
 }
 .背景图片 > div {
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: brightness(0.8);
+    -webkit-backdrop-filter: brightness(0.8);
     color: var(--theme-color);
     display: flex;
     align-items: center;
@@ -24,4 +24,20 @@
 }
 #个性签名 {
     font-size: larger;
+}
+
+section#我 {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 64px;
+}
+section#我 img {
+    margin-bottom: -64px;
+    position: relative;
+    top: -64px;
+}
+#main > div.右 > section:nth-child(1) {
+    margin-top: 64px;
 }

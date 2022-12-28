@@ -52,6 +52,10 @@ section,
 div {
     transition: 0.5s;
 }
+svg {
+    stroke: var(--theme-color-darker);
+    fill: var(--theme-color-darker);
+}
 section {
     background-color: var(--theme-color-brighter);
     border: 1px solid var(--theme-color-darker);
@@ -156,7 +160,6 @@ section h2 svg {
     animation-name: 加载圆圈;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
-    stroke: var(--theme-color-darker);
     width: 48px;
     height: 48px;
 }
