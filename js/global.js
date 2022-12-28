@@ -3,7 +3,8 @@ const 加载清单 = {
     "/": ["index"],
 };
 let 已加载的脚本数量 = 0,
-    应加载的脚本数量 = 0;
+    应加载的脚本数量 = 0,
+    路径 = "";
 
 function 添加脚本(url, 回调 = () => {}) {
     let s = document.createElement("script");
@@ -23,12 +24,7 @@ function 添加脚本(url, 回调 = () => {}) {
     document.head.append(s);
 }
 function 开始加载() {
-    let /** @type {String[]} */ 清单 =
-            加载清单[
-                location.pathname
-                    .replace(/[(index)(\.html)]/g, "")
-                    .replace(/\/\//g, "")
-            ];
+    let /** @type {String[]} */ 清单 = 加载清单[路径];
     if (!清单) return;
     应加载的脚本数量 = 清单.length;
     清单.forEach((s) => {
@@ -37,5 +33,20 @@ function 开始加载() {
     });
 }
 
+路径 = location.pathname.replace(/[(index)(\.html)]/g, "").replace(/\/\//g, "");
 window.完成加载 = window.完成加载 || [];
-开始加载();
+addEventListener("load", () => {
+    开始加载();
+
+    // 雪花特效
+    setInterval(() => {
+        let s = document.createElement("div");
+        s.innerText = "❄️";
+        s.className = "雪花";
+        s.style.left = Math.ceil(Math.random() * 100) + "%";
+        document.body.append(s);
+        setTimeout(() => {
+            s.remove();
+        }, 10000);
+    }, 500);
+});
