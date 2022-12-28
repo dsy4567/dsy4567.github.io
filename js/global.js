@@ -19,7 +19,7 @@ function 添加脚本(url, 回调 = () => {}) {
         // @ts-ignore
         document.querySelector("div#main").style.animationName = "显示";
     };
-    s.src = url;
+    s.src = "/js/" + url + ".js";
     document.head.append(s);
 }
 function 开始加载() {
