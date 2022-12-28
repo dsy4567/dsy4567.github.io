@@ -162,7 +162,6 @@ section h2 svg {
     animation-iteration-count: 1;
     /* animation-name: 隐藏; */
     background-color: var(--theme-color);
-    display: none;
     pointer-events: none;
     position: fixed;
     top: 0;
