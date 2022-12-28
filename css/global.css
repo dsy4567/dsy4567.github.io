@@ -1,10 +1,10 @@
 @charset "utf-8";
 @keyframes 加载圆圈 {
     from {
-        transform: rotate(0deg);
+        transform: rotate(45deg);
     }
     to {
-        transform: rotate(360deg);
+        transform: rotate(405deg);
     }
 }
 @keyframes 上下晃悠 {
@@ -16,6 +16,25 @@
     }
     100% {
         transform: translateY(0);
+    }
+}
+@keyframes 隐藏 {
+    0% {
+        filter: opacity(1);
+    }
+    100% {
+        display: none;
+        filter: opacity(0);
+    }
+}
+@keyframes 显示 {
+    0% {
+        filter: opacity(0);
+        transform: translateY(64px);
+    }
+    100% {
+        filter: opacity(1);
+        transform: translateY(0px);
     }
 }
 
@@ -52,8 +71,10 @@ section,
 div {
     transition: 0.5s;
 }
-svg {
+svg.stroke {
     stroke: var(--theme-color-darker);
+}
+svg.fill {
     fill: var(--theme-color-darker);
 }
 section {
@@ -136,7 +157,13 @@ section h2 svg {
 }
 
 #加载界面 {
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    /* animation-name: 隐藏; */
     background-color: var(--theme-color);
+    display: none;
+    pointer-events: none;
     position: fixed;
     top: 0;
     left: 0;
@@ -159,7 +186,6 @@ section h2 svg {
     animation-duration: 1s;
     animation-name: 加载圆圈;
     animation-iteration-count: infinite;
-    animation-timing-function: linear;
     width: 48px;
     height: 48px;
 }
@@ -186,4 +212,10 @@ section h2 svg {
 #导航栏 .右 * {
     margin-left: 8px;
     margin-right: 8px;
+}
+#main {
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    /* animation-name: 显示; */
 }
