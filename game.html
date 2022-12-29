@@ -54,6 +54,7 @@
             }
             .屎,
             .手指 {
+                pointer-events: none;
                 z-index: 8888888;
                 position: fixed;
             }
@@ -64,6 +65,12 @@
             .手指 {
                 font-size: 100px;
                 bottom: 0;
+            }
+
+            p#工具 {
+                position: absolute;
+                bottom: 0;
+                z-index: 8888889;
             }
         </style>
         <style>
@@ -260,16 +267,34 @@
                     );
             </script>
         </p>
-        <p>
+        <p id="工具">
             <button ontouchend="添加防沉迷弹窗()" onclick="添加防沉迷弹窗()">
                 添加防沉迷弹窗
             </button>
             <button
-                ontouchend="var i=setInterval(发射,500)"
-                onclick="var i=setInterval(发射,500)"
+                ontouchend="setInterval(发射,500)"
+                onclick="setInterval(发射,500)"
             >
                 自动发射
             </button>
+            <button
+                onclick="navigator.share({
+                title: document.title + '小游戏',
+                text: `我在这个小游戏里干掉了${累计弹窗}个防沉迷弹窗, 你也来试试吧~`,
+                url: location.href,
+                });"
+            >
+                分享</button
+            ><br />
+            速度: <span id="屎速度"></span> 坨屎/秒
+            <span id="弹窗速度"></span> 个防沉迷弹窗/秒<br />
+            累计发射 <span id="累计屎"></span> 坨屎, 干掉
+            <span id="累计弹窗"></span> 个防沉迷弹窗<br />
+            <input type="number" placeholder="飙速" id="飙速" /><button
+                onclick="for(let _=0;_<Number(飙速.value)/2;_++)setInterval(发射,500)"
+            >
+                √</button
+            ><br />
             Made with 😡 by <a href="https://github.com/dsy4567">dsy4567</a>
         </p>
         <div class="游戏">
@@ -364,7 +389,11 @@
 
             var 游戏 = document.querySelector("div.游戏"),
                 屎 = document.querySelector("div.屎"),
-                zIndex = 0x66ccff + 114514;
+                zIndex = 0x66ccff + 114514,
+                屎速度 = 0,
+                弹窗速度 = 0,
+                累计屎 = 0,
+                累计弹窗 = 0;
 
             function 移动(e) {
                 try {
@@ -384,11 +413,17 @@
                 屎.style.bottom = 屎_bottom + "px";
                 屎.style.left = 屎_left - 50 + "px";
                 游戏.appendChild(屎);
+                屎速度++;
+                累计屎++;
                 let interval = setTimeout(() => {
                     if (document.querySelector(".攻击对象")) {
                         document.querySelector(".攻击对象").remove();
                     } else if (document.querySelector(".攻击对象2")) {
                         document.querySelector(".攻击对象2").remove();
+                    } else {
+                        弹窗速度++;
+                        累计弹窗++;
+                        添加防沉迷弹窗();
                     }
                     屎.remove();
                 }, 5000);
@@ -401,6 +436,13 @@
             addEventListener("mouseup", 发射);
             addEventListener("contextmenu", 发射);
             addEventListener("keyup", 发射);
+            setInterval(() => {
+                document.querySelector("#屎速度").innerText = 屎速度;
+                document.querySelector("#弹窗速度").innerText = 弹窗速度;
+                document.querySelector("#累计屎").innerText = 累计屎;
+                document.querySelector("#累计弹窗").innerText = 累计弹窗;
+                屎速度 = 弹窗速度 = 0;
+            }, 1000);
         </script>
     </body>
 </html>
