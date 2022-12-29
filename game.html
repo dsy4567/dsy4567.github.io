@@ -59,7 +59,7 @@
                 position: fixed;
             }
             .屎 {
-                bottom: 75px;
+                bottom: 1vh;
                 font-size: 50px;
             }
             .手指 {
@@ -279,9 +279,9 @@
             </button>
             <button
                 onclick="navigator.share({
-                title: document.title + '小游戏',
+                title: '防沉迷和屎小游戏',
                 text: `我在这个小游戏里干掉了${累计弹窗}个防沉迷弹窗, 你也来试试吧~`,
-                url: location.href,
+                url: 'https://dsy4567.cf/game',
                 });"
             >
                 分享</button
@@ -405,6 +405,7 @@
                 }
             }
             function 发射(e) {
+                console.log(e);
                 let 屎_bottom = 50,
                     屎_left = document.querySelector(".手指").offsetLeft + 75;
                 let 屎 = document.createElement("div");
@@ -427,7 +428,12 @@
                     }
                     屎.remove();
                 }, 5000);
-                e?.preventDefault();
+                if (
+                    e?.target.tagName != "BUTTON" &&
+                    e?.target.tagName != "A" &&
+                    e?.target.tagName != "INPUT"
+                )
+                    e?.preventDefault();
             }
 
             addEventListener("touchmove", 移动);
