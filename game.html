@@ -291,7 +291,7 @@
             累计发射 <span id="累计屎"></span> 坨屎, 干掉
             <span id="累计弹窗"></span> 个防沉迷弹窗<br />
             <input type="number" placeholder="飙速" id="飙速" /><button
-                onclick="for(let _=0;_<Number(飙速.value)/2;_++)setInterval(发射,500)"
+                onclick="setInterval(发射,1/Number(飙速.value))"
             >
                 √</button
             ><br />
