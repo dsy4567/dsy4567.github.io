@@ -45,6 +45,20 @@
         transform: translate(0, 110vh) rotate(365deg);
     }
 }
+@keyframes 闪烁 {
+    0% {
+        filter: opacity(0);
+    }
+    50% {
+        filter: opacity(0);
+    }
+    50.1% {
+        filter: opacity(1);
+    }
+    100% {
+        filter: opacity(1);
+    }
+}
 
 :root {
     --theme-color: #66ccff;

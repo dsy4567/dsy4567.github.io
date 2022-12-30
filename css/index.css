@@ -25,6 +25,14 @@
 #个性签名 {
     font-size: 3vw;
 }
+#个性签名::after {
+    animation: 闪烁;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    content: "|";
+    font-style: initial;
+}
 
 section#我 {
     display: flex;
