@@ -1,32 +1,38 @@
 {
     "深色": {
+        "--theme-color": "#222",
         "--theme-color-brighter": "#444",
         "--theme-color-darker": "#000",
-        "--theme-color": "#222",
         "--text-color": "#ddd"
     },
     "浅色": {
-        "--theme-color-brighter": "#444",
-        "--theme-color-darker": "#000",
-        "--theme-color": "#222",
-        "--text-color": "#ddd"
+        "--theme-color": "#ddd",
+        "--theme-color-brighter": "#fff",
+        "--theme-color-darker": "#bbb",
+        "--text-color": "#222"
     },
     "天依蓝": {
+        "--theme-color": "#6cf",
         "--theme-color-brighter": "#75d1ff",
         "--theme-color-darker": "#5bb7e5",
-        "--theme-color": "#6cf",
         "--text-color": "#fff"
     },
     "初音绿": {
+        "--theme-color": "#39c5bb",
         "--theme-color-brighter": "#4ccac1",
         "--theme-color-darker": "#33b1a8",
-        "--theme-color": "#39C5BB",
+        "--text-color": "#fff"
+    },
+    "恶臭绿": {
+        "--theme-color": "#114514",
+        "--theme-color-brighter": "#28572b",
+        "--theme-color-darker": "#0f3e12",
         "--text-color": "#fff"
     },
     "中国红": {
-        "--theme-color-brighter": "#eb3232",
-        "--theme-color-darker": "#cf0000",
         "--theme-color": "#e60000",
+        "--theme-color-brighter": "#ed4c4c",
+        "--theme-color-darker": "#a10000",
         "--text-color": "#fff"
     }
 }

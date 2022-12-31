@@ -21,6 +21,7 @@
 .背景图片:hover > div {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+    filter: opacity(0);
 }
 #个性签名 {
     font-size: 3vw;

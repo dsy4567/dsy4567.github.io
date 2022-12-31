@@ -11,7 +11,7 @@ function 添加脚本(url, 回调 = () => {}) {
     s.onload = () => {
         if (++已加载的脚本数量 == 应加载的脚本数量) {
             完成加载.forEach((f) => {
-                f();
+                f(路径);
             });
         }
         回调();
@@ -39,6 +39,8 @@ addEventListener("load", () => {
     开始加载();
 
     // 雪花特效
+    // @ts-ignore
+    hhh;
     setInterval(() => {
         let s = document.createElement("div");
         s.innerText = "❄️";

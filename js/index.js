@@ -30,7 +30,7 @@ async function 获取个人信息() {
             });
     });
 }
-完成加载.push(async () => {
+完成加载.push(async (路径) => {
     if (路径 == "/") {
         // @ts-ignore
         document.querySelector("#随机金句").innerHTML =

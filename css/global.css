@@ -60,11 +60,21 @@
     }
 }
 
+::-webkit-scrollbar {
+    background-color: var(--theme-color);
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--theme-color-darker);
+}
+
 :root {
-    --theme-color: #66ccff;
-    --theme-color-brighter: #75d1ff;
-    --theme-color-darker: #51a3cc;
-    --text-color: white;
+    --theme-color: #222;
+    --theme-color-brighter: #444;
+    --theme-color-darker: #000;
+    --text-color: #ddd;
 }
 
 html,
@@ -89,8 +99,9 @@ a:hover {
 nav h1 {
     color: var(--theme-color);
 }
-section,
-div {
+button,
+div,
+section {
     transition: 0.5s;
 }
 svg.stroke {
@@ -140,7 +151,7 @@ section {
     z-index: 999;
 }
 section:hover {
-    box-shadow: 3px 3px 5px grey;
+    box-shadow: 3px 3px 5px var(--theme-color-darker);
 }
 section h2 {
     display: flex;
@@ -173,6 +184,10 @@ section h2 svg {
     }
 }
 
+.特小尺寸 {
+    width: 16px;
+    height: 16px;
+}
 .小尺寸 {
     width: 32px;
     height: 32px;
@@ -250,4 +265,33 @@ section h2 svg {
     animation-fill-mode: forwards;
     animation-iteration-count: 1;
     /* animation-name: 显示; */
+}
+
+div#侧边按钮 {
+    position: fixed;
+    right: 0;
+    top: 75vh;
+    z-index: 998;
+}
+div#侧边按钮 > * {
+    background-color: var(--text-color);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid var(--theme-color-darker);
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    filter: opacity(0.5);
+    margin-top: 5px;
+    padding: 4px;
+    transform: translateX(-4px);
+}
+div#侧边按钮 > *:hover {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    box-shadow: -2px 0px 5px 4px var(--theme-color-darker);
+    transform: translateX(0);
 }
