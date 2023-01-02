@@ -9,7 +9,6 @@
 .背景图片 > div {
     backdrop-filter: brightness(0.8);
     -webkit-backdrop-filter: brightness(0.8);
-    color: var(--theme-color);
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -18,13 +17,15 @@
     width: 100%;
     height: 30vh;
 }
-.背景图片:hover > div {
+.背景图片:hover > div.文字 {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
     filter: opacity(0);
 }
+#背景图片全屏 {
+}
 #个性签名 {
-    font-size: 3vw;
+    font-size: 16px;
 }
 #个性签名::after {
     animation: 闪烁;

@@ -1,46 +1,65 @@
-// @ts-check
+window.onerror = () => {
+    try {
+        document.querySelector("div#加载界面").remove();
+        document.querySelector("div#main").style.animationName = "显示";
+    } catch (e) {}
+};
+
 const 加载清单 = {
     "/": ["index"],
 };
-let 已加载的脚本数量 = 0,
+let 已加载的脚本 = {},
     应加载的脚本数量 = 0,
     路径 = "";
 
 function 添加脚本(url, 回调 = () => {}) {
+    if (document.querySelector(`script[src*="${url}"]`)) return 全部完成加载();
     let s = document.createElement("script");
-    s.onload = () => {
-        if (++已加载的脚本数量 == 应加载的脚本数量) {
-            完成加载.forEach((f) => {
-                f(路径);
-            });
-        }
-        回调();
-        // @ts-ignore
-        document.querySelector("div#加载界面").style.animationName = "隐藏";
-        // @ts-ignore
-        document.querySelector("div#main").style.animationName = "显示";
+    s.onload = (...p) => {
+        回调(...p);
+        全部完成加载();
     };
     s.src = "/js/" + url + ".js";
     document.head.append(s);
 }
 function 开始加载() {
+    路径 = location.pathname
+        .replace(/[(index)(\.html)]/g, "")
+        .replace(/\/\//g, "");
     let /** @type {String[]} */ 清单 = 加载清单[路径];
     if (!清单) return;
     应加载的脚本数量 = 清单.length;
-    清单.forEach((s) => {
-        if (document.querySelector(`script[src*="${s}"]`)) return;
-        添加脚本(s);
-    });
+    清单.forEach(s => 添加脚本(s));
+}
+async function 全部完成加载() {
+    已加载的脚本 = {};
+    for (let i = 0; i < 完成加载.length; i++) {
+        await 完成加载[i]("...准备加载...");
+    }
+    if (Object.keys(已加载的脚本).length == 应加载的脚本数量) {
+        for (let i = 0; i < 完成加载.length; i++) {
+            await 完成加载[i](路径);
+        }
+        document.querySelectorAll("a").forEach(el => {
+            if (el.host != location.host && !el.className.includes("外链")) {
+                el.className += " 外链";
+                el.target = "_blank";
+            }
+        });
+        document.querySelector("div#加载界面").style.animationName = "隐藏";
+        document.querySelector("div#main").style.animationName = "显示";
+    }
 }
 
-路径 = location.pathname.replace(/[(index)(\.html)]/g, "").replace(/\/\//g, "");
-window.完成加载 = window.完成加载 || [];
-addEventListener("load", () => {
-    开始加载();
-
+window.完成加载 = [];
+document.addEventListener("DOMContentLoaded", () => {
+    document
+        .querySelector("#回到顶部")
+        .addEventListener("click", () =>
+            document.body.scrollIntoView({ behavior: "smooth" })
+        );
     // 雪花特效
-    // @ts-ignore
-    hhh;
+    return;
     setInterval(() => {
         let s = document.createElement("div");
         s.innerText = "❄️";
@@ -51,4 +70,7 @@ addEventListener("load", () => {
             s.remove();
         }, 10000);
     }, 500);
+});
+addEventListener("load", () => {
+    开始加载();
 });
