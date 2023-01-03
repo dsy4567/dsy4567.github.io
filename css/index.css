@@ -22,10 +22,10 @@
     -webkit-backdrop-filter: none;
     filter: opacity(0);
 }
-#背景图片全屏 {
-}
 #个性签名 {
     font-size: 16px;
+    padding: 36px;
+    word-break: break-all;
 }
 #个性签名::after {
     animation: 闪烁;

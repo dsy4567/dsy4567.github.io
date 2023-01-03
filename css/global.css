@@ -75,6 +75,7 @@
 }
 
 :root {
+    --number-of-themes: 6;
     --theme-color: #222;
     --theme-color-brighter: #444;
     --theme-color-darker: #000;
@@ -303,6 +304,36 @@ div.侧边按钮 > * {
 div.侧边按钮 > *:hover {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    box-shadow: -2px 0px 5px 4px var(--theme-color-darker);
+    filter: opacity(1);
     transform: translateX(0);
+}
+div.侧边按钮 > #切换主题:hover {
+    transform: translateX(calc(-32px * var(--number-of-themes)));
+}
+div.侧边按钮 #切换主题 > #所有主题 {
+    background: var(--text-color);
+    filter: opacity(0);
+    position: absolute;
+    transform: translateX(28px) translateY(-4px);
+    width: 66px;
+    height: 32px;
+}
+div.侧边按钮 #切换主题:hover > #所有主题 {
+    filter: opacity(1);
+}
+div.侧边按钮 #切换主题 > #所有主题 {
+    background-color: var(--text-color);
+    display: flex;
+    filter: opacity(0);
+    position: absolute;
+    transform: translateX(28px) translateY(-4px);
+    width: calc(32px * var(--number-of-themes));
+    height: 32px;
+}
+div.侧边按钮 #切换主题 > #所有主题 > * {
+    background-color: #ffffff;
+    border-radius: 50%;
+    margin: 4px;
+    width: 24px;
+    height: 24px;
 }
