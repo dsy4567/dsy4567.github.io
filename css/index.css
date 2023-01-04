@@ -23,6 +23,7 @@
     filter: opacity(0);
 }
 #个性签名 {
+    color: #fff;
     font-size: 16px;
     padding: 36px;
     word-break: break-all;
