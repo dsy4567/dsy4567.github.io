@@ -10,7 +10,8 @@ const 加载清单 = {
 };
 let 已加载的脚本 = {},
     应加载的脚本数量 = 0,
-    路径 = "";
+    路径 = "",
+    DOMContentLoaded = false;
 
 function 添加脚本(url, 回调 = () => {}) {
     if (document.querySelector(`script[src*="${url}"]`)) return 全部完成加载();
@@ -52,12 +53,45 @@ async function 全部完成加载() {
 }
 
 window.完成加载 = [];
+fetch("/json/theme.json")
+    .then(res => res.json())
+    .then(theme => {
+        document.documentElement.style.setProperty(
+            "--number-of-themes",
+            Object.keys(theme).length
+        );
+        Object.keys(theme).forEach(t => {
+            let btn = document.createElement("button");
+            btn.style.backgroundColor = theme[t]["--theme-color"];
+            btn.title = t;
+            btn.onclick = () => {
+                [
+                    "--theme-color",
+                    "--theme-color-brighter",
+                    "--theme-color-darker",
+                    "--theme-color-transparent",
+                    "--text-color",
+                ].forEach(n => {
+                    document.documentElement.style.setProperty(n, theme[t][n]);
+                });
+                localStorage.setItem("theme", t);
+            };
+            if (t === localStorage.getItem("theme")) btn.onclick();
+            DOMContentLoaded
+                ? document.querySelector("#所有主题").append(btn)
+                : addEventListener("DOMContentLoaded", () =>
+                      document.querySelector("#所有主题").append(btn)
+                  );
+        });
+    });
 document.addEventListener("DOMContentLoaded", () => {
+    DOMContentLoaded = true;
     document
         .querySelector("#回到顶部")
         .addEventListener("click", () =>
             document.body.scrollIntoView({ behavior: "smooth" })
         );
+
     // 雪花特效
     return;
     setInterval(() => {

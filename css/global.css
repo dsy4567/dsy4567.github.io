@@ -74,13 +74,25 @@
     background-color: var(--theme-color-brighter);
 }
 
-:root {
-    --number-of-themes: 6;
-    --theme-color: #222;
-    --theme-color-brighter: #444;
-    --theme-color-darker: #000;
-    --theme-color-transparent: #2228;
-    --text-color: #ddd;
+@media (prefers-color-scheme: light) {
+    html {
+        --number-of-themes: 0;
+        --theme-color: #ddd;
+        --theme-color-brighter: #fff;
+        --theme-color-darker: #bbb;
+        --theme-color-transparent: #ddd8;
+        --text-color: #222;
+    }
+}
+@media (prefers-color-scheme: dark) {
+    html {
+        --number-of-themes: 6;
+        --theme-color: #222;
+        --theme-color-brighter: #444;
+        --theme-color-darker: #000;
+        --theme-color-transparent: #2228;
+        --text-color: #ddd;
+    }
 }
 
 html,
@@ -100,7 +112,7 @@ a {
     text-decoration: none;
 }
 a:hover,
-a:focus {
+a:focus-visible {
     text-decoration: underline var(--theme-color);
 }
 nav h1 {
@@ -292,7 +304,7 @@ div#主侧边按钮 {
     top: 75vh;
 }
 div.侧边按钮 > * {
-    background-color: var(--text-color);
+    background-color: #fff;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     border: none;
@@ -308,30 +320,20 @@ div.侧边按钮 > * {
     transform: translateX(-4px);
 }
 div.侧边按钮 > *:hover,
-div.侧边按钮 > *:focus {
+div.侧边按钮 > *:focus,
+div.侧边按钮 > *:focus-within {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     filter: opacity(1);
     transform: translateX(0);
 }
 div.侧边按钮 > #切换主题:hover,
-div.侧边按钮 > #切换主题:focus {
+div.侧边按钮 > #切换主题:focus,
+div.侧边按钮 > #切换主题:focus-within {
     transform: translateX(calc(-32px * var(--number-of-themes)));
 }
 div.侧边按钮 #切换主题 > #所有主题 {
-    background: var(--text-color);
-    filter: opacity(0);
-    position: absolute;
-    transform: translateX(28px) translateY(-4px);
-    width: 66px;
-    height: 32px;
-}
-div.侧边按钮 #切换主题:hover > #所有主题,
-div.侧边按钮 #切换主题:focus > #所有主题 {
-    filter: opacity(1);
-}
-div.侧边按钮 #切换主题 > #所有主题 {
-    background-color: var(--text-color);
+    background: #fff;
     display: flex;
     filter: opacity(0);
     position: absolute;
@@ -339,8 +341,13 @@ div.侧边按钮 #切换主题 > #所有主题 {
     width: calc(32px * var(--number-of-themes));
     height: 32px;
 }
+div.侧边按钮 #切换主题:hover > #所有主题,
+div.侧边按钮 #切换主题:focus > #所有主题,
+#所有主题:focus-within {
+    filter: opacity(1) !important;
+}
 div.侧边按钮 #切换主题 > #所有主题 > * {
-    background-color: #ffffff;
+    background-color: #fff;
     border: 1px solid var(--theme-color-darker);
     border-radius: 50%;
     margin: 4px;
