@@ -61,7 +61,7 @@
 }
 
 ::selection {
-    background-color: var(--theme-color-transparent);
+    background-color: rgba(200, 200, 200, 0.5);
 }
 
 ::-webkit-scrollbar {
@@ -109,19 +109,24 @@ body {
 }
 a {
     color: var(--theme-color-darker);
+    filter: brightness(1);
     text-decoration: none;
 }
 a:hover,
 a:focus-visible {
-    text-decoration: underline var(--theme-color);
+    filter: brightness(1.3);
+}
+a:active {
+    filter: brightness(0.8);
 }
 nav h1 {
     color: var(--theme-color);
 }
-button,
-div,
-section {
+* {
     transition: 0.5s;
+}
+*:focus-visible {
+    outline: 2px solid var(--theme-color-transparent);
 }
 svg.stroke {
     stroke: var(--theme-color-darker);
@@ -176,7 +181,8 @@ section {
     z-index: 999;
 }
 section:hover {
-    box-shadow: 3px 3px 5px var(--theme-color-darker);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
+        rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
 }
 section h2 {
     display: flex;
@@ -303,16 +309,20 @@ div.侧边按钮 {
 div#主侧边按钮 {
     top: 75vh;
 }
+div.侧边按钮 * {
+    cursor: pointer;
+}
 div.侧边按钮 > * {
     background-color: #fff;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
+        rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
     border: none;
     border-bottom-left-radius: 50%;
     border-bottom-right-radius: 50%;
     border-top-left-radius: 50%;
     border-top-right-radius: 50%;
-    cursor: pointer;
     display: flex;
     filter: opacity(0.5);
     margin-top: 5px;
@@ -353,4 +363,26 @@ div.侧边按钮 #切换主题 > #所有主题 > * {
     margin: 4px;
     width: 24px;
     height: 24px;
+}
+div.侧边按钮 #切换主题 > #所有主题 > *:hover,
+div.侧边按钮 #切换主题 > #所有主题 > *:focus-visible {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
+        rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+}
+
+div.通知 {
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    animation-name: 显示;
+    /* animation-name: 隐藏; */
+    background-color: var(--theme-color);
+    border-radius: 8px;
+    box-shadow: rgb(0 0 0 / 24%) 0px 12px 15px 0px,
+        rgb(0 0 0 / 19%) 0px 17px 50px 0px;
+    filter: opacity(0);
+    padding: 8px;
+    position: fixed;
+    bottom: 32px;
+    z-index: 1000;
 }

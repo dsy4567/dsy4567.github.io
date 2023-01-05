@@ -11,7 +11,13 @@ const 加载清单 = {
 let 已加载的脚本 = {},
     应加载的脚本数量 = 0,
     路径 = "",
-    DOMContentLoaded = false;
+    DOMContentLoaded = false,
+    loaded = false,
+    ctrl,
+    鸡,
+    你,
+    太,
+    美;
 
 function 添加脚本(url, 回调 = () => {}) {
     if (document.querySelector(`script[src*="${url}"]`)) return 全部完成加载();
@@ -53,6 +59,18 @@ async function 全部完成加载() {
 }
 
 window.完成加载 = [];
+alert = m => {
+    let el = document.createElement("div");
+    el.innerText = m;
+    el.className = "通知";
+    document.body.append(el);
+    setTimeout(() => {
+        el.style.animationName = "隐藏";
+        setTimeout(() => {
+            el.remove();
+        }, 500);
+    }, 3000);
+};
 fetch("/json/theme.json")
     .then(res => res.json())
     .then(theme => {
@@ -64,7 +82,8 @@ fetch("/json/theme.json")
             let btn = document.createElement("button");
             btn.style.backgroundColor = theme[t]["--theme-color"];
             btn.title = t;
-            btn.onclick = () => {
+            btn.type = "button";
+            btn.onclick = 提示用户 => {
                 [
                     "--theme-color",
                     "--theme-color-brighter",
@@ -75,8 +94,9 @@ fetch("/json/theme.json")
                     document.documentElement.style.setProperty(n, theme[t][n]);
                 });
                 localStorage.setItem("theme", t);
+                提示用户 !== false && alert("已切换主题: " + t);
             };
-            if (t === localStorage.getItem("theme")) btn.onclick();
+            if (t === localStorage.getItem("theme")) btn.onclick(false);
             DOMContentLoaded
                 ? document.querySelector("#所有主题").append(btn)
                 : addEventListener("DOMContentLoaded", () =>
@@ -84,6 +104,18 @@ fetch("/json/theme.json")
                   );
         });
     });
+addEventListener("keydown", ev => {
+    let k = ev.key.toLowerCase();
+    if (k.includes("control"))
+        (ctrl || (ctrl = new Audio("/audio/ctrl.mp3"))).play();
+    else if (k == "j") (鸡 || (鸡 = new Audio("/audio/鸡.mp3"))).play();
+    else if (k == "n") (你 || (你 = new Audio("/audio/你.mp3"))).play();
+    else if (k == "t") (太 || (太 = new Audio("/audio/太.mp3"))).play();
+    else if (k == "m") (美 || (美 = new Audio("/audio/美.mp3"))).play();
+});
+addEventListener("copy", () => {
+    alert("复制成功");
+});
 document.addEventListener("DOMContentLoaded", () => {
     DOMContentLoaded = true;
     document
@@ -91,9 +123,15 @@ document.addEventListener("DOMContentLoaded", () => {
         .addEventListener("click", () =>
             document.body.scrollIntoView({ behavior: "smooth" })
         );
+    setTimeout(() => {
+        if (!loaded) {
+            document.querySelector("div#加载界面").style.animationName = "隐藏";
+            document.querySelector("div#main").style.animationName = "显示";
+        }
+    }, 5000);
 
     // 雪花特效
-    return;
+    // return;
     setInterval(() => {
         let s = document.createElement("div");
         s.innerText = "❄️";
@@ -106,5 +144,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 500);
 });
 addEventListener("load", () => {
+    loaded = true;
     开始加载();
 });
