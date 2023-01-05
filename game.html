@@ -439,7 +439,7 @@
             addEventListener("mousemove", 移动);
             addEventListener("touchend", 发射);
             addEventListener("mouseup", 发射);
-            addEventListener("contextmenu", 发射);
+            addEventListener("contextmenu", e => e.preventDefault());
             addEventListener("keyup", 发射);
             setInterval(() => {
                 document.querySelector("#屎速度").innerText = 屎速度;
