@@ -251,8 +251,8 @@ section h2 svg {
 }
 #加载界面 * {
     position: absolute;
-    top: 50vh;
-    left: 50%;
+    top: calc(50vh - 24px);
+    left: calc(50% - 24px);
 }
 #加载界面 .头像 {
     margin-top: 6px;
