@@ -317,7 +317,7 @@ div.侧边按钮 {
     z-index: 998;
 }
 div#主侧边按钮 {
-    top: 75vh;
+    top: calc(75vh - 33px * 4);
 }
 div.侧边按钮 * {
     cursor: pointer;
