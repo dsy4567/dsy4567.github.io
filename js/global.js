@@ -1,7 +1,9 @@
+"use strict";
+
 window.onerror = () => {
     try {
-        document.querySelector("div#加载界面").remove();
-        document.querySelector("div#main").style.animationName = "显示";
+        qs("div#加载界面").remove();
+        qs("div#main").style.animationName = "显示";
     } catch (e) {}
 };
 
@@ -13,14 +15,29 @@ let 已加载的脚本 = {},
     路径 = "",
     DOMContentLoaded = false,
     loaded = false,
+    启用雪花特效 = JSON.parse(localStorage.getItem("启用雪花特效") ?? true),
     ctrl,
     鸡,
     你,
     太,
     美;
 
+/**
+ * @param {string} arg
+ * @returns {HTMLElement}
+ */
+function qs(arg) {
+    return document.querySelector(arg);
+}
+/**
+ * @param {string} arg
+ * @returns {HTMLElement[]}
+ */
+function qsa(arg) {
+    return document.querySelectorAll(arg);
+}
 function 添加脚本(url, 回调 = () => {}) {
-    if (document.querySelector(`script[src*="${url}"]`)) return 全部完成加载();
+    if (qs(`script[src*="${url}"]`)) return 全部完成加载();
     let s = document.createElement("script");
     s.onload = (...p) => {
         回调(...p);
@@ -47,21 +64,21 @@ async function 全部完成加载() {
         for (let i = 0; i < 完成加载.length; i++) {
             await 完成加载[i](路径);
         }
-        document.querySelectorAll("a").forEach(el => {
+        qsa("a").forEach(el => {
             if (el.host != location.host && !el.className.includes("外链")) {
                 el.className += " 外链";
                 el.target = "_blank";
             }
         });
-        document.querySelector("div#加载界面").style.animationName = "隐藏";
-        document.querySelector("div#main").style.animationName = "显示";
+        qs("div#加载界面").style.animationName = "隐藏";
+        qs("div#main").style.animationName = "显示";
     }
 }
 
 window.完成加载 = [];
 alert = m => {
     let el = document.createElement("div");
-    el.innerText = m;
+    el.innerHTML = m;
     el.className = "通知";
     document.body.append(el);
     setTimeout(() => {
@@ -86,8 +103,6 @@ fetch("/json/theme.json")
             btn.onclick = 提示用户 => {
                 [
                     "--theme-color",
-                    "--theme-color-brighter",
-                    "--theme-color-darker",
                     "--theme-color-transparent",
                     "--text-color",
                 ].forEach(n => {
@@ -98,9 +113,9 @@ fetch("/json/theme.json")
             };
             if (t === localStorage.getItem("theme")) btn.onclick(false);
             DOMContentLoaded
-                ? document.querySelector("#所有主题").append(btn)
+                ? qs("#所有主题").append(btn)
                 : addEventListener("DOMContentLoaded", () =>
-                      document.querySelector("#所有主题").append(btn)
+                      qs("#所有主题").append(btn)
                   );
         });
     });
@@ -123,16 +138,24 @@ document.addEventListener("DOMContentLoaded", () => {
         .addEventListener("click", () =>
             document.body.scrollIntoView({ behavior: "smooth" })
         );
+    qs("#雪花特效").addEventListener("click", () => {
+        localStorage.setItem(
+            "启用雪花特效",
+            JSON.stringify((启用雪花特效 = !启用雪花特效))
+        );
+        qsa(".雪花")?.forEach(el => el.remove());
+    });
     setTimeout(() => {
         if (!loaded) {
-            document.querySelector("div#加载界面").style.animationName = "隐藏";
-            document.querySelector("div#main").style.animationName = "显示";
+            qs("div#加载界面").style.animationName = "隐藏";
+            qs("div#main").style.animationName = "显示";
         }
     }, 5000);
 
     // 雪花特效
     // return;
     setInterval(() => {
+        if (!启用雪花特效) return;
         let s = document.createElement("div");
         s.innerText = "❄️";
         s.className = "雪花";

@@ -71,7 +71,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: var(--theme-color-brighter);
+    background-color: #8888;
 }
 
 @media (prefers-color-scheme: light) {
@@ -79,8 +79,8 @@
         --number-of-themes: 0;
         --theme-color: #ddd;
         --theme-color-brighter: #fff;
-        --theme-color-darker: #bbb;
-        --theme-color-transparent: #ddd8;
+        /* --theme-color-darker: #bbb;
+        --theme-color-transparent: #ddd8; */
         --text-color: #222;
     }
 }
@@ -88,10 +88,21 @@
     html {
         --number-of-themes: 6;
         --theme-color: #222;
-        --theme-color-brighter: #444;
-        --theme-color-darker: #000;
+        /* --theme-color-brighter: #444;
+        --theme-color-darker: #000; */
         --theme-color-transparent: #2228;
         --text-color: #ddd;
+    }
+}
+@media (forced-colors: active) {
+    a:hover {
+        outline: 2px solid #ffff00;
+    }
+    svg.fill {
+        fill: #ffff00 !important;
+    }
+    svg.stroke {
+        stroke: #ffff00 !important;
     }
 }
 
@@ -107,17 +118,20 @@ body {
     flex-direction: column;
     align-items: center;
 }
+a,
+svg {
+    color: var(--theme-color);
+    filter: brightness(0.7);
+}
 a {
-    color: var(--theme-color-darker);
-    filter: brightness(1);
     text-decoration: none;
 }
 a:hover,
 a:focus-visible {
-    filter: brightness(1.3);
+    filter: brightness(0.9);
 }
 a:active {
-    filter: brightness(0.8);
+    filter: brightness(0.5);
 }
 nav h1 {
     color: var(--theme-color);
@@ -128,18 +142,11 @@ nav h1 {
 *:focus-visible {
     outline: 2px solid var(--theme-color-transparent);
 }
-svg.stroke {
-    stroke: var(--theme-color-darker);
-}
 svg.fill {
-    fill: var(--theme-color-darker);
+    fill: var(--theme-color);
 }
-section {
-    background-color: var(--theme-color-brighter);
-    border: 1px solid var(--theme-color-darker);
-    border-radius: 8px;
-    margin: 8px;
-    padding: 8px;
+svg.stroke {
+    stroke: var(--theme-color);
 }
 #main {
     display: flex;
@@ -155,7 +162,7 @@ section {
     width: 75%;
 }
 #copyright {
-    border-top: 1px solid var(--theme-color-brighter);
+    border-top: 1px solid var(--theme-color-transparent);
     padding-top: 8px;
     text-align: center;
     width: 100%;
@@ -180,6 +187,13 @@ section {
     top: -10vh;
     z-index: 999;
 }
+section {
+    background-color: var(--theme-color-transparent);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    margin: 8px;
+    padding: 8px;
+}
 section:hover {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
         rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
@@ -201,7 +215,6 @@ section h2 svg {
         width: 100%;
     }
     section {
-        margin: calc(2.5% - 7px);
         margin-top: unset;
         padding: 8px;
     }
@@ -318,7 +331,7 @@ div.侧边按钮 > * {
     -webkit-backdrop-filter: blur(4px);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
         rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
-    border: none;
+    border: 1px solid transparent;
     border-bottom-left-radius: 50%;
     border-bottom-right-radius: 50%;
     border-top-left-radius: 50%;
@@ -342,30 +355,44 @@ div.侧边按钮 > #切换主题:focus,
 div.侧边按钮 > #切换主题:focus-within {
     transform: translateX(calc(-32px * var(--number-of-themes)));
 }
-div.侧边按钮 #切换主题 > #所有主题 {
+div.侧边按钮 > #网抑云阴乐:hover,
+div.侧边按钮 > #网抑云阴乐:focus,
+div.侧边按钮 > #网抑云阴乐:focus-within {
+    transform: translateX(calc(-32px * 5));
+}
+div.侧边按钮 .拥有更多选项 > .更多选项 {
     background: #fff;
+    border: 1px solid transparent;
     display: flex;
     filter: opacity(0);
     position: absolute;
-    transform: translateX(28px) translateY(-4px);
-    width: calc(32px * var(--number-of-themes));
+    transform: translateX(28px) translateY(-5px);
     height: 32px;
 }
-div.侧边按钮 #切换主题:hover > #所有主题,
-div.侧边按钮 #切换主题:focus > #所有主题,
-#所有主题:focus-within {
+div.侧边按钮 #切换主题 > #所有主题 {
+    width: calc(32px * var(--number-of-themes));
+}
+div.侧边按钮 #网抑云阴乐 > #阴乐控件 {
+    width: calc(32px * 5);
+}
+div.侧边按钮 .拥有更多选项:hover > .更多选项,
+div.侧边按钮 .拥有更多选项:focus > .更多选项,
+.更多选项:focus-within {
     filter: opacity(1) !important;
 }
-div.侧边按钮 #切换主题 > #所有主题 > * {
+div.侧边按钮 .拥有更多选项 > .更多选项 > * {
     background-color: #fff;
-    border: 1px solid var(--theme-color-darker);
+    border: 1px solid transparent;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 4px;
     width: 24px;
     height: 24px;
 }
-div.侧边按钮 #切换主题 > #所有主题 > *:hover,
-div.侧边按钮 #切换主题 > #所有主题 > *:focus-visible {
+div.侧边按钮 .拥有更多选项 > .更多选项 > *:hover,
+div.侧边按钮 .拥有更多选项 > .更多选项 > *:focus-visible {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
         rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
 }

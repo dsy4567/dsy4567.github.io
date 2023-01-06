@@ -1,3 +1,5 @@
+"use strict";
+
 async function 获取名言() {
     return new Promise((resolve, reject) => {
         fetch("/json/saying.json")
@@ -29,23 +31,22 @@ async function 获取个人信息() {
     if (路径 == "...准备加载...") {
         已加载的脚本["index.js"] = 1;
     } else if (路径 == "/") {
-        document.querySelector("#随机金句").innerHTML =
-            "&emsp;&emsp;" + (await 获取名言());
+        qs("#随机金句").innerHTML = "&emsp;&emsp;" + (await 获取名言());
 
         let 个人信息 = await 获取个人信息();
-        document.querySelector("#关注粉丝码龄").innerHTML = ` 关注: ${
-            个人信息.following
-        } | 粉丝: ${个人信息.followers} | 码龄: ${
+        qs("#关注粉丝码龄").innerHTML = ` 关注: ${个人信息.following} | 粉丝: ${
+            个人信息.followers
+        } | 码龄: ${
             new Date().getFullYear() -
             new Date(个人信息.created_at).getFullYear()
         }年 `;
 
-        document.querySelector("#个性签名").innerText = "";
+        qs("#个性签名").innerText = "";
         let arr = [...String(个人信息.bio)],
             interval = setInterval(() => {
                 let t = arr.shift();
                 t || clearInterval(interval);
-                document.querySelector("#个性签名").innerText += t || "";
+                qs("#个性签名").innerText += t || "";
             }, 3000 / arr.length);
     }
 });

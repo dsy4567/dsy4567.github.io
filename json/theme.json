@@ -1,44 +1,57 @@
 {
     "深色": {
         "--theme-color": "#222",
-        "--theme-color-brighter": "#444",
-        "--theme-color-darker": "#000",
-        "--theme-color-transparent": "#2228",
+        "--theme-color-transparent": "#fff2",
         "--text-color": "#ddd"
     },
     "浅色": {
         "--theme-color": "#ddd",
-        "--theme-color-brighter": "#fff",
-        "--theme-color-darker": "#bbb",
-        "--theme-color-transparent": "#ddd8",
+        "--theme-color-transparent": "#fff8",
         "--text-color": "#222"
+    },
+    "粉色": {
+        "--theme-color": "#ffc0cb",
+        "--theme-color-transparent": "#fff2",
+        "--text-color": "#fff"
+    },
+    "橙黄色": {
+        "--theme-color": "#ffa500",
+        "--theme-color-transparent": "#fff2",
+        "--text-color": "#fff"
     },
     "天依蓝": {
         "--theme-color": "#6cf",
-        "--theme-color-brighter": "#75d1ff",
-        "--theme-color-darker": "#5bb7e5",
-        "--theme-color-transparent": "#6cf8",
+        "--theme-color-transparent": "#fff2",
+        "--text-color": "#fff"
+    },
+    "支付宝蓝": {
+        "--theme-color": "#1678ff",
+        "--theme-color-transparent": "#fff2",
+        "--text-color": "#fff"
+    },
+    "中国收钱学会蓝": {
+        "--theme-color": "#069",
+        "--theme-color-transparent": "#fff2",
         "--text-color": "#fff"
     },
     "初音绿": {
         "--theme-color": "#39c5bb",
-        "--theme-color-brighter": "#4ccac1",
-        "--theme-color-darker": "#33b1a8",
-        "--theme-color-transparent": "#39c5bb80",
+        "--theme-color-transparent": "#fff2",
         "--text-color": "#fff"
     },
     "恶臭绿": {
         "--theme-color": "#114514",
-        "--theme-color-brighter": "#28572b",
-        "--theme-color-darker": "#0f3e12",
-        "--theme-color-transparent": "#11451480",
+        "--theme-color-transparent": "#fff2",
+        "--text-color": "#fff"
+    },
+    "微信绿": {
+        "--theme-color": "#1aad19",
+        "--theme-color-transparent": "#fff2",
         "--text-color": "#fff"
     },
     "中国红": {
         "--theme-color": "#e60000",
-        "--theme-color-brighter": "#ed4c4c",
-        "--theme-color-darker": "#a10000",
-        "--theme-color-transparent": "#e6000080",
+        "--theme-color-transparent": "#fff4",
         "--text-color": "#fff"
     }
 }
