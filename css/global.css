@@ -76,11 +76,10 @@
 
 @media (prefers-color-scheme: light) {
     html {
-        --number-of-themes: 0;
+
+        --number-of-themes: 6;
         --theme-color: #ddd;
-        --theme-color-brighter: #fff;
-        /* --theme-color-darker: #bbb;
-        --theme-color-transparent: #ddd8; */
+        --theme-color-transparent: #fff8;
         --text-color: #222;
     }
 }
@@ -88,9 +87,7 @@
     html {
         --number-of-themes: 6;
         --theme-color: #222;
-        /* --theme-color-brighter: #444;
-        --theme-color-darker: #000; */
-        --theme-color-transparent: #2228;
+        --theme-color-transparent: #fff2;
         --text-color: #ddd;
     }
 }
