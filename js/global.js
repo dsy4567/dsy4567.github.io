@@ -21,6 +21,73 @@ let 已加载的脚本 = {},
     你,
     太,
     美;
+let 网抑云阴乐 = {
+    设置: { 音量: 0.2 },
+    歌单: { 歌名: [], id: [], json: {} },
+    正在播放: {
+        索引: 0,
+        Audio: null,
+    },
+    播放暂停() {
+        网抑云阴乐.正在播放.Audio.paused
+            ? 网抑云阴乐.正在播放.Audio.play()
+            : 网抑云阴乐.正在播放.Audio.pause();
+    },
+    上一首() {
+        网抑云阴乐.正在播放.Audio.pause();
+        网抑云阴乐.正在播放.Audio.currentTime = 0;
+        if (--网抑云阴乐.正在播放.索引 < 0)
+            网抑云阴乐.正在播放.索引 = 网抑云阴乐.歌单.id.length - 1;
+        网抑云阴乐.正在播放.Audio.src = `http://music.163.com/song/media/outer/url?id=${
+            网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
+        }.mp3`;
+        网抑云阴乐.正在播放.Audio.play();
+        qs("#网抑云阴乐").title =
+            "网抑云阴乐 - 正在播放: " +
+            网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引];
+    },
+    下一首() {
+        网抑云阴乐.正在播放.Audio.pause();
+        网抑云阴乐.正在播放.Audio.currentTime = 0;
+        if (++网抑云阴乐.正在播放.索引 > 网抑云阴乐.歌单.id.length - 1)
+            网抑云阴乐.正在播放.索引 = 0;
+        网抑云阴乐.正在播放.Audio.src = `http://music.163.com/song/media/outer/url?id=${
+            网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
+        }.mp3`;
+        网抑云阴乐.正在播放.Audio.play();
+        qs("#网抑云阴乐").title =
+            "网抑云阴乐 - 正在播放: " +
+            网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引];
+    },
+    初始化() {
+        网抑云阴乐.歌单.歌名 = Object.keys(网抑云阴乐.歌单.json);
+        网抑云阴乐.歌单.id = Object.values(网抑云阴乐.歌单.json);
+        网抑云阴乐.正在播放.Audio = new Audio(
+            `http://music.163.com/song/media/outer/url?id=${
+                网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
+            }.mp3`
+        );
+        网抑云阴乐.正在播放.Audio.autoplay = true;
+        网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量;
+        网抑云阴乐.正在播放.Audio.preload = "auto";
+        网抑云阴乐.正在播放.Audio.onplay = () => {
+            alert(
+                "正在播放: " + 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引]
+            );
+        };
+        网抑云阴乐.正在播放.Audio.onerror = e => {
+            alert(
+                "无法播放: " +
+                    网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引] +
+                    ": " +
+                    e
+            );
+        };
+        qs("#网抑云阴乐").title =
+            "网抑云阴乐 - 正在播放: " +
+            网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引];
+    },
+};
 
 /**
  * @param {string} arg
@@ -88,6 +155,93 @@ alert = m => {
         }, 500);
     }, 3000);
 };
+fetch("/json/cloudmusic.json")
+    .then(res => res.json())
+    .then(j => {
+        网抑云阴乐.歌单.json = j;
+        function svg(html, onclick, title) {
+            let s = document.createElement("button");
+            s.innerHTML = html;
+            s.onclick = onclick;
+            s.type = "button";
+            s.title = title;
+            qs("#阴乐控件").append(s);
+        }
+        function 初始化() {
+            svg(
+                `<svg
+            class="特小尺寸 stroke"
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M34 36L22 24L34 12"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+            <path
+                d="M14 12V36"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+        </svg>`,
+                网抑云阴乐.上一首,
+                "上一首"
+            );
+            svg(
+                `<svg
+            class="特小尺寸 stroke"
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M16 12V36"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+            <path
+                d="M32 12V36"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+        </svg>`,
+                网抑云阴乐.播放暂停,
+                "播放/暂停"
+            );
+            svg(
+                `<svg
+            class="特小尺寸 stroke"
+            viewBox="0 0 48 48"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+        >
+            <path
+                d="M14 12L26 24L14 36"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+            <path
+                d="M34 12V36"
+                stroke-width="4"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            />
+        </svg>`,
+                网抑云阴乐.下一首,
+                "下一首"
+            );
+            网抑云阴乐.初始化();
+        }
+        if (DOMContentLoaded) 初始化();
+        else addEventListener("DOMContentLoaded", 初始化);
+    });
 fetch("/json/theme.json")
     .then(res => res.json())
     .then(theme => {

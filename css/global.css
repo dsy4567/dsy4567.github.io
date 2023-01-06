@@ -355,7 +355,7 @@ div.侧边按钮 > #切换主题:focus-within {
 div.侧边按钮 > #网抑云阴乐:hover,
 div.侧边按钮 > #网抑云阴乐:focus,
 div.侧边按钮 > #网抑云阴乐:focus-within {
-    transform: translateX(calc(-32px * 5));
+    transform: translateX(calc(-32px * 3));
 }
 div.侧边按钮 .拥有更多选项 > .更多选项 {
     background: #fff;
@@ -370,7 +370,7 @@ div.侧边按钮 #切换主题 > #所有主题 {
     width: calc(32px * var(--number-of-themes));
 }
 div.侧边按钮 #网抑云阴乐 > #阴乐控件 {
-    width: calc(32px * 5);
+    width: calc(32px * 3);
 }
 div.侧边按钮 .拥有更多选项:hover > .更多选项,
 div.侧边按钮 .拥有更多选项:focus > .更多选项,
