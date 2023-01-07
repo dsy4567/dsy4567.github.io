@@ -5,9 +5,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             http-equiv="Content-Security-Policy"
-            content="upgrade-insecure-requests"
+            content="
+                upgrade-insecure-requests;
+                script-src 'self'
+            "
         />
         <title>首页 | dsy4567 的小站</title>
+
+        <link rel="dns-prefetch" href="https://bing.img.run" />
+        <link rel="dns-prefetch" href="https://cn.bing.com" />
+        <link rel="dns-prefetch" href="https://music.163.com/" />
+        <link rel="dns-prefetch" href="https://api.github.com" />
+
+        <link rel="preload" href="https://bing.img.run/rand.php" as="image" />
+        <link rel="preload" href="/js/index.js" as="script" />
+
         <script src="/js/global.js"></script>
         <link rel="stylesheet" href="/css/global.css" />
         <link rel="stylesheet" href="/css/index.css" />

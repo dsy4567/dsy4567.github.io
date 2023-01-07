@@ -28,7 +28,7 @@
     },
     "prettier.arrowParens": "avoid",
     "prettier.bracketSpacing": true,
-    "prettier.endOfLine": "auto",
+    "prettier.endOfLine": "lf",
     "prettier.printWidth": 80,
     "prettier.proseWrap": "always",
     "prettier.quoteProps": "as-needed",
@@ -41,5 +41,6 @@
         "out": true
     },
     "typescript.tsc.autoDetect": "off",
-    "typescript.tsdk": "node_modules/typescript/lib"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "files.eol": "\n"
 }
