@@ -70,6 +70,7 @@ let 网抑云阴乐 = {
         网抑云阴乐.正在播放.Audio.autoplay = true;
         网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量;
         网抑云阴乐.正在播放.Audio.preload = "auto";
+        网抑云阴乐.正在播放.Audio.onended = 网抑云阴乐.下一首;
         网抑云阴乐.正在播放.Audio.onplay = () => {
             alert(
                 "正在播放: " + 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引]
