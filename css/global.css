@@ -340,7 +340,7 @@ div.侧边按钮 > * {
     transform: translateX(-4px);
 }
 div.侧边按钮 > *:hover,
-div.侧边按钮 > *:focus,
+div.侧边按钮 > *:focus-visible,
 div.侧边按钮 > *:focus-within {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -355,7 +355,7 @@ div.侧边按钮 > #切换主题:focus-within {
 div.侧边按钮 > #网抑云阴乐:hover,
 div.侧边按钮 > #网抑云阴乐:focus,
 div.侧边按钮 > #网抑云阴乐:focus-within {
-    transform: translateX(calc(-32px * 3));
+    transform: translateX(calc(-32px * 4));
 }
 div.侧边按钮 .拥有更多选项 > .更多选项 {
     background: #fff;
@@ -370,7 +370,7 @@ div.侧边按钮 #切换主题 > #所有主题 {
     width: calc(32px * var(--number-of-themes));
 }
 div.侧边按钮 #网抑云阴乐 > #阴乐控件 {
-    width: calc(32px * 3);
+    width: calc(32px * 4);
 }
 div.侧边按钮 .拥有更多选项:hover > .更多选项,
 div.侧边按钮 .拥有更多选项:focus > .更多选项,
@@ -401,13 +401,16 @@ div.通知 {
     animation-name: 显示;
     /* animation-name: 隐藏; */
     background-color: var(--theme-color);
+    border: 1px solid transparent;
     border-radius: 8px;
     box-shadow: rgb(0 0 0 / 24%) 0px 12px 15px 0px,
         rgb(0 0 0 / 19%) 0px 17px 50px 0px;
     filter: opacity(0);
+    margin: 16px;
     padding: 8px;
     pointer-events: none;
     position: fixed;
     bottom: 32px;
+    word-break: break-all;
     z-index: 1000;
 }
