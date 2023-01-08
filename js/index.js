@@ -1,5 +1,20 @@
 "use strict";
 
+let 已运行 = false;
+/**
+ * @param {string} arg
+ * @returns {HTMLElement}
+ */
+function qs(arg) {
+    return document.querySelector(arg);
+}
+/**
+ * @param {string} arg
+ * @returns {HTMLElement[]}
+ */
+function qsa(arg) {
+    return document.querySelectorAll(arg);
+}
 async function 获取名言() {
     return new Promise((resolve, reject) => {
         fetch("/json/saying.json")
@@ -27,10 +42,8 @@ async function 获取个人信息() {
             });
     });
 }
-完成加载.push(async 路径 => {
-    if (路径 == "...准备加载...") {
-        已加载的脚本["index.js"] = 1;
-    } else if (路径 == "/") {
+export async function main(路径) {
+    if ((路径 == "/" || 路径 == "/blog") && !已运行) {
         qs("#随机金句").innerHTML = "&emsp;&emsp;" + (await 获取名言());
 
         let 个人信息 = await 获取个人信息();
@@ -48,5 +61,6 @@ async function 获取个人信息() {
                 t || clearInterval(interval);
                 qs("#个性签名").innerText += t || "";
             }, 3000 / arr.length);
+        已运行 = true;
     }
-});
+}

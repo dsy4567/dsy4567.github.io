@@ -133,9 +133,6 @@ a:active {
 nav h1 {
     color: var(--theme-color);
 }
-* {
-    transition: 0.5s;
-}
 *:focus-visible {
     outline: 2px solid var(--theme-color-transparent);
 }
@@ -146,9 +143,14 @@ svg.stroke {
     stroke: var(--theme-color);
 }
 #main {
-    display: flex;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    /* animation-name: 显示; */
+    display: none;
     align-items: flex-start;
     justify-content: space-around;
+    filter: opacity(0);
     width: 100%;
     max-width: 1280px;
 }
@@ -156,6 +158,10 @@ svg.stroke {
     width: 25%;
 }
 #main .右 {
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    /* animation-name: 显示; */
     width: 75%;
 }
 #copyright {
@@ -246,18 +252,8 @@ section h2 svg {
 }
 
 #加载界面 {
-    animation-duration: 1s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    /* animation-name: 隐藏; */
-    background-color: var(--theme-color);
-    pointer-events: none;
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100vh;
-    z-index: 999;
+    height: 70vh;
 }
 #加载界面 * {
     position: absolute;
@@ -303,12 +299,6 @@ section h2 svg {
 }
 #导航栏 a {
     color: #fff;
-}
-#main {
-    animation-duration: 2s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    /* animation-name: 显示; */
 }
 
 div.侧边按钮 {
@@ -414,3 +404,43 @@ div.通知 {
     word-break: break-all;
     z-index: 1000;
 }
+
+.背景图片 {
+    background: url(https://bing.img.run/rand.php) no-repeat;
+    background-position: center center;
+    background-size: cover;
+    margin-bottom: 8px;
+    width: 100%;
+    height: 30vh;
+}
+.背景图片 > div {
+    -webkit-backdrop-filter: brightness(0.8);
+    backdrop-filter: brightness(0.8);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    stroke: white;
+    width: 100%;
+    height: 30vh;
+}
+.背景图片:hover > div.文字 {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    filter: opacity(0);
+}
+#个性签名 {
+    color: #fff;
+    font-size: 16px;
+    padding: 36px;
+    word-break: break-all;
+}
+#个性签名::after {
+    animation: 闪烁;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    content: "|";
+    font-style: initial;
+}
+
