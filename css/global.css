@@ -76,7 +76,6 @@
 
 @media (prefers-color-scheme: light) {
     html {
-
         --number-of-themes: 6;
         --theme-color: #ddd;
         --theme-color-transparent: #fff8;
@@ -143,7 +142,7 @@ svg.stroke {
     stroke: var(--theme-color);
 }
 #main {
-    animation-duration: 2s;
+    animation-duration: 1s;
     animation-fill-mode: forwards;
     animation-iteration-count: 1;
     /* animation-name: 显示; */
@@ -158,10 +157,6 @@ svg.stroke {
     width: 25%;
 }
 #main .右 {
-    animation-duration: 2s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    /* animation-name: 显示; */
     width: 75%;
 }
 #copyright {
@@ -443,4 +438,3 @@ div.通知 {
     content: "|";
     font-style: initial;
 }
-

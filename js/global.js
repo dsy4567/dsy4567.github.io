@@ -2,18 +2,18 @@
 
 window.onerror = () => {
     try {
-        qs("div#加载界面").remove();
-        qs("div#main").style.animationName = "显示";
+        qs("div#加载界面").style.display = "none";
+        qs("div#main").style.display = "flex";
     } catch (e) {}
 };
 
 const /** @type {Record<string, string[]>} */ 加载清单 = {
-        "/": "/js/index.js",
-        "/blog": "/js/index.js",
+        "/": ["index"],
+        "/blog": ["index", "blog"],
     };
 let 模块 = {
-        "/": null,
-        "/blog": null,
+        index: null,
+        blog: null,
     },
     路径 = location.pathname
         .replace(/(index|\.html)/g, "")
@@ -31,6 +31,7 @@ let 模块 = {
     /** @type {HTMLAudioElement} */ 美;
 let 网抑云阴乐 = {
     已初始化: false,
+    立即播放: false,
     设置: { 音量: 0.5 },
     歌单: {
         /** @type {string[]} */ 歌名: [],
@@ -66,7 +67,7 @@ let 网抑云阴乐 = {
             网抑云阴乐.正在播放.Audio.src = `http://music.163.com/song/media/outer/url?id=${
                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
             }.mp3`;
-            网抑云阴乐.正在播放.Audio.play();
+            网抑云阴乐.正在播放.Audio.autoplay = true;
             qs("#网抑云阴乐").title =
                 "网抑云阴乐 - 正在播放: " +
                 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引];
@@ -100,7 +101,7 @@ let 网抑云阴乐 = {
             网抑云阴乐.正在播放.Audio.src = `http://music.163.com/song/media/outer/url?id=${
                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
             }.mp3`;
-            网抑云阴乐.正在播放.Audio.play();
+            网抑云阴乐.正在播放.Audio.autoplay = true;
             qs("#网抑云阴乐").title =
                 "网抑云阴乐 - 正在播放: " +
                 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引];
@@ -145,12 +146,12 @@ let 网抑云阴乐 = {
                     网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
                 }.mp3`
             );
+            网抑云阴乐.正在播放.Audio.preload = "none";
             网抑云阴乐.正在播放.Audio.autoplay =
                 (localStorage.getItem("自动播放") &&
                     JSON.parse(localStorage.getItem("自动播放"))) ??
                 true;
             网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量;
-            网抑云阴乐.正在播放.Audio.preload = "auto";
             网抑云阴乐.正在播放.Audio.onended = 网抑云阴乐.下一首;
             if (navigator.mediaSession) {
                 navigator.mediaSession.setActionHandler("play", function () {
@@ -190,6 +191,16 @@ let 网抑云阴乐 = {
                     "正在播放: " +
                         网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引]
                 );
+                // 鬼知道这代码有啥用
+                try {
+                    if (
+                        网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].includes(
+                            "普通disco"
+                        )
+                    )
+                        qs("#羊了个羊").style.display = "none";
+                    else qs("#羊了个羊").style.display = "";
+                } catch (e) {}
             };
             网抑云阴乐.正在播放.Audio.onerror = e => {
                 alert(
@@ -222,68 +233,40 @@ function qs(arg) {
 function qsa(arg) {
     return document.querySelectorAll(arg);
 }
-// function 添加脚本(url, 回调 = () => {}) {
-//     if (qs(`script[src*="${url}"]`)) return 全部完成加载();
-//     let s = document.createElement("script");
-//     s.onload = (...p) => {
-//         回调(...p);
-//         全部完成加载();
-//     };
-//     s.src = "/js/" + url + ".js";
-//     document.head.append(s);
-// }
-// function 开始加载() {
-//     路径 = location.pathname
-//         .replace(/(index|\.html)/g, "")
-//         .replace(/\/\//g, "");
-//     let /** @type {String[]} */ 清单 = 加载清单[路径];
-//     if (!清单) return;
-//     应加载的脚本数量 = 清单.length;
-//     清单.forEach(s => 添加脚本(s));
-// }
-// async function 全部完成加载() {
-//     已加载的脚本 = {};
-//     for (let i = 0; i < 完成加载.length; i++) {
-//         await 完成加载[i]("...准备加载...");
-//     }
-//     if (Object.keys(已加载的脚本).length == 应加载的脚本数量) {
-//         for (let i = 0; i < 完成加载.length; i++) {
-//             await 完成加载[i](路径);
-//         }
-//         qsa("a").forEach(el => {
-//             if (el.host != location.host && !el.className.includes("外链")) {
-//                 el.className += " 外链";
-//                 el.target = "_blank";
-//             }
-//         });
-//         qs("div#加载界面").style.animationName = "隐藏";
-//         qs("div#main").style.animationName = "显示";
-//     }
-// }
+async function 加载脚本() {
+    路径 = location.pathname
+        .replace(/(index|\.html)/g, "")
+        .replace(/\/\//g, "");
+    for (let i = 0; i < 加载清单[路径].length; i++) {
+        let s = 加载清单[路径][i];
+        (模块[s] || (模块[s] = await import(`/js/${s}.js`))).main(路径);
+    }
+}
 function 动态加载(el) {
     if (正在动态加载) return open(el.href, "_self");
     正在动态加载 = true;
+    qs("#main").style.animationName = "隐藏";
+    qs("div#加载界面").style.display = "";
     fetch(el.href)
         .then(res => res.text())
-        .then(html => {
+        .then(async html => {
             let m = html.match(/<!-- START MAIN -->.+<!-- END MAIN -->/s),
                 mt = html.match(/<title>.+<\/title>/s);
             if (!m || !mt) throw new Error("动态加载失败: 匹配结果为空");
             history.pushState(null, "", el.href);
-            document.title = mt[0]
-                .replace("<title>", "")
-                .replace("</title>", "");
-            qs("#main .右").style.animationName = "隐藏";
-            setTimeout(() => {
+            document.title = mt[0].replace(/<\/?title>/g, "");
+            try {
                 qs("#main .右").innerHTML = m[0];
-                qs("#main .右").style.animationName = "显示";
+                await 加载脚本();
+                qs("div#加载界面").style.display = "none";
+                qs("#main").style.animationName = "显示";
                 正在动态加载 = false;
-            }, 500);
+            } catch (e) {
+                console.error(e);
+                open(el.href, "_self");
+            }
         })
-        .catch(e => {
-            console.error(e);
-            open(el.href, "_self");
-        });
+        .catch(e => {});
 }
 
 alert = m => {
@@ -298,7 +281,7 @@ alert = m => {
         }, 500);
     }, 3000);
 };
-fetch("/json/cloudmusic.json")
+fetch("/json/ncm.json")
     .then(res => res.json())
     .then(j => {
         网抑云阴乐.歌单.json = j;
@@ -506,13 +489,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 let s = document.createElement("style");
                 s.innerHTML = `
                 a, button, div, section {
-                    transition: 0.5s transform, 0.5s box-shadow, 0.5s filter, 0s background-color, 0s color;
+                    transition: 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0s background-color, 0s color;
                 }`;
                 document.head.append(s);
             }, 2000);
         }
     }, 5000);
-    (模块[路径] || (模块[路径] = await import(加载清单[路径]))).main(路径);
+    加载脚本();
 });
 addEventListener("load", () => {
     loaded = true;
@@ -536,7 +519,7 @@ addEventListener("load", () => {
         let s = document.createElement("style");
         s.innerHTML = `
         a, button, div, section {
-           transition: 0.5s transform, 0.5s box-shadow, 0.5s filter, 0s background-color, 0s color;
+           transition: 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0s background-color, 0s color;
         }`;
         document.head.append(s);
         addEventListener("click", 网抑云阴乐.初始化);
