@@ -245,6 +245,7 @@ async function 加载脚本() {
 function 动态加载(el) {
     if (正在动态加载) return open(el.href, "_self");
     正在动态加载 = true;
+    history.pushState(null, "", el.href);
     qs("#main").style.display = "none";
     qs("div#加载界面").style.display = "";
     fetch(el.href)
@@ -254,7 +255,6 @@ function 动态加载(el) {
                 mt = html.match(/<title>.+<\/title>/s);
             if (!m) throw new Error("动态加载失败: 匹配结果为空");
             document.title = mt[0].replace(/<\/?title>/g, "");
-            history.pushState(null, "", el.href);
             try {
                 qs("#main .右").innerHTML = m[0];
                 await 加载脚本();
@@ -276,12 +276,12 @@ function 动态加载(el) {
                 });
             } catch (e) {
                 console.error(e);
-                open(el.href, "_self");
+                location.reload();
             }
         })
         .catch(e => {
                 console.error(e);
-                open(el.href, "_self");
+                location.reload();
         });
 }
 
