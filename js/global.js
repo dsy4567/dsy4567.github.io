@@ -267,7 +267,7 @@ function 动态加载(el) {
                         el.className += " 外链";
                         el.target = "_blank";
                     } else if (!el.className.includes("动态加载")) {
-                        el.className =+ " 动态加载";
+                        el.className += " 动态加载";
                         el.addEventListener("click", ev => {
                             ev.preventDefault();
                             动态加载(el);
@@ -544,7 +544,7 @@ addEventListener("load", () => {
                 el.className += " 外链";
                 el.target = "_blank";
             } else if (!el.className.includes("动态加载")) {
-                el.className =+ " 动态加载";
+                el.className += " 动态加载";
                 el.addEventListener("click", ev => {
                     ev.preventDefault();
                     动态加载(el);
