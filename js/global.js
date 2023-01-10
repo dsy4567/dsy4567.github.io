@@ -553,6 +553,9 @@ addEventListener("load", () => {
         });
     }, 2000);
 });
+addEventListener("popstate", () => {
+    动态加载(location.pathname);
+});
 
 console.log(`
                +----------------------------------------------------------+              —————————————————————————————————
