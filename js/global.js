@@ -245,7 +245,7 @@ async function 加载脚本() {
 function 动态加载(el) {
     if (正在动态加载) return open(el.href, "_self");
     正在动态加载 = true;
-    qs("#main").style.animationName = "隐藏";
+    qs("#main").style.display = "none";
     qs("div#加载界面").style.display = "";
     fetch(el.href)
         .then(res => res.text())
@@ -259,6 +259,7 @@ function 动态加载(el) {
                 qs("#main .右").innerHTML = m[0];
                 await 加载脚本();
                 qs("div#加载界面").style.display = "none";
+                qs("#main").style.display = "flex";
                 qs("#main").style.animationName = "显示";
                 正在动态加载 = false;
                 qsa("a").forEach(el => {
