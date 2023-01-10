@@ -252,9 +252,9 @@ function 动态加载(el) {
         .then(async html => {
             let m = html.match(/<!-- START MAIN -->.+<!-- END MAIN -->/s),
                 mt = html.match(/<title>.+<\/title>/s);
-            if (!m && !mt) throw new Error("动态加载失败: 匹配结果为空");
-            history.pushState(null, "", el.href);
+            if (!m) throw new Error("动态加载失败: 匹配结果为空");
             document.title = mt[0].replace(/<\/?title>/g, "");
+            history.pushState(null, "", el.href);
             try {
                 qs("#main .右").innerHTML = m[0];
                 await 加载脚本();
@@ -266,7 +266,10 @@ function 动态加载(el) {
                 open(el.href, "_self");
             }
         })
-        .catch(e => {});
+        .catch(e => {
+                console.error(e);
+                open(el.href, "_self");
+        });
 }
 
 alert = m => {
