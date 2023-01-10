@@ -552,7 +552,6 @@ addEventListener("load", () => {
                 });
             }
         });
-        document.body.scrollIntoView({ behavior: "smooth" })
     }, 2000);
 });
 addEventListener("popstate", () => {
