@@ -554,7 +554,7 @@ addEventListener("load", () => {
     }, 2000);
 });
 addEventListener("popstate", () => {
-    动态加载(location.pathname);
+    动态加载({href: location.pathname});
 });
 
 console.log(`
