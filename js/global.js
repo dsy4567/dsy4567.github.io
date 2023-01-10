@@ -261,6 +261,7 @@ function 动态加载(el) {
                 qs("div#加载界面").style.display = "none";
                 qs("#main").style.display = "flex";
                 qs("#main").style.animationName = "显示";
+                qs("#main .右").scrollIntoView({ behavior: "smooth" })
                 正在动态加载 = false;
                 qsa("a").forEach(el => {
                     if (el.host != location.host && !el.className.includes("外链")) {
@@ -551,6 +552,7 @@ addEventListener("load", () => {
                 });
             }
         });
+        document.body.scrollIntoView({ behavior: "smooth" })
     }, 2000);
 });
 addEventListener("popstate", () => {
