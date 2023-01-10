@@ -266,11 +266,13 @@ function 动态加载(el) {
                     if (el.host != location.host && !el.className.includes("外链")) {
                         el.className += " 外链";
                         el.target = "_blank";
-                    } else
+                    } else if (!el.className.includes("动态加载")) {
+                        el.className =+ " 动态加载";
                         el.addEventListener("click", ev => {
                             ev.preventDefault();
                             动态加载(el);
                         });
+                    }
                 });
             } catch (e) {
                 console.error(e);
@@ -541,11 +543,13 @@ addEventListener("load", () => {
             if (el.host != location.host && !el.className.includes("外链")) {
                 el.className += " 外链";
                 el.target = "_blank";
-            } else
+            } else if (!el.className.includes("动态加载")) {
+                el.className =+ " 动态加载";
                 el.addEventListener("click", ev => {
                     ev.preventDefault();
                     动态加载(el);
                 });
+            }
         });
     }, 2000);
 });
