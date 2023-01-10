@@ -254,7 +254,7 @@ function 动态加载(el) {
                 mt = html.match(/<title>.+<\/title>/s);
             if (!m) throw new Error("动态加载失败: 匹配结果为空");
             document.title = mt[0].replace(/<\/?title>/g, "");
-            history.pushState(null, "", el.href);
+            !el.popstate && history.pushState(null, "", el.href);
             try {
                 qs("#main .右").innerHTML = m[0];
                 await 加载脚本();
@@ -554,7 +554,10 @@ addEventListener("load", () => {
     }, 2000);
 });
 addEventListener("popstate", () => {
-    动态加载({href: location.pathname});
+    动态加载({
+        href: location.pathname,
+        popstate: true
+    });
 });
 
 console.log(`
