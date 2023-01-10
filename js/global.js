@@ -261,6 +261,16 @@ function 动态加载(el) {
                 qs("div#加载界面").style.display = "none";
                 qs("#main").style.animationName = "显示";
                 正在动态加载 = false;
+                qsa("a").forEach(el => {
+                    if (el.host != location.host && !el.className.includes("外链")) {
+                        el.className += " 外链";
+                        el.target = "_blank";
+                    } else
+                        el.addEventListener("click", ev => {
+                            ev.preventDefault();
+                            动态加载(el);
+                        });
+                });
             } catch (e) {
                 console.error(e);
                 open(el.href, "_self");
