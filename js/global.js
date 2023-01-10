@@ -252,7 +252,7 @@ function 动态加载(el) {
         .then(async html => {
             let m = html.match(/<!-- START MAIN -->.+<!-- END MAIN -->/s),
                 mt = html.match(/<title>.+<\/title>/s);
-            if (!m || !mt) throw new Error("动态加载失败: 匹配结果为空");
+            if (!m && !mt) throw new Error("动态加载失败: 匹配结果为空");
             history.pushState(null, "", el.href);
             document.title = mt[0].replace(/<\/?title>/g, "");
             try {
