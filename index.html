@@ -7,7 +7,7 @@
             http-equiv="Content-Security-Policy"
             content="
                 upgrade-insecure-requests;
-                script-src 'self'
+                script-src 'self' *.googletagmanager.com
             "
         />
         <meta name="description" content="站长很懒, 不想写网站介绍" />
@@ -22,12 +22,6 @@
         <link rel="preconnect" href="https://cn.bing.com" />
         <link rel="preconnect" href="https://api.github.com" />
 
-        <link
-            rel="preload"
-            href="/js/index.js"
-            as="script"
-            crossorigin="anonymous"
-        />
         <link
             rel="preload"
             href="/json/ncm.json"
@@ -47,6 +41,7 @@
             crossorigin="anonymous"
         />
 
+        <script src="/js/global2.js"></script>
         <script src="/js/global.js" type="module"></script>
         <link rel="stylesheet" href="/css/global.css" />
         <link rel="stylesheet" href="/css/index.css" />

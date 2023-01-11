@@ -8,10 +8,10 @@ window.onerror = () => {
 };
 
 const /** @type {Record<string, string[]>} */ 加载清单 = {
-        "/": ["index"],
-        "/blog": ["index", "blog"],
+        "/": [],
+        "/blog": ["blog"],
     };
-let 模块 = {
+let 已加载的模块 = {
         index: null,
         blog: null,
     },
@@ -20,6 +20,7 @@ let 模块 = {
         .replace(/\/\//g, ""),
     DOMContentLoaded = false,
     loaded = false,
+    已强制隐藏加载界面 = false,
     正在动态加载 = false,
     /** @type {boolean} */ 启用雪花特效 = JSON.parse(
         localStorage.getItem("启用雪花特效") ?? true
@@ -81,10 +82,10 @@ let 网抑云阴乐 = {
                         " - "
                     )[0] + " - ",
                     ""
-                ),
+                ), // 歌名
                 artist: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
                     " - "
-                )[0],
+                )[0], // 歌手
             });
         } catch (e) {
             alert("播放失败");
@@ -115,10 +116,10 @@ let 网抑云阴乐 = {
                         " - "
                     )[0] + " - ",
                     ""
-                ),
+                ), // 歌名
                 artist: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
                     " - "
-                )[0],
+                )[0], // 歌手
             });
         } catch (e) {
             alert("播放失败");
@@ -131,6 +132,7 @@ let 网抑云阴乐 = {
             网抑云阴乐.已初始化 = true;
             网抑云阴乐.歌单.歌名 = Object.keys(网抑云阴乐.歌单.json);
             网抑云阴乐.歌单.id = Object.values(网抑云阴乐.歌单.json);
+            // 根据 id 定位上次播放的音乐
             if (localStorage.getItem("上次播放")) {
                 let 上次播放 = localStorage.getItem("上次播放");
                 for (let i = 0; i < 网抑云阴乐.歌单.id.length; i++) {
@@ -154,6 +156,7 @@ let 网抑云阴乐 = {
             网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量;
             网抑云阴乐.正在播放.Audio.onended = 网抑云阴乐.下一首;
             if (navigator.mediaSession) {
+                // 使用浏览器/系统提供的控件控制音乐播放
                 navigator.mediaSession.setActionHandler("play", function () {
                     网抑云阴乐.正在播放.Audio.play();
                     navigator.mediaSession.playbackState = "playing";
@@ -179,11 +182,11 @@ let 网抑云阴乐 = {
                                 网抑云阴乐.正在播放.索引
                             ].split(" - ")[0] + " - ",
                             ""
-                        ),
+                        ), // 歌名
                         artist: 网抑云阴乐.歌单.歌名[
                             网抑云阴乐.正在播放.索引
                         ].split(" - ")[0],
-                    });
+                    }); // 歌手
                 };
             }
             网抑云阴乐.正在播放.Audio.onplay = () => {
@@ -219,29 +222,18 @@ let 网抑云阴乐 = {
     },
 };
 
-/**
- * @param {string} arg
- * @returns {HTMLElement}
- */
-function qs(arg) {
-    return document.querySelector(arg);
-}
-/**
- * @param {string} arg
- * @returns {HTMLElement[]}
- */
-function qsa(arg) {
-    return document.querySelectorAll(arg);
-}
 async function 加载脚本() {
     路径 = location.pathname
         .replace(/(index|\.html)/g, "")
         .replace(/\/\//g, "");
     for (let i = 0; i < 加载清单[路径].length; i++) {
         let s = 加载清单[路径][i];
-        (模块[s] || (模块[s] = await import(`/js/${s}.js`))).main(路径);
+        (
+            已加载的模块[s] || (已加载的模块[s] = await import(`/js/${s}.js`))
+        ).main(路径);
     }
 }
+/** @param {{href: string, popstate:boolean}} el */
 function 动态加载(el) {
     if (正在动态加载) return open(el.href, "_self");
     正在动态加载 = true;
@@ -291,19 +283,36 @@ function 动态加载(el) {
             open(el.href, "_self");
         });
 }
-
-alert = m => {
-    let el = document.createElement("div");
-    el.innerHTML = m;
-    el.className = "通知";
-    document.body.append(el);
+function 完成加载() {
+    qs("div#加载界面").style.display = "none";
+    qs("div#main").style.display = "flex";
+    qs("div#main").style.animationName = "显示";
     setTimeout(() => {
-        el.style.animationName = "隐藏";
-        setTimeout(() => {
-            el.remove();
-        }, 500);
-    }, 3000);
-};
+        let s = document.createElement("style");
+        s.innerHTML = `
+    a, button, div, section {
+       transition: 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0s background-color, 0s color;
+    }`;
+        document.head.append(s);
+        addEventListener("click", 网抑云阴乐.初始化);
+        qsa("a").forEach(el => {
+            if (el.host != location.host && !el.className.includes("外链")) {
+                el.className += " 外链";
+                el.target = "_blank";
+            } else if (
+                el.host == location.host &&
+                !el.className.includes("动态加载")
+            ) {
+                el.className += " 动态加载";
+                el.addEventListener("click", ev => {
+                    ev.preventDefault();
+                    动态加载(el);
+                });
+            }
+        });
+    }, 2000);
+}
+// 网抑云阴乐歌单+控件
 fetch("/json/ncm.json")
     .then(res => res.json())
     .then(j => {
@@ -316,7 +325,7 @@ fetch("/json/ncm.json")
             s.title = title;
             qs("#阴乐控件").append(s);
         }
-        function 初始化() {
+        let f = () => {
             svg(
                 `<svg
                     class="特小尺寸 stroke"
@@ -436,15 +445,10 @@ fetch("/json/ncm.json")
                 },
                 "在网抑云阴乐中查看"
             );
-        }
-        if (DOMContentLoaded) 初始化();
-        else addEventListener("DOMContentLoaded", 初始化);
+        };
+        DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     });
-localStorage.getItem("主题色") &&
-    document.documentElement.style.setProperty(
-        "--theme-color",
-        localStorage.getItem("主题色")
-    );
+// 主题
 fetch("/json/theme.json")
     .then(res => res.json())
     .then(theme => {
@@ -470,13 +474,44 @@ fetch("/json/theme.json")
                 提示用户 !== false && alert("已切换主题: " + t);
             };
             if (t === localStorage.getItem("theme")) btn.onclick(false);
-            DOMContentLoaded
-                ? qs("#所有主题").append(btn)
-                : addEventListener("DOMContentLoaded", () =>
-                      qs("#所有主题").append(btn)
-                  );
+            let f = () => qs("#所有主题").append(btn);
+            DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
         });
     });
+fetch("/json/saying.json")
+    .then(res => res.json())
+    .then(j => {
+        let f = () =>
+            (qs("#随机金句").innerHTML =
+                "&emsp;&emsp;" +
+                (j[Math.ceil(Math.random() * Number(j?.length))] || j[0]));
+        DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+    })
+    .catch(e => console.error(e));
+fetch("https://api.github.com/users/dsy4567")
+    .then(res => res.json())
+    .then(个人信息 => {
+        let f = () => {
+            qs("#关注粉丝码龄").innerHTML = ` 关注: ${
+                个人信息.following
+            } | 粉丝: ${个人信息.followers} | 码龄: ${
+                new Date().getFullYear() -
+                new Date(个人信息.created_at).getFullYear()
+            }年 `;
+
+            qs("#个性签名").innerText = "";
+            let arr = [...String(个人信息.bio)],
+                interval = setInterval(() => {
+                    let t = arr.shift();
+                    t || clearInterval(interval);
+                    qs("#个性签名").innerText += t || "";
+                }, 3000 / arr.length);
+        };
+        DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+    })
+    .catch(e => console.error(e));
+
+// 🏀🏀🏀
 addEventListener("keydown", ev => {
     let k = ev.key.toLowerCase();
     if (k.includes("control"))
@@ -503,25 +538,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
         qsa(".雪花")?.forEach(el => el.remove());
     });
-    setTimeout(() => {
-        if (!loaded) {
-            qs("div#加载界面").style.display = "none";
-            qs("div#main").style.display = "flex";
-            qs("div#main").style.animationName = "显示";
-            setTimeout(() => {
-                let s = document.createElement("style");
-                s.innerHTML = `
-                a, button, div, section {
-                    transition: 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0s background-color, 0s color;
-                }`;
-                document.head.append(s);
-            }, 2000);
-        }
-    }, 5000);
+    // 超时强制隐藏加载界面
+    setTimeout(
+        () => !loaded && (完成加载() || (已强制隐藏加载界面 = true)),
+        5000
+    );
     加载脚本();
 });
 addEventListener("load", () => {
     loaded = true;
+    // 省流
     if (navigator?.connection?.saveData ?? true) 网抑云阴乐.初始化();
     // 雪花特效
     setInterval(() => {
@@ -535,39 +561,32 @@ addEventListener("load", () => {
             s.remove();
         }, 10000);
     }, 500);
-    qs("div#加载界面").style.display = "none";
-    qs("div#main").style.display = "flex";
-    qs("div#main").style.animationName = "显示";
-    setTimeout(() => {
-        let s = document.createElement("style");
-        s.innerHTML = `
-        a, button, div, section {
-           transition: 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0s background-color, 0s color;
-        }`;
-        document.head.append(s);
-        addEventListener("click", 网抑云阴乐.初始化);
-        qsa("a").forEach(el => {
-            if (el.host != location.host && !el.className.includes("外链")) {
-                el.className += " 外链";
-                el.target = "_blank";
-            } else if (
-                el.host == location.host &&
-                !el.className.includes("动态加载")
-            ) {
-                el.className += " 动态加载";
-                el.addEventListener("click", ev => {
-                    ev.preventDefault();
-                    动态加载(el);
-                });
-            }
-        });
-    }, 2000);
+    !已强制隐藏加载界面 && 完成加载();
 });
 addEventListener("popstate", () => {
     动态加载({
         href: location.pathname,
         popstate: true,
     });
+});
+
+_global["global.js"] = () => ({
+    已加载的模块,
+    DOMContentLoaded,
+    loaded,
+    路径,
+    已强制隐藏加载界面,
+    正在动态加载,
+    启用雪花特效,
+    ctrl,
+    鸡,
+    你,
+    太,
+    美,
+    网抑云阴乐,
+    加载脚本,
+    动态加载,
+    完成加载,
 });
 
 console.log(`
