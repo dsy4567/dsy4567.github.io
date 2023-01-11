@@ -261,13 +261,19 @@ function 动态加载(el) {
                 qs("div#加载界面").style.display = "none";
                 qs("#main").style.display = "flex";
                 qs("#main").style.animationName = "显示";
-                document.body.scrollIntoView({ behavior: "smooth" })
+                document.body.scrollIntoView({ behavior: "smooth" });
                 正在动态加载 = false;
                 qsa("a").forEach(el => {
-                    if (el.host != location.host && !el.className.includes("外链")) {
+                    if (
+                        el.host != location.host &&
+                        !el.className.includes("外链")
+                    ) {
                         el.className += " 外链";
                         el.target = "_blank";
-                    } else if (el.host == location.host && !el.className.includes("动态加载")) {
+                    } else if (
+                        el.host == location.host &&
+                        !el.className.includes("动态加载")
+                    ) {
                         el.className += " 动态加载";
                         el.addEventListener("click", ev => {
                             ev.preventDefault();
@@ -281,8 +287,8 @@ function 动态加载(el) {
             }
         })
         .catch(e => {
-                console.error(e);
-                open(el.href, "_self");
+            console.error(e);
+            open(el.href, "_self");
         });
 }
 
@@ -544,7 +550,10 @@ addEventListener("load", () => {
             if (el.host != location.host && !el.className.includes("外链")) {
                 el.className += " 外链";
                 el.target = "_blank";
-            } else if (el.host == location.host && !el.className.includes("动态加载")) {
+            } else if (
+                el.host == location.host &&
+                !el.className.includes("动态加载")
+            ) {
                 el.className += " 动态加载";
                 el.addEventListener("click", ev => {
                     ev.preventDefault();
@@ -557,7 +566,7 @@ addEventListener("load", () => {
 addEventListener("popstate", () => {
     动态加载({
         href: location.pathname,
-        popstate: true
+        popstate: true,
     });
 });
 
