@@ -29,7 +29,7 @@ let 路径 = (location.pathname + location.search)
 let 网抑云阴乐 = {
     已初始化: false,
     立即播放: false,
-    设置: { 音量: 0x66ccff / 100000 },
+    设置: { 音量: 0x66ccff / 10000000 },
     歌单: {
         /** @type {string[]} */ 歌名: [],
         /** @type {number[]} */ id: [],
