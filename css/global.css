@@ -129,6 +129,12 @@ a:focus-visible {
 a:active {
     filter: brightness(0.5);
 }
+a.无滤镜,
+a.无滤镜:hover,
+a.无滤镜:focus-visible,
+a.无滤镜:active {
+    filter: none;
+}
 nav h1 {
     color: var(--theme-color);
 }
@@ -185,6 +191,28 @@ svg.stroke {
     top: -10vh;
     z-index: 999;
 }
+blockquote {
+    background-color: var(--theme-color-transparent);
+    border-left: 8px solid var(--theme-color);
+    border-radius: 8px;
+    margin: 0;
+    padding: 1px;
+}
+code {
+    background-color: var(--theme-color-transparent);
+    border-radius: 8px;
+    padding: 4px;
+}
+pre {
+    background-color: var(--theme-color-transparent);
+    border-radius: 8px;
+    padding: 8px;
+}
+pre code {
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+}
 section {
     background-color: var(--theme-color-transparent);
     border: 1px solid transparent;
@@ -204,6 +232,10 @@ section h2 {
 }
 section h2 svg {
     margin-right: 8px;
+}
+section img {
+    width: 100%;
+    height: 100%;
 }
 @media only screen and (max-width: 960px) {
     #main {
@@ -437,4 +469,19 @@ div.通知 {
     animation-timing-function: linear;
     content: "|";
     font-style: initial;
+}
+section#我 {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 64px;
+}
+section#我 img {
+    margin-bottom: -64px;
+    position: relative;
+    top: -64px;
+}
+#main > div.右 > section:nth-child(1) {
+    margin-top: 64px;
 }

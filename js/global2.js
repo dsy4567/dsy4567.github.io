@@ -1,6 +1,8 @@
+"use strict";
+
 /**
  * document.querySelector
- * @param {string} arg
+ * @param {keyof HTMLElementTagNameMap} arg
  * @returns {HTMLElement}
  */
 function qs(arg) {
@@ -8,18 +10,26 @@ function qs(arg) {
 }
 /**
  * document.querySelectorAll
- * @param {string} arg
+ * @param {keyof HTMLElementTagNameMap} arg
  * @returns {HTMLElement[]}
  */
 function qsa(arg) {
     return document.querySelectorAll(arg);
 }
 /**
+ * document.createElement
+ * @param {keyof HTMLElementTagNameMap} arg
+ * @returns {HTMLElement}
+ */
+function ce(arg) {
+    return document.createElement(arg);
+}
+/**
  * 更美观的 alert
  * @param {{href: string, popstate:boolean}} el
  */
 alert = m => {
-    let el = document.createElement("div");
+    let el = ce("div");
     el.innerHTML = m;
     el.className = "通知";
     document.body.append(el);
@@ -42,7 +52,7 @@ localStorage.getItem("主题色") &&
     );
 
 // 谷歌统计代码
-let s = document.createElement("script");
+let s = ce("script");
 s.async = true;
 s.src = "https://www.googletagmanager.com/gtag/js?id=G-060YCRMSSH";
 document.head.append(s);

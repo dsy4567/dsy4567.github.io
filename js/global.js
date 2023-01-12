@@ -11,11 +11,7 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
         "/": [],
         "/blog": ["blog"],
     };
-let 已加载的模块 = {
-        index: null,
-        blog: null,
-    },
-    路径 = location.pathname
+let 路径 = (location.pathname + location.search)
         .replace(/(index|\.html)/g, "")
         .replace(/\/\//g, ""),
     DOMContentLoaded = false,
@@ -222,16 +218,18 @@ let 网抑云阴乐 = {
     },
 };
 
-async function 加载脚本() {
+async function 加载模块() {
     路径 = location.pathname
+        .replace(/(index|\.html)/g, "")
+        .replace(/\/\//g, "");
+    let 路径2 = (location.pathname + location.search)
         .replace(/(index|\.html)/g, "")
         .replace(/\/\//g, "");
     for (let i = 0; i < 加载清单[路径].length; i++) {
         let s = 加载清单[路径][i];
-        (
-            已加载的模块[s] || (已加载的模块[s] = await import(`/js/${s}.js`))
-        ).main(路径);
+        (await import(`/js/${s}.js`)).main(路径2);
     }
+    路径 = 路径2;
 }
 /** @param {{href: string, popstate:boolean}} el */
 function 动态加载(el) {
@@ -249,30 +247,14 @@ function 动态加载(el) {
             !el.popstate && history.pushState(null, "", el.href);
             try {
                 qs("#main .右").innerHTML = m[0];
-                await 加载脚本();
+                await 加载模块();
                 qs("div#加载界面").style.display = "none";
                 qs("#main").style.display = "flex";
                 qs("#main").style.animationName = "显示";
-                document.body.scrollIntoView({ behavior: "smooth" });
+                !location.search.includes("id=") &&
+                    document.body.scrollIntoView({ behavior: "smooth" });
                 正在动态加载 = false;
-                qsa("a").forEach(el => {
-                    if (
-                        el.host != location.host &&
-                        !el.className.includes("外链")
-                    ) {
-                        el.className += " 外链";
-                        el.target = "_blank";
-                    } else if (
-                        el.host == location.host &&
-                        !el.className.includes("动态加载")
-                    ) {
-                        el.className += " 动态加载";
-                        el.addEventListener("click", ev => {
-                            ev.preventDefault();
-                            动态加载(el);
-                        });
-                    }
-                });
+                添加链接点击事件();
             } catch (e) {
                 console.error(e);
                 open(el.href, "_self");
@@ -288,29 +270,34 @@ function 完成加载() {
     qs("div#main").style.display = "flex";
     qs("div#main").style.animationName = "显示";
     setTimeout(() => {
-        let s = document.createElement("style");
+        let s = ce("style");
         s.innerHTML = `
     a, button, div, section {
-       transition: 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0s background-color, 0s color;
+       transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0s background-color, 0s color;
     }`;
         document.head.append(s);
         addEventListener("click", 网抑云阴乐.初始化);
-        qsa("a").forEach(el => {
-            if (el.host != location.host && !el.className.includes("外链")) {
-                el.className += " 外链";
-                el.target = "_blank";
-            } else if (
-                el.host == location.host &&
-                !el.className.includes("动态加载")
-            ) {
-                el.className += " 动态加载";
-                el.addEventListener("click", ev => {
-                    ev.preventDefault();
-                    动态加载(el);
-                });
-            }
-        });
+        添加链接点击事件();
     }, 2000);
+}
+function 添加链接点击事件() {
+    qsa("a").forEach(el => {
+        if (el.host != location.host && !el.className.includes("外链")) {
+            el.className += " 外链";
+            el.target = "_blank";
+        } else if (
+            el.host == location.host &&
+            !el.className.includes("动态加载")
+        ) {
+            el.className += " 动态加载";
+            el.addEventListener("click", ev => {
+                ev.preventDefault();
+                动态加载(el);
+            });
+        }
+        if (el.querySelector("img") && !el.className.includes("无滤镜"))
+            el.className += " 无滤镜";
+    });
 }
 // 网抑云阴乐歌单+控件
 fetch("/json/ncm.json")
@@ -318,7 +305,7 @@ fetch("/json/ncm.json")
     .then(j => {
         网抑云阴乐.歌单.json = j;
         function svg(html, onclick, title) {
-            let s = document.createElement("button");
+            let s = ce("button");
             s.innerHTML = html;
             s.onclick = onclick;
             s.type = "button";
@@ -457,7 +444,7 @@ fetch("/json/theme.json")
             Object.keys(theme).length
         );
         Object.keys(theme).forEach(t => {
-            let btn = document.createElement("button");
+            let btn = ce("button");
             btn.style.backgroundColor = theme[t]["--theme-color"];
             btn.title = t;
             btn.type = "button";
@@ -543,7 +530,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         () => !loaded && (完成加载() || (已强制隐藏加载界面 = true)),
         5000
     );
-    加载脚本();
+    加载模块();
 });
 addEventListener("load", () => {
     loaded = true;
@@ -552,7 +539,7 @@ addEventListener("load", () => {
     // 雪花特效
     setInterval(() => {
         if (!启用雪花特效) return;
-        let s = document.createElement("div");
+        let s = ce("div");
         s.innerText = "❄️";
         s.className = "雪花";
         s.style.left = Math.ceil(Math.random() * 100) + "%";
@@ -571,8 +558,6 @@ addEventListener("popstate", () => {
 });
 
 _global["global.js"] = () => ({
-    已加载的模块,
-    DOMContentLoaded,
     loaded,
     路径,
     已强制隐藏加载界面,
@@ -584,9 +569,10 @@ _global["global.js"] = () => ({
     太,
     美,
     网抑云阴乐,
-    加载脚本,
+    加载模块,
     动态加载,
     完成加载,
+    添加链接点击事件,
 });
 
 console.log(`
