@@ -11,6 +11,7 @@
 
 # 👖 第三方库/接口
 
+-   [Marked](https://github.com/markedjs/marked)
 -   [ByteDance IconPark](https://github.com/bytedance/IconPark)
 -   https://bing.img.run/rand.php
 -   [网易云音乐](https://music.163.com)
