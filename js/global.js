@@ -458,6 +458,11 @@ fetch("/json/theme.json")
                 });
                 localStorage.setItem("theme", t);
                 localStorage.setItem("主题色", theme[t]["--theme-color"]);
+                localStorage.setItem(
+                    "透明色",
+                    theme[t]["--theme-color-transparent"]
+                );
+                localStorage.setItem("字体色", theme[t]["--text-color"]);
                 提示用户 !== false && alert("已切换主题: " + t);
             };
             if (t === localStorage.getItem("theme")) btn.onclick(false);

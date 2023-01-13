@@ -42,23 +42,23 @@ alert = m => {
 };
 
 // 方便暴露到全局变量
-var _global = {};
-
-addEventListener(
-    "storage",
-    () =>
+var _global = {},
+    尽快设置主题色 = () =>
         localStorage.getItem("主题色") &&
-        document.documentElement.style.setProperty(
+        (document.documentElement.style.setProperty(
             "--theme-color",
             localStorage.getItem("主题色")
-        )
-);
-// 尽快设置主题色
-localStorage.getItem("主题色") &&
-    document.documentElement.style.setProperty(
-        "--theme-color",
-        localStorage.getItem("主题色")
-    );
+        ) ||
+            document.documentElement.style.setProperty(
+                "--theme-color-transparent",
+                localStorage.getItem("透明色")
+            ) ||
+            document.documentElement.style.setProperty(
+                "--text-color",
+                localStorage.getItem("字体色")
+            ));
+addEventListener("storage", 尽快设置主题色);
+尽快设置主题色();
 
 // 谷歌统计代码
 let s = ce("script");
