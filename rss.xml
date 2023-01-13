@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
     <channel>
+        <!-- 手写的rss, 非常烂 -->
         <title>博客 | dsy4567 的小站</title>
         <link>https://dsy4567.github.io/blog.html</link>
         <description>站长很懒, 不想写网站介绍</description>
@@ -18,11 +19,6 @@
             <description></description>
             <pubDate>Fri Jan 13 2023 00:00:00 GMT+0800</pubDate>
             <guid></guid>
-            <image>
-                <url>https://dsy4567.github.io/blog-md//img/cover.</url>
-                <title></title>
-                <link>https://dsy4567.github.io/blog.html?id=</link>
-            </image>
         </item> -->
         <item>
             <title>(水文)2022 €€£ €$₽ J 组第二轮游寄</title>
@@ -30,11 +26,6 @@
             <description>2022-10-28 J 组取消, S 组继续, 游寄结束</description>
             <pubDate>Fri Jan 13 2023 00:00:00 GMT+0800</pubDate>
             <guid>2022-ccf-csp-j-you-ji</guid>
-            <image>
-                <url>https://dsy4567.github.io/blog-md/2022-ccf-csp-j-you-ji/img/cover.png</url>
-                <title></title>
-                <link>https://dsy4567.github.io/blog.html?id=2022-ccf-csp-j-you-ji</link>
-            </image>
         </item>
         <item>
             <title>长文章测试</title>
@@ -49,11 +40,6 @@
             <description>测试文章</description>
             <pubDate>Fri Jan 13 2023 00:00:00 GMT+0800</pubDate>
             <guid>hello-world</guid>
-            <image>
-                <url>https://dsy4567.github.io/blog-md/hello-world/img/cover.jpg</url>
-                <title></title>
-                <link>https://dsy4567.github.io/blog.html?id=hello-world</link>
-            </image>
         </item>
     </channel>
 </rss>
