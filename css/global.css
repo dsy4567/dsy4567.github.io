@@ -302,8 +302,8 @@ section img {
 }
 
 #导航栏 {
-    background-image: linear-gradient(#e6000080, rgba(0, 0, 0, 0));
-    color: var(--theme-color);
+    background-image: linear-gradient(var(--theme-color), rgba(0, 0, 0, 0));
+    color: var(--text-color);
     display: flex;
     align-items: center;
     flex-direction: row;
@@ -325,7 +325,7 @@ section img {
     margin-right: 8px;
 }
 #导航栏 a {
-    color: #e60000;
+    color: var(--text-color);
 }
 
 div.侧边按钮 {
