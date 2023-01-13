@@ -141,10 +141,10 @@ nav h1 {
 *:focus-visible {
     outline: 2px solid var(--theme-color-transparent);
 }
-svg.fill {
+.fill {
     fill: var(--theme-color);
 }
-svg.stroke {
+.stroke {
     stroke: var(--theme-color);
 }
 #main {
@@ -172,6 +172,9 @@ svg.stroke {
     margin-bottom: 0;
     text-align: center;
     width: 100%;
+}
+.rss {
+    transform: translate(-4px, 2px) rotate(45deg);
 }
 .组 {
     display: flex;
