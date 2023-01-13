@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+    <channel>
+        <title>博客 | dsy4567 的小站</title>
+        <link>https://dsy4567.github.io/blog.html</link>
+        <description>站长很懒, 不想写网站介绍</description>
+        <language>zh-cn</language>
+        <pubDate>Fri Jan 13 2023 00:00:00 GMT+0800 (中国标准时间)</pubDate>
+        <lastBuildDate>Fri Jan 13 2023 00:00:00 GMT+0800 (中国标准时间)</lastBuildDate>
+        <docs>https://baike.baidu.com/item/rss/24470</docs>
+        <generator>dsy4567</generator>
+        <managingEditor>dsy4567@outlook.com</managingEditor>
+        <webMaster>dsy4567@outlook.com</webMaster>
+        <!--
+        <item>
+            <title></title>
+            <link>https://dsy4567.github.io/blog.html?id=</link>
+            <description></description>
+            <pubDate>Fri Jan 13 2023 00:00:00 GMT+0800 (中国标准时间)</pubDate>
+            <guid></guid>
+        </item>
+        -->
+        <item>
+            <title>(水文)2022 €€£ €$₽ J 组第二轮游寄</title>
+            <link>https://dsy4567.github.io/blog.html?id=2022-ccf-csp-j-you-ji</link>
+            <description>2022-10-28 J 组取消, S 组继续, 游寄结束</description>
+            <pubDate>Fri Jan 13 2023 00:00:00 GMT+0800 (中国标准时间)</pubDate>
+            <guid>2022-ccf-csp-j-you-ji</guid>
+        </item>
+        <item>
+            <title>长文章测试</title>
+            <link>https://dsy4567.github.io/blog.html?id=very-long</link>
+            <description>我们一般认为，抓住了问题的关键，其他一切则会迎刃而解。 我们一般认为，抓住了问题的关键，其他一切则会迎刃而解。 现在，解决1+1=3的问题，是非常非常重要的。 ...</description>
+            <pubDate>Fri Jan 13 2023 00:00:00 GMT+0800 (中国标准时间)</pubDate>
+            <guid>very-long</guid>
+        </item>
+        <item>
+            <title>你好，世界！</title>
+            <link>https://dsy4567.github.io/blog.html?id=hello-world</link>
+            <description>测试文章</description>
+            <pubDate>Fri Jan 13 2023 00:00:00 GMT+0800 (中国标准时间)</pubDate>
+            <guid>hello-world</guid>
+        </item>
+    </channel>
+</rss>
