@@ -44,6 +44,15 @@ alert = m => {
 // 方便暴露到全局变量
 var _global = {};
 
+addEventListener(
+    "storage",
+    () =>
+        localStorage.getItem("主题色") &&
+        document.documentElement.style.setProperty(
+            "--theme-color",
+            localStorage.getItem("主题色")
+        )
+);
 // 尽快设置主题色
 localStorage.getItem("主题色") &&
     document.documentElement.style.setProperty(
