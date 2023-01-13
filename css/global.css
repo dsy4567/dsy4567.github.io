@@ -166,8 +166,9 @@ svg.stroke {
     width: 75%;
 }
 #copyright {
-    border-top: 1px solid var(--theme-color-transparent);
+    background-color: var(--theme-color-transparent);
     padding-top: 8px;
+    margin-bottom: 0;
     text-align: center;
     width: 100%;
 }
