@@ -1,8 +1,8 @@
 "use strict";
 
 export async function main(/** @type {String} */ 路径) {
-    await import("/js/marked.min.js");
     if (路径.startsWith("/blog?")) {
+        await import("/js/marked.min.js");
         let u = new URL(location.href);
         let id = u.searchParams.get("id");
         fetch(`/blog-md/${id}/index.md`)
@@ -32,18 +32,20 @@ export async function main(/** @type {String} */ 路径) {
                         h2 = ce("h2"),
                         p = ce("p"),
                         img = ce("img"),
+                        span = ce("span"),
                         sect = ce("section");
                     a.href = "/blog.html?id=" + 文章.id;
                     a.innerText = 文章.name;
                     p.innerText = 文章.desc;
+                    span.innerText =
+                        "发表于: " + new Date(文章.date).toLocaleString();
+                    span.className = "date";
                     if (文章.img) {
                         img.src = `/blog-md/${文章.id}/img/` + 文章.img;
                         img.alt = img.title = "封面图";
-                        img.style.width = "100%";
-                        img.style.height = "auto";
                     } else img = "";
                     h2.append(a);
-                    sect.append(h2, img, p);
+                    sect.append(h2, img, p, span);
                     qs("#main .右").append(sect);
                 });
                 qs("#正在加载文章提示").remove();
