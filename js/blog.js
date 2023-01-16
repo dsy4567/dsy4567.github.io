@@ -16,12 +16,25 @@ export async function main(/** @type {String} */ 路径) {
                     qs("#main > .右 > section > h1").innerText +
                     " | " +
                     document.title;
-                _global["global.js"]().添加链接点击事件();
                 qs("#main .右").scrollIntoView({ behavior: "smooth" });
+                qs("#main .右")
+                    .querySelectorAll("h1, h2, h3, h4, h5, h6")
+                    ?.forEach(el => {
+                        if (
+                            el.id &&
+                            !el.className.includes("可固定") &&
+                            !el.querySelector("a")
+                        ) {
+                            el.innerHTML = `<a href="#${el.id}">${el.innerHTML}</a>`;
+                            el.className += " 可固定";
+                        }
+                    });
+                _global["global.js"]().添加链接点击事件();
             })
             .catch(e => {
                 console.error(e);
-                qs("#正在加载文章提示").innerText = "加载失败";
+                qs("#正在加载文章提示").innerText =
+                    "加载失败, 加载时可能遇到了错误, 或此文章不存在";
             });
     } else if (路径 == "/blog") {
         fetch("/json/blog.json")

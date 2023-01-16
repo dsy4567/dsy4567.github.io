@@ -135,6 +135,12 @@ a.无滤镜:focus-visible,
 a.无滤镜:active {
     filter: none;
 }
+a.外链::after {
+    content: "↗";
+}
+a[title]::after {
+    content: "" !important;
+}
 img {
     border-radius: 8px;
 }

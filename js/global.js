@@ -252,6 +252,7 @@ function 动态加载(el) {
                 qs("#main").style.display = "flex";
                 qs("#main").style.animationName = "显示";
                 !location.search.includes("id=") &&
+                    !已强制隐藏加载界面 &&
                     document.body.scrollIntoView({ behavior: "smooth" });
                 正在动态加载 = false;
                 添加链接点击事件();
@@ -282,6 +283,7 @@ function 完成加载() {
 }
 function 添加链接点击事件() {
     qsa("a").forEach(el => {
+        if (el.pathname == location.pathname && el.href.includes("#")) return;
         if (el.host != location.host && !el.className.includes("外链")) {
             el.className += " 外链";
             el.target = "_blank";
@@ -532,7 +534,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
     // 超时强制隐藏加载界面
     setTimeout(
-        () => !loaded && (完成加载() || (已强制隐藏加载界面 = true)),
+        () =>
+            !loaded &&
+            (完成加载() ||
+                (已强制隐藏加载界面 = true) ||
+                alert("错误: 页面未能在规定的时间内完成加载")),
         5000
     );
     加载模块();
@@ -555,7 +561,14 @@ addEventListener("load", () => {
     }, 500);
     !已强制隐藏加载界面 && 完成加载();
 });
-addEventListener("popstate", () => {
+addEventListener("popstate", ev => {
+    if (
+        (location.pathname + location.search)
+            .replace(/(index|\.html)/g, "")
+            .replace(/\/\//g, "") == 路径 &&
+        location.href.includes("#")
+    )
+        return;
     动态加载({
         href: location.pathname,
         popstate: true,
