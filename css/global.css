@@ -7,6 +7,14 @@
         transform: rotate(405deg);
     }
 }
+@keyframes 匀速转 {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 @keyframes 上下晃悠 {
     0% {
         transform: translateY(0);
@@ -345,6 +353,20 @@ section img {
     color: var(--text-color);
 }
 
+#网抑云阴乐封面 {
+    animation-duration: 5s;
+    animation-name: 匀速转;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    border-radius: 50%;
+    display: none;
+}
+#网抑云阴乐封面[src*="http"] {
+    display: block;
+}
+#网抑云阴乐封面[src*="http"] + svg {
+    display: none;
+}
 div.侧边按钮 {
     position: fixed;
     right: 0;

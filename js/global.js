@@ -44,10 +44,8 @@ let 网抑云阴乐 = {
             网抑云阴乐.初始化();
             if (网抑云阴乐.正在播放.Audio.paused) {
                 网抑云阴乐.正在播放.Audio.play();
-                localStorage.setItem("自动播放", true);
             } else {
                 网抑云阴乐.正在播放.Audio.pause();
-                localStorage.setItem("自动播放", false);
             }
         } catch (e) {
             alert("播放失败");
@@ -72,17 +70,24 @@ let 网抑云阴乐 = {
                 "上次播放",
                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
             );
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].replace(
-                    网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
-                        " - "
-                    )[0] + " - ",
-                    ""
-                ), // 歌名
-                artist: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
-                    " - "
-                )[0], // 歌手
-            });
+            // navigator.mediaSession.metadata = new MediaMetadata({
+            //     title: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].replace(
+            //         网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
+            //             " - "
+            //         )[0] + " - ",
+            //         ""
+            //     ), // 歌名
+            //     artist: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
+            //         " - "
+            //     )[0], // 歌手
+            //     artwork: [
+            //         {
+            //             src:
+            //                 "https://ncmimg.workers.dsy4567.cf/" +
+            //                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引],
+            //         },
+            //     ], // 封面
+            // });
         } catch (e) {
             alert("播放失败");
             console.error(e);
@@ -106,17 +111,24 @@ let 网抑云阴乐 = {
                 "上次播放",
                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
             );
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].replace(
-                    网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
-                        " - "
-                    )[0] + " - ",
-                    ""
-                ), // 歌名
-                artist: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
-                    " - "
-                )[0], // 歌手
-            });
+            // navigator.mediaSession.metadata = new MediaMetadata({
+            //     title: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].replace(
+            //         网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
+            //             " - "
+            //         )[0] + " - ",
+            //         ""
+            //     ), // 歌名
+            //     artist: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
+            //         " - "
+            //     )[0], // 歌手
+            //     artwork: [
+            //         {
+            //             src:
+            //                 "https://ncmimg.workers.dsy4567.cf/" +
+            //                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引],
+            //         },
+            //     ], // 封面
+            // });
         } catch (e) {
             alert("播放失败");
             console.error(e);
@@ -181,8 +193,23 @@ let 网抑云阴乐 = {
                         ), // 歌名
                         artist: 网抑云阴乐.歌单.歌名[
                             网抑云阴乐.正在播放.索引
-                        ].split(" - ")[0],
-                    }); // 歌手
+                        ].split(" - ")[0], // 歌手
+                        artwork: [
+                            {
+                                src:
+                                    "https://ncmimg.workers.dsy4567.cf/" +
+                                    网抑云阴乐.歌单.id[
+                                        网抑云阴乐.正在播放.索引
+                                    ],
+                            },
+                        ], // 封面
+                    });
+                    qs("#网抑云阴乐封面").onerror = () => {
+                        qs("#网抑云阴乐封面").src = "";
+                    };
+                    qs("#网抑云阴乐封面").src =
+                        "https://ncmimg.workers.dsy4567.cf/" +
+                        网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引];
                 };
             }
             网抑云阴乐.正在播放.Audio.onplay = () => {
@@ -190,6 +217,8 @@ let 网抑云阴乐 = {
                     "正在播放: " +
                         网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引]
                 );
+                localStorage.setItem("自动播放", true);
+                qs("#网抑云阴乐封面").style.animationName = "匀速转";
                 // 羊了个羊这个大**, \u4ed6\u5976\u5976\u7684玩了八百遍都过不去
                 try {
                     if (
@@ -200,6 +229,10 @@ let 网抑云阴乐 = {
                         qs("#羊了个羊").style.display = "none";
                     else qs("#羊了个羊").style.display = "";
                 } catch (e) {}
+            };
+            网抑云阴乐.正在播放.Audio.onpause = () => {
+                localStorage.setItem("自动播放", false);
+                qs("#网抑云阴乐封面").style.animationName = "unset";
             };
             网抑云阴乐.正在播放.Audio.onerror = e => {
                 alert(
