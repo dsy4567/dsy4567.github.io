@@ -149,6 +149,10 @@ a.外链::after {
 a[title]::after {
     content: "" !important;
 }
+abbr {
+    cursor: help;
+    text-decoration: dashed underline var(--theme-color);
+}
 img {
     border-radius: 8px;
 }

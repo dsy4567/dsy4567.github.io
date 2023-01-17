@@ -1,4 +1,4 @@
-# (水文)2022 €€£ €\$₽ J 组第二轮游寄
+# (水文)2022 <abbr title="CCF CSP(China Computer Federation Certified Software Professional, CCF 软件能力认证)的货币符号形式, 体现了 CCF 贪财的特点">€€£ €\$₽</abbr> J 组第二轮游寄
 
 ## 2022-10-28
 
