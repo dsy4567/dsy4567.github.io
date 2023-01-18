@@ -21,11 +21,18 @@ let 路径 = (location.pathname + location.search)
     /** @type {boolean} */ 启用雪花特效 = JSON.parse(
         localStorage.getItem("启用雪花特效") ?? true
     ),
-    /** @type {HTMLAudioElement} */ ctrl,
-    /** @type {HTMLAudioElement} */ 鸡,
-    /** @type {HTMLAudioElement} */ 你,
-    /** @type {HTMLAudioElement} */ 太,
-    /** @type {HTMLAudioElement} */ 美;
+    /** @type {string} */ ctrl,
+    /** @type {string} */ 鸡1,
+    /** @type {string} */ 鸡2,
+    /** @type {string} */ 鸡3,
+    /** @type {string} */ 鸡4,
+    /** @type {string} */ 鸡5,
+    /** @type {string} */ 鸡,
+    /** @type {string} */ 鸡7,
+    /** @type {string} */ 鸡8,
+    /** @type {string} */ 你,
+    /** @type {string} */ 太,
+    /** @type {string} */ 美;
 let 网抑云阴乐 = {
     已初始化: false,
     立即播放: false,
@@ -540,13 +547,60 @@ fetch("https://api.github.com/users/dsy4567")
 
 // 🏀🏀🏀
 addEventListener("keydown", ev => {
+    if (!ctrl) {
+        ctrl = "jntm";
+        fetch("/audio/ctrl.mp3")
+            .then(res => res.blob())
+            .then(b => (ctrl = URL.createObjectURL(b)));
+        fetch("/audio/鸡1.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡1 = URL.createObjectURL(b)));
+        fetch("/audio/鸡2.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡2 = URL.createObjectURL(b)));
+        fetch("/audio/鸡3.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡3 = URL.createObjectURL(b)));
+        fetch("/audio/鸡4.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡4 = URL.createObjectURL(b)));
+        fetch("/audio/鸡5.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡5 = URL.createObjectURL(b)));
+        fetch("/audio/鸡.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡 = URL.createObjectURL(b)));
+        fetch("/audio/鸡7.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡7 = URL.createObjectURL(b)));
+        fetch("/audio/鸡8.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡8 = URL.createObjectURL(b)));
+        fetch("/audio/你.mp3")
+            .then(res => res.blob())
+            .then(b => (你 = URL.createObjectURL(b)));
+        fetch("/audio/太.mp3")
+            .then(res => res.blob())
+            .then(b => (太 = URL.createObjectURL(b)));
+        fetch("/audio/美.mp3")
+            .then(res => res.blob())
+            .then(b => (美 = URL.createObjectURL(b)));
+        return;
+    }
     let k = ev.key.toLowerCase();
-    if (k.includes("control"))
-        (ctrl || (ctrl = new Audio("/audio/ctrl.mp3"))).play();
-    else if (k == "j") (鸡 || (鸡 = new Audio("/audio/鸡.mp3"))).play();
-    else if (k == "n") (你 || (你 = new Audio("/audio/你.mp3"))).play();
-    else if (k == "t") (太 || (太 = new Audio("/audio/太.mp3"))).play();
-    else if (k == "m") (美 || (美 = new Audio("/audio/美.mp3"))).play();
+    if (k.includes("control")) new Audio(ctrl.mp3).play();
+    else if (k == "1") new Audio(鸡1).play();
+    else if (k == "2") new Audio(鸡2).play();
+    else if (k == "3") new Audio(鸡3).play();
+    else if (k == "4") new Audio(鸡4).play();
+    else if (k == "5") new Audio(鸡5).play();
+    else if (k == "6") new Audio(鸡).play();
+    else if (k == "7") new Audio(鸡7).play();
+    else if (k == "8") new Audio(鸡8).play();
+    else if (k == "j") new Audio(鸡).play();
+    else if (k == "n") new Audio(你).play();
+    else if (k == "t") new Audio(太).play();
+    else if (k == "m") new Audio(美).play();
 });
 addEventListener("copy", () => {
     alert("复制成功");
