@@ -588,7 +588,7 @@ addEventListener("keydown", ev => {
         return;
     }
     let k = ev.key.toLowerCase();
-    if (k.includes("control")) new Audio(ctrl.mp3).play();
+    if (k.includes("control")) new Audio(ctrl).play();
     else if (k == "1") new Audio(鸡1).play();
     else if (k == "2") new Audio(鸡2).play();
     else if (k == "3") new Audio(鸡3).play();
