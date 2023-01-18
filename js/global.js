@@ -29,6 +29,9 @@ let 路径 = (location.pathname + location.search)
     /** @type {string} */ 鸡5,
     /** @type {string} */ 鸡6,
     /** @type {string} */ 鸡7,
+    /** @type {string} */ 鸡8,
+    /** @type {string} */ 鸡9,
+    /** @type {string} */ 鸡0,
     /** @type {string} */ 鸡,
     /** @type {string} */ 你,
     /** @type {string} */ 太,
@@ -573,6 +576,15 @@ addEventListener("keydown", ev => {
         fetch("/audio/鸡7.mp3")
             .then(res => res.blob())
             .then(b => (鸡7 = URL.createObjectURL(b)));
+        fetch("/audio/鸡8.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡8 = URL.createObjectURL(b)));
+        fetch("/audio/鸡9.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡9 = URL.createObjectURL(b)));
+        fetch("/audio/鸡0.mp3")
+            .then(res => res.blob())
+            .then(b => (鸡0 = URL.createObjectURL(b)));
         fetch("/audio/鸡.mp3")
             .then(res => res.blob())
             .then(b => (鸡 = URL.createObjectURL(b)));
@@ -596,6 +608,9 @@ addEventListener("keydown", ev => {
     else if (k == "5") new Audio(鸡5).play();
     else if (k == "6") new Audio(鸡6).play();
     else if (k == "7") new Audio(鸡7).play();
+    else if (k == "8") new Audio(鸡8).play();
+    else if (k == "9") new Audio(鸡9).play();
+    else if (k == "0") new Audio(鸡0).play();
     else if (k == "j") new Audio(鸡).play();
     else if (k == "n") new Audio(你).play();
     else if (k == "t") new Audio(太).play();
