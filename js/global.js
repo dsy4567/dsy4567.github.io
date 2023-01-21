@@ -166,7 +166,6 @@ let 网抑云阴乐 = {
                     网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
                 }.mp3`
             );
-            网抑云阴乐.正在播放.Audio.crossOrigin = "";
             网抑云阴乐.正在播放.Audio.preload = "none";
             网抑云阴乐.正在播放.Audio.autoplay =
                 (localStorage.getItem("自动播放") &&
