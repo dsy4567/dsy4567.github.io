@@ -1,0 +1,5 @@
+<script>
+    let u = new URL(location.href);
+    let c = u.searchParams.get("code");
+    document.write(c == "1234" ? "ok" : "error");
+</script>
