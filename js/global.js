@@ -328,7 +328,7 @@ function 添加链接点击事件() {
     qsa("a").forEach(el => {
         if (el.pathname == location.pathname && el.href.includes("#")) return;
         if (el.host != location.host && !el.className.includes("外链")) {
-            el.className += " 外链";
+          if(!el.qs("img, svg"))  el.className += " 外链";
             el.target = "_blank";
         } else if (
             el.host == location.host &&
