@@ -166,6 +166,7 @@ let 网抑云阴乐 = {
                     网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
                 }.mp3`
             );
+            网抑云阴乐.正在播放.Audio.crossOrigin = "";
             网抑云阴乐.正在播放.Audio.preload = "none";
             网抑云阴乐.正在播放.Audio.autoplay =
                 (localStorage.getItem("自动播放") &&
@@ -360,6 +361,7 @@ fetch("/json/ncm.json")
         let f = () => {
             svg(
                 `<svg
+                    aria-hidden="true"
                     class="特小尺寸 stroke"
                     viewBox="0 0 48 48"
                     fill="none"
@@ -383,6 +385,7 @@ fetch("/json/ncm.json")
             );
             svg(
                 `<svg
+                    aria-hidden="true"
                     class="特小尺寸 stroke"
                     viewBox="0 0 48 48"
                     fill="none"
@@ -406,6 +409,7 @@ fetch("/json/ncm.json")
             );
             svg(
                 `<svg
+                    aria-hidden="true"
                     class="特小尺寸 stroke"
                     viewBox="0 0 48 48"
                     fill="none"
@@ -429,6 +433,7 @@ fetch("/json/ncm.json")
             );
             svg(
                 `<svg
+                    aria-hidden="true"
                     class="特小尺寸 stroke"
                     viewBox="0 0 48 48"
                     fill="none"
@@ -654,6 +659,7 @@ addEventListener("load", () => {
         let s = ce("div");
         s.innerText = "❄️";
         s.className = "雪花";
+        s.ariaHidden = "true";
         s.style.left = Math.ceil(Math.random() * 100) + "%";
         document.body.append(s);
         setTimeout(() => {
@@ -682,21 +688,21 @@ _global["global.js"] = () => ({
     已强制隐藏加载界面,
     正在动态加载,
     启用雪花特效,
-    /** @type {string} */ ctrl,
-    /** @type {string} */ 鸡1,
-    /** @type {string} */ 鸡2,
-    /** @type {string} */ 鸡3,
-    /** @type {string} */ 鸡4,
-    /** @type {string} */ 鸡5,
-    /** @type {string} */ 鸡6,
-    /** @type {string} */ 鸡7,
-    /** @type {string} */ 鸡8,
-    /** @type {string} */ 鸡9,
-    /** @type {string} */ 鸡0,
-    /** @type {string} */ 鸡,
-    /** @type {string} */ 你,
-    /** @type {string} */ 太,
-    /** @type {string} */ 美,
+    ctrl,
+    鸡1,
+    鸡2,
+    鸡3,
+    鸡4,
+    鸡5,
+    鸡6,
+    鸡7,
+    鸡8,
+    鸡9,
+    鸡0,
+    鸡,
+    你,
+    太,
+    美,
     网抑云阴乐,
     加载模块,
     动态加载,

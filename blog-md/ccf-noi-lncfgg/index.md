@@ -93,3 +93,5 @@ CCF关于对NOI违约选手处罚决定的通告 <https://www.noi.cn/xw/2011-11-
 ## 其他信息
 
 本文可随意转载/修改, 无需注明出处
+
+<nocopyright value="true"></nocopyright>

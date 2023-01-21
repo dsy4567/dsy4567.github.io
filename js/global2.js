@@ -26,7 +26,7 @@ function ce(arg) {
 }
 /**
  * 更美观的 alert
- * @param {{href: string, popstate:boolean}} el
+ * @param {string} m
  */
 alert = m => {
     let el = ce("div");
