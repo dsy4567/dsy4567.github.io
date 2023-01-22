@@ -66,7 +66,7 @@ export async function main(/** @type {String} */ 路径) {
                     a.href = "/blog.html?id=" + 文章.id;
                     a.innerText = 文章.name;
                     p.innerText = 文章.desc;
-                    span.innerText = `发表于:  + ${new Date(
+                    span.innerText = `发表于: ${new Date(
                         文章.date
                     ).toLocaleString()}, 更新于: ${new Date(
                         文章.updated
