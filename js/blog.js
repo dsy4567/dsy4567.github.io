@@ -66,8 +66,11 @@ export async function main(/** @type {String} */ 路径) {
                     a.href = "/blog.html?id=" + 文章.id;
                     a.innerText = 文章.name;
                     p.innerText = 文章.desc;
-                    span.innerText =
-                        "发表于: " + new Date(文章.date).toLocaleString();
+                    span.innerText = `发表于:  + ${new Date(
+                        文章.date
+                    ).toLocaleString()}, 更新于: ${new Date(
+                        文章.updated
+                    ).toLocaleString()}`;
                     span.className = "date";
                     if (文章.img) {
                         img.src = `/blog-md/${文章.id}/img/` + 文章.img;
