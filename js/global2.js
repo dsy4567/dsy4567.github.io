@@ -32,6 +32,7 @@ alert = m => {
     let el = ce("div");
     el.innerHTML = m;
     el.className = "通知";
+    el.ariaLive = "assertive";
     document.body.append(el);
     setTimeout(() => {
         el.style.animationName = "隐藏";
@@ -43,20 +44,22 @@ alert = m => {
 
 // 方便暴露到全局变量
 var _global = {},
-    尽快设置主题色 = () =>
-        localStorage.getItem("主题色") &&
-        (document.documentElement.style.setProperty(
-            "--theme-color",
-            localStorage.getItem("主题色")
-        ) ||
+    尽快设置主题色 = () => {
+        if (localStorage.getItem("主题色")) {
+            document.documentElement.style.setProperty(
+                "--theme-color",
+                (qs("#主题色").content = localStorage.getItem("主题色"))
+            );
             document.documentElement.style.setProperty(
                 "--theme-color-transparent",
                 localStorage.getItem("透明色")
-            ) ||
+            );
             document.documentElement.style.setProperty(
                 "--text-color",
                 localStorage.getItem("字体色")
-            ));
+            );
+        }
+    };
 addEventListener("storage", 尽快设置主题色);
 尽快设置主题色();
 

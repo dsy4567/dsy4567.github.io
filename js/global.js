@@ -294,9 +294,7 @@ function 动态加载(el) {
                 qs("div#加载界面").style.display = "none";
                 qs("#main").style.display = "flex";
                 qs("#main").style.animationName = "显示";
-                !location.search.includes("id=") &&
-                    !已强制隐藏加载界面 &&
-                    document.body.scrollIntoView({ behavior: "smooth" });
+
                 正在动态加载 = false;
                 添加链接点击事件();
             } catch (e) {
@@ -497,7 +495,13 @@ fetch("/json/theme.json")
             btn.style.backgroundColor = theme[t]["--theme-color"];
             btn.title = t;
             btn.type = "button";
+            btn.role = "radio";
+            btn.ariaChecked = false;
             btn.onclick = 提示用户 => {
+                qsa("#所有主题 > button").forEach(
+                    el => (el.ariaChecked = false)
+                );
+                btn.ariaChecked = true;
                 [
                     "--theme-color",
                     "--theme-color-transparent",
@@ -505,6 +509,7 @@ fetch("/json/theme.json")
                 ].forEach(n => {
                     document.documentElement.style.setProperty(n, theme[t][n]);
                 });
+                qs("#主题色").content = theme[t]["--theme-color"];
                 localStorage.setItem("theme", t);
                 localStorage.setItem("主题色", theme[t]["--theme-color"]);
                 localStorage.setItem(
@@ -630,10 +635,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         .addEventListener("click", () =>
             document.body.scrollIntoView({ behavior: "smooth" })
         );
+    qs("#雪花特效").ariaChecked = 启用雪花特效;
     qs("#雪花特效").addEventListener("click", () => {
         localStorage.setItem(
             "启用雪花特效",
-            JSON.stringify((启用雪花特效 = !启用雪花特效))
+            JSON.stringify(
+                (qs("#雪花特效").ariaChecked = 启用雪花特效 = !启用雪花特效)
+            )
         );
         qsa(".雪花")?.forEach(el => el.remove());
     });

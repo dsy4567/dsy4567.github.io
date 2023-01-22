@@ -15,6 +15,7 @@
             name="keywords"
             content="dsy4567 博客 个人网站 编程 HTML CSS JS"
         />
+        <meta id="主题色" name="theme-color" content="#ddd" />
         <title>首页 | dsy4567 的小站</title>
         <base target="_self" />
 
@@ -69,7 +70,13 @@
                     ></path>
                 </svg>
             </button>
-            <button type="button" title="雪花特效" id="雪花特效">
+            <button
+                aria-checked="true"
+                role="checkbox"
+                type="button"
+                title="雪花特效"
+                id="雪花特效"
+            >
                 <svg
                     aria-hidden="true"
                     class="特小尺寸 stroke"
@@ -198,7 +205,7 @@
                         stroke-linejoin="round"
                     ></path>
                 </svg>
-                <div class="更多选项" id="所有主题"></div>
+                <div role="radiogroup" class="更多选项" id="所有主题"></div>
             </div>
         </div>
 

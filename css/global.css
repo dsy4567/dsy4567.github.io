@@ -67,6 +67,17 @@
         filter: opacity(1);
     }
 }
+@keyframes 标记 {
+    0% {
+        background-color: mark;
+    }
+    75% {
+        background-color: mark;
+    }
+    100% {
+        background-color: initial;
+    }
+}
 
 ::selection {
     background-color: rgba(200, 200, 200, 0.5);
@@ -109,18 +120,17 @@
         stroke: #ffff00 !important;
     }
 }
-
-html,
-body {
-    color: var(--text-color);
-    margin: 0;
-    padding: 0;
+html {
+    scroll-behavior: smooth;
 }
 body {
     background-color: var(--theme-color);
+    color: var(--text-color);
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin: 0;
+    padding: 0;
 }
 a,
 svg {
@@ -161,6 +171,13 @@ nav h1 {
 }
 *:focus-visible {
     outline: 2px solid var(--theme-color);
+}
+.标记 {
+    animation-duration: 3s;
+    animation-name: 标记;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+    transition: 0.5s all;
 }
 .fill {
     fill: var(--theme-color);

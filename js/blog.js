@@ -21,7 +21,6 @@ export async function main(/** @type {String} */ 路径) {
                     qs("#main > .右 > section > h1").innerText +
                     " | " +
                     document.title;
-                qs("#main .右").scrollIntoView({ behavior: "smooth" });
                 qs("#main .右")
                     .querySelectorAll("h1, h2, h3, h4, h5, h6")
                     ?.forEach(el => {
@@ -35,6 +34,18 @@ export async function main(/** @type {String} */ 路径) {
                         }
                     });
                 _global["global.js"]().添加链接点击事件();
+                if (location.href.includes("#")) {
+                    try {
+                        qs(
+                            `[id="${decodeURI(
+                                location.hash.substring(1)
+                            )}"] + *`
+                        ).className += " 标记";
+                    } catch (e) {}
+                    let h = location.hash;
+                    location.hash = "";
+                    location.hash = h;
+                } else qs("#main .右").scrollIntoView({ behavior: "smooth" });
             })
             .catch(e => {
                 console.error(e);
