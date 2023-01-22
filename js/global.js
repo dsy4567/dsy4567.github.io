@@ -279,6 +279,7 @@ function 动态加载(el) {
     if (正在动态加载) return open(el.href, "_self");
     正在动态加载 = true;
     qs("#main").style.display = "none";
+    qs("#main").ariaBusy = "true";
     qs("div#加载界面").style.display = "";
     fetch(el.href)
         .then(res => res.text())
@@ -294,6 +295,7 @@ function 动态加载(el) {
                 qs("div#加载界面").style.display = "none";
                 qs("#main").style.display = "flex";
                 qs("#main").style.animationName = "显示";
+                qs("#main").ariaBusy = "false";
 
                 正在动态加载 = false;
                 添加链接点击事件();

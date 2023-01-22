@@ -27,11 +27,53 @@
         -->
 
     <entry>
+        <title>新年快乐</title>
+        <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=new-year" />
+        <id>new-year</id>
+        <published>2023-01-22T12:48:59.719Z</published>
+        <updated>2023-01-22T12:48:59.719Z</updated>
+        <summary>过年了,不要再讨论什么Go、Python、Java之类的了。你带你的破电脑回到家并不能给你带来任何实质性作用，朋友们兜里掏大把钱吃喝玩乐，你默默的在家里摆弄你的破烂框架...</summary>
+        <author>
+            <name>dsy4567</name>
+            <uri>https://dsy4567.github.io/</uri>
+        </author>
+        <category term="Default" />
+        <content type="html" xml:lang="zh-cn">
+            <![CDATA[
+<h1 id="新年快乐">新年快乐</h1>
+<p>过年了,不要再讨论什么Go、Python、Java之类的了。</p>
+<p>你带你的破电脑回到家并不能给你带来任何实质性作用，</p>
+<p>朋友们兜里掏大把钱吃喝玩乐，</p>
+<p>你默默的在家里摆弄你的破烂框架。</p>
+<p>亲戚朋友吃饭问你收获了什么。</p>
+<p>你说我做了个框架，把Spring、Django、Gin优点都结合了一遍，</p>
+<p>亲戚们懵逼了，</p>
+<p>你还在心里默默嘲笑他们。</p>
+<p>笑他们不懂你的轮子、不懂你的算法、不懂你的封装，</p>
+<p>也笑他们连个复杂点的密码都记不住。</p>
+<p>你父母的同事都在说自己的子女年的收获，</p>
+<p>儿子买了个房，女儿买了个车，姑娘升职加薪了,</p>
+<p>你的父母默默无言，</p>
+<p>说我的儿子搞了个破电脑，开起来嗡嗡响、家里电表走得越来越快了,</p>
+<p>你的父母还在想你什么时候能买套房子,什么时候能成个家.</p>
+<p>你却一天到晚想的是怎么封装一个牛逼的组件。你一天到晚看那个破文档，封装什么消息中间件，什么高速缓存、ORM框架，GitHub早就一堆。</p>
+<p>但是即使这样,你还是乐此不疲的写着自己的另一套。因为你会觉得这是你自己写的不一样，实际上毛用都没有。</p>
+<p>时间轮回，一年又一年，你还在想着新技术出来了，继续学习什么Serverless，什么容器化，什么边缘计算。</p>
+<p>而你身边的人在考虑啥时候买第二套房子，什么时候生二胎，你还在捣鼓你的破代码。</p>
+<blockquote>
+<p>本文可随意转载/修改, 无需注明出处</p>
+</blockquote>
+<p><nocopyright value="true"></nocopyright></p>
+            ]]>
+        </content>
+    </entry>
+
+    <entry>
         <title>(转) CCF NOI 历年处罚公告</title>
         <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=ccf-noi-lncfgg" />
         <id>ccf-noi-lncfgg</id>
-        <published>Mon, Jan 16 2023 17:41:54 +0800</published>
-        <updated>Mon, Jan 16 2023 17:41:54 +0800</updated>
+        <published>2023-01-16T09:41:54.000Z</published>
+        <updated>2023-01-16T09:41:54.000Z</updated>
         <summary>转自 https://fucksc.cf/penalties/ 前言 本文旨在让各位选手/监考老师/特派员在历次处罚中引以为戒, 请各位读者理性看待以下事件, 不要对当事人/CCF做出不恰当的行为...</summary>
         <author>
             <name>dsy4567</name>
@@ -103,8 +145,8 @@
         <title>(水文)2022 €€£ €$₽ J 组第二轮游寄</title>
         <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=2022-ccf-csp-j-you-ji" />
         <id>2022-ccf-csp-j-you-ji</id>
-        <published>Fri, 13 Jan 2023 00:00:00 +0800</published>
-        <updated>Fri, 13 Jan 2023 00:00:00 +0800</updated>
+        <published>2023-01-12T16:00:00.000Z</published>
+        <updated>2023-01-12T16:00:00.000Z</updated>
         <summary>2022-10-28 J 组取消, S 组继续, 游寄结束</summary>
         <author>
             <name>dsy4567</name>
@@ -126,8 +168,8 @@
         <title>长文章测试</title>
         <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=very-long" />
         <id>very-long</id>
-        <published>Fri, 13 Jan 2023 00:00:00 +0800</published>
-        <updated>Fri, 13 Jan 2023 00:00:00 +0800</updated>
+        <published>2023-01-12T16:00:00.000Z</published>
+        <updated>2023-01-12T16:00:00.000Z</updated>
         <summary>我们一般认为，抓住了问题的关键，其他一切则会迎刃而解。 我们一般认为，抓住了问题的关键，其他一切则会迎刃而解。 现在，解决1+1=3的问题，是非常非常重要的。 ...</summary>
         <author>
             <name>dsy4567</name>
@@ -167,8 +209,8 @@
         <title>(你好，世界！</title>
         <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=hello-world" />
         <id>hello-world</id>
-        <published>Fri, 13 Jan 2023 00:00:00 +0800</published>
-        <updated>Fri, 13 Jan 2023 00:00:00 +0800</updated>
+        <published>2023-01-12T16:00:00.000Z</published>
+        <updated>2023-01-12T16:00:00.000Z</updated>
         <summary>2022-10-28 J 组取消, S 组继续, 游寄结束</summary>
         <author>
             <name>dsy4567</name>

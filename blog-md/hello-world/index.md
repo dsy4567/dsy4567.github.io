@@ -16,3 +16,7 @@ _斜体_
 import { foo } from "bar";
 if (438 == 250) while (1) {}
 ```
+
+> 本文可随意转载/修改, 无需注明出处
+
+<nocopyright value="true"></nocopyright>
