@@ -663,6 +663,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                    s.remove();
                }, 10000);
            }, 500);
+        }
     });
     // 超时强制隐藏加载界面
     setTimeout(
