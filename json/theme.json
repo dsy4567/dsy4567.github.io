@@ -5,14 +5,14 @@
         "--text-color": "#ddd"
     },
     "浅色": {
-        "--theme-color": "#ddd",
-        "--theme-color-transparent": "#fff8",
-        "--text-color": "#222"
+        "--theme-color": "#bbb",
+        "--theme-color-transparent": "#fff6",
+        "--text-color": "#000"
     },
     "粉色": {
         "--theme-color": "#ffc0cb",
         "--theme-color-transparent": "#fff2",
-        "--text-color": "#fff"
+        "--text-color": "#000"
     },
     "橙黄色": {
         "--theme-color": "#ffa500",

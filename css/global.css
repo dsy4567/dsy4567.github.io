@@ -220,12 +220,11 @@ nav h1 {
     transform: translate(-4px, 2px) rotate(45deg);
 }
 .date {
-    color: var(--theme-color-transparent);
-    transition: 0.5s color;
-}
-.date:hover {
     color: var(--text-color);
+    filter: drop-shadow(2px 4px 6px #333) opacity(0.5);
+    transition: 0.5s color, 0.5s filter;
 }
+.date:hover {filter: drop-shadow(2px 4px 6px #333) opacity(1);}
 .组 {
     display: flex;
     max-width: 100%;
@@ -273,7 +272,7 @@ section {
     border: 1px solid transparent;
     border-radius: var(--border-radius);
     margin: 8px;
-    padding: 8px;
+    padding: 12px;
 }
 section:hover {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
