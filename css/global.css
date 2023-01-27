@@ -529,6 +529,7 @@ div.通知 {
     color: #fff;
     font-size: 16px;
     padding: 36px;
+    text-align: center;
     word-break: break-all;
 }
 #个性签名::after {

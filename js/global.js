@@ -11,6 +11,7 @@ let 路径 = (location.pathname + location.search)
     loaded = false,
     已强制隐藏加载界面 = false,
     正在动态加载 = false,
+    雪花特效计时器 = -1,
     /** @type {boolean} */ 启用雪花特效 = JSON.parse(
         localStorage.getItem("启用雪花特效") ?? true
     ),
@@ -640,6 +641,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             )
         );
         qsa(".雪花")?.forEach(el => el.remove());
+        if(!启用雪花特效){
+            clearInterval(雪花特效计时器);
+            雪花特效计时器 = -1;
+        } else {
+            雪花特效计时器 = setInterval(() => {
+               if (!启用雪花特效) return;
+               let s = ce("div");
+               s.innerText = "❄️";
+               s.className = "雪花";
+               s.ariaHidden = "true";
+               s.style.left = Math.ceil(Math.random() * 100) + "%";
+               document.body.append(s);
+               setTimeout(() => {
+                   s.remove();
+               }, 10000);
+           }, 500);
+        }
     });
     // 超时强制隐藏加载界面
     setTimeout(
@@ -654,11 +672,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 addEventListener("load", () => {
     loaded = true;
+    !已强制隐藏加载界面 && 完成加载();
     // 省流
     if (navigator?.connection?.saveData ?? true) 网抑云阴乐.初始化();
     // 雪花特效
-    setInterval(() => {
-        if (!启用雪花特效) return;
+    if (!启用雪花特效) return;
+    雪花特效计时器 = setInterval(() => {
         let s = ce("div");
         s.innerText = "❄️";
         s.className = "雪花";
@@ -669,7 +688,6 @@ addEventListener("load", () => {
             s.remove();
         }, 10000);
     }, 500);
-    !已强制隐藏加载界面 && 完成加载();
 });
 addEventListener("popstate", ev => {
     if (
