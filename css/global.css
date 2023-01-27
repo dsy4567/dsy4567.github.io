@@ -167,6 +167,9 @@ abbr {
     cursor: help;
     text-decoration: dashed underline var(--theme-color);
 }
+*:disabled {
+    cursor: not-allowed;
+}
 img {
     background-color: var(--theme-color-transparent);
     border-radius: var(--border-radius);
@@ -224,7 +227,9 @@ nav h1 {
     filter: drop-shadow(2px 4px 6px #333) opacity(0.5);
     transition: 0.5s color, 0.5s filter;
 }
-.date:hover {filter: drop-shadow(2px 4px 6px #333) opacity(1);}
+.date:hover {
+    filter: drop-shadow(2px 4px 6px #333) opacity(1);
+}
 .组 {
     display: flex;
     max-width: 100%;
@@ -247,6 +252,7 @@ nav h1 {
 }
 blockquote {
     background-color: var(--theme-color-transparent);
+    border: 1px solid transparent;
     border-left: 8px solid var(--theme-color);
     border-radius: var(--border-radius);
     margin: 0;
@@ -254,16 +260,19 @@ blockquote {
 }
 code {
     background-color: var(--theme-color-transparent);
+    border: 1px solid transparent;
     border-radius: var(--border-radius);
     padding: 4px;
 }
 pre {
     background-color: var(--theme-color-transparent);
+    border: 1px solid transparent;
     border-radius: var(--border-radius);
     padding: 8px;
 }
 pre code {
     background-color: transparent;
+    border: none;
     margin: 0;
     padding: 0;
 }
@@ -280,9 +289,8 @@ section:hover {
 }
 section h2 {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: flex-start;
-    font-size: 32px;
 }
 section h2 svg {
     margin-right: 8px;
