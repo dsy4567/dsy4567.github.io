@@ -1,3 +1,5 @@
+/* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
+
 "use strict";
 
 const /** @type {Record<string, string[]>} */ 加载清单 = {
@@ -641,22 +643,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             )
         );
         qsa(".雪花")?.forEach(el => el.remove());
-        if(!启用雪花特效){
+        if (!启用雪花特效) {
             clearInterval(雪花特效计时器);
             雪花特效计时器 = -1;
         } else {
             雪花特效计时器 = setInterval(() => {
-               if (!启用雪花特效) return;
-               let s = ce("div");
-               s.innerText = "❄️";
-               s.className = "雪花";
-               s.ariaHidden = "true";
-               s.style.left = Math.ceil(Math.random() * 100) + "%";
-               document.body.append(s);
-               setTimeout(() => {
-                   s.remove();
-               }, 10000);
-           }, 500);
+                if (!启用雪花特效) return;
+                let s = ce("div");
+                s.innerText = "❄️";
+                s.className = "雪花";
+                s.ariaHidden = "true";
+                s.style.left = Math.ceil(Math.random() * 100) + "%";
+                document.body.append(s);
+                setTimeout(() => {
+                    s.remove();
+                }, 10000);
+            }, 500);
         }
     });
     // 超时强制隐藏加载界面
