@@ -1,5 +1,14 @@
 "use strict";
 
+window.onerror = () => {
+    try {
+        qs("div#加载界面").style.display = "none";
+        qs("div#main").style.display = "flex";
+    } catch (e) {}
+};
+
+String.prototype.rp = String.prototype.replace;
+
 /**
  * document.querySelector
  * @param {keyof HTMLElementTagNameMap} arg

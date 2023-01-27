@@ -1,12 +1,5 @@
 "use strict";
 
-window.onerror = () => {
-    try {
-        qs("div#加载界面").style.display = "none";
-        qs("div#main").style.display = "flex";
-    } catch (e) {}
-};
-
 const /** @type {Record<string, string[]>} */ 加载清单 = {
         "/": [],
         "/blog": ["blog"],
@@ -474,10 +467,11 @@ fetch("/json/ncm.json")
                     />
                 </svg>`,
                 () => {
-                    open(
-                        "https://music.163.com/#/song?id=" +
-                            网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
-                    );
+                    网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引] &&
+                        open(
+                            "https://music.163.com/#/song?id=" +
+                                网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
+                        );
                 },
                 "在网抑云阴乐中查看"
             );

@@ -70,12 +70,15 @@
 @keyframes 标记 {
     0% {
         background-color: mark;
+        color: marktext;
     }
     75% {
         background-color: mark;
+        color: marktext;
     }
     100% {
-        background-color: initial;
+        background-color: inherit;
+        color: inherit;
     }
 }
 
@@ -165,6 +168,7 @@ abbr {
     text-decoration: dashed underline var(--theme-color);
 }
 img {
+    background-color: var(--theme-color-transparent);
     border-radius: var(--border-radius);
 }
 nav h1 {
@@ -216,7 +220,11 @@ nav h1 {
     transform: translate(-4px, 2px) rotate(45deg);
 }
 .date {
-    filter: brightness(0.5);
+    color: var(--theme-color-transparent);
+    transition: 0.5s color;
+}
+.date:hover {
+    color: var(--text-color);
 }
 .组 {
     display: flex;
@@ -545,4 +553,22 @@ section#我 img {
 }
 #main > div.右 > section:nth-child(1) {
     margin-top: 64px;
+}
+
+#评论区 {
+}
+.评论 {
+}
+.评论 .用户信息 {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+.评论 .用户信息 > * {
+    margin-left: 8px;
+}
+.评论 > * {
+}
+.评论 .评论正文 {
+    margin: 4px;
 }
