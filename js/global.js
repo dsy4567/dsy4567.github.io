@@ -17,6 +17,7 @@ let 路径 = (location.pathname + location.search)
     /** @type {boolean} */ 启用雪花特效 = JSON.parse(
         localStorage.getItem("启用雪花特效") ?? true
     ),
+    图标 = {},
     /** @type {string} */ ctrl,
     /** @type {string} */ 鸡1,
     /** @type {string} */ 鸡2,
@@ -306,6 +307,9 @@ function 动态加载(el) {
         });
 }
 function 完成加载() {
+    qsa("svg[data-icon]").forEach(el => {
+        el.outerHTML = 图标[el.dataset.icon];
+    });
     qs("div#加载界面").style.display = "none";
     qs("div#main").style.display = "flex";
     qs("div#main").style.animationName = "显示";
@@ -530,6 +534,18 @@ fetch("/json/saying.json")
             (qs("#随机金句").innerHTML =
                 "&emsp;&emsp;" +
                 (j[Math.ceil(Math.random() * Number(j?.length))] || j[0]));
+        DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+    })
+    .catch(e => console.error(e));
+fetch("/json/icon.json")
+    .then(res => res.json())
+    .then(j => {
+        let f = () => {
+            图标 = j;
+            qsa("svg[data-icon]").forEach(el => {
+                el.outerHTML = 图标[el.dataset.icon];
+            });
+        };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     })
     .catch(e => console.error(e));

@@ -123,6 +123,15 @@
         stroke: #ffff00 !important;
     }
 }
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0s !important;
+        transition: none !important;
+    }
+    html {
+        scroll-behavior: auto !important;
+    }
+}
 html {
     --border-radius: 8px;
     scroll-behavior: smooth;
@@ -167,15 +176,15 @@ abbr {
     cursor: help;
     text-decoration: dashed underline var(--theme-color);
 }
-*:disabled {
-    cursor: not-allowed;
-}
 img {
     background-color: var(--theme-color-transparent);
     border-radius: var(--border-radius);
 }
 nav h1 {
     color: var(--theme-color);
+}
+*:disabled {
+    cursor: not-allowed;
 }
 *:focus-visible {
     outline: 2px solid var(--theme-color);
@@ -443,12 +452,12 @@ div.侧边按钮 > *:focus-within {
 div.侧边按钮 > #切换主题:hover,
 div.侧边按钮 > #切换主题:focus,
 div.侧边按钮 > #切换主题:focus-within {
-    transform: translateX(calc(-32px * var(--number-of-themes)));
+    transform: translateX(calc(-32px * (var(--number-of-themes) + 1)));
 }
 div.侧边按钮 > #网抑云阴乐:hover,
 div.侧边按钮 > #网抑云阴乐:focus,
 div.侧边按钮 > #网抑云阴乐:focus-within {
-    transform: translateX(calc(-32px * 4));
+    transform: translateX(calc(-32px * (4 + 1)));
 }
 div.侧边按钮 .拥有更多选项 > .更多选项 {
     background: #fff;
@@ -460,10 +469,10 @@ div.侧边按钮 .拥有更多选项 > .更多选项 {
     height: 32px;
 }
 div.侧边按钮 #切换主题 > #所有主题 {
-    width: calc(32px * var(--number-of-themes));
+    width: calc(36px * (var(--number-of-themes) + 1));
 }
 div.侧边按钮 #网抑云阴乐 > #阴乐控件 {
-    width: calc(32px * 4);
+    width: calc(32px * (4 + 1));
 }
 div.侧边按钮 .拥有更多选项:hover > .更多选项,
 div.侧边按钮 .拥有更多选项:focus > .更多选项,
