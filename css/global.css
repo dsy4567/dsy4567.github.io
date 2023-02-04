@@ -141,6 +141,18 @@ body {
     margin: 0;
     padding: 0;
 }
+
+span#联系方式 {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+span#联系方式 * {
+    margin-left: 2px;
+    margin-right: 2px;
+}
 a,
 svg {
     color: var(--theme-color);
