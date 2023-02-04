@@ -27,6 +27,65 @@
         -->
 
     <entry>
+        <title>2022 GitHub 总结</title>
+        <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=github-2022" />
+        <id>github-2022</id>
+        <published>2023-02-04T06:41:29.533Z</published>
+        <updated>2023-02-04T06:41:29.533Z</updated>
+        <summary>2022 GitHub 总结视频</summary>
+        <author>
+            <name>dsy4567</name>
+            <uri>https://dsy4567.github.io/</uri>
+        </author>
+        <category term="Default" />
+        <content type="html" xml:lang="zh-cn">
+            <![CDATA[
+<h1 id="2022-github-总结">2022 GitHub 总结</h1>
+<p><video controls="" src="https://dsy4567.github.io/blog-md/github-2022/video/dsy4567's GitHubUnwrapped.mp4"></video></p>
+<hr><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"></a><br>如无特别说明，本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br>
+            ]]>
+        </content>
+    </entry>
+
+    <entry>
+        <title>镜像站列表</title>
+        <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=mirrors" />
+        <id>mirrors</id>
+        <published>2023-02-04T04:59:21.580Z</published>
+        <updated>2023-02-04T04:59:21.580Z</updated>
+        <summary>dsy4567 的小站/防沉迷终结者的镜像站列表</summary>
+        <author>
+            <name>dsy4567</name>
+            <uri>https://dsy4567.github.io/</uri>
+        </author>
+        <category term="Default" />
+        <content type="html" xml:lang="zh-cn">
+            <![CDATA[
+<h1 id="镜像站列表">镜像站列表</h1>
+<h2 id="dsy4567-的小站">dsy4567 的小站</h2>
+<p>主站: <a href="https://dsy4567.cf">https://dsy4567.cf</a> (Vercel + Cloudflare CDN)</p>
+<p>镜像站:</p>
+<ul>
+<li><a href="https://dsy4567.github.io">https://dsy4567.github.io</a> (GitHub Pages)</li>
+<li><a href="https://home.mirrors.dsy4567.cf">https://home.mirrors.dsy4567.cf</a> (Cloudflare Pages)</li>
+<li><a href="https://home-netlify.mirrors.dsy4567.cf">https://home-netlify.mirrors.dsy4567.cf</a> (Netlify)</li>
+<li><a href="https://home-vercel.mirrors.dsy4567.cf">https://home-vercel.mirrors.dsy4567.cf</a> (Vercel)</li>
+</ul>
+<h2 id="防沉迷终结者">防沉迷终结者</h2>
+<p>主站: <a href="https://fcmsb250.github.io">https://fcmsb250.github.io</a> (GitHub Pages)</p>
+<p>镜像站:</p>
+<ul>
+<li><a href="https://fcm.dsy4567.cf">https://fcm.dsy4567.cf</a> (Cloudflare Pages)</li>
+<li><a href="https://fcm.mirrors.dsy4567.cf">https://fcm.mirrors.dsy4567.cf</a> (Cloudflare Pages)</li>
+<li><a href="https://fcm-netlify.mirrors.dsy4567.cf">https://fcm-netlify.mirrors.dsy4567.cf</a> (Netlify)</li>
+<li><a href="https://fcm-vercel.mirrors.dsy4567.cf">https://fcm-vercel.mirrors.dsy4567.cf</a> (Vercel)</li>
+</ul>
+<hr><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"></a><br>如无特别说明，本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br>
+            ]]>
+        </content>
+    </entry>
+
+    <entry>
         <title>新年快乐</title>
         <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=new-year" />
         <id>new-year</id>
@@ -158,7 +217,7 @@
 <h1 id="水文2022-€€£-€₽-j-组第二轮游寄">(水文)2022 <abbr title="CCF CSP(China Computer Federation Certified Software Professional, CCF 软件能力认证)的货币符号形式, 体现了 CCF 贪财的特点">€€£ €$₽</abbr> J 组第二轮游寄</h1>
 <h2 id="2022-10-28">2022-10-28</h2>
 <p>J 组取消, S 组继续, 游寄结束</p>
-<p><a href="https://www.noi.cn/gs/xw/sx1/2022-10-28/775827.shtml?province=df"><img src="/blog-md/2022-ccf-csp-j-you-ji/img/cover.png" alt="棺方通知"></a></p>
+<p><a href="https://www.noi.cn/gs/xw/sx1/2022-10-28/775827.shtml?province=df"><img src="https://dsy4567.github.io/blog-md/2022-ccf-csp-j-you-ji/img/cover.png" alt="棺方通知"></a></p>
 <hr><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议" style="border-width: 0;width: inherit;height: inherit;" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"></a><br>如无特别说明，本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。
             ]]>
         </content>
