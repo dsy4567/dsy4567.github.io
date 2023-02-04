@@ -559,6 +559,10 @@ section#我 img {
     position: relative;
     top: -64px;
 }
+
+section#我 img:hover {
+    transform: rotateZ(360deg);
+}
 #main > div.右 > section:nth-child(1) {
     margin-top: 64px;
 }
