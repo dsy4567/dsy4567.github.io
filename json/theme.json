@@ -19,10 +19,15 @@
         "--theme-color-transparent": "#fff2",
         "--text-color": "#fff"
     },
+    "紫色": {
+        "--theme-color": "#6A0DAD",
+        "--theme-color-transparent": "#fff2",
+        "--text-color": "#fff"
+    },
     "天依蓝": {
         "--theme-color": "#6cf",
         "--theme-color-transparent": "#fff2",
-        "--text-color": "#fff"
+        "--text-color": "#000"
     },
     "支付宝蓝": {
         "--theme-color": "#1678ff",
@@ -37,7 +42,7 @@
     "初音绿": {
         "--theme-color": "#39c5bb",
         "--theme-color-transparent": "#fff2",
-        "--text-color": "#fff"
+        "--text-color": "#000"
     },
     "恶臭绿": {
         "--theme-color": "#114514",

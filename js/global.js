@@ -390,10 +390,6 @@ fetch("/json/ncm.json")
 fetch("/json/theme.json")
     .then(res => res.json())
     .then(theme => {
-        document.documentElement.style.setProperty(
-            "--number-of-themes",
-            Object.keys(theme).length
-        );
         Object.keys(theme).forEach(t => {
             let btn = ce("button");
             btn.style.backgroundColor = theme[t]["--theme-color"];

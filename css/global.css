@@ -90,7 +90,6 @@
 
 @media (prefers-color-scheme: light) {
     html {
-        --number-of-themes: 6;
         --theme-color: #ddd;
         --theme-color-transparent: #fff8;
         --text-color: #222;
@@ -98,7 +97,6 @@
 }
 @media (prefers-color-scheme: dark) {
     html {
-        --number-of-themes: 6;
         --theme-color: #222;
         --theme-color-transparent: #fff2;
         --text-color: #ddd;
@@ -194,6 +192,10 @@ nav h1 {
     animation-iteration-count: 1;
     animation-timing-function: linear;
     transition: 0.5s all;
+}
+svg[data-icon] {
+    background-color: var(--theme-color);
+    border-radius: 50%;
 }
 .fill {
     fill: var(--theme-color);
