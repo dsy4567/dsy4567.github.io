@@ -13,10 +13,6 @@ let 路径 = (location.pathname + location.search)
     loaded = false,
     已强制隐藏加载界面 = false,
     正在动态加载 = false,
-    雪花特效计时器 = -1,
-    /** @type {boolean} */ 启用雪花特效 = JSON.parse(
-        localStorage.getItem("启用雪花特效") ?? true
-    ),
     图标 = {},
     /** @type {string} */ ctrl,
     /** @type {string} */ 鸡1,
@@ -307,9 +303,6 @@ function 动态加载(el) {
         });
 }
 function 完成加载() {
-    qsa("svg[data-icon]").forEach(el => {
-        el.outerHTML = 图标[el.dataset.icon];
-    });
     qs("div#加载界面").style.display = "none";
     qs("div#main").style.display = "flex";
     qs("div#main").style.animationName = "显示";
@@ -325,6 +318,9 @@ function 完成加载() {
     }, 2000);
 }
 function 添加链接点击事件() {
+    qsa("svg[data-icon]").forEach(el => {
+        图标[el.dataset.icon] && (el.outerHTML = 图标[el.dataset.icon]);
+    });
     qsa("a").forEach(el => {
         if (el.pathname == location.pathname && el.href.includes("#")) return;
         if (el.host != location.host && !el.className.includes("外链")) {
@@ -359,120 +355,22 @@ fetch("/json/ncm.json")
         }
         let f = () => {
             svg(
-                `<svg
-                    aria-hidden="true"
-                    class="特小尺寸 stroke"
-                    viewBox="0 0 48 48"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M34 36L22 24L34 12"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                    <path
-                        d="M14 12V36"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                </svg>`,
+                `<svg class="特小尺寸" data-icon="上一首"></svg>`,
                 网抑云阴乐.上一首,
                 "上一首"
             );
             svg(
-                `<svg
-                    aria-hidden="true"
-                    class="特小尺寸 stroke"
-                    viewBox="0 0 48 48"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M16 12V36"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                    <path
-                        d="M32 12V36"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                </svg>`,
+                `<svg class="特小尺寸" data-icon="播放暂停"></svg>`,
                 网抑云阴乐.播放暂停,
                 "播放/暂停"
             );
             svg(
-                `<svg
-                    aria-hidden="true"
-                    class="特小尺寸 stroke"
-                    viewBox="0 0 48 48"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M14 12L26 24L14 36"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                    <path
-                        d="M34 12V36"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                </svg>`,
+                `<svg class="特小尺寸" data-icon="下一首"></svg>`,
                 网抑云阴乐.下一首,
                 "下一首"
             );
             svg(
-                `<svg
-                    aria-hidden="true"
-                    class="特小尺寸 stroke"
-                    viewBox="0 0 48 48"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                    <path
-                        d="M4 24H44"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                    <path
-                        fill-rule="evenodd"
-                        clip-rule="evenodd"
-                        d="M24 44C28.4183 44 32 35.0457 32 24C32 12.9543 28.4183 4 24 4C19.5817 4 16 12.9543 16 24C16 35.0457 19.5817 44 24 44Z"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                    <path
-                        d="M9.85791 10.1421C13.4772 13.7614 18.4772 16 24 16C29.5229 16 34.5229 13.7614 38.1422 10.1421"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                    <path
-                        d="M38.1422 37.8579C34.5229 34.2386 29.5229 32 24 32C18.4772 32 13.4772 34.2386 9.85791 37.8579"
-                        stroke-width="4"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    />
-                </svg>`,
+                `<svg class="特小尺寸" data-icon="在网抑云阴乐中查看"></svg>`,
                 () => {
                     网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引] &&
                         open(
@@ -482,6 +380,9 @@ fetch("/json/ncm.json")
                 },
                 "在网抑云阴乐中查看"
             );
+            qsa("svg[data-icon]").forEach(el => {
+                图标[el.dataset.icon] && (el.outerHTML = 图标[el.dataset.icon]);
+            });
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     });
@@ -543,7 +444,7 @@ fetch("/json/icon.json")
         let f = () => {
             图标 = j;
             qsa("svg[data-icon]").forEach(el => {
-                el.outerHTML = 图标[el.dataset.icon];
+                图标[el.dataset.icon] && (el.outerHTML = 图标[el.dataset.icon]);
             });
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
@@ -650,33 +551,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         .addEventListener("click", () =>
             document.body.scrollIntoView({ behavior: "smooth" })
         );
-    qs("#雪花特效").ariaChecked = 启用雪花特效;
-    qs("#雪花特效").addEventListener("click", () => {
-        localStorage.setItem(
-            "启用雪花特效",
-            JSON.stringify(
-                (qs("#雪花特效").ariaChecked = 启用雪花特效 = !启用雪花特效)
-            )
-        );
-        qsa(".雪花")?.forEach(el => el.remove());
-        if (!启用雪花特效) {
-            clearInterval(雪花特效计时器);
-            雪花特效计时器 = -1;
-        } else {
-            雪花特效计时器 = setInterval(() => {
-                if (!启用雪花特效) return;
-                let s = ce("div");
-                s.innerText = "❄️";
-                s.className = "雪花";
-                s.ariaHidden = "true";
-                s.style.left = Math.ceil(Math.random() * 100) + "%";
-                document.body.append(s);
-                setTimeout(() => {
-                    s.remove();
-                }, 10000);
-            }, 500);
-        }
-    });
     // 超时强制隐藏加载界面
     setTimeout(
         () =>
@@ -693,19 +567,6 @@ addEventListener("load", () => {
     !已强制隐藏加载界面 && 完成加载();
     // 省流
     if (navigator?.connection?.saveData ?? true) 网抑云阴乐.初始化();
-    // 雪花特效
-    if (!启用雪花特效) return;
-    雪花特效计时器 = setInterval(() => {
-        let s = ce("div");
-        s.innerText = "❄️";
-        s.className = "雪花";
-        s.ariaHidden = "true";
-        s.style.left = Math.ceil(Math.random() * 100) + "%";
-        document.body.append(s);
-        setTimeout(() => {
-            s.remove();
-        }, 10000);
-    }, 500);
 });
 addEventListener("popstate", ev => {
     if (
@@ -726,7 +587,6 @@ _global["global.js"] = () => ({
     路径,
     已强制隐藏加载界面,
     正在动态加载,
-    启用雪花特效,
     ctrl,
     鸡1,
     鸡2,
@@ -747,6 +607,7 @@ _global["global.js"] = () => ({
     动态加载,
     完成加载,
     添加链接点击事件,
+    图标,
 });
 
 console.log(`

@@ -45,14 +45,6 @@
         transform: translateY(0px);
     }
 }
-@keyframes 雪花 {
-    from {
-        transform: translate(0, 0) rotate(0);
-    }
-    to {
-        transform: translate(0, 110vh) rotate(365deg);
-    }
-}
 @keyframes 闪烁 {
     0% {
         filter: opacity(0);
@@ -132,6 +124,12 @@
         scroll-behavior: auto !important;
     }
 }
+@media (prefers-reduced-data: reduce) {
+    .背景图片 {
+        background: none !important;
+    }
+}
+
 html {
     --border-radius: 8px;
     scroll-behavior: smooth;
@@ -247,17 +245,6 @@ nav h1 {
 .组 > section {
     max-width: 256px;
     min-width: 256px;
-}
-.雪花 {
-    animation: 雪花;
-    animation-duration: 10s;
-    animation-iteration-count: 1;
-    animation-timing-function: linear;
-    animation-fill-mode: forwards;
-    position: fixed;
-    pointer-events: none;
-    top: -10vh;
-    z-index: 999;
 }
 blockquote {
     background-color: var(--theme-color-transparent);
@@ -452,27 +439,31 @@ div.侧边按钮 > *:focus-within {
 div.侧边按钮 > #切换主题:hover,
 div.侧边按钮 > #切换主题:focus,
 div.侧边按钮 > #切换主题:focus-within {
-    transform: translateX(calc(-32px * (var(--number-of-themes) + 1)));
+    transform: translateX(calc(-32px * 5));
 }
 div.侧边按钮 > #网抑云阴乐:hover,
 div.侧边按钮 > #网抑云阴乐:focus,
 div.侧边按钮 > #网抑云阴乐:focus-within {
-    transform: translateX(calc(-32px * (4 + 1)));
+    transform: translateX(calc(-32px * 5));
 }
 div.侧边按钮 .拥有更多选项 > .更多选项 {
     background: #fff;
     border: 1px solid transparent;
     display: flex;
     filter: opacity(0);
+    padding-right: 32px;
     position: absolute;
     transform: translateX(28px) translateY(-5px);
     height: 32px;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 div.侧边按钮 #切换主题 > #所有主题 {
-    width: calc(36px * (var(--number-of-themes) + 1));
+    width: calc(32px * 4);
+    height: calc(32px * 3);
 }
 div.侧边按钮 #网抑云阴乐 > #阴乐控件 {
-    width: calc(32px * (4 + 1));
+    width: calc(32px * 4);
 }
 div.侧边按钮 .拥有更多选项:hover > .更多选项,
 div.侧边按钮 .拥有更多选项:focus > .更多选项,

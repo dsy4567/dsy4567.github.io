@@ -72,39 +72,7 @@ export async function main(/** @type {String} */ 路径) {
                         if (typeof j !== "object") j = [];
                         let html = `
 <h2>
-    <svg
-        aria-hidden="true"
-        class="小尺寸 stroke"
-        viewBox="0 0 48 48"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-    >
-        <path
-            d="M44 6H4V36H13V41L23 36H44V6Z"
-            fill="none"
-            stroke-width="4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        ></path>
-        <path
-            d="M14 19.5V22.5"
-            stroke-width="4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        ></path>
-        <path
-            d="M24 19.5V22.5"
-            stroke-width="4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        ></path>
-        <path
-            d="M34 19.5V22.5"
-            stroke-width="4"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-        ></path>
-    </svg>
+    <svg data-icon="评论" class="小尺寸"></svg>
     <span>评论</span>
 </h2>
 <section>
@@ -161,6 +129,14 @@ ${(() => {
                         sect.innerHTML = html;
                         qs("#main .右").append(sect);
                         _global["global.js"]().添加链接点击事件();
+                        qsa("svg[data-icon]").forEach(el => {
+                            el.outerHTML =
+                                _global["global.js"]().图标[el.dataset.icon] &&
+                                (el.outerHTML =
+                                    _global["global.js"]().图标[
+                                        el.dataset.icon
+                                    ]);
+                        });
                     });
             })
             .catch(e => {
