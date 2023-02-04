@@ -174,7 +174,8 @@ abbr {
     cursor: help;
     text-decoration: dashed underline var(--theme-color);
 }
-img, video {
+img,
+video {
     background-color: var(--theme-color-transparent);
     border-radius: var(--border-radius);
 }
@@ -291,9 +292,11 @@ section h2 {
 section h2 svg {
     margin-right: 8px;
 }
-section img, section video {
+section img,
+section video {
     width: 100%;
     height: auto;
+    max-height: 100vh;
 }
 @media only screen and (max-width: 960px) {
     #main {
