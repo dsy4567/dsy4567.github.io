@@ -1,5 +1,14 @@
 [
     {
+        "id": "P1932",
+        "name": "P1932 题解",
+        "desc": "A+B  A-B  A*B  A/B A%B Problem",
+        "img": "",
+        "updated": "2023-02-04T08:56:05.388Z",
+        "date": "2023-02-04T08:56:05.388Z",
+        "issue": 10
+    },
+    {
         "id": "github-2022",
         "name": "2022 GitHub 总结",
         "desc": "2022 GitHub 总结视频",

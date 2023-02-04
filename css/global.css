@@ -296,8 +296,12 @@ section h2 svg {
 }
 section img,
 section video {
-    width: 100%;
+    max-width: 100%;
     max-height: 75vh;
+}
+
+hr {
+    border: 1px solid var(--theme-color-transparent);
 }
 @media only screen and (max-width: 960px) {
     #main {

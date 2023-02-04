@@ -27,6 +27,77 @@
         -->
 
     <entry>
+        <title>P1932 题解</title>
+        <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=P1932" />
+        <id>P1932</id>
+        <published>2023-02-04T08:56:05.388Z</published>
+        <updated>2023-02-04T08:56:05.388Z</updated>
+        <summary>A+B  A-B  A*B  A/B A%B Problem</summary>
+        <author>
+            <name>dsy4567</name>
+            <uri>https://dsy4567.github.io/</uri>
+        </author>
+        <category term="Default" />
+        <content type="html" xml:lang="zh-cn">
+            <![CDATA[
+<h1 id="p1932-题解">P1932 题解</h1>
+<h2 id="原题">原题</h2>
+<blockquote>
+<p><a href="https://www.luogu.com.cn/problem/P1932">https://www.luogu.com.cn/problem/P1932</a></p>
+</blockquote>
+<h3 id="ab--a-b--ab--ab-ab-problem">A+B  A-B  A*B  A/B A%B Problem</h3>
+<h4 id="题目背景">题目背景</h4>
+<p>这个题目很新颖吧！！！</p>
+<h4 id="题目描述">题目描述</h4>
+<p>求A、B的和差积商余！</p>
+<h5 id="由于数据有修改，减法运算结果可能带负号！">由于数据有修改，减法运算结果可能带负号！</h5>
+<h4 id="输入格式">输入格式</h4>
+<p>两个数两行</p>
+<p>A
+B</p>
+<h4 id="输出格式">输出格式</h4>
+<p>五个数</p>
+<p>和
+差
+积
+商
+余</p>
+<h4 id="样例-1">样例 #1</h4>
+<h5 id="样例输入-1">样例输入 #1</h5>
+<pre><code>1
+1
+</code></pre>
+<h5 id="样例输出-1">样例输出 #1</h5>
+<pre><code>2
+0
+1
+1
+0
+</code></pre>
+<h4 id="提示">提示</h4>
+<p>length(A),length(B)&lt;=10^4</p>
+<p>A,B&gt;0
+每个点3s。</p>
+<hr>
+<h2 id="代码">代码</h2>
+<pre><code class="language-python">a=int(input())
+b=int(input())
+print(a+b)
+print(a-b)
+print(a*b)
+print(a//b)
+print(a%b)
+</code></pre>
+<p>Python <abbr title="永远单身">YYDS!</abbr></p>
+<blockquote>
+<p><a href="https://www.luogu.com.cn/record/92251434">https://www.luogu.com.cn/record/92251434</a></p>
+</blockquote>
+<hr><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png"></a><br>如无特别说明，本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br>
+            ]]>
+        </content>
+    </entry>
+
+    <entry>
         <title>2022 GitHub 总结</title>
         <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=github-2022" />
         <id>github-2022</id>
