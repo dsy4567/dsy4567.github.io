@@ -295,8 +295,7 @@ section h2 svg {
 section img,
 section video {
     width: 100%;
-    height: auto;
-    max-height: 100vh;
+    max-height: 75vh;
 }
 @media only screen and (max-width: 960px) {
     #main {
