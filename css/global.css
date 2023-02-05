@@ -225,7 +225,7 @@ svg[data-icon] {
     justify-content: space-around;
     filter: opacity(0);
     width: 100%;
-    max-width: 1280px;
+    max-width: 1400px;
 }
 #main .左 {
     width: 25%;
@@ -235,6 +235,8 @@ svg[data-icon] {
 }
 #copyright {
     background-color: var(--theme-color-transparent);
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
     padding-top: 8px;
     padding-bottom: 8px;
     margin-bottom: 0;
