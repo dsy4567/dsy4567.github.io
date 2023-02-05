@@ -86,7 +86,7 @@
 
 ::-webkit-scrollbar-thumb {
     background-color: #8888;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
 }
 
 @media (prefers-color-scheme: light) {
