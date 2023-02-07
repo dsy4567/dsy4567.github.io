@@ -2,7 +2,7 @@
 
 ## dsy4567 的小站
 
-主站: <https://dsy4567.cf> (Vercel + Cloudflare CDN)
+主站: <https://dsy4567.cf> (Vercel)
 
 镜像站:
 
