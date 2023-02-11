@@ -533,7 +533,7 @@ div.通知 {
 }
 
 .背景图片 {
-    background: url(https://bing.img.run/rand.php) no-repeat;
+    background: url(/img/bg.jpg) no-repeat;
     background-position: center center;
     background-size: cover;
     margin-bottom: 8px;
