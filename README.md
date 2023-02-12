@@ -14,7 +14,6 @@
 # 👖 第三方库/接口
 
 -   [ByteDance IconPark](https://github.com/bytedance/IconPark)
--   <https://bing.img.run/rand.php>
 -   <https://api.github.com>
 -   [Marked](https://github.com/markedjs/marked)
 -   [网易云音乐](https://music.163.com)
