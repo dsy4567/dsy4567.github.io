@@ -277,7 +277,7 @@ code {
     background-color: var(--theme-color-transparent);
     border: 1px solid transparent;
     border-radius: var(--border-radius);
-    padding: 4px;
+    padding: 1.5px;
 }
 pre {
     background-color: var(--theme-color-transparent);
