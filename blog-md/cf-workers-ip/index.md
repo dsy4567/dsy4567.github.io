@@ -63,6 +63,8 @@ export default {
 
 访问 https://\<你的自定义域\>/114514 一段时间后, 回到之前创建的 KV 命名空间, 你的 IP 就出来了
 
+把这个网址发给别人, 只要 TA 打开, 嘿嘿(
+
 ![KV 命名空间管理面板](/blog-md/cf-workers-ip/img/ip.png)
 
 ## 其他有用的东西
