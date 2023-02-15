@@ -222,16 +222,6 @@ let 网抑云阴乐 = {
                 );
                 localStorage.setItem("自动播放", true);
                 qs("#网抑云阴乐封面").style.animationName = "匀速转";
-                // 羊了个羊这个大**, \u4ed6\u5976\u5976\u7684玩了八百遍都过不去
-                try {
-                    if (
-                        网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].includes(
-                            "普通disco"
-                        )
-                    )
-                        qs("#羊了个羊").style.display = "none";
-                    else qs("#羊了个羊").style.display = "";
-                } catch (e) {}
             };
             网抑云阴乐.正在播放.Audio.onpause = () => {
                 localStorage.setItem("自动播放", false);
