@@ -1,0 +1,13 @@
+{
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "Strict-Transport-Security",
+                    "value": "max-age=114514; includeSubDomains; preload"
+                }
+            ]
+        }
+    ]
+}
