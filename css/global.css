@@ -160,7 +160,7 @@ span#联系方式 * {
 a,
 svg {
     color: var(--theme-color);
-    filter: brightness(0.7);
+    filter: brightness(1);
 }
 a {
     text-decoration: none;
@@ -296,7 +296,7 @@ pre code {
     padding: 0;
 }
 section {
-    background-color: var(--theme-color-transparent);
+    background-color: hsl(calc(var(--theme-color-h) * 360), calc(var(--theme-color-s) * 100%), calc(var(--theme-color-l) * 100% - 5%));
     border: 1px solid transparent;
     border-radius: var(--border-radius);
     margin: 8px;

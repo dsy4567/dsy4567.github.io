@@ -394,6 +394,9 @@ fetch("/json/theme.json")
                 btn.ariaChecked = true;
                 [
                     "--theme-color",
+                    "--theme-color-h",
+                    "--theme-color-s",
+                    "--theme-color-l",
                     "--theme-color-transparent",
                     "--text-color",
                 ].forEach(n => {
@@ -402,6 +405,9 @@ fetch("/json/theme.json")
                 qs("#主题色").content = theme[t]["--theme-color"];
                 localStorage.setItem("theme", t);
                 localStorage.setItem("主题色", theme[t]["--theme-color"]);
+                localStorage.setItem("主题色h", theme[t]["--theme-color-h"]);
+                localStorage.setItem("主题色s", theme[t]["--theme-color-s"]);
+                localStorage.setItem("主题色l", theme[t]["--theme-color-l"]);
                 localStorage.setItem(
                     "透明色",
                     theme[t]["--theme-color-transparent"]
@@ -538,14 +544,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.body.scrollIntoView({ behavior: "smooth" })
         );
     // 超时强制隐藏加载界面
-    setTimeout(
-        () =>
-            !loaded &&
-            (完成加载() ||
-                (已强制隐藏加载界面 = true) ||
-                alert("错误: 页面未能在规定的时间内完成加载")),
-        5000
-    );
+    setTimeout(() => {
+        if (!loaded) {
+            完成加载();
+            已强制隐藏加载界面 = true;
+        }
+    }, 5000);
     加载模块();
 });
 addEventListener("load", () => {

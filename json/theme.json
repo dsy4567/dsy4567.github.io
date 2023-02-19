@@ -1,61 +1,97 @@
 {
     "深色": {
         "--theme-color": "#222",
+        "--theme-color-h": 0.0,
+        "--theme-color-s": 0.0,
+        "--theme-color-l": 0.13,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#ddd"
     },
     "浅色": {
         "--theme-color": "#bbb",
+        "--theme-color-h": 0.0,
+        "--theme-color-s": 0.0,
+        "--theme-color-l": 0.73,
         "--theme-color-transparent": "#fff6",
         "--text-color": "#000"
     },
     "粉色": {
         "--theme-color": "#ffc0cb",
+        "--theme-color-h": 0.97,
+        "--theme-color-s": 1.0,
+        "--theme-color-l": 0.88,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#000"
     },
     "橙黄色": {
         "--theme-color": "#ffa500",
+        "--theme-color-h": 0.11,
+        "--theme-color-s": 1.0,
+        "--theme-color-l": 0.5,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#fff"
     },
     "紫色": {
-        "--theme-color": "#6A0DAD",
+        "--theme-color": "#6a0dad",
+        "--theme-color-h": 0.76,
+        "--theme-color-s": 0.86,
+        "--theme-color-l": 0.36,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#fff"
     },
     "天依蓝": {
-        "--theme-color": "#6cf",
+        "--theme-color": "#66ccff",
+        "--theme-color-h": 0.56,
+        "--theme-color-s": 1.0,
+        "--theme-color-l": 0.7,
         "--theme-color-transparent": "#fff2",
-        "--text-color": "#000"
+        "--text-color": "#fff"
     },
     "支付宝蓝": {
         "--theme-color": "#1678ff",
+        "--theme-color-h": 0.6,
+        "--theme-color-s": 1.0,
+        "--theme-color-l": 0.54,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#fff"
     },
     "中国收钱学会蓝": {
         "--theme-color": "#069",
+        "--theme-color-h": 0.56,
+        "--theme-color-s": 1.0,
+        "--theme-color-l": 0.3,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#fff"
     },
     "初音绿": {
         "--theme-color": "#39c5bb",
+        "--theme-color-h": 0.49,
+        "--theme-color-s": 0.55,
+        "--theme-color-l": 0.5,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#000"
     },
     "恶臭绿": {
         "--theme-color": "#114514",
+        "--theme-color-h": 0.34,
+        "--theme-color-s": 0.6,
+        "--theme-color-l": 0.17,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#fff"
     },
     "微信绿": {
         "--theme-color": "#1aad19",
+        "--theme-color-h": 0.33,
+        "--theme-color-s": 0.75,
+        "--theme-color-l": 0.39,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#fff"
     },
     "中国红": {
         "--theme-color": "#e60000",
+        "--theme-color-h": 0.0,
+        "--theme-color-s": 1.0,
+        "--theme-color-l": 0.45,
         "--theme-color-transparent": "#fff4",
         "--text-color": "#fff"
     }
