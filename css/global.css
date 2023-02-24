@@ -75,7 +75,7 @@
 }
 
 ::selection {
-    background-color: rgba(200, 200, 200, 0.5);
+    background-color: #888;
 }
 
 ::-webkit-scrollbar {
@@ -88,6 +88,7 @@
     background-color: #8888;
     border-radius: var(--border-radius);
 }
+
 ::-webkit-scrollbar-thumb:active {
     background-color: #888;
 }
@@ -95,6 +96,9 @@
 @media (prefers-color-scheme: light) {
     html {
         --theme-color: #ddd;
+        --theme-color-h: 0;
+        --theme-color-s: 0;
+        --theme-color-l: 0.87;
         --theme-color-transparent: #fff8;
         --text-color: #222;
     }
@@ -102,9 +106,31 @@
 @media (prefers-color-scheme: dark) {
     html {
         --theme-color: #222;
+        --theme-color-h: 0;
+        --theme-color-s: 0;
+        --theme-color-l: 0.13;
         --theme-color-transparent: #fff2;
         --text-color: #ddd;
     }
+}
+html {
+    --bg-color: hsl(
+        calc(var(--theme-color-h) * 360),
+        calc(var(--theme-color-s) * 100%),
+        calc(var(--theme-color-l) * 100% - 3%)
+    );
+    --bg-color-dark: hsl(
+        calc(var(--theme-color-h) * 360),
+        calc(var(--theme-color-s) * 100%),
+        calc(var(--theme-color-l) * 100%)
+    );
+    --bg-color-dark-2: hsl(
+        calc(var(--theme-color-h) * 360),
+        calc(var(--theme-color-s) * 100%),
+        calc(var(--theme-color-l) * 100% + 3%)
+    );
+    --bg-color-light: 0;
+    --link-color: #000;
 }
 @media (forced-colors: active) {
     a:hover {
@@ -118,7 +144,8 @@
     }
 }
 @media (prefers-reduced-motion: reduce) {
-    * {
+    *,
+    *::after {
         animation-duration: 0s !important;
         transition: none !important;
     }
@@ -159,19 +186,16 @@ span#联系方式 * {
 }
 a,
 svg {
-    color: var(--theme-color);
-    filter: brightness(1);
+    color: var(--link-color);
 }
 a {
-    text-decoration: none;
+    text-decoration: 1px underline var(--link-color);
 }
 a:hover,
 a:focus-visible {
-    filter: brightness(0.9);
-    text-decoration: underline;
+    text-decoration: 1px underline transparent;
 }
 a:active {
-    filter: brightness(0.5);
 }
 a.无滤镜,
 a.无滤镜:hover,
@@ -179,9 +203,11 @@ a.无滤镜:focus-visible,
 a.无滤镜:active {
     filter: none;
 }
-a.外链::after {
+a.外链::after,
+a.外链:hover:active::after {
     content: "↗";
 }
+
 a[title]::after {
     content: "" !important;
 }
@@ -215,10 +241,10 @@ svg[data-icon] {
     border-radius: 50%;
 }
 .fill {
-    fill: var(--theme-color);
+    fill: var(--link-color);
 }
 .stroke {
-    stroke: var(--theme-color);
+    stroke: var(--link-color);
 }
 #main {
     animation-duration: 1s;
@@ -239,7 +265,7 @@ svg[data-icon] {
     width: 75%;
 }
 #copyright {
-    background-color: var(--theme-color-transparent);
+    background-color: var(--bg-color);
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
     padding-top: 8px;
@@ -269,12 +295,12 @@ svg[data-icon] {
     min-width: 256px;
 }
 blockquote {
-    background-color: var(--theme-color-transparent);
+    background-color: var(--bg-color-dark-2);
     border: 1px solid transparent;
-    border-left: 8px solid var(--theme-color);
+    border-left: 8px solid var(--theme-color-transparent);
     border-radius: var(--border-radius);
-    margin: 0;
-    padding: 1px;
+    margin: 0px;
+    padding: 4px;
 }
 code {
     background-color: var(--theme-color-transparent);
@@ -296,12 +322,15 @@ pre code {
     padding: 0;
 }
 section {
-    background-color: hsl(calc(var(--theme-color-h) * 360), calc(var(--theme-color-s) * 100%), calc(var(--theme-color-l) * 100% - 5%));
+    background-color: var(--bg-color);
     border: 1px solid transparent;
     border-radius: var(--border-radius);
     margin: 8px;
     padding: 12px;
     word-break: break-word;
+}
+section section {
+    background-color: var(--bg-color-dark);
 }
 section:hover {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
@@ -413,6 +442,7 @@ hr {
 }
 #导航栏 a {
     color: var(--text-color);
+    text-decoration: none;
 }
 
 #网抑云阴乐封面 {

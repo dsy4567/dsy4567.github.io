@@ -8,10 +8,10 @@
         "--text-color": "#ddd"
     },
     "浅色": {
-        "--theme-color": "#bbb",
+        "--theme-color": "#ddd",
         "--theme-color-h": 0.0,
         "--theme-color-s": 0.0,
-        "--theme-color-l": 0.73,
+        "--theme-color-l": 0.87,
         "--theme-color-transparent": "#fff6",
         "--text-color": "#000"
     },
@@ -22,6 +22,14 @@
         "--theme-color-l": 0.88,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#000"
+    },
+    "粉红色": {
+        "--theme-color": "#c83296",
+        "--theme-color-h": 0.89,
+        "--theme-color-s": 0.6,
+        "--theme-color-l": 0.49,
+        "--theme-color-transparent": "#fff4",
+        "--text-color": "#fff"
     },
     "橙黄色": {
         "--theme-color": "#ffa500",
@@ -85,14 +93,6 @@
         "--theme-color-s": 0.75,
         "--theme-color-l": 0.39,
         "--theme-color-transparent": "#fff2",
-        "--text-color": "#fff"
-    },
-    "中国红": {
-        "--theme-color": "#e60000",
-        "--theme-color-h": 0.0,
-        "--theme-color-s": 1.0,
-        "--theme-color-l": 0.45,
-        "--theme-color-transparent": "#fff4",
         "--text-color": "#fff"
     }
 }

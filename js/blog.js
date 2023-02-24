@@ -50,7 +50,7 @@ export async function main(/** @type {String} */ 路径) {
                             el.className += " 可固定";
                         }
                     });
-                _global["global.js"]().添加链接点击事件();
+                _global["global.js"]().添加点击事件和设置图标();
                 if (location.href.includes("#")) {
                     try {
                         qs(
@@ -128,7 +128,7 @@ ${(() => {
                         sect.id = "评论区";
                         sect.innerHTML = html;
                         qs("#main .右").append(sect);
-                        _global["global.js"]().添加链接点击事件();
+                        _global["global.js"]().添加点击事件和设置图标();
                         qsa("svg[data-icon]").forEach(el => {
                             el.outerHTML =
                                 _global["global.js"]().图标[el.dataset.icon] &&
@@ -181,7 +181,7 @@ ${(() => {
                     qs("#main .右").append(sect);
                 });
                 qs("#正在加载文章提示").remove();
-                _global["global.js"]().添加链接点击事件();
+                _global["global.js"]().添加点击事件和设置图标();
             })
             .catch(e => {
                 console.error(e);

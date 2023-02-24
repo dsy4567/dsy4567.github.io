@@ -2,7 +2,7 @@
 
 "use strict";
 
-window.onerror = () => {
+window.onerror = function () {
     try {
         qs("div#加载界面").style.display = "none";
         qs("div#main").style.display = "flex";
@@ -36,41 +36,52 @@ function ce(arg) {
     return document.createElement(arg);
 }
 /**
- * 更美观的 alert
  * @param {string} m
  */
-alert = m => {
+function 提示(m) {
     let el = ce("div");
     el.innerHTML = m;
     el.className = "通知";
     el.ariaLive = "assertive";
     document.body.append(el);
-    setTimeout(() => {
+    setTimeout(function () {
         el.style.animationName = "隐藏";
-        setTimeout(() => {
+        setTimeout(function () {
             el.remove();
         }, 500);
     }, 3000);
-};
+}
+function 尽快设置主题色() {
+    if (localStorage.getItem("主题色h")) {
+        document.documentElement.style.setProperty(
+            "--theme-color",
+            (qs("#主题色").content = localStorage.getItem("主题色"))
+        );
+        document.documentElement.style.setProperty(
+            "--theme-color-h",
+            localStorage.getItem("主题色h")
+        );
+        document.documentElement.style.setProperty(
+            "--theme-color-s",
+            localStorage.getItem("主题色s")
+        );
+        document.documentElement.style.setProperty(
+            "--theme-color-l",
+            localStorage.getItem("主题色")
+        );
+        document.documentElement.style.setProperty(
+            "--theme-color-transparent",
+            localStorage.getItem("透明色")
+        );
+        document.documentElement.style.setProperty(
+            "--text-color",
+            localStorage.getItem("字体色")
+        );
+    }
+}
 
 // 方便暴露到全局变量
-var _global = {},
-    尽快设置主题色 = () => {
-        if (localStorage.getItem("主题色")) {
-            document.documentElement.style.setProperty(
-                "--theme-color",
-                (qs("#主题色").content = localStorage.getItem("主题色"))
-            );
-            document.documentElement.style.setProperty(
-                "--theme-color-transparent",
-                localStorage.getItem("透明色")
-            );
-            document.documentElement.style.setProperty(
-                "--text-color",
-                localStorage.getItem("字体色")
-            );
-        }
-    };
+var _global = {};
 addEventListener("storage", 尽快设置主题色);
 尽快设置主题色();
 
