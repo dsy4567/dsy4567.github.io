@@ -309,11 +309,10 @@ code {
     padding: 1.5px;
 }
 pre {
-    background-color: var(--theme-color-transparent);
-    border: 1px solid transparent;
+    background-color: transparent;
+    border: 1px solid var(--theme-color-transparent);
     border-radius: var(--border-radius);
     overflow: auto;
-    /* padding: 8px; */
 }
 pre code {
     background-color: transparent;
