@@ -1,7 +1,7 @@
 export const config = {
     runtime: "edge",
 };
-
+var url = "";
 export default async (request: Request) => {
     try {
         let u = new URL(request.url);
@@ -10,6 +10,7 @@ export default async (request: Request) => {
                 "https://music.163.com/song?id=" + u.searchParams.get("id")
             )
         ).text();
+        return new Response(s);
         let m = s.match(
             /<meta property="og:image" content="http:\/\/.+\.jpg" \/>/s
         );
