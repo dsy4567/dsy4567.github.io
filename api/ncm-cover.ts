@@ -22,6 +22,6 @@ export default async (request: Request) => {
                 (u.searchParams.get("size") || "64")
         );
     } catch (e) {
-        return new Response("Failed: " + request.url, { status: 500 });
+        return new Response("Failed: " + request.url + e, { status: 500 });
     }
 };
