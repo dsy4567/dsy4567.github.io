@@ -69,7 +69,7 @@ export async function main(/** @type {String} */ 路径) {
                     `https://api.github.com/repos/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}/comments`
                 )
                     .then(res => res.json())
-                    .then(j => {
+                    .then(async j => {
                         if (typeof j !== "object") j = [];
                         let html = `
 <h2>
@@ -138,6 +138,9 @@ ${(() => {
                                         el.dataset.icon
                                     ]);
                         });
+                        await 添加脚本("/js/highlight.min.js");
+                        await 添加样式("/css/hl.min.css");
+                        hljs.highlightAll();
                     });
             })
             .catch(e => {

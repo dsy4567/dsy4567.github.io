@@ -42,6 +42,35 @@ function 隐藏加载页面() {
     qs("#main").ariaBusy = "false";
 }
 /**
+ * @param {string} url
+ */
+function 添加样式(url) {
+    return new Promise(resolve => {
+        if (qs("link[href*='" + url + "']")) return resolve({});
+        let l = ce("link");
+        l.onload = ev => {
+            resolve(ev);
+        };
+        l.href = url;
+        l.rel = "stylesheet";
+        document.head.append(l);
+    });
+}
+/**
+ * @param {string} url
+ */
+async function 添加脚本(url) {
+    return new Promise(resolve => {
+        if (qs("script[src*='" + url + "']")) return resolve({});
+        let s = ce("script");
+        s.onload = ev => {
+            resolve(ev);
+        };
+        s.src = url;
+        document.head.append(s);
+    });
+}
+/**
  * @param {string} m
  */
 function 提示(m) {
