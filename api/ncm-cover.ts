@@ -6,8 +6,7 @@ export default async (request: Request) => {
         let u = new URL(request.url);
         let s = await (
             await fetch(
-                "https://music.163.com/song?realIP=116.25.146.177&id=" +
-                    u.searchParams.get("id")
+                "https://music.163.com/song?id=" + u.searchParams.get("id")
             )
         ).text();
         let m = s.match(
