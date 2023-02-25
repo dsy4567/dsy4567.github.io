@@ -6,7 +6,8 @@
         "img": "",
         "updated": "2023-02-13T09:55:45.491Z",
         "date": "2023-02-13T09:55:45.491Z",
-        "encrypted": true
+        "encrypted": true,
+        "issue": 15
     },
     {
         "id": "cf-workers-ip",
