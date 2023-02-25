@@ -262,7 +262,10 @@ async function 加载模块() {
 }
 /** @param {{href: string, popstate:boolean}} el */
 function 动态加载(el) {
-    if (正在动态加载) return open(el.href, "_self");
+    if (正在动态加载) {
+        open(el.href, "_self");
+        return 隐藏加载页面();
+    }
     正在动态加载 = true;
     qs("#main").style.display = "none";
     qs("#main").ariaBusy = "true";
@@ -297,11 +300,13 @@ function 动态加载(el) {
             } catch (e) {
                 console.error(e);
                 open(el.href, "_self");
+                隐藏加载页面();
             }
         })
         .catch(e => {
             console.error(e);
             open(el.href, "_self");
+            隐藏加载页面();
         });
 }
 function 完成加载() {
