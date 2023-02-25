@@ -13,15 +13,7 @@ export default async (request: Request) => {
         let m = s.match(
             /<meta property="og:image" content="http:\/\/.+\.jpg" \/>/s
         );
-        return new Response(
-            m?.[0]
-                .replace('<meta property="og:image" content="', "")
-                .replace('" />', "") +
-                "?param=" +
-                (u.searchParams.get("size") || "64") +
-                "y" +
-                (u.searchParams.get("size") || "64")
-        );
+        return new Response(s);
         return fetch(
             m?.[0]
                 .replace('<meta property="og:image" content="', "")
