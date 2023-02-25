@@ -200,7 +200,7 @@ let 网抑云阴乐 = {
                         artwork: [
                             {
                                 src:
-                                    "https://ncmimg.workers.dsy4567.cf/" +
+                                    "https://dsy4567.cf/api/ncm-cover?id=" +
                                     网抑云阴乐.歌单.id[
                                         网抑云阴乐.正在播放.索引
                                     ],
@@ -211,8 +211,9 @@ let 网抑云阴乐 = {
                         qs("#网抑云阴乐封面").src = "";
                     };
                     qs("#网抑云阴乐封面").src =
-                        "https://ncmimg.workers.dsy4567.cf/" +
-                        网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引];
+                        "https://dsy4567.cf/api/ncm-cover?id=" +
+                        网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引] +
+                        "&size=32";
                 };
             }
             网抑云阴乐.正在播放.Audio.onplay = () => {
