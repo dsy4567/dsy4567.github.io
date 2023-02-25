@@ -1,7 +1,6 @@
 export const config = {
     runtime: "edge",
 };
-var url = "";
 export default async (request: Request) => {
     try {
         let u = new URL(request.url);
@@ -14,8 +13,7 @@ export default async (request: Request) => {
         let m = s.match(
             /<meta property="og:image" content="http:\/\/.+\.jpg" \/>/s
         );
-        // return new Response(s);
-        return fetch(
+        return Response.redirect(
             m?.[0]
                 .replace('<meta property="og:image" content="', "")
                 .replace('" />', "") +
