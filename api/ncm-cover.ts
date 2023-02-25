@@ -14,7 +14,7 @@ export default async (request: Request) => {
         m?.[0]
             .replace('<meta property="og:image" content="', "")
             .replace('" />', "") +
-            "?" +
+            "?param=" +
             (u.searchParams.get("size") || "64") +
             "y" +
             (u.searchParams.get("size") || "64")
