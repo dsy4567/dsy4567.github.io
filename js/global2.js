@@ -35,6 +35,12 @@ function qsa(arg) {
 function ce(arg) {
     return document.createElement(arg);
 }
+function 隐藏加载页面() {
+    qs("div#加载界面").style.display = "none";
+    qs("#main").style.display = "flex";
+    qs("#main").style.animationName = "显示";
+    qs("#main").ariaBusy = "false";
+}
 /**
  * @param {string} m
  */

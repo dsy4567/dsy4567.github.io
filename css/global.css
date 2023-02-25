@@ -130,7 +130,7 @@ html {
         calc(var(--theme-color-l) * 100% + 3%)
     );
     --bg-color-light: 0;
-    --link-color: #000;
+    --link-color: var(--text-color);
 }
 @media (forced-colors: active) {
     a:hover {
@@ -309,7 +309,7 @@ code {
     padding: 1.5px;
 }
 pre {
-    background-color: var(--theme-color-transparent);
+    background-color: var(--bg-color-dark);
     border: 1px solid transparent;
     border-radius: var(--border-radius);
     overflow: auto;
@@ -470,10 +470,14 @@ div#主侧边按钮 {
 div.侧边按钮 * {
     cursor: pointer;
 }
+div.侧边按钮 .fill {
+    fill: #000;
+}
+div.侧边按钮 .stroke {
+    stroke: #000;
+}
 div.侧边按钮 > * {
     background-color: #fff;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
     box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
         rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
     border: 1px solid transparent;

@@ -287,11 +287,10 @@ function 动态加载(el) {
             try {
                 qs("#main .右").innerHTML = m[0];
                 await 加载模块();
-                qs("div#加载界面").style.display = "none";
-                qs("#main").style.display = "flex";
-                qs("#main").style.animationName = "显示";
-                qs("#main").ariaBusy = "false";
 
+                u.pathname
+                    .replace(/(index|\.html)/g, "")
+                    .replace(/\/\//g, "") == "/" && 隐藏加载页面();
                 正在动态加载 = false;
                 添加点击事件和设置图标();
             } catch (e) {
@@ -305,9 +304,7 @@ function 动态加载(el) {
         });
 }
 function 完成加载() {
-    qs("div#加载界面").style.display = "none";
-    qs("div#main").style.display = "flex";
-    qs("div#main").style.animationName = "显示";
+    隐藏加载页面();
     setTimeout(() => {
         let s = ce("style");
         s.innerHTML = `
