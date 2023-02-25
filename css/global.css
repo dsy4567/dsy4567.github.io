@@ -309,11 +309,11 @@ code {
     padding: 1.5px;
 }
 pre {
-    background-color: var(--bg-color-dark);
+    background-color: var(--theme-color-transparent);
     border: 1px solid transparent;
     border-radius: var(--border-radius);
     overflow: auto;
-    padding: 8px;
+    /* padding: 8px; */
 }
 pre code {
     background-color: transparent;
@@ -646,4 +646,8 @@ section#我 img:hover {
 }
 .评论 .评论正文 {
     margin: 4px;
+}
+
+.hljs {
+    background-color: transparent !important;
 }
