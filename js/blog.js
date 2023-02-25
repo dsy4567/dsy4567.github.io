@@ -15,6 +15,21 @@ export async function main(/** @type {String} */ 路径) {
         fetch(`/blog-md/${id}/index.md`)
             .then(res => res.text())
             .then(t => {
+                if (当前文章信息.encrypted) {
+                    let 密码 = prompt("文章受密码保护, 请输入密码以继续阅读");
+                    if (密码) {
+                        let n = 0,
+                            arr = [...密码];
+                        for (let i = 0; i < arr.length; i++) {
+                            n += arr[i].charCodeAt();
+                        }
+                        let arr2 = t.replace(/[\n]/s, "").split(",");
+                        t = "";
+                        arr2.forEach(n2 => {
+                            t += String.fromCharCode(+n2 - 0x66ccff - n);
+                        });
+                    }
+                }
                 let sect = ce("section"),
                     html = marked.parse(t),
                     span = ce("span");
@@ -65,13 +80,14 @@ export async function main(/** @type {String} */ 路径) {
                     location.hash = h;
                 } else qs("#main .右").scrollIntoView({ behavior: "smooth" });
 
-                fetch(
-                    `https://api.github.com/repos/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}/comments`
-                )
-                    .then(res => res.json())
-                    .then(async j => {
-                        if (typeof j !== "object") j = [];
-                        let html = `
+                当前文章信息.issue &&
+                    fetch(
+                        `https://api.github.com/repos/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}/comments`
+                    )
+                        .then(res => res.json())
+                        .then(async j => {
+                            if (typeof j !== "object") j = [];
+                            let html = `
 <h2>
     <svg data-icon="评论" class="小尺寸"></svg>
     <span>评论</span>
@@ -125,23 +141,25 @@ ${(() => {
     return h;
 })()}
 `;
-                        let sect = ce("section");
-                        sect.id = "评论区";
-                        sect.innerHTML = html;
-                        qs("#main .右").append(sect);
-                        _global["global.js"]().添加点击事件和设置图标();
-                        qsa("svg[data-icon]").forEach(el => {
-                            el.outerHTML =
-                                _global["global.js"]().图标[el.dataset.icon] &&
-                                (el.outerHTML =
+                            let sect = ce("section");
+                            sect.id = "评论区";
+                            sect.innerHTML = html;
+                            qs("#main .右").append(sect);
+                            _global["global.js"]().添加点击事件和设置图标();
+                            qsa("svg[data-icon]").forEach(el => {
+                                el.outerHTML =
                                     _global["global.js"]().图标[
                                         el.dataset.icon
-                                    ]);
+                                    ] &&
+                                    (el.outerHTML =
+                                        _global["global.js"]().图标[
+                                            el.dataset.icon
+                                        ]);
+                            });
+                            await 添加脚本("/js/highlight.min.js");
+                            await 添加样式("/css/hl.min.css");
+                            hljs.highlightAll();
                         });
-                        await 添加脚本("/js/highlight.min.js");
-                        await 添加样式("/css/hl.min.css");
-                        hljs.highlightAll();
-                    });
             })
             .catch(e => {
                 console.error(e);
