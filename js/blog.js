@@ -19,7 +19,6 @@ export async function main(/** @type {String} */ 路径) {
                     html = marked.parse(t),
                     span = ce("span");
                 qs("#main .右").append(sect);
-                qs("#正在加载文章提示").remove();
                 sect.innerHTML =
                     html +
                     (html.includes('<nocopyright value="true"></nocopyright>')
@@ -50,7 +49,9 @@ export async function main(/** @type {String} */ 路径) {
                             el.className += " 可固定";
                         }
                     });
-                _global["global.js"]().添加链接点击事件();
+                qs("#正在加载文章提示").remove();
+                隐藏加载页面();
+                _global["global.js"]().添加点击事件和设置图标();
                 if (location.href.includes("#")) {
                     try {
                         qs(
@@ -128,7 +129,7 @@ ${(() => {
                         sect.id = "评论区";
                         sect.innerHTML = html;
                         qs("#main .右").append(sect);
-                        _global["global.js"]().添加链接点击事件();
+                        _global["global.js"]().添加点击事件和设置图标();
                         qsa("svg[data-icon]").forEach(el => {
                             el.outerHTML =
                                 _global["global.js"]().图标[el.dataset.icon] &&
@@ -141,6 +142,7 @@ ${(() => {
             })
             .catch(e => {
                 console.error(e);
+                隐藏加载页面();
                 qs("#正在加载文章提示").innerText =
                     "加载失败, 加载时可能遇到了错误, 或此文章不存在";
             });
@@ -180,11 +182,13 @@ ${(() => {
                     sect.append(h2, img, p, span);
                     qs("#main .右").append(sect);
                 });
+                隐藏加载页面();
                 qs("#正在加载文章提示").remove();
-                _global["global.js"]().添加链接点击事件();
+                _global["global.js"]().添加点击事件和设置图标();
             })
             .catch(e => {
                 console.error(e);
+                隐藏加载页面();
                 qs("#正在加载文章提示").innerText = "加载失败";
             });
     }

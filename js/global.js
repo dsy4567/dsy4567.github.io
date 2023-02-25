@@ -51,7 +51,7 @@ let 网抑云阴乐 = {
                 网抑云阴乐.正在播放.Audio.pause();
             }
         } catch (e) {
-            alert("播放失败");
+            提示("播放失败");
             console.error(e);
         }
     },
@@ -92,7 +92,7 @@ let 网抑云阴乐 = {
             //     ], // 封面
             // });
         } catch (e) {
-            alert("播放失败");
+            提示("播放失败");
             console.error(e);
         }
     },
@@ -133,7 +133,7 @@ let 网抑云阴乐 = {
             //     ], // 封面
             // });
         } catch (e) {
-            alert("播放失败");
+            提示("播放失败");
             console.error(e);
         }
     },
@@ -216,7 +216,7 @@ let 网抑云阴乐 = {
                 };
             }
             网抑云阴乐.正在播放.Audio.onplay = () => {
-                alert(
+                提示(
                     "正在播放: " +
                         网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引]
                 );
@@ -228,17 +228,19 @@ let 网抑云阴乐 = {
                 qs("#网抑云阴乐封面").style.animationName = "unset";
             };
             网抑云阴乐.正在播放.Audio.onerror = e => {
-                alert(
+                提示(
                     "无法播放: " +
-                        网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引]
+                        网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引] +
+                        ", 将在 3 秒后切换下一首"
                 );
                 console.error(e);
+                setTimeout(网抑云阴乐.下一首(), 3000);
             };
             qs("#网抑云阴乐").title =
                 "网抑云阴乐 - 正在播放: " +
                 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引];
         } catch (e) {
-            alert("播放失败");
+            提示("播放失败");
             console.error(e);
         }
     },
@@ -271,17 +273,26 @@ function 动态加载(el) {
                 mt = html.match(/<title>.+<\/title>/s);
             if (!m) throw new Error("动态加载失败: 匹配结果为空");
             document.title = mt[0].replace(/<\/?title>/g, "");
-            !el.popstate && history.pushState(null, "", el.href);
+            let u = new URL(el.href, location.href);
+            !el.popstate &&
+                history.pushState(
+                    {
+                        路径: (u.pathname + u.search)
+                            .replace(/(index|\.html)/g, "")
+                            .replace(/\/\//g, ""),
+                    },
+                    "",
+                    el.href
+                );
             try {
                 qs("#main .右").innerHTML = m[0];
                 await 加载模块();
-                qs("div#加载界面").style.display = "none";
-                qs("#main").style.display = "flex";
-                qs("#main").style.animationName = "显示";
-                qs("#main").ariaBusy = "false";
 
+                u.pathname
+                    .replace(/(index|\.html)/g, "")
+                    .replace(/\/\//g, "") == "/" && 隐藏加载页面();
                 正在动态加载 = false;
-                添加链接点击事件();
+                添加点击事件和设置图标();
             } catch (e) {
                 console.error(e);
                 open(el.href, "_self");
@@ -293,21 +304,19 @@ function 动态加载(el) {
         });
 }
 function 完成加载() {
-    qs("div#加载界面").style.display = "none";
-    qs("div#main").style.display = "flex";
-    qs("div#main").style.animationName = "显示";
+    隐藏加载页面();
     setTimeout(() => {
         let s = ce("style");
         s.innerHTML = `
     a, button, div, section, img {
-       transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0s background-color, 0s color;
+       transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration, 0s background-color, 0s color;
     }`;
         document.head.append(s);
         addEventListener("click", 网抑云阴乐.初始化);
-        添加链接点击事件();
+        添加点击事件和设置图标();
     }, 2000);
 }
-function 添加链接点击事件() {
+function 添加点击事件和设置图标() {
     qsa("svg[data-icon]").forEach(el => {
         图标[el.dataset.icon] && (el.outerHTML = 图标[el.dataset.icon]);
     });
@@ -328,6 +337,9 @@ function 添加链接点击事件() {
         }
         if (el.querySelector("img") && !el.className.includes("无滤镜"))
             el.className += " 无滤镜";
+    });
+    qsa("img").forEach(el => {
+        el.ondblclick = () => open(el.src, "_blank");
     });
 }
 // 网抑云阴乐歌单+控件
@@ -394,6 +406,9 @@ fetch("/json/theme.json")
                 btn.ariaChecked = true;
                 [
                     "--theme-color",
+                    "--theme-color-h",
+                    "--theme-color-s",
+                    "--theme-color-l",
                     "--theme-color-transparent",
                     "--text-color",
                 ].forEach(n => {
@@ -402,12 +417,15 @@ fetch("/json/theme.json")
                 qs("#主题色").content = theme[t]["--theme-color"];
                 localStorage.setItem("theme", t);
                 localStorage.setItem("主题色", theme[t]["--theme-color"]);
+                localStorage.setItem("主题色h", theme[t]["--theme-color-h"]);
+                localStorage.setItem("主题色s", theme[t]["--theme-color-s"]);
+                localStorage.setItem("主题色l", theme[t]["--theme-color-l"]);
                 localStorage.setItem(
                     "透明色",
                     theme[t]["--theme-color-transparent"]
                 );
                 localStorage.setItem("字体色", theme[t]["--text-color"]);
-                提示用户 !== false && alert("已切换主题: " + t);
+                提示用户 !== false && 提示("已切换主题: " + t);
             };
             if (t === localStorage.getItem("theme")) btn.onclick(false);
             let f = () => qs("#所有主题").append(btn);
@@ -528,7 +546,7 @@ addEventListener("keydown", ev => {
     else if (k == "m") new Audio(美).play();
 });
 addEventListener("copy", () => {
-    alert("复制成功");
+    提示("复制成功");
 });
 document.addEventListener("DOMContentLoaded", async () => {
     DOMContentLoaded = true;
@@ -538,14 +556,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.body.scrollIntoView({ behavior: "smooth" })
         );
     // 超时强制隐藏加载界面
-    setTimeout(
-        () =>
-            !loaded &&
-            (完成加载() ||
-                (已强制隐藏加载界面 = true) ||
-                alert("错误: 页面未能在规定的时间内完成加载")),
-        5000
-    );
+    setTimeout(() => {
+        if (!loaded) {
+            完成加载();
+            已强制隐藏加载界面 = true;
+        }
+    }, 5000);
     加载模块();
 });
 addEventListener("load", () => {
@@ -556,12 +572,13 @@ addEventListener("load", () => {
 });
 addEventListener("popstate", ev => {
     if (
-        (location.pathname + location.search)
+        ((location.pathname + location.search)
             .replace(/(index|\.html)/g, "")
             .replace(/\/\//g, "") == 路径 &&
-        location.href.includes("#")
+            location.href.includes("#")) ||
+        ev.state?.路径 == 路径
     )
-        return;
+        return ev.preventDefault();
     动态加载({
         href: location.pathname,
         popstate: true,
@@ -592,7 +609,7 @@ _global["global.js"] = () => ({
     加载模块,
     动态加载,
     完成加载,
-    添加链接点击事件,
+    添加点击事件和设置图标,
     图标,
 });
 
