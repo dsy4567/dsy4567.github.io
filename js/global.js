@@ -30,6 +30,7 @@ let 路径 = (location.pathname + location.search)
     /** @type {string} */ 太,
     /** @type {string} */ 美;
 let 网抑云阴乐 = {
+    重试timeout: -1,
     已初始化: false,
     立即播放: false,
     设置: { 音量: 0x66ccff / 10000000 },
@@ -44,6 +45,7 @@ let 网抑云阴乐 = {
     },
     播放暂停() {
         try {
+            clearTimeout(网抑云阴乐.重试timeout);
             网抑云阴乐.初始化();
             if (网抑云阴乐.正在播放.Audio.paused) {
                 网抑云阴乐.正在播放.Audio.play();
@@ -57,6 +59,7 @@ let 网抑云阴乐 = {
     },
     上一首() {
         try {
+            clearTimeout(网抑云阴乐.重试timeout);
             网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
@@ -98,6 +101,7 @@ let 网抑云阴乐 = {
     },
     下一首() {
         try {
+            clearTimeout(网抑云阴乐.重试timeout);
             网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
@@ -235,7 +239,8 @@ let 网抑云阴乐 = {
                         ", 将在 3 秒后切换下一首"
                 );
                 console.error(e);
-                setTimeout(网抑云阴乐.下一首, 3000);
+                clearTimeout(网抑云阴乐.重试timeout);
+                网抑云阴乐.重试timeout = setTimeout(网抑云阴乐.下一首, 3000);
             };
             qs("#网抑云阴乐").title =
                 "网抑云阴乐 - 正在播放: " +
