@@ -14,7 +14,7 @@ export async function main(/** @type {String} */ 路径) {
         let 当前文章信息 = {};
         fetch(`/blog-md/${id}/index.md`)
             .then(res => res.text())
-            .then(t => {
+            .then(async t => {
                 if (当前文章信息.encrypted) {
                     let 密码 = prompt("文章受密码保护, 请输入密码以继续阅读");
                     if (密码) {
