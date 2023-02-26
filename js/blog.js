@@ -80,6 +80,10 @@ export async function main(/** @type {String} */ 路径) {
                     location.hash = h;
                 } else qs("#main .右").scrollIntoView({ behavior: "smooth" });
 
+                await 添加脚本("/js/highlight.min.js");
+                添加样式("/css/hl.min.css");
+                hljs.highlightAll();
+
                 当前文章信息.issue &&
                     fetch(
                         `https://api.github.com/repos/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}/comments`
@@ -156,8 +160,6 @@ ${(() => {
                                             el.dataset.icon
                                         ]);
                             });
-                            await 添加脚本("/js/highlight.min.js");
-                            await 添加样式("/css/hl.min.css");
                             hljs.highlightAll();
                         });
             })
@@ -165,7 +167,7 @@ ${(() => {
                 console.error(e);
                 隐藏加载页面();
                 qs("#正在加载文章提示").innerText =
-                    "加载失败, 加载时可能遇到了错误, 或此文章不存在";
+                    "加载失败, 加载时可能遇到了错误, 或此文章不存在, 如果文章已加密，您还可能输入了错误的密码";
             });
         for (let i = 0; i < 所有文章信息.length; i++) {
             const 文章信息 = 所有文章信息[i];
