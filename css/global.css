@@ -83,12 +83,17 @@
     width: 8px;
     height: 8px;
 }
-
+div::-webkit-scrollbar-thumb {
+    border: 1px solid var(--theme-color);
+}
 ::-webkit-scrollbar-thumb {
     background-color: #8888;
+    border: 3px solid var(--theme-color);
     border-radius: var(--border-radius);
 }
-
+::-webkit-scrollbar-thumb:hover {
+    border: 1px solid var(--theme-color);
+}
 ::-webkit-scrollbar-thumb:active {
     background-color: #888;
 }
