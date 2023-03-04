@@ -76,24 +76,6 @@ let 网抑云阴乐 = {
                 "上次播放",
                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
             );
-            // navigator.mediaSession.metadata = new MediaMetadata({
-            //     title: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].replace(
-            //         网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
-            //             " - "
-            //         )[0] + " - ",
-            //         ""
-            //     ), // 歌名
-            //     artist: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
-            //         " - "
-            //     )[0], // 歌手
-            //     artwork: [
-            //         {
-            //             src:
-            //                 "https://ncmimg.workers.dsy4567.cf/" +
-            //                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引],
-            //         },
-            //     ], // 封面
-            // });
         } catch (e) {
             提示("播放失败");
             console.error(e);
@@ -118,24 +100,6 @@ let 网抑云阴乐 = {
                 "上次播放",
                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
             );
-            // navigator.mediaSession.metadata = new MediaMetadata({
-            //     title: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].replace(
-            //         网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
-            //             " - "
-            //         )[0] + " - ",
-            //         ""
-            //     ), // 歌名
-            //     artist: 网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引].split(
-            //         " - "
-            //     )[0], // 歌手
-            //     artwork: [
-            //         {
-            //             src:
-            //                 "https://ncmimg.workers.dsy4567.cf/" +
-            //                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引],
-            //         },
-            //     ], // 封面
-            // });
         } catch (e) {
             提示("播放失败");
             console.error(e);
@@ -188,7 +152,8 @@ let 网抑云阴乐 = {
                     "nexttrack",
                     网抑云阴乐.下一首
                 );
-                网抑云阴乐.正在播放.Audio.oncanplay = () => {
+                网抑云阴乐.正在播放.Audio.oncanplay = async () => {
+                    let 封面;
                     navigator.mediaSession.metadata = new MediaMetadata({
                         title: 网抑云阴乐.歌单.歌名[
                             网抑云阴乐.正在播放.索引
@@ -203,21 +168,24 @@ let 网抑云阴乐 = {
                         ].split(" - ")[0], // 歌手
                         artwork: [
                             {
-                                src:
-                                    "https://dsy4567.cf/api/ncm-cover?id=" +
-                                    网抑云阴乐.歌单.id[
-                                        网抑云阴乐.正在播放.索引
-                                    ],
+                                src: (封面 = (
+                                    await (
+                                        await fetch(
+                                            `https://ncm.vercel.dsy4567.cf/song/detail?ids=${
+                                                网抑云阴乐.歌单.id[
+                                                    网抑云阴乐.正在播放.索引
+                                                ]
+                                            }&realIP=111.18.65.162`
+                                        )
+                                    ).json()
+                                ).songs[0].al.picUrl),
                             },
                         ], // 封面
                     });
                     qs("#网抑云阴乐封面").onerror = () => {
                         qs("#网抑云阴乐封面").src = "";
                     };
-                    qs("#网抑云阴乐封面").src =
-                        "https://dsy4567.cf/api/ncm-cover?id=" +
-                        网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引] +
-                        "&size=32";
+                    qs("#网抑云阴乐封面").src = 封面;
                 };
             }
             网抑云阴乐.正在播放.Audio.onplay = () => {

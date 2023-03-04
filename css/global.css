@@ -83,9 +83,9 @@
     width: 8px;
     height: 8px;
 }
-div::-webkit-scrollbar-thumb {
+/* div::-webkit-scrollbar-thumb {
     border: 1px solid var(--theme-color);
-}
+} */
 ::-webkit-scrollbar-thumb {
     background-color: #8888;
     border: 3px solid var(--theme-color);
@@ -550,8 +550,7 @@ div.侧边按钮 .拥有更多选项 > .更多选项 > * {
 }
 div.侧边按钮 .拥有更多选项 > .更多选项 > *:hover,
 div.侧边按钮 .拥有更多选项 > .更多选项 > *:focus-visible {
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
-        rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+    box-shadow: rgb(0 0 0 / 24%) 0px 12px 8px 0px, rgb(0 0 0 / 19%) 0px 17px 8px 0px;
 }
 
 div.通知 {
