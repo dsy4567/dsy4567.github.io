@@ -15,8 +15,9 @@
 
 -   [ByteDance IconPark](https://github.com/bytedance/IconPark)
 -   <https://api.github.com>
+-   [highlight.js](https://github.com/highlightjs/highlight.js/)
 -   [Marked](https://github.com/markedjs/marked)
--   [网易云音乐](https://music.163.com)
+-   [网易云音乐](https://music.163.com) + https://ncm.vercel.dsy4567.cf/
 
 # ⚖️ 许可证
 
@@ -24,15 +25,14 @@
 
 欢迎在遵守许可证的前提下使用/贡献代码 🎉
 
-> 修改代码时必须保留页脚最后一行的仓库链接和原作者信息,
-> 以及代码顶部的版权信息,
+> 修改代码时必须保留页脚最后一行的仓库链接和原作者信息, 以及代码顶部的版权信息,
 > 可以添加修改后代码的仓库链接及作者信息
 >
 > ```html
-> Made with ❤️ by <a href="https://github.com/dsy4567">dsy4567</a> | <a href="https://github.com/dsy4567/dsy4567.github.io">源代码(GitHub)</a>
+> Made with ❤️ by <a href="https://github.com/dsy4567">dsy4567</a> |
+> <a href="https://github.com/dsy4567/dsy4567.github.io">源代码(GitHub)</a>
 > ```
 >
 > ```js
 > /* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
 > ```
->
