@@ -13,23 +13,39 @@ export async function main(/** @type {String} */ 路径) {
         let id = u.searchParams.get("id");
         let 当前文章信息 = {};
         fetch(`/blog-md/${id}/index.md`)
-            .then(res => res.text())
+            .then(res => res.arrayBuffer())
             .then(async t => {
                 if (当前文章信息.encrypted) {
                     let 密码 = prompt("文章受密码保护, 请输入密码以继续阅读");
                     if (密码) {
-                        let n = 0,
-                            arr = [...密码];
-                        for (let i = 0; i < arr.length; i++) {
-                            n += arr[i].charCodeAt();
+                        const KEY = [
+                                0x66, 0xcc, 0xff, 0x39, 0xc5, 0xbb, 0x11, 0x45,
+                                0x14, 0x19, 0x19, 0x81,
+                            ],
+                            PASSWORD = [...密码];
+                        for (let i = 0; i < PASSWORD.length; i++) {
+                            PASSWORD[i] = PASSWORD[i].charCodeAt(0);
                         }
-                        let arr2 = t.replace(/[\n]/s, "").split(",");
-                        t = "";
-                        arr2.forEach(n2 => {
-                            t += String.fromCharCode(+n2 - 0x66ccff - n);
-                        });
+                        for (let i = 0; i < PASSWORD.length; i++) {
+                            for (let j = 0; j < KEY.length; j++) {
+                                PASSWORD[i] ^= KEY[j];
+                            }
+                        }
+                        let data = new Uint8Array(t);
+                        for (let i = 0; i < data.length; i++) {
+                            for (let j = 0; j < PASSWORD.length; j++) {
+                                data[i] ^= PASSWORD[j];
+                            }
+                        }
+                        t = data.buffer;
                     }
                 }
+                t = await new Blob([t], {
+                    type: "text/markdown; charset=UTF-8",
+                }).text();
+                if (t[0] != "#")
+                    throw new Error("密码错误/文章未按规范格式编写");
+
                 let sect = ce("section"),
                     html = marked.parse(t),
                     span = ce("span");
@@ -165,6 +181,7 @@ ${(() => {
             })
             .catch(e => {
                 console.error(e);
+                阻止搜索引擎收录();
                 隐藏加载页面();
                 qs("#正在加载文章提示").innerText =
                     "加载失败, 加载时可能遇到了错误, 或此文章不存在, 如果文章已加密, 您还可能输入了错误的密码";
@@ -211,6 +228,7 @@ ${(() => {
             })
             .catch(e => {
                 console.error(e);
+                阻止搜索引擎收录();
                 隐藏加载页面();
                 qs("#正在加载文章提示").innerText = "加载失败";
             });

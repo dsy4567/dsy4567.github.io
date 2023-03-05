@@ -471,7 +471,7 @@ div.侧边按钮 {
 div#主侧边按钮 {
     top: calc(75vh - 33px * 4);
 }
-div.侧边按钮 * {
+div.侧边按钮 button {
     cursor: pointer;
 }
 div.侧边按钮 .fill {
@@ -550,7 +550,8 @@ div.侧边按钮 .拥有更多选项 > .更多选项 > * {
 }
 div.侧边按钮 .拥有更多选项 > .更多选项 > *:hover,
 div.侧边按钮 .拥有更多选项 > .更多选项 > *:focus-visible {
-    box-shadow: rgb(0 0 0 / 24%) 0px 12px 8px 0px, rgb(0 0 0 / 19%) 0px 17px 8px 0px;
+    box-shadow: rgb(0 0 0 / 24%) 0px 12px 8px 0px,
+        rgb(0 0 0 / 19%) 0px 17px 8px 0px;
 }
 
 div.通知 {

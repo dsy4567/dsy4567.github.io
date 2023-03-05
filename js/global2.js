@@ -114,6 +114,9 @@ function 尽快设置主题色() {
         );
     }
 }
+function 阻止搜索引擎收录() {
+    qs("meta[name='robots']").content = "noindex";
+}
 
 // 方便暴露到全局变量
 var _global = {};

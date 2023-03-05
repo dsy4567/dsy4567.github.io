@@ -243,6 +243,7 @@ function 动态加载(el) {
     qs("#main").style.display = "none";
     qs("#main").ariaBusy = "true";
     qs("div#加载界面").style.display = "";
+    qs("meta[name='robots']").content = "";
     fetch(el.href)
         .then(res => res.text())
         .then(async html => {
