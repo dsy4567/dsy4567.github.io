@@ -350,8 +350,8 @@ section h2 svg {
 }
 section img,
 section video {
-    max-width: 100%;
-    max-height: 75vh;
+    width: 100%;
+    height: auto;
 }
 
 hr {
