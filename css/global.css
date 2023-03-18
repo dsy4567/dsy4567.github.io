@@ -350,7 +350,7 @@ section h2 svg {
 }
 section img,
 section video {
-    max-width: 100%;
+    width: 100%;
     height: auto;
 }
 
@@ -654,4 +654,28 @@ section#我 img:hover {
 
 .hljs {
     background-color: transparent !important;
+}
+
+#技能 {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    padding: 8px;
+}
+
+#技能 > p {
+    margin: 4px;
+    margin-bottom: 16px;
+}
+
+#技能 > p > span {
+    background-color: var(--theme-color-transparent);
+    border: 1px solid;
+    border-radius: var(--border-radius);
+    display: block;
+    margin-top: 8px;
+    height: 2px;
+}
+#技能 > p > span::before {
+    content: attr(aria-label);
 }
