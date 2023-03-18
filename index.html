@@ -33,17 +33,11 @@
             href="https://dsy4567.github.io/rss.xml"
         />
 
-        <link rel="preconnect" href="https://api.github.com" />
+        <link rel="dns-prefetch" href="https://api.github.com" />
 
         <link
             rel="preload"
             href="/json/ncm.json"
-            as="fetch"
-            crossorigin="anonymous"
-        />
-        <link
-            rel="preload"
-            href="/json/saying.json"
             as="fetch"
             crossorigin="anonymous"
         />
@@ -163,12 +157,13 @@
                         </a>
                     </span>
                 </section>
-                <section class="随机金句">
+                <section class="一言">
                     <h2>
-                        <svg class="小尺寸" data-icon="随机金句"></svg>
-                        <span>随机金句</span>
+                        <svg class="小尺寸" data-icon="一言"></svg>
+                        <span>一言</span>
                     </h2>
-                    <p id="随机金句">加载中</p>
+                    <p id="一言">加载中</p>
+                    <span class="date">双击查看详细信息</span>
                 </section>
                 <section>
                     <h2>

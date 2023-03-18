@@ -17,7 +17,8 @@
 -   <https://api.github.com>
 -   [highlight.js](https://github.com/highlightjs/highlight.js/)
 -   [Marked](https://github.com/markedjs/marked)
--   [网易云音乐](https://music.163.com) + https://ncm.vercel.dsy4567.cf/
+-   [网易云音乐](https://music.163.com) + [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+-   [一言](https://hitokoto.cn/)
 
 # ⚖️ 许可证
 

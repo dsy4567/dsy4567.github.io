@@ -412,13 +412,17 @@ fetch("/json/theme.json")
             DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
         });
     });
-fetch("/json/saying.json")
+fetch("https://v1.hitokoto.cn/")
     .then(res => res.json())
     .then(j => {
-        let f = () =>
-            (qs("#随机金句").innerHTML =
-                "&emsp;&emsp;" +
-                (j[Math.ceil(Math.random() * Number(j?.length))] || j[0]));
+        let f = () => {
+            qs("#一言").innerText = j.hitokoto;
+            qsa("#一言, .一言 .date").forEach(
+                el =>
+                    (el.ondblclick = () =>
+                        open("https://hitokoto.cn/?uuid=" + j.uuid, "_blank"))
+            );
+        };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     })
     .catch(e => console.error(e));
