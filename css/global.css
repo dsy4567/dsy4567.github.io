@@ -261,7 +261,7 @@ svg[data-icon] {
     justify-content: space-around;
     filter: opacity(0);
     width: 100%;
-    max-width: 1400px;
+    max-width: 1500px;
 }
 #main .左 {
     width: 25%;
