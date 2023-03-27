@@ -46,7 +46,8 @@ let 网抑云阴乐 = {
         所有歌词: [],
     },
     更改音量() {
-        // 没写完
+        网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量 =
+            ((网抑云阴乐.设置.音量 * 100 + 25) % 125) / 100;
     },
     切换(欲播放的音乐id, 立即播放 = false) {
         for (let i = 0; i < 网抑云阴乐.歌单.id.length; i++) {
@@ -467,9 +468,14 @@ fetch("/json/ncm.json")
                 },
                 "在网抑云阴乐中查看"
             );
+            svg(
+                `<svg class="特小尺寸" data-icon="音量"></svg>`,
+                网抑云阴乐.更改音量,
+                "音量"
+            );
             qs("#阴乐控件").insertAdjacentHTML(
                 "beforeend",
-                `<ol id="播放列表"></ol>`
+                `<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a><ol id="播放列表"></ol>`
             );
             Object.keys(j).forEach(歌名 => {
                 let li = ce("li");
