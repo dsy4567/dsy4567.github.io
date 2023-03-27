@@ -13,6 +13,7 @@ let 路径 = (location.pathname + location.search)
     loaded = false,
     已强制隐藏加载界面 = false,
     正在动态加载 = false,
+    歌词interval = -1,
     图标 = {},
     /** @type {string} */ ctrl,
     /** @type {string} */ 鸡1,
@@ -33,7 +34,7 @@ let 网抑云阴乐 = {
     重试timeout: -1,
     已初始化: false,
     立即播放: false,
-    设置: { 音量: 0x66ccff / 10000000 },
+    设置: { 音量: 50 / 100 },
     歌单: {
         /** @type {string[]} */ 歌名: [],
         /** @type {number[]} */ id: [],
@@ -42,6 +43,41 @@ let 网抑云阴乐 = {
     正在播放: {
         索引: 0,
         /** @type {HTMLAudioElement} */ Audio: null,
+        所有歌词: [],
+    },
+    更改音量() {
+        // 没写完
+    },
+    切换(欲播放的音乐id, 立即播放 = false) {
+        for (let i = 0; i < 网抑云阴乐.歌单.id.length; i++) {
+            const id = 网抑云阴乐.歌单.id[i];
+            if (id == 欲播放的音乐id) {
+                网抑云阴乐.正在播放.索引 = i;
+                break;
+            }
+        }
+        if (立即播放) {
+            try {
+                clearTimeout(网抑云阴乐.重试timeout);
+                网抑云阴乐.初始化();
+                网抑云阴乐.正在播放.Audio.pause();
+                网抑云阴乐.正在播放.Audio.currentTime = 0;
+                网抑云阴乐.正在播放.Audio.src = `http://music.163.com/song/media/outer/url?id=${
+                    网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
+                }.mp3`;
+                网抑云阴乐.正在播放.Audio.autoplay = true;
+                qs("#网抑云阴乐").title =
+                    "网抑云阴乐 - 正在播放: " +
+                    网抑云阴乐.歌单.歌名[网抑云阴乐.正在播放.索引];
+                localStorage.setItem(
+                    "上次播放",
+                    网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
+                );
+            } catch (e) {
+                提示("播放失败");
+                console.error(e);
+            }
+        }
     },
     播放暂停() {
         try {
@@ -60,6 +96,7 @@ let 网抑云阴乐 = {
     上一首() {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
+            clearInterval(歌词interval);
             网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
@@ -84,6 +121,7 @@ let 网抑云阴乐 = {
     下一首() {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
+            clearInterval(歌词interval);
             网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
@@ -114,13 +152,10 @@ let 网抑云阴乐 = {
             // 根据 id 定位上次播放的音乐
             if (localStorage.getItem("上次播放")) {
                 let 上次播放 = localStorage.getItem("上次播放");
-                for (let i = 0; i < 网抑云阴乐.歌单.id.length; i++) {
-                    const id = 网抑云阴乐.歌单.id[i];
-                    if (id == 上次播放) {
-                        网抑云阴乐.正在播放.索引 = i;
-                        break;
-                    }
-                }
+                网抑云阴乐.切换(上次播放);
+                qs("#播放列表").scrollTop = qs(
+                    "li[data-id='" + 上次播放 + "']"
+                )?.offsetTop;
             }
             网抑云阴乐.正在播放.Audio = new Audio(
                 `http://music.163.com/song/media/outer/url?id=${
@@ -153,6 +188,52 @@ let 网抑云阴乐 = {
                     网抑云阴乐.下一首
                 );
                 网抑云阴乐.正在播放.Audio.oncanplay = async () => {
+                    qs("#歌词").innerText = "";
+                    clearInterval(歌词interval);
+                    网抑云阴乐.正在播放.所有歌词 = [];
+                    fetch(
+                        `https://ncm.vercel.dsy4567.cf/lyric?id=${
+                            网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
+                        }&realIP=111.18.65.162`
+                    )
+                        .then(res => res.json())
+                        .then(async j => {
+                            let 待解析歌词;
+                            if (
+                                !(待解析歌词 = j.lrc.lyric) &&
+                                j.lrc.version != 6
+                            ) {
+                                qs("#歌词").innerText = "";
+                                clearInterval(歌词interval);
+                                网抑云阴乐.正在播放.所有歌词 = [];
+                                return;
+                            }
+                            await 添加脚本("/js/lrc-parser.js");
+                            网抑云阴乐.正在播放.所有歌词 =
+                                lrcParser(待解析歌词).scripts;
+
+                            clearInterval(歌词interval);
+                            歌词interval = setInterval(() => {
+                                for (
+                                    let 索引 = 0;
+                                    索引 < 网抑云阴乐.正在播放.所有歌词.length;
+                                    索引++
+                                ) {
+                                    const 歌词 =
+                                            网抑云阴乐.正在播放.所有歌词[索引],
+                                        时间 =
+                                            网抑云阴乐.正在播放.Audio
+                                                .currentTime + 0.2;
+                                    if (
+                                        歌词.start <= 时间 &&
+                                        时间 <= 歌词.end
+                                    ) {
+                                        qs("#歌词").innerText = 歌词.text;
+                                        break;
+                                    }
+                                }
+                            }, 200);
+                        });
                     let 封面;
                     navigator.mediaSession.metadata = new MediaMetadata({
                         title: 网抑云阴乐.歌单.歌名[
@@ -195,10 +276,34 @@ let 网抑云阴乐 = {
                 );
                 localStorage.setItem("自动播放", true);
                 qs("#网抑云阴乐封面").style.animationName = "匀速转";
+                qsa("li.正在播放")?.forEach(元素 => {
+                    元素.classList.remove("正在播放");
+                });
+                qs(
+                    "li[data-id='" +
+                        网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引] +
+                        "']"
+                )?.classList.add("正在播放");
+                clearInterval(歌词interval);
+                歌词interval = setInterval(() => {
+                    for (
+                        let 索引 = 0;
+                        索引 < 网抑云阴乐.正在播放.所有歌词.length;
+                        索引++
+                    ) {
+                        const 歌词 = 网抑云阴乐.正在播放.所有歌词[索引],
+                            时间 = 网抑云阴乐.正在播放.Audio.currentTime + 0.2;
+                        if (歌词.start <= 时间 && 时间 <= 歌词.end) {
+                            qs("#歌词").innerText = 歌词.text;
+                            break;
+                        }
+                    }
+                }, 200);
             };
             网抑云阴乐.正在播放.Audio.onpause = () => {
                 localStorage.setItem("自动播放", false);
                 qs("#网抑云阴乐封面").style.animationName = "unset";
+                clearInterval(歌词interval);
             };
             网抑云阴乐.正在播放.Audio.onerror = e => {
                 提示(
@@ -288,8 +393,8 @@ function 完成加载() {
     setTimeout(() => {
         let s = ce("style");
         s.innerHTML = `
-    a, button, div, section, img {
-       transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration, 0s background-color, 0s color;
+    a, button, div, section, img, li {
+       transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration, 0.5s background-color, 0.5s color;
     }`;
         document.head.append(s);
         addEventListener("click", 网抑云阴乐.初始化);
@@ -362,6 +467,22 @@ fetch("/json/ncm.json")
                 },
                 "在网抑云阴乐中查看"
             );
+            qs("#阴乐控件").insertAdjacentHTML(
+                "beforeend",
+                `<ol id="播放列表"></ol>`
+            );
+            Object.keys(j).forEach(歌名 => {
+                let li = ce("li");
+                li.innerText = 歌名;
+                li.onclick = li.onkeyup = ev => {
+                    if (ev.key == "Enter" || !ev?.key)
+                        网抑云阴乐.切换(li.dataset.id, true);
+                };
+                li.tabIndex = 0;
+                li.title = 歌名;
+                li.dataset.id = 网抑云阴乐.歌单.json[歌名];
+                qs("#播放列表").append(li);
+            });
             qsa("svg[data-icon]").forEach(el => {
                 图标[el.dataset.icon] && (el.outerHTML = 图标[el.dataset.icon]);
             });

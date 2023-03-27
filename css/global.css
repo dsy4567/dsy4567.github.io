@@ -80,19 +80,12 @@
 
 ::-webkit-scrollbar {
     background-color: transparent;
-    width: 8px;
-    height: 8px;
+    width: 5px;
+    height: 5px;
 }
-/* div::-webkit-scrollbar-thumb {
-    border: 1px solid var(--theme-color);
-} */
 ::-webkit-scrollbar-thumb {
     background-color: #8888;
-    border: 3px solid var(--theme-color);
     border-radius: var(--border-radius);
-}
-::-webkit-scrollbar-thumb:hover {
-    border: 1px solid var(--theme-color);
 }
 ::-webkit-scrollbar-thumb:active {
     background-color: #888;
@@ -350,7 +343,7 @@ section h2 svg {
 }
 section img,
 section video {
-    width: 100%;
+    max-width: 100%;
     height: auto;
 }
 
@@ -493,6 +486,7 @@ div.侧边按钮 > * {
     filter: opacity(0.5);
     margin-top: 5px;
     padding: 4px;
+    position: relative;
     transform: translateX(-4px);
 }
 div.侧边按钮 > *:hover,
@@ -503,6 +497,12 @@ div.侧边按钮 > *:focus-within {
     filter: opacity(1);
     transform: translateX(0);
 }
+div.侧边按钮 > #网抑云阴乐 {
+    z-index: 1;
+}
+div.侧边按钮 > #切换主题 {
+    z-index: 0;
+}
 div.侧边按钮 > #切换主题:hover,
 div.侧边按钮 > #切换主题:focus,
 div.侧边按钮 > #切换主题:focus-within {
@@ -511,7 +511,7 @@ div.侧边按钮 > #切换主题:focus-within {
 div.侧边按钮 > #网抑云阴乐:hover,
 div.侧边按钮 > #网抑云阴乐:focus,
 div.侧边按钮 > #网抑云阴乐:focus-within {
-    transform: translateX(calc(-32px * 5));
+    transform: translateX(calc(-32px * 6));
 }
 div.侧边按钮 .拥有更多选项 > .更多选项 {
     background: #fff;
@@ -529,15 +529,79 @@ div.侧边按钮 #切换主题 > #所有主题 {
     width: calc(32px * 4);
     height: calc(32px * 3);
 }
-div.侧边按钮 #网抑云阴乐 > #阴乐控件 {
-    width: calc(32px * 4);
+div.侧边按钮 #网抑云阴乐 #歌词 {
+    font-size: 12px;
+    position: absolute;
+    user-select: none;
+    overflow: hidden;
+    pointer-events: none;
+    right: 48px;
+    text-align: end;
+    white-space: nowrap;
 }
+
+div.侧边按钮 #网抑云阴乐 #歌词 p {
+    font-size: 12px;
+    height: 16px;
+    line-height: 16px;
+    margin: 0;
+    padding: 0;
+}
+div.侧边按钮 #网抑云阴乐 > #阴乐控件 {
+    width: calc(32px * 5);
+}
+div.侧边按钮 #网抑云阴乐 #播放列表 {
+    background: #fff;
+    color: #000;
+    font-size: 0.9em;
+    margin: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 5px;
+    position: absolute;
+    top: 32px;
+    left: -1px;
+    width: calc(31px * 6 - 3px);
+    height: 118px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+div.侧边按钮 #网抑云阴乐 #播放列表 li {
+    border-top: 1px solid #888;
+    cursor: pointer;
+    display: table-caption;
+    user-select: none;
+    white-space: nowrap;
+}
+div.侧边按钮 #网抑云阴乐 #播放列表 li::marker {
+}
+div.侧边按钮 #网抑云阴乐 #播放列表 li.正在播放,
+div.侧边按钮 #网抑云阴乐 #播放列表 li:hover {
+    background-color: #ccc;
+}
+div.侧边按钮 #网抑云阴乐 #播放列表 li.正在播放::before {
+    background-color: var(--theme-color);
+    display: block;
+    width: 5px;
+    height: 19px;
+    position: absolute;
+    left: 0px;
+    content: "";
+}
+
+div.侧边按钮 #网抑云阴乐 #播放列表 li * {
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 div.侧边按钮 .拥有更多选项:hover > .更多选项,
 div.侧边按钮 .拥有更多选项:focus > .更多选项,
 .更多选项:focus-within {
     filter: opacity(1) !important;
 }
-div.侧边按钮 .拥有更多选项 > .更多选项 > * {
+div.侧边按钮 .拥有更多选项 > .更多选项 > button {
     background-color: #fff;
     border: 1px solid transparent;
     border-radius: 50%;
