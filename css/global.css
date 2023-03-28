@@ -173,11 +173,16 @@ body {
 
 .隐藏链接 {
     position: absolute;
-    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    overflow: hidden;
 }
 
 .隐藏链接:focus-visible {
-    opacity: 1;
+    width: auto;
+    height: auto;
+    z-index: 999;
 }
 
 span#联系方式 {
