@@ -14,27 +14,12 @@ let 路径 = (location.pathname + location.search)
     已强制隐藏加载界面 = false,
     正在动态加载 = false,
     歌词interval = -1,
-    图标 = {},
-    /** @type {string} */ ctrl,
-    /** @type {string} */ 鸡1,
-    /** @type {string} */ 鸡2,
-    /** @type {string} */ 鸡3,
-    /** @type {string} */ 鸡4,
-    /** @type {string} */ 鸡5,
-    /** @type {string} */ 鸡6,
-    /** @type {string} */ 鸡7,
-    /** @type {string} */ 鸡8,
-    /** @type {string} */ 鸡9,
-    /** @type {string} */ 鸡0,
-    /** @type {string} */ 鸡,
-    /** @type {string} */ 你,
-    /** @type {string} */ 太,
-    /** @type {string} */ 美;
+    图标 = {};
 let 网抑云阴乐 = {
     重试timeout: -1,
     已初始化: false,
     立即播放: false,
-    设置: { 音量: 50 / 100 },
+    设置: { 音量: 25 / 100 },
     歌单: {
         /** @type {string[]} */ 歌名: [],
         /** @type {number[]} */ id: [],
@@ -44,12 +29,53 @@ let 网抑云阴乐 = {
         索引: 0,
         /** @type {HTMLAudioElement} */ Audio: null,
         所有歌词: [],
+        所有歌词翻译: [],
     },
     更改音量() {
         网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量 =
             ((网抑云阴乐.设置.音量 * 100 + 25) % 125) / 100;
     },
-    切换(欲播放的音乐id, 立即播放 = false) {
+    恢复歌词() {
+        clearInterval(歌词interval);
+        歌词interval = setInterval(() => {
+            const 时间 = 网抑云阴乐.正在播放.Audio.currentTime + 0.2;
+            for (
+                let 索引 = 网抑云阴乐.正在播放.所有歌词.length - 1;
+                索引 >= 0;
+                索引--
+            ) {
+                const 歌词 = 网抑云阴乐.正在播放.所有歌词[索引];
+
+                if (歌词.start <= 时间) {
+                    !qs("#歌词").innerText.startsWith(歌词.text) &&
+                        (qs("#歌词").innerText = 歌词.text);
+                    break;
+                }
+            }
+            if (网抑云阴乐.正在播放.所有歌词翻译[0])
+                for (
+                    let 索引 = 网抑云阴乐.正在播放.所有歌词翻译.length - 1;
+                    索引 >= 0;
+                    索引--
+                ) {
+                    const 歌词翻译 = 网抑云阴乐.正在播放.所有歌词翻译[索引];
+
+                    if (歌词翻译.start <= 时间) {
+                        !qs("#歌词").innerText.endsWith(")") &&
+                            (qs("#歌词").innerText += ` (${歌词翻译.text})`);
+                        break;
+                    }
+                }
+        }, 200);
+    },
+    async 获取音乐地址(id) {
+        return (
+            await (
+                await fetch("https://ncm.vercel.dsy4567.cf/song/url?id=" + id)
+            ).json()
+        )?.data[0]?.url;
+    },
+    async 切换音乐(欲播放的音乐id, 立即播放 = false) {
         for (let i = 0; i < 网抑云阴乐.歌单.id.length; i++) {
             const id = 网抑云阴乐.歌单.id[i];
             if (id == 欲播放的音乐id) {
@@ -60,12 +86,12 @@ let 网抑云阴乐 = {
         if (立即播放) {
             try {
                 clearTimeout(网抑云阴乐.重试timeout);
-                网抑云阴乐.初始化();
+                await 网抑云阴乐.初始化();
                 网抑云阴乐.正在播放.Audio.pause();
                 网抑云阴乐.正在播放.Audio.currentTime = 0;
-                网抑云阴乐.正在播放.Audio.src = `http://music.163.com/song/media/outer/url?id=${
+                网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
                     网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
-                }.mp3`;
+                );
                 网抑云阴乐.正在播放.Audio.autoplay = true;
                 qs("#网抑云阴乐").title =
                     "网抑云阴乐 - 正在播放: " +
@@ -80,10 +106,10 @@ let 网抑云阴乐 = {
             }
         }
     },
-    播放暂停() {
+    async 播放暂停() {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
-            网抑云阴乐.初始化();
+            await 网抑云阴乐.初始化();
             if (网抑云阴乐.正在播放.Audio.paused) {
                 网抑云阴乐.正在播放.Audio.play();
             } else {
@@ -94,18 +120,19 @@ let 网抑云阴乐 = {
             console.error(e);
         }
     },
-    上一首() {
+    async 上一首() {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
+            qs("#歌词").innerText = "";
             clearInterval(歌词interval);
-            网抑云阴乐.初始化();
+            await 网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
             if (--网抑云阴乐.正在播放.索引 < 0)
                 网抑云阴乐.正在播放.索引 = 网抑云阴乐.歌单.id.length - 1;
-            网抑云阴乐.正在播放.Audio.src = `http://music.163.com/song/media/outer/url?id=${
+            网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
-            }.mp3`;
+            );
             网抑云阴乐.正在播放.Audio.autoplay = true;
             qs("#网抑云阴乐").title =
                 "网抑云阴乐 - 正在播放: " +
@@ -119,18 +146,19 @@ let 网抑云阴乐 = {
             console.error(e);
         }
     },
-    下一首() {
+    async 下一首() {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
+            qs("#歌词").innerText = "";
             clearInterval(歌词interval);
-            网抑云阴乐.初始化();
+            await 网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
             if (++网抑云阴乐.正在播放.索引 > 网抑云阴乐.歌单.id.length - 1)
                 网抑云阴乐.正在播放.索引 = 0;
-            网抑云阴乐.正在播放.Audio.src = `http://music.163.com/song/media/outer/url?id=${
+            网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
                 网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
-            }.mp3`;
+            );
             网抑云阴乐.正在播放.Audio.autoplay = true;
             qs("#网抑云阴乐").title =
                 "网抑云阴乐 - 正在播放: " +
@@ -144,7 +172,7 @@ let 网抑云阴乐 = {
             console.error(e);
         }
     },
-    初始化() {
+    async 初始化() {
         try {
             if (网抑云阴乐.已初始化) return;
             网抑云阴乐.已初始化 = true;
@@ -153,15 +181,15 @@ let 网抑云阴乐 = {
             // 根据 id 定位上次播放的音乐
             if (localStorage.getItem("上次播放")) {
                 let 上次播放 = localStorage.getItem("上次播放");
-                网抑云阴乐.切换(上次播放);
+                网抑云阴乐.切换音乐(上次播放);
                 qs("#播放列表").scrollTop = qs(
                     "li[data-id='" + 上次播放 + "']"
                 )?.offsetTop;
             }
             网抑云阴乐.正在播放.Audio = new Audio(
-                `http://music.163.com/song/media/outer/url?id=${
+                await 网抑云阴乐.获取音乐地址(
                     网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
-                }.mp3`
+                )
             );
             网抑云阴乐.正在播放.Audio.preload = "none";
             网抑云阴乐.正在播放.Audio.autoplay =
@@ -199,10 +227,12 @@ let 网抑云阴乐 = {
                     )
                         .then(res => res.json())
                         .then(async j => {
-                            let 待解析歌词;
+                            let 待解析歌词,
+                                待解析歌词翻译 = j.tlyric?.lyric;
                             if (
-                                !(待解析歌词 = j.lrc.lyric) &&
-                                j.lrc.version != 6
+                                (!(待解析歌词 = j.lrc.lyric) &&
+                                    j.lrc.version != 6) ||
+                                !j.lrc.lyric.includes("[")
                             ) {
                                 qs("#歌词").innerText = "";
                                 clearInterval(歌词interval);
@@ -212,29 +242,19 @@ let 网抑云阴乐 = {
                             await 添加脚本("/js/lrc-parser.js");
                             网抑云阴乐.正在播放.所有歌词 =
                                 lrcParser(待解析歌词).scripts;
+                            待解析歌词翻译?.includes("[") &&
+                                (网抑云阴乐.正在播放.所有歌词翻译 =
+                                    lrcParser(待解析歌词翻译).scripts);
 
-                            clearInterval(歌词interval);
-                            歌词interval = setInterval(() => {
-                                for (
-                                    let 索引 = 0;
-                                    索引 < 网抑云阴乐.正在播放.所有歌词.length;
-                                    索引++
-                                ) {
-                                    const 歌词 =
-                                            网抑云阴乐.正在播放.所有歌词[索引],
-                                        时间 =
-                                            网抑云阴乐.正在播放.Audio
-                                                .currentTime + 0.2;
-                                    if (
-                                        歌词.start <= 时间 &&
-                                        时间 <= 歌词.end
-                                    ) {
-                                        qs("#歌词").innerText = 歌词.text;
-                                        break;
-                                    }
-                                }
-                            }, 200);
+                            网抑云阴乐.恢复歌词();
                         });
+
+                    qs("#播放列表").scrollTop = qs(
+                        "li[data-id='" +
+                            网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引] +
+                            "']"
+                    )?.offsetTop;
+
                     let 封面;
                     navigator.mediaSession.metadata = new MediaMetadata({
                         title: 网抑云阴乐.歌单.歌名[
@@ -285,21 +305,7 @@ let 网抑云阴乐 = {
                         网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引] +
                         "']"
                 )?.classList.add("正在播放");
-                clearInterval(歌词interval);
-                歌词interval = setInterval(() => {
-                    for (
-                        let 索引 = 0;
-                        索引 < 网抑云阴乐.正在播放.所有歌词.length;
-                        索引++
-                    ) {
-                        const 歌词 = 网抑云阴乐.正在播放.所有歌词[索引],
-                            时间 = 网抑云阴乐.正在播放.Audio.currentTime + 0.2;
-                        if (歌词.start <= 时间 && 时间 <= 歌词.end) {
-                            qs("#歌词").innerText = 歌词.text;
-                            break;
-                        }
-                    }
-                }, 200);
+                网抑云阴乐.恢复歌词();
             };
             网抑云阴乐.正在播放.Audio.onpause = () => {
                 localStorage.setItem("自动播放", false);
@@ -482,7 +488,7 @@ fetch("/json/ncm.json")
                 li.innerText = 歌名;
                 li.onclick = li.onkeyup = ev => {
                     if (ev.key == "Enter" || !ev?.key)
-                        网抑云阴乐.切换(li.dataset.id, true);
+                        网抑云阴乐.切换音乐(li.dataset.id, true);
                 };
                 li.tabIndex = 0;
                 li.title = 歌名;
@@ -588,74 +594,6 @@ fetch("https://api.github.com/users/dsy4567")
     })
     .catch(e => console.error(e));
 
-// 🏀🏀🏀
-addEventListener("keydown", ev => {
-    if (!ctrl) {
-        ctrl = "jntm";
-        fetch("/audio/ctrl.mp3")
-            .then(res => res.blob())
-            .then(b => (ctrl = URL.createObjectURL(b)));
-        fetch("/audio/鸡1.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡1 = URL.createObjectURL(b)));
-        fetch("/audio/鸡2.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡2 = URL.createObjectURL(b)));
-        fetch("/audio/鸡3.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡3 = URL.createObjectURL(b)));
-        fetch("/audio/鸡4.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡4 = URL.createObjectURL(b)));
-        fetch("/audio/鸡5.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡5 = URL.createObjectURL(b)));
-        fetch("/audio/鸡6.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡6 = URL.createObjectURL(b)));
-        fetch("/audio/鸡7.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡7 = URL.createObjectURL(b)));
-        fetch("/audio/鸡8.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡8 = URL.createObjectURL(b)));
-        fetch("/audio/鸡9.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡9 = URL.createObjectURL(b)));
-        fetch("/audio/鸡0.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡0 = URL.createObjectURL(b)));
-        fetch("/audio/鸡.mp3")
-            .then(res => res.blob())
-            .then(b => (鸡 = URL.createObjectURL(b)));
-        fetch("/audio/你.mp3")
-            .then(res => res.blob())
-            .then(b => (你 = URL.createObjectURL(b)));
-        fetch("/audio/太.mp3")
-            .then(res => res.blob())
-            .then(b => (太 = URL.createObjectURL(b)));
-        fetch("/audio/美.mp3")
-            .then(res => res.blob())
-            .then(b => (美 = URL.createObjectURL(b)));
-        return;
-    }
-    let k = ev.key.toLowerCase();
-    if (k.includes("control")) new Audio(ctrl).play();
-    else if (k == "1") new Audio(鸡1).play();
-    else if (k == "2") new Audio(鸡2).play();
-    else if (k == "3") new Audio(鸡3).play();
-    else if (k == "4") new Audio(鸡4).play();
-    else if (k == "5") new Audio(鸡5).play();
-    else if (k == "6") new Audio(鸡6).play();
-    else if (k == "7") new Audio(鸡7).play();
-    else if (k == "8") new Audio(鸡8).play();
-    else if (k == "9") new Audio(鸡9).play();
-    else if (k == "0") new Audio(鸡0).play();
-    else if (k == "j") new Audio(鸡).play();
-    else if (k == "n") new Audio(你).play();
-    else if (k == "t") new Audio(太).play();
-    else if (k == "m") new Audio(美).play();
-});
 addEventListener("copy", () => {
     提示("复制成功");
 });
