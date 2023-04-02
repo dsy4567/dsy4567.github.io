@@ -73,7 +73,7 @@ let 网抑云阴乐 = {
             await (
                 await fetch("https://ncm.vercel.dsy4567.cf/song/url?id=" + id)
             ).json()
-        )?.data[0]?.url;
+        )?.data[0]?.url.replace("http://", "https://");
     },
     async 切换音乐(欲播放的音乐id, 立即播放 = false) {
         for (let i = 0; i < 网抑云阴乐.歌单.id.length; i++) {
