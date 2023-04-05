@@ -242,10 +242,10 @@ let 网抑云阴乐 = {
                             }
                             await 添加脚本("/js/lrc-parser.js");
                             网抑云阴乐.正在播放.所有歌词 =
-                                lrcParser(待解析歌词).scripts;
+                                lrcParser(待解析歌词 + "[114514:59:59]qwq\n").scripts;
                             待解析歌词翻译?.includes("[") &&
                                 (网抑云阴乐.正在播放.所有歌词翻译 =
-                                    lrcParser(待解析歌词翻译).scripts);
+                                    lrcParser(待解析歌词翻译 + "[114514:59:59]qwq\n").scripts);
 
                             网抑云阴乐.恢复歌词();
                         });
