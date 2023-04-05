@@ -64,8 +64,7 @@ A,B>0
 ## 代码
 
 ```python
-a=int(input())
-b=int(input())
+a,b=int(input()),int(input())
 print(a+b)
 print(a-b)
 print(a*b)
@@ -75,4 +74,4 @@ print(a%b)
 
 Python <abbr title="永远单身">YYDS!</abbr>
 
-> <https://www.luogu.com.cn/record/92251434>
+> <https://www.luogu.com.cn/record/107080406>
