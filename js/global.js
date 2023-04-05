@@ -220,6 +220,7 @@ let 网抑云阴乐 = {
                     qs("#歌词").innerText = "";
                     clearInterval(歌词interval);
                     网抑云阴乐.正在播放.所有歌词 = [];
+                    网抑云阴乐.正在播放.所有歌词翻译 = [];
                     fetch(
                         `https://ncm.vercel.dsy4567.cf/lyric?id=${
                             网抑云阴乐.歌单.id[网抑云阴乐.正在播放.索引]
