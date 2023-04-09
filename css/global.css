@@ -552,7 +552,8 @@ div.侧边按钮 #网抑云阴乐 #歌词 {
     pointer-events: none;
     right: 48px;
     text-align: end;
-    white-space: nowrap;
+    white-space: normal;
+    width: calc(100vw - 64px);
 }
 
 div.侧边按钮 #网抑云阴乐 #歌词 p {

@@ -70,7 +70,7 @@ let 网抑云阴乐 = {
             await (
                 await fetch("https://ncm.vercel.dsy4567.cf/song/url?id=" + id)
             ).json()
-        )?.data[0]?.url;
+        )?.data[0]?.url.replace("http://", "https://");
     },
     async 切换音乐(欲播放的音乐id, 立即播放 = false) {
         if (typeof 网抑云阴乐.歌单索引[欲播放的音乐id] !== "undefined") {
@@ -209,6 +209,7 @@ let 网抑云阴乐 = {
                     qs("#歌词").innerText = "";
                     clearInterval(歌词interval);
                     网抑云阴乐.正在播放.所有歌词 = [];
+                    网抑云阴乐.正在播放.所有歌词翻译 = [];
                     fetch(
                         `https://ncm.vercel.dsy4567.cf/lyric?id=${
                             网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
@@ -230,10 +231,10 @@ let 网抑云阴乐 = {
                             }
                             await 添加脚本("/js/lrc-parser.js");
                             网抑云阴乐.正在播放.所有歌词 =
-                                lrcParser(待解析歌词).scripts;
+                                lrcParser(待解析歌词 + "[99:59.59]\n").scripts;
                             待解析歌词翻译?.includes("[") &&
                                 (网抑云阴乐.正在播放.所有歌词翻译 =
-                                    lrcParser(待解析歌词翻译).scripts);
+                                    lrcParser(待解析歌词翻译 + "[99:59.99]\n").scripts);
 
                             网抑云阴乐.恢复歌词();
                         });
@@ -628,21 +629,6 @@ _global["global.js"] = () => ({
     路径,
     已强制隐藏加载界面,
     正在动态加载,
-    ctrl,
-    鸡1,
-    鸡2,
-    鸡3,
-    鸡4,
-    鸡5,
-    鸡6,
-    鸡7,
-    鸡8,
-    鸡9,
-    鸡0,
-    鸡,
-    你,
-    太,
-    美,
     网抑云阴乐,
     加载模块,
     动态加载,
