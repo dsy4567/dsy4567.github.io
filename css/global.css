@@ -176,12 +176,14 @@ body {
     width: 1px;
     height: 1px;
     margin: 0;
+    opacity: 0;
     overflow: hidden;
 }
 
 .隐藏链接:focus-visible {
     width: auto;
     height: auto;
+    opacity: 1;
     z-index: 999;
 }
 
@@ -511,6 +513,10 @@ div.侧边按钮 > *:focus-within {
     filter: opacity(1);
     transform: translateX(0);
 }
+
+div.侧边按钮 > #网抑云阴乐:hover, div.侧边按钮 > #网抑云阴乐:focus-within {
+    border-bottom-left-radius: 0;
+}
 div.侧边按钮 > #网抑云阴乐 {
     z-index: 1;
 }
@@ -576,8 +582,8 @@ div.侧边按钮 #网抑云阴乐 #播放列表 {
     padding: 5px;
     position: absolute;
     top: 32px;
-    left: -1px;
-    width: calc(31px * 6 - 3px);
+    left: -34px;
+    width: calc(31px * 6 + 30px);
     height: 118px;
     flex-direction: column;
     flex-wrap: nowrap;
