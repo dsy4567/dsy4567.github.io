@@ -20,7 +20,7 @@ let 网抑云阴乐 = {
     已初始化: false,
     立即播放: false,
     设置: { 音量: 25 / 100 },
-    /** @type {{完整歌名:string, 歌名:string, 歌手:string, 专辑:string, id:number}[]} */ 歌单: [],
+    /** @type {{完整歌名:string, 歌名:string, 歌手:string, 专辑:string, 封面:string, id:number, mv:number}[]} */ 歌单: [],
     /** @type {Record<number, number>} */ 歌单索引: {},
     正在播放: {
         索引: 0,
@@ -66,11 +66,22 @@ let 网抑云阴乐 = {
         }, 200);
     },
     async 获取音乐地址(id) {
-        return (
+        let 数据 = (
             await (
                 await fetch("https://ncm.vercel.dsy4567.cf/song/url?id=" + id)
             ).json()
-        )?.data[0]?.url.replace("http://", "https://");
+        )?.data[0];
+        if (数据?.fee === 0 || 数据?.fee === 8)
+            return 数据?.url.replace("http://", "https://");
+        else
+            return (
+                await (
+                    await fetch(
+                        "https://ncm.vercel.dsy4567.cf/mv/url?id=" +
+                            网抑云阴乐.歌单[网抑云阴乐.歌单索引[id]].mv
+                    )
+                ).json()
+            ).data.url;
     },
     async 切换音乐(欲播放的音乐id, 立即播放 = false) {
         if (typeof 网抑云阴乐.歌单索引[欲播放的音乐id] !== "undefined") {
@@ -205,7 +216,7 @@ let 网抑云阴乐 = {
                     "nexttrack",
                     网抑云阴乐.下一首
                 );
-                网抑云阴乐.正在播放.Audio.oncanplay = async () => {
+                网抑云阴乐.正在播放.Audio.onloadedmetadata = async () => {
                     qs("#歌词").innerText = "";
                     clearInterval(歌词interval);
                     网抑云阴乐.正在播放.所有歌词 = [];
@@ -230,11 +241,13 @@ let 网抑云阴乐 = {
                                 return;
                             }
                             await 添加脚本("/js/lrc-parser.js");
-                            网抑云阴乐.正在播放.所有歌词 =
-                                lrcParser(待解析歌词 + "[99:59.59]\n").scripts;
+                            网抑云阴乐.正在播放.所有歌词 = lrcParser(
+                                待解析歌词 + "[99:59.59]\n"
+                            ).scripts;
                             待解析歌词翻译?.includes("[") &&
-                                (网抑云阴乐.正在播放.所有歌词翻译 =
-                                    lrcParser(待解析歌词翻译 + "[99:59.99]\n").scripts);
+                                (网抑云阴乐.正在播放.所有歌词翻译 = lrcParser(
+                                    待解析歌词翻译 + "[99:59.99]\n"
+                                ).scripts);
 
                             网抑云阴乐.恢复歌词();
                         });
@@ -251,19 +264,11 @@ let 网抑云阴乐 = {
                         artist: 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].歌手,
                         artwork: [
                             {
-                                src: (封面 = (
-                                    await (
-                                        await fetch(
-                                            `https://ncm.vercel.dsy4567.cf/song/detail?ids=${
-                                                网抑云阴乐.歌单[
-                                                    网抑云阴乐.正在播放.索引
-                                                ].id
-                                            }&realIP=111.18.65.162`
-                                        )
-                                    ).json()
-                                ).songs[0].al.picUrl),
+                                src: (封面 =
+                                    网抑云阴乐.歌单[网抑云阴乐.正在播放.索引]
+                                        .封面),
                             },
-                        ], // 封面
+                        ],
                     });
                     qs("#网抑云阴乐封面").onerror = () => {
                         qs("#网抑云阴乐封面").src = "";
@@ -381,7 +386,6 @@ function 完成加载() {
        transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration, 0.5s background-color, 0.5s color;
     }`;
         document.head.append(s);
-        addEventListener("click", 网抑云阴乐.初始化);
         添加点击事件和设置图标();
     }, 2000);
 }
@@ -423,6 +427,8 @@ fetch("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=8219428260")
                 歌名: 音乐信息.name,
                 歌手: 所有歌手.join(" / "),
                 专辑: 音乐信息.al.name,
+                封面: 音乐信息.al.picUrl,
+                mv: 音乐信息.mv,
                 id: 音乐信息.id,
             };
             网抑云阴乐.歌单[i].完整歌名 =
@@ -488,6 +494,8 @@ fetch("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=8219428260")
             qsa("svg[data-icon]").forEach(el => {
                 图标[el.dataset.icon] && (el.outerHTML = 图标[el.dataset.icon]);
             });
+
+            网抑云阴乐.初始化();
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     });
@@ -606,8 +614,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 addEventListener("load", () => {
     loaded = true;
     !已强制隐藏加载界面 && 完成加载();
-    // 省流
-    if (navigator?.connection?.saveData ?? true) 网抑云阴乐.初始化();
 });
 addEventListener("popstate", ev => {
     if (
