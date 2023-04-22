@@ -1,5 +1,7 @@
 # 翻墙教程
 
+<!-- more -->
+
 ![你这是违法行为](/blog-md/gfw-nmsl/img/wf.png)
 
 ## 这墙可不兴翻呀(((

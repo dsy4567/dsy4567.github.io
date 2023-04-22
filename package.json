@@ -1,0 +1,26 @@
+{
+  "name": "dsy4567.github.io",
+  "version": "1.0.0",
+  "description": "90%自己造轮子的个人网站, 0% Vue/React/Bootstrap",
+  "directories": {
+    "example": "example"
+  },
+  "scripts": {
+    "rss": "node ./tools/rss.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsy4567/dsy4567.github.io.git"
+  },
+  "author": "dsy4567",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "bugs": {
+    "url": "https://github.com/dsy4567/dsy4567.github.io/issues"
+  },
+  "homepage": "https://github.com/dsy4567/dsy4567.github.io#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "jsonfile": "^6.1.0",
+    "marked": "^4.3.0"
+  }
+}

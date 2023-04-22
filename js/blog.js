@@ -5,14 +5,21 @@
 let 所有文章信息 = [];
 
 export async function main(/** @type {String} */ 路径) {
+    await import("/js/marked.min.js");
     if (路径.startsWith("/blog?")) {
-        await import("/js/marked.min.js");
         if (!所有文章信息[0])
             所有文章信息 = await (await fetch("/json/blog.json")).json();
         let u = new URL(location.href);
         let id = u.searchParams.get("id");
         let 当前文章信息 = {};
-        fetch(`/blog-md/${id}/index.md`)
+        for (let i = 0; i < 所有文章信息.length; i++) {
+            const 文章信息 = 所有文章信息[i];
+            if (文章信息.id == id) {
+                当前文章信息 = 文章信息;
+                break;
+            }
+        }
+        fetch(当前文章信息.url ? 当前文章信息.url : `/blog-md/${id}/index.md`)
             .then(res => res.text())
             .then(async t => {
                 let sect = ce("section"),
@@ -153,15 +160,8 @@ ${(() => {
                 阻止搜索引擎收录();
                 隐藏加载页面();
                 qs("#正在加载文章提示").innerText =
-                    "加载失败, 加载时可能遇到了错误, 或此文章不存在, 如果文章已加密, 您还可能输入了错误的密码";
+                    "加载失败, 加载时可能遇到了错误, 或此文章不存在";
             });
-        for (let i = 0; i < 所有文章信息.length; i++) {
-            const 文章信息 = 所有文章信息[i];
-            if (文章信息.id == id) {
-                当前文章信息 = 文章信息;
-                break;
-            }
-        }
     } else if (路径 == "/blog") {
         fetch("/json/blog.json")
             .then(res => res.json())
@@ -169,14 +169,14 @@ ${(() => {
                 所有文章信息 = j;
                 j.forEach(文章 => {
                     let a = ce("a"),
-                        h2 = ce("h2"),
+                        br = ce("br"),
                         p = ce("p"),
                         img = ce("img"),
                         span = ce("span"),
                         sect = ce("section");
                     a.href = "/blog.html?id=" + 文章.id;
-                    a.innerText = 文章.name;
-                    p.innerText = 文章.desc;
+                    a.innerText = "阅读更多";
+                    p.innerHTML = marked.parse(文章.desc);
                     span.innerText = `发表于: ${new Date(
                         文章.date
                     ).toLocaleString()}, 更新于: ${new Date(
@@ -187,8 +187,7 @@ ${(() => {
                         img.src = `/blog-md/${文章.id}/img/` + 文章.img;
                         img.alt = img.title = "封面图";
                     } else img = "";
-                    h2.append(a);
-                    sect.append(h2, img, p, span);
+                    sect.append(img, p, a, br, span);
                     qs("#main .右").append(sect);
                 });
                 隐藏加载页面();

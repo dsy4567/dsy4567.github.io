@@ -1,5 +1,7 @@
 # P1932 题解
 
+<!-- more -->
+
 ## 原题
 
 > <https://www.luogu.com.cn/problem/P1932>
