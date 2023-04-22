@@ -416,7 +416,7 @@ function 添加点击事件和设置图标() {
     });
 }
 // 网抑云阴乐歌单+控件
-navigator.userAgent.toLowerCase().match(/bot|spider/g) &&
+!navigator.userAgent.toLowerCase().match(/bot|spider/g) &&
     fetch("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=8219428260")
         .then(res => res.json())
         .then(j => {
