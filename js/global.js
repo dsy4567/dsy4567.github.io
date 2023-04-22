@@ -5,7 +5,8 @@
 const /** @type {Record<string, string[]>} */ 加载清单 = {
         "/": [],
         "/blog": ["blog"],
-    };
+    },
+    歌单id = localStorage.getItem("歌单id") || 8219428260;
 let 路径 = (location.pathname + location.search)
         .replace(/(index|\.html)/g, "")
         .replace(/\/\//g, ""),
@@ -417,7 +418,7 @@ function 添加点击事件和设置图标() {
 }
 // 网抑云阴乐歌单+控件
 !navigator.userAgent.toLowerCase().match(/bot|spider/g) &&
-    fetch("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=8219428260")
+    fetch("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=" + 歌单id)
         .then(res => res.json())
         .then(j => {
             for (let i = 0; i < j.songs.length; i++) {
