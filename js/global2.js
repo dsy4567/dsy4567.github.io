@@ -102,7 +102,7 @@ function 尽快设置主题色() {
         );
         document.documentElement.style.setProperty(
             "--theme-color-l",
-            localStorage.getItem("主题色")
+            localStorage.getItem("主题色l")
         );
         document.documentElement.style.setProperty(
             "--theme-color-transparent",
