@@ -19,7 +19,7 @@ _斜体_
 
 ~~删除线~~
 
-l>!fff!<l
+{% endreveal %}
 
 代码 `console.log(0x66ccff)` 将在控制台打印 `6737151`
 
