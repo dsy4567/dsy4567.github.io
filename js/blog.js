@@ -2,7 +2,8 @@
 
 "use strict";
 
-let 所有文章信息 = [];
+let 所有文章信息 = [],
+    路径 = 获取清理后的路径(true);
 
 export async function main(/** @type {String} */ 路径) {
     await import("/js/marked.min.js");
@@ -44,6 +45,12 @@ export async function main(/** @type {String} */ 路径) {
                     qs("#main > .右 > section > h1").innerText +
                     " | " +
                     document.title;
+
+                let ul = ce("ul"),
+                    目录 = ce("section");
+                let t1 = [0, 0, 0, 0, 0, 0],
+                    t2 = 0,
+                    t3 = 0;
                 qs("#main .右")
                     .querySelectorAll("h1, h2, h3, h4, h5, h6")
                     ?.forEach(el => {
@@ -55,7 +62,34 @@ export async function main(/** @type {String} */ 路径) {
                             el.innerHTML = `<a href="#${el.id}">${el.innerHTML}</a>`;
                             el.className += " 可固定";
                         }
+                        t3 = { H1: 0, H2: 1, H3: 2, H4: 3, H5: 4, H6: 5 }[
+                            el.tagName
+                        ];
+                        if (t2 < t3) {
+                            t2 = t3;
+                        } else if (t2 > t3) {
+                            t1[t2] = 0;
+                            t2 = t3;
+                        }
+                        t1[t2]++;
+                        let li = ce("li"),
+                            a = ce("a");
+                        a.innerText =
+                            t1.join(".").replace(/.0/g, "") +
+                            " " +
+                            el.innerText;
+                        a.href = "#" + el.id;
+                        li.append(a);
+                        ul.append(li);
                     });
+                目录.insertAdjacentHTML(
+                    "afterbegin",
+                    '<h2><svg class="小尺寸" data-icon="目录"></svg><span>目录</span></h2>'
+                );
+                目录.append(ul);
+                目录.className = "目录";
+                qs("#main > .左").append(目录);
+
                 qs("#正在加载文章提示").remove();
                 隐藏加载页面();
                 _global["global.js"]().添加点击事件和设置图标();
@@ -202,3 +236,12 @@ ${(() => {
             });
     }
 }
+
+addEventListener("popstate", () => {
+    if (路径 !== 获取清理后的路径(true)) {
+        路径 = 获取清理后的路径(true);
+        qsa(".目录")?.forEach(el => {
+            el.remove();
+        });
+    }
+});

@@ -73,7 +73,7 @@ let 网抑云阴乐 = {
             ).json()
         )?.data[0];
         if (数据?.fee === 0 || 数据?.fee === 8)
-            return 数据?.url?.replace("http://", "https://");
+            return 数据?.url.replace("http://", "https://");
         else
             return (
                 await (
@@ -82,7 +82,7 @@ let 网抑云阴乐 = {
                             网抑云阴乐.歌单[网抑云阴乐.歌单索引[id]].mv
                     )
                 ).json()
-            )?.data?.url?.replace("http://", "https://");
+            ).data.url;
     },
     async 切换音乐(欲播放的音乐id, 立即播放 = false) {
         if (typeof 网抑云阴乐.歌单索引[欲播放的音乐id] !== "undefined") {
@@ -316,12 +316,8 @@ let 网抑云阴乐 = {
 };
 
 async function 加载模块() {
-    路径 = location.pathname
-        .replace(/(index|\.html)/g, "")
-        .replace(/\/\//g, "");
-    let 路径2 = (location.pathname + location.search)
-        .replace(/(index|\.html)/g, "")
-        .replace(/\/\//g, "");
+    路径 = 获取清理后的路径();
+    let 路径2 = 获取清理后的路径(true);
     for (let i = 0; i < 加载清单[路径].length; i++) {
         let s = 加载清单[路径][i];
         (await import(`/js/${s}.js`)).main(路径2);
@@ -620,10 +616,7 @@ addEventListener("load", () => {
 });
 addEventListener("popstate", ev => {
     if (
-        ((location.pathname + location.search)
-            .replace(/(index|\.html)/g, "")
-            .replace(/\/\//g, "") == 路径 &&
-            location.href.includes("#")) ||
+        (获取清理后的路径(true) == 路径 && location.href.includes("#")) ||
         ev.state?.路径 == 路径
     )
         return ev.preventDefault();
