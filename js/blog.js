@@ -2,8 +2,7 @@
 
 "use strict";
 
-let 所有文章信息 = [],
-    路径 = 获取清理后的路径(true);
+let 所有文章信息 = [];
 
 export async function main(/** @type {String} */ 路径) {
     await import("/js/marked.min.js");
@@ -238,10 +237,9 @@ ${(() => {
 }
 
 addEventListener("popstate", () => {
-    if (路径 !== 获取清理后的路径(true)) {
+    if (!获取清理后的路径(true).includes('id=')) {
         qsa(".目录")?.forEach(el => {
             el.remove();
         });
     }
-    路径 = 获取清理后的路径(true);
 });
