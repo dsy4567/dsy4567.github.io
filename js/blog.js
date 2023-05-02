@@ -238,10 +238,10 @@ ${(() => {
 }
 
 addEventListener("popstate", () => {
-    路径 = 获取清理后的路径(true);
     if (路径 !== 获取清理后的路径(true)) {
         qsa(".目录")?.forEach(el => {
             el.remove();
         });
     }
+    路径 = 获取清理后的路径(true);
 });
