@@ -2,7 +2,8 @@
 
 "use strict";
 
-let 所有文章信息 = [];
+let 所有文章信息 = [],
+    路径 = 获取清理后的路径(true);
 
 export async function main(/** @type {String} */ 路径) {
     await import("/js/marked.min.js");
@@ -74,9 +75,7 @@ export async function main(/** @type {String} */ 路径) {
                         let li = ce("li"),
                             a = ce("a");
                         a.innerText =
-                            t1.join(".").rp(/.0/g, "") +
-                            " " +
-                            el.innerText;
+                            t1.join(".").rp(/.0/g, "") + " " + el.innerText;
                         a.href = "#" + el.id;
                         li.append(a);
                         ul.append(li);
