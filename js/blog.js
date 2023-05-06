@@ -75,7 +75,7 @@ export async function main(/** @type {String} */ 路径) {
                         let li = ce("li"),
                             a = ce("a");
                         a.innerText =
-                            t1.join(".").replace(/.0/g, "") +
+                            t1.join(".").rp(/.0/g, "") +
                             " " +
                             el.innerText;
                         a.href = "#" + el.id;
@@ -237,7 +237,7 @@ ${(() => {
     }
 }
 
-addEventListener("popstate", () => {
+addEventListener("URL发生变化", () => {
     if (路径 !== 获取清理后的路径(true)) {
         路径 = 获取清理后的路径(true);
         qsa(".目录")?.forEach(el => {

@@ -119,9 +119,11 @@ function 阻止搜索引擎收录() {
 }
 function 获取清理后的路径(包含query = false) {
     return (location.pathname + (包含query ? location.search : ""))
-        .replace(/(index|\.html)/g, "")
-        .replace(/\/\//g, "");
+        .rp(/(index|\.html)/g, "")
+        .rp(/\/\//g, "");
 }
+
+var URL发生变化事件=new CustomEvent("URL发生变化")
 
 // 方便暴露到全局变量
 var _global = {};

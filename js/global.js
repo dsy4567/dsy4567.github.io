@@ -8,8 +8,8 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
     },
     歌单id = localStorage.getItem("歌单id") || 8219428260;
 let 路径 = (location.pathname + location.search)
-        .replace(/(index|\.html)/g, "")
-        .replace(/\/\//g, ""),
+        .rp(/(index|\.html)/g, "")
+        .rp(/\/\//g, ""),
     DOMContentLoaded = false,
     loaded = false,
     已强制隐藏加载界面 = false,
@@ -73,7 +73,7 @@ let 网抑云阴乐 = {
             ).json()
         )?.data[0];
         if (数据?.fee === 0 || 数据?.fee === 8)
-            return 数据?.url.replace("http://", "https://");
+            return 数据?.url.rp("http://", "https://");
         else
             return (
                 await (
@@ -341,25 +341,26 @@ function 动态加载(el) {
             let m = html.match(/<!-- START MAIN -->.+<!-- END MAIN -->/s),
                 mt = html.match(/<title>.+<\/title>/s);
             if (!m) throw new Error("动态加载失败: 匹配结果为空");
-            document.title = mt[0].replace(/<\/?title>/g, "");
+            document.title = mt[0].rp(/<\/?title>/g, "");
             let u = new URL(el.href, location.href);
             !el.popstate &&
                 history.pushState(
                     {
                         路径: (u.pathname + u.search)
-                            .replace(/(index|\.html)/g, "")
-                            .replace(/\/\//g, ""),
+                            .rp(/(index|\.html)/g, "")
+                            .rp(/\/\//g, ""),
                     },
                     "",
                     el.href
                 );
+                dispatchEvent(URL发生变化事件)
             try {
                 qs("#main .右").innerHTML = m[0];
                 await 加载模块();
 
                 u.pathname
-                    .replace(/(index|\.html)/g, "")
-                    .replace(/\/\//g, "") == "/" && 隐藏加载页面();
+                    .rp(/(index|\.html)/g, "")
+                    .rp(/\/\//g, "") == "/" && 隐藏加载页面();
                 正在动态加载 = false;
                 添加点击事件和设置图标();
             } catch (e) {
