@@ -73,7 +73,7 @@ let 网抑云阴乐 = {
             ).json()
         )?.data[0];
         if (数据?.fee === 0 || 数据?.fee === 8)
-            return 数据?.url.rp("http://", "https://");
+            return 数据?.url?.rp("http://", "https://");
         else
             return (
                 await (
@@ -82,7 +82,7 @@ let 网抑云阴乐 = {
                             网抑云阴乐.歌单[网抑云阴乐.歌单索引[id]].mv
                     )
                 ).json()
-            ).data.url;
+            )?.data?.url?.replace("http://", "https://");
     },
     async 切换音乐(欲播放的音乐id, 立即播放 = false) {
         if (typeof 网抑云阴乐.歌单索引[欲播放的音乐id] !== "undefined") {
