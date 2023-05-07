@@ -2,6 +2,8 @@
 
 "use strict";
 
+import 网抑云阴乐 from "./ncm.js";
+
 const /** @type {Record<string, string[]>} */ 加载清单 = {
         "/": [],
         "/blog": ["blog"],
@@ -15,309 +17,6 @@ let 路径 = (location.pathname + location.search)
     已强制隐藏加载界面 = false,
     正在动态加载 = false,
     图标 = {};
-let 网抑云阴乐 = {
-    重试timeout: -1,
-    已初始化: false,
-    立即播放: false,
-    设置: { 音量: 25 / 100 },
-    /** @type {{完整歌名:string, 歌名:string, 歌手:string, 专辑:string, 封面:string, id:number, mv:number}[]} */ 歌单: [],
-    /** @type {Record<number, number>} */ 歌单索引: {},
-    正在播放: {
-        索引: 0,
-        /** @type {HTMLAudioElement} */ Audio: new Audio(),
-        所有歌词: [],
-        所有歌词翻译: [],
-        歌词interval: -1,
-        上一句歌词: "",
-    },
-    更改音量() {
-        网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量 =
-            ((网抑云阴乐.设置.音量 * 100 + 25) % 125) / 100;
-    },
-    恢复歌词() {
-        clearInterval(网抑云阴乐.正在播放.歌词interval);
-        网抑云阴乐.正在播放.歌词interval = setInterval(() => {
-            const 时间 = 网抑云阴乐.正在播放.Audio.currentTime + 0.2;
-            let 需要添加翻译 = false,
-                歌词开始时间 = 0;
-            for (
-                let 索引 = 网抑云阴乐.正在播放.所有歌词.length - 1;
-                索引 >= 0;
-                索引--
-            ) {
-                const 歌词 = 网抑云阴乐.正在播放.所有歌词[索引];
-
-                if (歌词.start <= 时间) {
-                    歌词开始时间 = 歌词.start;
-                    if (歌词.text !== 网抑云阴乐.正在播放.上一句歌词) {
-                        网抑云阴乐.正在播放.上一句歌词 = 歌词.text;
-                        qs("#歌词").innerText = 歌词.text;
-                        需要添加翻译 = true;
-                    }
-                    break;
-                }
-            }
-            if (网抑云阴乐.正在播放.所有歌词翻译[0])
-                for (
-                    let 索引 = 网抑云阴乐.正在播放.所有歌词翻译.length - 1;
-                    索引 >= 0;
-                    索引--
-                ) {
-                    const 歌词翻译 = 网抑云阴乐.正在播放.所有歌词翻译[索引];
-
-                    if (歌词翻译.start === 歌词开始时间) {
-                        if (需要添加翻译)
-                            qs("#歌词").innerText += ` (${歌词翻译.text})`;
-                        break;
-                    }
-                }
-        }, 200);
-    },
-    async 获取音乐地址(id) {
-        let 数据 = (
-            await (
-                await fetch("https://ncm.vercel.dsy4567.cf/song/url?id=" + id)
-            ).json()
-        )?.data[0];
-        if (数据?.fee === 0 || 数据?.fee === 8)
-            return 数据?.url?.rp("http://", "https://");
-        else
-            return (
-                await (
-                    await fetch(
-                        "https://ncm.vercel.dsy4567.cf/mv/url?id=" +
-                            网抑云阴乐.歌单[网抑云阴乐.歌单索引[id]].mv
-                    )
-                ).json()
-            )?.data?.url?.replace("http://", "https://");
-    },
-    async 切换音乐(欲播放的音乐id, 立即播放 = false) {
-        if (typeof 网抑云阴乐.歌单索引[欲播放的音乐id] !== "undefined")
-            网抑云阴乐.正在播放.索引 = 网抑云阴乐.歌单索引[欲播放的音乐id];
-
-        if (立即播放)
-            try {
-                clearTimeout(网抑云阴乐.重试timeout);
-                await 网抑云阴乐.初始化();
-                网抑云阴乐.正在播放.Audio.pause();
-                网抑云阴乐.正在播放.Audio.currentTime = 0;
-                网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
-                    网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-                );
-                网抑云阴乐.正在播放.Audio.autoplay = true;
-                qs("#网抑云阴乐").title =
-                    "网抑云阴乐 - 正在播放: " +
-                    网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
-                localStorage.setItem(
-                    "上次播放",
-                    网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-                );
-            } catch (e) {
-                提示("播放失败");
-                console.error(e);
-            }
-    },
-    async 播放暂停() {
-        try {
-            clearTimeout(网抑云阴乐.重试timeout);
-            await 网抑云阴乐.初始化();
-            if (网抑云阴乐.正在播放.Audio.paused)
-                网抑云阴乐.正在播放.Audio.play();
-            else 网抑云阴乐.正在播放.Audio.pause();
-        } catch (e) {
-            提示("播放失败");
-            console.error(e);
-        }
-    },
-    async 上一首() {
-        try {
-            clearTimeout(网抑云阴乐.重试timeout);
-            qs("#歌词").innerText = "";
-            clearInterval(网抑云阴乐.正在播放.歌词interval);
-            await 网抑云阴乐.初始化();
-            网抑云阴乐.正在播放.Audio.pause();
-            网抑云阴乐.正在播放.Audio.currentTime = 0;
-            if (--网抑云阴乐.正在播放.索引 < 0)
-                网抑云阴乐.正在播放.索引 = 网抑云阴乐.歌单.length - 1;
-            网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
-                网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-            );
-            网抑云阴乐.正在播放.Audio.autoplay = true;
-            qs("#网抑云阴乐").title =
-                "网抑云阴乐 - 正在播放: " +
-                网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
-            localStorage.setItem(
-                "上次播放",
-                网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-            );
-        } catch (e) {
-            提示("播放失败");
-            console.error(e);
-        }
-    },
-    async 下一首() {
-        try {
-            clearTimeout(网抑云阴乐.重试timeout);
-            qs("#歌词").innerText = "";
-            clearInterval(网抑云阴乐.正在播放.歌词interval);
-            await 网抑云阴乐.初始化();
-            网抑云阴乐.正在播放.Audio.pause();
-            网抑云阴乐.正在播放.Audio.currentTime = 0;
-            if (++网抑云阴乐.正在播放.索引 > 网抑云阴乐.歌单.length - 1)
-                网抑云阴乐.正在播放.索引 = 0;
-            网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
-                网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-            );
-            网抑云阴乐.正在播放.Audio.autoplay = true;
-            qs("#网抑云阴乐").title =
-                "网抑云阴乐 - 正在播放: " +
-                网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
-            localStorage.setItem(
-                "上次播放",
-                网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-            );
-        } catch (e) {
-            提示("播放失败");
-            console.error(e);
-        }
-    },
-    async 初始化() {
-        try {
-            if (网抑云阴乐.已初始化) return;
-            网抑云阴乐.已初始化 = true;
-            // 根据 id 定位上次播放的音乐
-            if (localStorage.getItem("上次播放")) {
-                let 上次播放 = localStorage.getItem("上次播放");
-                网抑云阴乐.切换音乐(上次播放);
-                qs("#播放列表").scrollTop = qs(
-                    "li[data-id='" + 上次播放 + "']"
-                )?.offsetTop;
-            }
-            网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
-                网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-            );
-            网抑云阴乐.正在播放.Audio.preload = "none";
-            网抑云阴乐.正在播放.Audio.autoplay =
-                (localStorage.getItem("自动播放") &&
-                    JSON.parse(localStorage.getItem("自动播放"))) ??
-                true;
-            网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量;
-            网抑云阴乐.正在播放.Audio.onended = 网抑云阴乐.下一首;
-            if (navigator.mediaSession) {
-                // 使用浏览器/系统提供的控件控制音乐播放
-                navigator.mediaSession.setActionHandler("play", function () {
-                    网抑云阴乐.正在播放.Audio.play();
-                    navigator.mediaSession.playbackState = "playing";
-                });
-                navigator.mediaSession.setActionHandler("pause", function () {
-                    网抑云阴乐.正在播放.Audio.pause();
-                    navigator.mediaSession.playbackState = "paused";
-                });
-                navigator.mediaSession.setActionHandler(
-                    "previoustrack",
-                    网抑云阴乐.上一首
-                );
-                navigator.mediaSession.setActionHandler(
-                    "nexttrack",
-                    网抑云阴乐.下一首
-                );
-                网抑云阴乐.正在播放.Audio.onloadedmetadata = async () => {
-                    qs("#歌词").innerText = "";
-                    clearInterval(网抑云阴乐.正在播放.歌词interval);
-                    网抑云阴乐.正在播放.所有歌词 = [];
-                    网抑云阴乐.正在播放.所有歌词翻译 = [];
-                    fetch(
-                        `https://ncm.vercel.dsy4567.cf/lyric?id=${
-                            网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-                        }&realIP=111.18.65.162`
-                    )
-                        .then(res => res.json())
-                        .then(async j => {
-                            let 待解析歌词,
-                                待解析歌词翻译 = j.tlyric?.lyric;
-                            if (
-                                (!(待解析歌词 = j.lrc.lyric) &&
-                                    j.lrc.version !== 6) ||
-                                !j.lrc.lyric.includes("[")
-                            ) {
-                                qs("#歌词").innerText = "";
-                                clearInterval(网抑云阴乐.正在播放.歌词interval);
-                                网抑云阴乐.正在播放.所有歌词 = [];
-                                return;
-                            }
-                            await 添加脚本("/js/lrc-parser.js");
-                            网抑云阴乐.正在播放.所有歌词 = lrcParser(
-                                待解析歌词 + "[99:59.59]\n"
-                            ).scripts;
-                            待解析歌词翻译?.includes("[") &&
-                                (网抑云阴乐.正在播放.所有歌词翻译 = lrcParser(
-                                    待解析歌词翻译 + "[99:59.99]\n"
-                                ).scripts);
-
-                            网抑云阴乐.恢复歌词();
-                        });
-
-                    qs("#播放列表").scrollTop = qs(
-                        "li[data-id='" +
-                            网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id +
-                            "']"
-                    )?.offsetTop;
-
-                    let 封面;
-                    navigator.mediaSession.metadata = new MediaMetadata({
-                        title: 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].歌名,
-                        artist: 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].歌手,
-                        artwork: [
-                            {
-                                src: (封面 =
-                                    网抑云阴乐.歌单[网抑云阴乐.正在播放.索引]
-                                        .封面),
-                            },
-                        ],
-                    });
-                    qs("#网抑云阴乐封面").onerror = () => {
-                        qs("#网抑云阴乐封面").src = "";
-                    };
-                    qs("#网抑云阴乐封面").src = 封面;
-                };
-            }
-            网抑云阴乐.正在播放.Audio.onplay = () => {
-                localStorage.setItem("自动播放", true);
-                qs("#网抑云阴乐封面").style.animationName = "匀速转";
-                qsa("li.正在播放")?.forEach(元素 => {
-                    元素.classList.remove("正在播放");
-                });
-                qs(
-                    "li[data-id='" +
-                        网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id +
-                        "']"
-                )?.classList.add("正在播放");
-                网抑云阴乐.恢复歌词();
-            };
-            网抑云阴乐.正在播放.Audio.onpause = () => {
-                localStorage.setItem("自动播放", false);
-                qs("#网抑云阴乐封面").style.animationName = "unset";
-                clearInterval(网抑云阴乐.正在播放.歌词interval);
-            };
-            网抑云阴乐.正在播放.Audio.onerror = e => {
-                提示(
-                    "无法播放: " +
-                        网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名 +
-                        ", 将在 3 秒后切换下一首"
-                );
-                console.error(e);
-                clearTimeout(网抑云阴乐.重试timeout);
-                网抑云阴乐.重试timeout = setTimeout(网抑云阴乐.下一首, 3000);
-            };
-            qs("#网抑云阴乐").title =
-                "网抑云阴乐 - 正在播放: " +
-                网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
-        } catch (e) {
-            提示("播放失败");
-            console.error(e);
-        }
-    },
-};
 
 async function 加载模块() {
     路径 = 获取清理后的路径();
@@ -329,9 +28,9 @@ async function 加载模块() {
     路径 = 路径2;
 }
 /** @param {{href: string, popstate:boolean}} el */
-function 动态加载(el) {
+function 动态加载(元素) {
     if (正在动态加载) {
-        open(el.href, "_self");
+        open(元素.href, "_self");
         return 隐藏加载页面();
     }
     正在动态加载 = true;
@@ -339,14 +38,14 @@ function 动态加载(el) {
     qs("#main").ariaBusy = "true";
     qs("div#加载界面").style.display = "";
     qs("meta[name='robots']").content = "";
-    fetch(el.href)
+    fetch(元素.href)
         .then(res => res.text())
         .then(async html => {
             let m = html.match(/<!-- START MAIN -->.+<!-- END MAIN -->/s),
                 mt = html.match(/<title>.+<\/title>/s);
             if (!m) throw new Error("动态加载失败: 匹配结果为空");
-            let u = new URL(el.href, location.href);
-            !el.popstate &&
+            let u = new URL(元素.href, location.href);
+            !元素.popstate &&
                 history.pushState(
                     {
                         路径: (u.pathname + u.search)
@@ -354,7 +53,7 @@ function 动态加载(el) {
                             .rp(/\/\//g, ""),
                     },
                     "",
-                    el.href
+                    元素.href
                 );
             document.title = mt[0].rp(/<\/?title>/g, "");
             dispatchEvent(URL发生变化事件);
@@ -368,13 +67,13 @@ function 动态加载(el) {
                 添加点击事件和设置图标();
             } catch (e) {
                 console.error(e);
-                open(el.href, "_self");
+                open(元素.href, "_self");
                 隐藏加载页面();
             }
         })
         .catch(e => {
             console.error(e);
-            open(el.href, "_self");
+            open(元素.href, "_self");
             隐藏加载页面();
         });
 }
@@ -391,29 +90,30 @@ function 完成加载() {
     }, 2000);
 }
 function 添加点击事件和设置图标() {
-    qsa("svg[data-icon]").forEach(el => {
-        图标[el.dataset.icon] && (el.outerHTML = 图标[el.dataset.icon]);
+    qsa("svg[data-icon]").forEach(元素 => {
+        图标[元素.dataset.icon] && (元素.outerHTML = 图标[元素.dataset.icon]);
     });
-    qsa("a").forEach(el => {
-        if (el.pathname === location.pathname && el.href.includes("#")) return;
-        if (el.host !== location.host && !el.className.includes("外链")) {
-            if (!el.querySelector("img, svg")) el.className += " 外链";
-            el.target = "_blank";
+    qsa("a").forEach(元素 => {
+        if (元素.pathname === location.pathname && 元素.href.includes("#"))
+            return;
+        if (元素.host !== location.host && !元素.className.includes("外链")) {
+            if (!元素.querySelector("img, svg")) 元素.classList.add("外链");
+            元素.target = "_blank";
         } else if (
-            el.host === location.host &&
-            !el.className.includes("动态加载")
+            元素.host === location.host &&
+            !元素.className.includes("动态加载")
         ) {
-            el.className += " 动态加载";
-            el.addEventListener("click", ev => {
-                ev.preventDefault();
-                动态加载(el);
+            元素.classList.add("动态加载");
+            元素.addEventListener("click", 事件 => {
+                事件.preventDefault();
+                动态加载(元素);
             });
         }
-        if (el.querySelector("img") && !el.className.includes("无滤镜"))
-            el.className += " 无滤镜";
+        if (元素.querySelector("img") && !元素.className.includes("无滤镜"))
+            元素.classList.add("无滤镜");
     });
-    qsa("img").forEach(el => {
-        el.ondblclick = () => open(el.src, "_blank");
+    qsa("img").forEach(元素 => {
+        元素.ondblclick = () => open(元素.src, "_blank");
     });
 }
 // 网抑云阴乐歌单+控件
@@ -437,13 +137,22 @@ function 添加点击事件和设置图标() {
                     网抑云阴乐.歌单[i].歌手 + " - " + 网抑云阴乐.歌单[i].歌名;
                 网抑云阴乐.歌单索引[音乐信息.id] = i;
             }
-            function svg(html, onclick, title) {
-                let s = ce("button");
-                s.innerHTML = html;
-                s.onclick = onclick;
-                s.type = "button";
-                s.title = title;
-                qs("#阴乐控件").append(s);
+            function svg(
+                html,
+                /** @type {(元素:HTMLButtonElement)=>void} */ onclick,
+                title,
+                role = "button"
+            ) {
+                let btn = ce("button");
+                btn.innerHTML = html;
+                btn.onclick = () => {
+                    onclick(btn);
+                };
+                btn.type = "button";
+                btn.title = title;
+                btn.role = role;
+                btn.ariaChecked = role === "checkbox" ? false : null;
+                qs("#阴乐控件").append(btn);
             }
             let f = () => {
                 svg(
@@ -473,6 +182,12 @@ function 添加点击事件和设置图标() {
                     "在网抑云阴乐中查看"
                 );
                 svg(
+                    `<svg class="特小尺寸" data-icon="随机播放"></svg>`,
+                    网抑云阴乐.启用或禁用随机播放,
+                    "随机播放",
+                    "checkbox"
+                );
+                svg(
                     `<svg class="特小尺寸" data-icon="音量"></svg>`,
                     网抑云阴乐.更改音量,
                     "音量"
@@ -483,9 +198,9 @@ function 添加点击事件和设置图标() {
                 );
                 网抑云阴乐.歌单.forEach(音乐信息 => {
                     let li = ce("li");
-                    li.innerText = 音乐信息.完整歌名;
-                    li.onclick = li.onkeyup = ev => {
-                        if (ev?.key === "Enter" || !ev?.key)
+                    li.innerHTML = `${音乐信息.歌名} <span class="淡化">${音乐信息.歌手}</span>`;
+                    li.onclick = li.onkeyup = 事件 => {
+                        if (事件?.key === "Enter" || !事件?.key)
                             网抑云阴乐.切换音乐(音乐信息.id, true);
                     };
                     li.tabIndex = 0;
@@ -493,9 +208,9 @@ function 添加点击事件和设置图标() {
                     li.dataset.id = 音乐信息.id;
                     qs("#播放列表").append(li);
                 });
-                qsa("svg[data-icon]").forEach(el => {
-                    图标[el.dataset.icon] &&
-                        (el.outerHTML = 图标[el.dataset.icon]);
+                qsa("svg[data-icon]").forEach(元素 => {
+                    图标[元素.dataset.icon] &&
+                        (元素.outerHTML = 图标[元素.dataset.icon]);
                 });
 
                 网抑云阴乐.初始化();
@@ -505,17 +220,17 @@ function 添加点击事件和设置图标() {
 // 主题
 fetch("/json/theme.json")
     .then(res => res.json())
-    .then(theme => {
-        Object.keys(theme).forEach(t => {
+    .then(主题 => {
+        Object.keys(主题).forEach(t => {
             let btn = ce("button");
-            btn.style.backgroundColor = theme[t]["--theme-color"];
+            btn.style.backgroundColor = 主题[t]["--theme-color"];
             btn.title = t;
             btn.type = "button";
             btn.role = "radio";
             btn.ariaChecked = false;
             btn.onclick = 提示用户 => {
                 qsa("#所有主题 > button").forEach(
-                    el => (el.ariaChecked = false)
+                    元素 => (元素.ariaChecked = false)
                 );
                 btn.ariaChecked = true;
                 [
@@ -526,19 +241,19 @@ fetch("/json/theme.json")
                     "--theme-color-transparent",
                     "--text-color",
                 ].forEach(n => {
-                    document.documentElement.style.setProperty(n, theme[t][n]);
+                    document.documentElement.style.setProperty(n, 主题[t][n]);
                 });
-                qs("#主题色").content = theme[t]["--theme-color"];
+                qs("#主题色").content = 主题[t]["--theme-color"];
                 localStorage.setItem("theme", t);
-                localStorage.setItem("主题色", theme[t]["--theme-color"]);
-                localStorage.setItem("主题色h", theme[t]["--theme-color-h"]);
-                localStorage.setItem("主题色s", theme[t]["--theme-color-s"]);
-                localStorage.setItem("主题色l", theme[t]["--theme-color-l"]);
+                localStorage.setItem("主题色", 主题[t]["--theme-color"]);
+                localStorage.setItem("主题色h", 主题[t]["--theme-color-h"]);
+                localStorage.setItem("主题色s", 主题[t]["--theme-color-s"]);
+                localStorage.setItem("主题色l", 主题[t]["--theme-color-l"]);
                 localStorage.setItem(
                     "透明色",
-                    theme[t]["--theme-color-transparent"]
+                    主题[t]["--theme-color-transparent"]
                 );
-                localStorage.setItem("字体色", theme[t]["--text-color"]);
+                localStorage.setItem("字体色", 主题[t]["--text-color"]);
                 提示用户 !== false && 提示("已切换主题: " + t);
             };
             if (t === localStorage.getItem("theme")) btn.onclick(false);
@@ -552,8 +267,8 @@ fetch("https://v1.hitokoto.cn/")
         let f = () => {
             qs("#一言").innerText = j.hitokoto;
             qsa("#一言, .一言 .date").forEach(
-                el =>
-                    (el.ondblclick = () =>
+                元素 =>
+                    (元素.ondblclick = () =>
                         open("https://hitokoto.cn/?uuid=" + j.uuid, "_blank"))
             );
         };
@@ -565,8 +280,9 @@ fetch("/json/icon.json")
     .then(j => {
         let f = () => {
             图标 = j;
-            qsa("svg[data-icon]").forEach(el => {
-                图标[el.dataset.icon] && (el.outerHTML = 图标[el.dataset.icon]);
+            qsa("svg[data-icon]").forEach(元素 => {
+                图标[元素.dataset.icon] &&
+                    (元素.outerHTML = 图标[元素.dataset.icon]);
             });
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
@@ -618,12 +334,12 @@ addEventListener("load", () => {
     loaded = true;
     !已强制隐藏加载界面 && 完成加载();
 });
-addEventListener("popstate", ev => {
+addEventListener("popstate", 事件 => {
     if (
         (获取清理后的路径(true) === 路径 && location.href.includes("#")) ||
-        ev.state?.路径 === 路径
+        事件.state?.路径 === 路径
     )
-        return ev.preventDefault();
+        return 事件.preventDefault();
     动态加载({
         href: location.pathname,
         popstate: true,
@@ -632,7 +348,9 @@ addEventListener("popstate", ev => {
 
 _global["global.js"] = () => ({
     loaded,
+    DOMContentLoaded,
     路径,
+    图标,
     已强制隐藏加载界面,
     正在动态加载,
     网抑云阴乐,

@@ -48,11 +48,11 @@ function 添加样式(url) {
     return new Promise(resolve => {
         if (qs("link[href*='" + url + "']")) return resolve({});
         let l = ce("link");
-        l.onload = ev => {
-            resolve(ev);
+        l.onload = 事件 => {
+            resolve(事件);
         };
         l.href = url;
-        l.rel = "stylesheet";
+        l.r元素 = "stylesheet";
         document.head.append(l);
     });
 }
@@ -63,8 +63,8 @@ async function 添加脚本(url) {
     return new Promise(resolve => {
         if (qs("script[src*='" + url + "']")) return resolve({});
         let s = ce("script");
-        s.onload = ev => {
-            resolve(ev);
+        s.onload = 事件 => {
+            resolve(事件);
         };
         s.src = url;
         document.head.append(s);
@@ -74,15 +74,15 @@ async function 添加脚本(url) {
  * @param {string} m
  */
 function 提示(m) {
-    let el = ce("div");
-    el.innerHTML = m;
-    el.className = "通知";
-    el.ariaLive = "assertive";
-    document.body.append(el);
+    let 元素 = ce("div");
+    元素.innerHTML = m;
+    元素.classList.add("通知");
+    元素.ariaLive = "assertive";
+    document.body.append(元素);
     setTimeout(function () {
-        el.style.animationName = "隐藏";
+        元素.style.animationName = "隐藏";
         setTimeout(function () {
-            el.remove();
+            元素.remove();
         }, 500);
     }, 3000);
 }
@@ -121,6 +121,9 @@ function 获取清理后的路径(包含query = false) {
     return (location.pathname + (包含query ? location.search : ""))
         .rp(/(index|\.html)/g, "")
         .rp(/\/\//g, "");
+}
+function 随机数(最大) {
+    return Math.floor(Math.random() * 最大 + 1);
 }
 
 var URL发生变化事件 = new CustomEvent("URL发生变化");

@@ -234,11 +234,11 @@ video {
     background-color: var(--theme-color-transparent);
     border-radius: var(--border-radius);
 }
-spoiler{
+spoiler {
     background-color: #000 !important;
     color: #000 !important;
 }
-spoiler:hover{
+spoiler:hover {
     color: #fff !important;
 }
 nav h1 {
@@ -305,6 +305,9 @@ svg[data-icon] {
 }
 .date:hover {
     filter: drop-shadow(2px 4px 6px #333) opacity(1);
+}
+.淡化 {
+    opacity: 0.5;
 }
 .组 {
     display: flex;
@@ -521,7 +524,8 @@ div.侧边按钮 > *:focus-within {
     transform: translateX(0);
 }
 
-div.侧边按钮 > #网抑云阴乐:hover, div.侧边按钮 > #网抑云阴乐:focus-within {
+div.侧边按钮 > #网抑云阴乐:hover,
+div.侧边按钮 > #网抑云阴乐:focus-within {
     border-bottom-left-radius: 0;
 }
 div.侧边按钮 > #网抑云阴乐 {
@@ -538,7 +542,7 @@ div.侧边按钮 > #切换主题:focus-within {
 div.侧边按钮 > #网抑云阴乐:hover,
 div.侧边按钮 > #网抑云阴乐:focus,
 div.侧边按钮 > #网抑云阴乐:focus-within {
-    transform: translateX(calc(-32px * 6));
+    transform: translateX(calc(-32px * 7));
 }
 div.侧边按钮 .拥有更多选项 > .更多选项 {
     background: #fff;
@@ -577,7 +581,7 @@ div.侧边按钮 #网抑云阴乐 #歌词 p {
     padding: 0;
 }
 div.侧边按钮 #网抑云阴乐 > #阴乐控件 {
-    width: calc(32px * 5);
+    width: calc(32px * 6);
 }
 div.侧边按钮 #网抑云阴乐 #播放列表 {
     background: #fff;
@@ -590,7 +594,7 @@ div.侧边按钮 #网抑云阴乐 #播放列表 {
     position: absolute;
     top: 32px;
     left: -34px;
-    width: calc(31px * 6 + 30px);
+    width: calc(31px * 8);
     height: 118px;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -613,7 +617,7 @@ div.侧边按钮 #网抑云阴乐 #播放列表 li.正在播放::before {
     background-color: var(--theme-color);
     display: block;
     width: 5px;
-    height: 19px;
+    height: 38px;
     position: absolute;
     left: 0px;
     content: "";
@@ -642,12 +646,9 @@ div.侧边按钮 .拥有更多选项 > .更多选项 > button {
     width: 24px;
     height: 24px;
 }
+div.侧边按钮 .拥有更多选项 > .更多选项 > *.激活,
 div.侧边按钮 .拥有更多选项 > .更多选项 > *:hover,
 div.侧边按钮 .拥有更多选项 > .更多选项 > *:focus-visible {
-    background-color: #ccc;
-}
-
-div.侧边按钮 .拥有更多选项 > .更多选项 > *:hover {
     background-color: #888;
 }
 

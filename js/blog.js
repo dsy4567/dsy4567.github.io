@@ -38,7 +38,7 @@ export async function main(/** @type {String} */ 路径) {
                 ).toLocaleString()}, 更新于: ${new Date(
                     当前文章信息.updated
                 ).toLocaleString()}`;
-                span.className = "date";
+                span.classList.add("date");
                 sect.append(span);
 
                 document.title =
@@ -53,17 +53,17 @@ export async function main(/** @type {String} */ 路径) {
                     t3 = 0;
                 qs("#main .右")
                     .querySelectorAll("h1, h2, h3, h4, h5, h6")
-                    ?.forEach(el => {
+                    ?.forEach(元素 => {
                         if (
-                            el.id &&
-                            !el.className.includes("可固定") &&
-                            !el.querySelector("a")
+                            元素.id &&
+                            !元素.className.includes("可固定") &&
+                            !元素.querySelector("a")
                         ) {
-                            el.innerHTML = `<a href="#${el.id}">${el.innerHTML}</a>`;
-                            el.className += " 可固定";
+                            元素.innerHTML = `<a href="#${元素.id}">${元素.innerHTML}</a>`;
+                            元素.classList.add("可固定");
                         }
                         t3 = { H1: 0, H2: 1, H3: 2, H4: 3, H5: 4, H6: 5 }[
-                            el.tagName
+                            元素.tagName
                         ];
                         if (t2 < t3) t2 = t3;
                         else if (t2 > t3) {
@@ -74,8 +74,8 @@ export async function main(/** @type {String} */ 路径) {
                         let li = ce("li"),
                             a = ce("a");
                         a.innerText =
-                            t1.join(".").rp(/.0/g, "") + " " + el.innerText;
-                        a.href = "#" + el.id;
+                            t1.join(".").rp(/.0/g, "") + " " + 元素.innerText;
+                        a.href = "#" + 元素.id;
                         li.append(a);
                         ul.append(li);
                     });
@@ -84,7 +84,7 @@ export async function main(/** @type {String} */ 路径) {
                     '<h2><svg class="小尺寸" data-icon="目录"></svg><span>目录</span></h2>'
                 );
                 目录.append(ul);
-                目录.className = "目录";
+                目录.classList.add("目录");
                 qs("#main > .左").append(目录);
 
                 qs("#正在加载文章提示").remove();
@@ -96,7 +96,7 @@ export async function main(/** @type {String} */ 路径) {
                             `[id="${decodeURI(
                                 location.hash.substring(1)
                             )}"] + *`
-                        ).className += " 标记";
+                        ).classList.add("标记");
                     } catch (e) {}
                     let h = location.hash;
                     location.hash = "";
@@ -170,14 +170,14 @@ ${(() => {
                             sect.innerHTML = html;
                             qs("#main .右").append(sect);
                             _global["global.js"]().添加点击事件和设置图标();
-                            qsa("svg[data-icon]").forEach(el => {
-                                el.outerHTML =
+                            qsa("svg[data-icon]").forEach(元素 => {
+                                元素.outerHTML =
                                     _global["global.js"]().图标[
-                                        el.dataset.icon
+                                        元素.dataset.icon
                                     ] &&
-                                    (el.outerHTML =
+                                    (元素.outerHTML =
                                         _global["global.js"]().图标[
-                                            el.dataset.icon
+                                            元素.dataset.icon
                                         ]);
                             });
                             hljs.highlightAll();
@@ -210,7 +210,7 @@ ${(() => {
                     ).toLocaleString()}, 更新于: ${new Date(
                         文章.updated
                     ).toLocaleString()}`;
-                    span.className = "date";
+                    span.classList.add("date");
                     if (文章.img) {
                         img.src = `/blog-md/${文章.id}/img/` + 文章.img;
                         img.alt = img.title = "封面图";
@@ -233,8 +233,10 @@ ${(() => {
 addEventListener("URL发生变化", () => {
     if (路径 !== 获取清理后的路径(true)) {
         路径 = 获取清理后的路径(true);
-        qsa(".目录")?.forEach(el => {
-            el.remove();
+        qsa(".目录")?.forEach(元素 => {
+            元素.remove();
         });
     }
 });
+
+_global["blog.js"] = () => ({ 所有文章信息, 路径, main });
