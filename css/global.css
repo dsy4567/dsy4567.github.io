@@ -234,6 +234,13 @@ video {
     background-color: var(--theme-color-transparent);
     border-radius: var(--border-radius);
 }
+spoiler{
+    background-color: #000 !important;
+    color: #000 !important;
+}
+spoiler:hover{
+    color: #fff !important;
+}
 nav h1 {
     color: var(--theme-color);
 }
