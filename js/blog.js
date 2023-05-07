@@ -65,9 +65,8 @@ export async function main(/** @type {String} */ 路径) {
                         t3 = { H1: 0, H2: 1, H3: 2, H4: 3, H5: 4, H6: 5 }[
                             el.tagName
                         ];
-                        if (t2 < t3) 
-                            t2 = t3;
-                         else if (t2 > t3) {
+                        if (t2 < t3) t2 = t3;
+                        else if (t2 > t3) {
                             t1[t2] = 0;
                             t2 = t3;
                         }
@@ -191,7 +190,7 @@ ${(() => {
                 qs("#正在加载文章提示").innerText =
                     "加载失败, 加载时可能遇到了错误, 或此文章不存在";
             });
-    } else if (路径 === "/blog") 
+    } else if (路径 === "/blog")
         fetch("/json/blog.json")
             .then(res => res.json())
             .then((/** @type {Array} */ j) => {
@@ -229,7 +228,6 @@ ${(() => {
                 隐藏加载页面();
                 qs("#正在加载文章提示").innerText = "加载失败";
             });
-    
 }
 
 addEventListener("URL发生变化", () => {
