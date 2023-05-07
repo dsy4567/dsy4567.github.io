@@ -383,7 +383,7 @@ function 完成加载() {
     setTimeout(() => {
         let s = ce("style");
         s.innerHTML = `
-    a, button, div, section, img, li {
+    a, button, div, section, img, li, spoiler {
        transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration, 0.5s background-color, 0.5s color;
     }`;
         document.head.append(s);
