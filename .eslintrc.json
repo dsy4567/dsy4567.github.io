@@ -1,0 +1,14 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+    },
+    "root": true,
+    "rules": {
+        "curly": ["warn", "multi"],
+        "object-curly-newline": "warn",
+        "eqeqeq": "warn",
+        "no-throw-literal": "warn",
+        "semi": "off"
+    }
+}

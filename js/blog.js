@@ -15,7 +15,7 @@ export async function main(/** @type {String} */ 路径) {
         let 当前文章信息 = {};
         for (let i = 0; i < 所有文章信息.length; i++) {
             const 文章信息 = 所有文章信息[i];
-            if (文章信息.id == id) {
+            if (文章信息.id === id) {
                 当前文章信息 = 文章信息;
                 break;
             }
@@ -65,9 +65,9 @@ export async function main(/** @type {String} */ 路径) {
                         t3 = { H1: 0, H2: 1, H3: 2, H4: 3, H5: 4, H6: 5 }[
                             el.tagName
                         ];
-                        if (t2 < t3) {
+                        if (t2 < t3) 
                             t2 = t3;
-                        } else if (t2 > t3) {
+                         else if (t2 > t3) {
                             t1[t2] = 0;
                             t2 = t3;
                         }
@@ -115,15 +115,17 @@ export async function main(/** @type {String} */ 路径) {
                         .then(res => res.json())
                         .then(async j => {
                             if (typeof j !== "object") j = [];
+                            // prettier-ignore
                             let html = `
 <h2>
     <svg data-icon="评论" class="小尺寸"></svg>
     <span>评论</span>
 </h2>
 <section>
-    <a id="评论链接" href="https://github.com/dsy4567/dsy4567.github.io/issues/${
-        当前文章信息.issue
-    }#issue-comment-box">在 GitHub 上发表评论</a>
+    <a
+        id="评论链接"
+        href="https://github.com/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}#issue-comment-box"
+    >在 GitHub 上发表评论</a>
 </section>
 ${(() => {
     let h = "";
@@ -136,17 +138,11 @@ ${(() => {
             src="${评论.user.avatar_url}"
             alt="的头像"
         /></a>
-        <span class="用户名"><a href="${评论.user.html_url}">${
-            评论.user.login
-        }</a></span>
+        <span class="用户名"><a href="${评论.user.html_url}">${评论.user.login}</a></span>
     </div>
     <div class="评论正文">${marked.parse(评论.body)}</div>
-    <span class="date">发表于: ${new Date(
-        评论.created_at
-    ).toLocaleString()} 更新于: ${new Date(
-            评论.updated_at
-        ).toLocaleString()}</span><br />
-        <span class="date">${(() => {
+    <span class="date">发表于: ${new Date(评论.created_at).toLocaleString()} 更新于: ${new Date(评论.updated_at).toLocaleString()}</span><br />
+    <span class="date">${(() => {
             let emojis = {
                     "+1": "👍",
                     "-1": "👎",
@@ -163,7 +159,8 @@ ${(() => {
                     s += emojis[k] + ": " + 评论.reactions[k] + " ";
             });
             return s;
-        })()}</span>
+        })()}
+    </span>
 </section>`;
     });
     return h;
@@ -194,7 +191,7 @@ ${(() => {
                 qs("#正在加载文章提示").innerText =
                     "加载失败, 加载时可能遇到了错误, 或此文章不存在";
             });
-    } else if (路径 == "/blog") {
+    } else if (路径 === "/blog") 
         fetch("/json/blog.json")
             .then(res => res.json())
             .then((/** @type {Array} */ j) => {
@@ -232,7 +229,7 @@ ${(() => {
                 隐藏加载页面();
                 qs("#正在加载文章提示").innerText = "加载失败";
             });
-    }
+    
 }
 
 addEventListener("URL发生变化", () => {

@@ -14,7 +14,6 @@ let 路径 = (location.pathname + location.search)
     loaded = false,
     已强制隐藏加载界面 = false,
     正在动态加载 = false,
-    歌词interval = -1,
     图标 = {};
 let 网抑云阴乐 = {
     重试timeout: -1,
@@ -28,15 +27,19 @@ let 网抑云阴乐 = {
         /** @type {HTMLAudioElement} */ Audio: new Audio(),
         所有歌词: [],
         所有歌词翻译: [],
+        歌词interval: -1,
+        上一句歌词: "",
     },
     更改音量() {
         网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量 =
             ((网抑云阴乐.设置.音量 * 100 + 25) % 125) / 100;
     },
     恢复歌词() {
-        clearInterval(歌词interval);
-        歌词interval = setInterval(() => {
+        clearInterval(网抑云阴乐.正在播放.歌词interval);
+        网抑云阴乐.正在播放.歌词interval = setInterval(() => {
             const 时间 = 网抑云阴乐.正在播放.Audio.currentTime + 0.2;
+            let 需要添加翻译 = false,
+                歌词开始时间 = 0;
             for (
                 let 索引 = 网抑云阴乐.正在播放.所有歌词.length - 1;
                 索引 >= 0;
@@ -45,8 +48,12 @@ let 网抑云阴乐 = {
                 const 歌词 = 网抑云阴乐.正在播放.所有歌词[索引];
 
                 if (歌词.start <= 时间) {
-                    !qs("#歌词").innerText.startsWith(歌词.text) &&
-                        (qs("#歌词").innerText = 歌词.text);
+                    歌词开始时间 = 歌词.start;
+                    if (歌词.text !== 网抑云阴乐.正在播放.上一句歌词) {
+                        网抑云阴乐.正在播放.上一句歌词 = 歌词.text;
+                        qs("#歌词").innerText = 歌词.text;
+                        需要添加翻译 = true;
+                    }
                     break;
                 }
             }
@@ -58,9 +65,9 @@ let 网抑云阴乐 = {
                 ) {
                     const 歌词翻译 = 网抑云阴乐.正在播放.所有歌词翻译[索引];
 
-                    if (歌词翻译.start <= 时间) {
-                        !qs("#歌词").innerText.endsWith(")") &&
-                            (qs("#歌词").innerText += ` (${歌词翻译.text})`);
+                    if (歌词翻译.start === 歌词开始时间) {
+                        if (需要添加翻译)
+                            qs("#歌词").innerText += ` (${歌词翻译.text})`;
                         break;
                     }
                 }
@@ -85,10 +92,10 @@ let 网抑云阴乐 = {
             )?.data?.url?.replace("http://", "https://");
     },
     async 切换音乐(欲播放的音乐id, 立即播放 = false) {
-        if (typeof 网抑云阴乐.歌单索引[欲播放的音乐id] !== "undefined") {
+        if (typeof 网抑云阴乐.歌单索引[欲播放的音乐id] !== "undefined")
             网抑云阴乐.正在播放.索引 = 网抑云阴乐.歌单索引[欲播放的音乐id];
-        }
-        if (立即播放) {
+
+        if (立即播放)
             try {
                 clearTimeout(网抑云阴乐.重试timeout);
                 await 网抑云阴乐.初始化();
@@ -109,17 +116,14 @@ let 网抑云阴乐 = {
                 提示("播放失败");
                 console.error(e);
             }
-        }
     },
     async 播放暂停() {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
             await 网抑云阴乐.初始化();
-            if (网抑云阴乐.正在播放.Audio.paused) {
+            if (网抑云阴乐.正在播放.Audio.paused)
                 网抑云阴乐.正在播放.Audio.play();
-            } else {
-                网抑云阴乐.正在播放.Audio.pause();
-            }
+            else 网抑云阴乐.正在播放.Audio.pause();
         } catch (e) {
             提示("播放失败");
             console.error(e);
@@ -129,7 +133,7 @@ let 网抑云阴乐 = {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
             qs("#歌词").innerText = "";
-            clearInterval(歌词interval);
+            clearInterval(网抑云阴乐.正在播放.歌词interval);
             await 网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
@@ -155,7 +159,7 @@ let 网抑云阴乐 = {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
             qs("#歌词").innerText = "";
-            clearInterval(歌词interval);
+            clearInterval(网抑云阴乐.正在播放.歌词interval);
             await 网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
@@ -219,7 +223,7 @@ let 网抑云阴乐 = {
                 );
                 网抑云阴乐.正在播放.Audio.onloadedmetadata = async () => {
                     qs("#歌词").innerText = "";
-                    clearInterval(歌词interval);
+                    clearInterval(网抑云阴乐.正在播放.歌词interval);
                     网抑云阴乐.正在播放.所有歌词 = [];
                     网抑云阴乐.正在播放.所有歌词翻译 = [];
                     fetch(
@@ -233,11 +237,11 @@ let 网抑云阴乐 = {
                                 待解析歌词翻译 = j.tlyric?.lyric;
                             if (
                                 (!(待解析歌词 = j.lrc.lyric) &&
-                                    j.lrc.version != 6) ||
+                                    j.lrc.version !== 6) ||
                                 !j.lrc.lyric.includes("[")
                             ) {
                                 qs("#歌词").innerText = "";
-                                clearInterval(歌词interval);
+                                clearInterval(网抑云阴乐.正在播放.歌词interval);
                                 网抑云阴乐.正在播放.所有歌词 = [];
                                 return;
                             }
@@ -293,7 +297,7 @@ let 网抑云阴乐 = {
             网抑云阴乐.正在播放.Audio.onpause = () => {
                 localStorage.setItem("自动播放", false);
                 qs("#网抑云阴乐封面").style.animationName = "unset";
-                clearInterval(歌词interval);
+                clearInterval(网抑云阴乐.正在播放.歌词interval);
             };
             网抑云阴乐.正在播放.Audio.onerror = e => {
                 提示(
@@ -353,14 +357,13 @@ function 动态加载(el) {
                     "",
                     el.href
                 );
-                dispatchEvent(URL发生变化事件)
+            dispatchEvent(URL发生变化事件);
             try {
                 qs("#main .右").innerHTML = m[0];
                 await 加载模块();
 
-                u.pathname
-                    .rp(/(index|\.html)/g, "")
-                    .rp(/\/\//g, "") == "/" && 隐藏加载页面();
+                u.pathname.rp(/(index|\.html)/g, "").rp(/\/\//g, "") === "/" &&
+                    隐藏加载页面();
                 正在动态加载 = false;
                 添加点击事件和设置图标();
             } catch (e) {
@@ -392,12 +395,12 @@ function 添加点击事件和设置图标() {
         图标[el.dataset.icon] && (el.outerHTML = 图标[el.dataset.icon]);
     });
     qsa("a").forEach(el => {
-        if (el.pathname == location.pathname && el.href.includes("#")) return;
-        if (el.host != location.host && !el.className.includes("外链")) {
+        if (el.pathname === location.pathname && el.href.includes("#")) return;
+        if (el.host !== location.host && !el.className.includes("外链")) {
             if (!el.querySelector("img, svg")) el.className += " 外链";
             el.target = "_blank";
         } else if (
-            el.host == location.host &&
+            el.host === location.host &&
             !el.className.includes("动态加载")
         ) {
             el.className += " 动态加载";
@@ -482,7 +485,7 @@ function 添加点击事件和设置图标() {
                     let li = ce("li");
                     li.innerText = 音乐信息.完整歌名;
                     li.onclick = li.onkeyup = ev => {
-                        if (ev?.key == "Enter" || !ev?.key)
+                        if (ev?.key === "Enter" || !ev?.key)
                             网抑云阴乐.切换音乐(音乐信息.id, true);
                     };
                     li.tabIndex = 0;
@@ -617,8 +620,8 @@ addEventListener("load", () => {
 });
 addEventListener("popstate", ev => {
     if (
-        (获取清理后的路径(true) == 路径 && location.href.includes("#")) ||
-        ev.state?.路径 == 路径
+        (获取清理后的路径(true) === 路径 && location.href.includes("#")) ||
+        ev.state?.路径 === 路径
     )
         return ev.preventDefault();
     动态加载({
