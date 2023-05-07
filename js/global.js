@@ -345,7 +345,6 @@ function 动态加载(el) {
             let m = html.match(/<!-- START MAIN -->.+<!-- END MAIN -->/s),
                 mt = html.match(/<title>.+<\/title>/s);
             if (!m) throw new Error("动态加载失败: 匹配结果为空");
-            document.title = mt[0].rp(/<\/?title>/g, "");
             let u = new URL(el.href, location.href);
             !el.popstate &&
                 history.pushState(
@@ -357,6 +356,7 @@ function 动态加载(el) {
                     "",
                     el.href
                 );
+            document.title = mt[0].rp(/<\/?title>/g, "");
             dispatchEvent(URL发生变化事件);
             try {
                 qs("#main .右").innerHTML = m[0];
