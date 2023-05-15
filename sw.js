@@ -1,30 +1,20 @@
 const 资源清单 = [
-        "/",
-        "/js/blog.js",
-        "/js/global.js",
-        "/js/global2.js",
-        "/js/highlight.min.js",
-        "/js/lrc-parser.js",
-        "/js/marked.min.js",
-        "/js/ncm.js",
-        "/css/global.css",
-        "/css/hl.min.css",
-        "/img/avatar.jpg",
-        "/img/bg.jpg",
-        "/json/blog.json",
-        "/json/icon.json",
-        "/json/theme.json",
-    ],
-    本站域名 = [
-        "dsy4567.cf",
-        "dsy4567.github.io",
-        "dsy4567.fucksc.cf",
-        "home.mirrors.dsy4567.cf",
-        "home-netlify.mirrors.dsy4567.cf",
-        "home-vercel.mirrors.dsy4567.cf",
-        "localhost",
-        "127.0.0.1",
-    ];
+    "/",
+    "/js/blog.js",
+    "/js/global.js",
+    "/js/global2.js",
+    "/js/highlight.min.js",
+    "/js/lrc-parser.js",
+    "/js/marked.min.js",
+    "/js/ncm.js",
+    "/css/global.css",
+    "/css/hl.min.css",
+    "/img/avatar.jpg",
+    "/img/bg.jpg",
+    "/json/blog.json",
+    "/json/icon.json",
+    "/json/theme.json",
+];
 
 const 添加资源至缓存 = async 资源 => {
     const 缓存 = await caches.open("offline");
@@ -47,11 +37,7 @@ self.addEventListener("install", 事件 => {
 });
 
 self.addEventListener("fetch", 事件 => {
-    let 启用缓存 = false;
-    for (let i = 0; i < 本站域名.length; i++)
-        if (new URL(事件.request.url).hostname == 本站域名[i])
-            启用缓存 = 启用缓存 || true;
-    if (!启用缓存) return;
+    if (new URL(事件.request.url).hostname != location.hostname) return;
 
     事件.respondWith(
         (async (请求, 预加载的响应Promise, fallbackUrl) => {
