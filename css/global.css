@@ -1,10 +1,10 @@
 @charset "utf-8";
-@keyframes 加载圆圈 {
+@keyframes 进度条 {
     from {
-        transform: rotate(45deg);
+        width: 0%;
     }
     to {
-        transform: rotate(405deg);
+        width: 90%;
     }
 }
 @keyframes 匀速转 {
@@ -13,26 +13,6 @@
     }
     to {
         transform: rotate(360deg);
-    }
-}
-@keyframes 上下晃悠 {
-    0% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(16px);
-    }
-    100% {
-        transform: translateY(0);
-    }
-}
-@keyframes 隐藏 {
-    0% {
-        filter: opacity(1);
-    }
-    100% {
-        display: none;
-        filter: opacity(0);
     }
 }
 @keyframes 显示 {
@@ -157,6 +137,18 @@ html {
     }
 }
 
+a,
+button,
+div,
+section,
+img,
+li,
+spoiler {
+    transition: 0.5s backdrop-filter, 0.5s background-image, 0.5s transform,
+        0.5s box-shadow, 0.5s filter, 0.5s text-decoration,
+        0.5s background-color;
+}
+
 html {
     --border-radius: 8px;
     scroll-behavior: smooth;
@@ -271,8 +263,8 @@ svg[data-icon] {
     animation-duration: 1s;
     animation-fill-mode: forwards;
     animation-iteration-count: 1;
-    /* animation-name: 显示; */
-    display: none;
+    animation-name: 显示;
+    display: flex;
     align-items: flex-start;
     justify-content: space-around;
     filter: opacity(0);
@@ -418,6 +410,7 @@ hr {
 }
 
 #加载界面 {
+    display: none;
     width: 100%;
     height: 70vh;
 }
@@ -487,6 +480,7 @@ div.侧边按钮 {
     right: 0;
     z-index: 998;
 }
+
 div#主侧边按钮 {
     top: calc(75vh - 33px * 4);
 }
@@ -514,6 +508,9 @@ div.侧边按钮 > * {
     padding: 4px;
     position: relative;
     transform: translateX(-4px);
+    transition: 0.5s border-radius, 1.5s backdrop-filter, 0.5s background-image,
+        0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration,
+        0.5s background-color;
 }
 div.侧边按钮 > *:hover,
 div.侧边按钮 > *:focus-visible,
@@ -674,7 +671,8 @@ div.通知 {
 }
 
 .背景图片 {
-    background: url(/img/bg.jpg) no-repeat;
+    background-image: url("/img/bg.jpg");
+    background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
     margin-bottom: 8px;
@@ -776,4 +774,40 @@ section#我 img:hover {
 }
 #技能 > p > span::before {
     content: attr(aria-label);
+}
+
+.进度条外面 {
+    background-color: rgba(127, 127, 127, 0);
+    opacity: 0;
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: 0.5s opacity, 0.5s background-color;
+    width: 100%;
+    height: 100vh;
+    z-index: 1000;
+}
+.进度条外面.显示 {
+    background-color: rgba(127, 127, 127, 0.5);
+    opacity: 1;
+    pointer-events: all;
+}
+.进度条 {
+    animation-duration: 10s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: 1;
+    animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
+    background-color: var(--theme-color);
+    box-shadow: rgba(0, 0, 0) 0px 0px 16px 2px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: 0.5s width, 0.5s background-color;
+    width: 100%;
+    max-width: 100%;
+    height: 2px;
+}
+.进度条外面.显示 .进度条 {
+    animation-name: 进度条;
 }

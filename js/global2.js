@@ -35,11 +35,10 @@ function qsa(arg) {
 function ce(arg) {
     return document.createElement(arg);
 }
-function 隐藏加载页面() {
-    qs("div#加载界面").style.display = "none";
-    qs("#main").style.display = "flex";
-    qs("#main").style.animationName = "显示";
-    qs("#main").ariaBusy = "false";
+function 显示或隐藏进度条(状态) {
+    状态
+        ? qs(".进度条外面")?.classList.add("显示")
+        : qs(".进度条外面")?.classList.remove("显示");
 }
 /**
  * @param {string} url

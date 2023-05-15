@@ -101,9 +101,7 @@
             </div>
         </div>
 
-        <div aria-label="加载中, 请稍后" id="加载界面">
-            <svg class="加载圆圈" data-icon="加载圆圈"></svg>
-        </div>
+        <div class="进度条外面"><div class="进度条"></div></div>
 
         <div id="main">
             <div class="左">
@@ -383,25 +381,6 @@
         </p>
         <noscript>
             <div>请启用 JavaScript 以获得更好的浏览体验</div>
-            <style>
-                a,
-                button,
-                div,
-                section,
-                li,
-                spoiler {
-                    transition: 0.5s border-radius, 0.5s backdrop-filter,
-                        0.5s transform, 0.5s box-shadow, 0.5s filter,
-                        0.5s background-color, 0.5s color !important;
-                }
-                #加载界面 {
-                    display: none !important;
-                }
-                #main {
-                    animation-name: 显示;
-                    display: flex !important;
-                }
-            </style>
         </noscript>
     </body>
 </html>

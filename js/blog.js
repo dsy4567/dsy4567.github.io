@@ -88,7 +88,7 @@ export async function main(/** @type {String} */ 路径) {
                 qs("#main > .左").append(目录);
 
                 qs("#正在加载文章提示").remove();
-                隐藏加载页面();
+                显示或隐藏进度条(false);
                 _global["global.js"]().添加点击事件和设置图标();
                 if (location.href.includes("#")) {
                     try {
@@ -186,7 +186,7 @@ ${(() => {
             .catch(e => {
                 console.error(e);
                 阻止搜索引擎收录();
-                隐藏加载页面();
+                显示或隐藏进度条(false);
                 qs("#正在加载文章提示").innerText =
                     "加载失败, 加载时可能遇到了错误, 或此文章不存在";
             });
@@ -218,14 +218,14 @@ ${(() => {
                     sect.append(img, p, a, br, span);
                     qs("#main .右").append(sect);
                 });
-                隐藏加载页面();
+                显示或隐藏进度条(false);
                 qs("#正在加载文章提示").remove();
                 _global["global.js"]().添加点击事件和设置图标();
             })
             .catch(e => {
                 console.error(e);
                 阻止搜索引擎收录();
-                隐藏加载页面();
+                显示或隐藏进度条(false);
                 qs("#正在加载文章提示").innerText = "加载失败";
             });
 }

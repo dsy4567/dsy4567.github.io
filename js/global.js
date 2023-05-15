@@ -14,7 +14,6 @@ let 路径 = (location.pathname + location.search)
         .rp(/\/\//g, ""),
     DOMContentLoaded = false,
     loaded = false,
-    已强制隐藏加载界面 = false,
     正在动态加载 = false,
     图标 = {};
 
@@ -31,12 +30,10 @@ async function 加载模块() {
 function 动态加载(元素) {
     if (正在动态加载) {
         open(元素.href, "_self");
-        return 隐藏加载页面();
+        return 显示或隐藏进度条(false);
     }
     正在动态加载 = true;
-    qs("#main").style.display = "none";
-    qs("#main").ariaBusy = "true";
-    qs("div#加载界面").style.display = "";
+    显示或隐藏进度条(true);
     qs("meta[name='robots']").content = "";
     fetch(元素.href)
         .then(res => res.text())
@@ -62,32 +59,23 @@ function 动态加载(元素) {
                 await 加载模块();
 
                 u.pathname.rp(/(index|\.html)/g, "").rp(/\/\//g, "") === "/" &&
-                    隐藏加载页面();
+                    显示或隐藏进度条(false);
                 正在动态加载 = false;
                 添加点击事件和设置图标();
             } catch (e) {
                 console.error(e);
                 open(元素.href, "_self");
-                隐藏加载页面();
+                显示或隐藏进度条(false);
             }
         })
         .catch(e => {
             console.error(e);
             open(元素.href, "_self");
-            隐藏加载页面();
+            显示或隐藏进度条(false);
         });
 }
 function 完成加载() {
-    隐藏加载页面();
-    setTimeout(() => {
-        let s = ce("style");
-        s.innerHTML = `
-    a, button, div, section, img, li, spoiler {
-       transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration, 0.5s background-color, 0.5s color;
-    }`;
-        document.head.append(s);
-        添加点击事件和设置图标();
-    }, 2000);
+    添加点击事件和设置图标();
 }
 function 添加点击事件和设置图标() {
     qsa("svg[data-icon]").forEach(元素 => {
@@ -321,18 +309,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         .addEventListener("click", () =>
             document.body.scrollIntoView({ behavior: "smooth" })
         );
-    // 超时强制隐藏加载界面
-    setTimeout(() => {
-        if (!loaded) {
-            完成加载();
-            已强制隐藏加载界面 = true;
-        }
-    }, 5000);
     加载模块();
+    完成加载();
 });
 addEventListener("load", () => {
     loaded = true;
-    !已强制隐藏加载界面 && 完成加载();
 });
 addEventListener("popstate", 事件 => {
     if (
@@ -351,7 +332,6 @@ _global["global.js"] = () => ({
     DOMContentLoaded,
     路径,
     图标,
-    已强制隐藏加载界面,
     正在动态加载,
     网抑云阴乐,
     加载模块,
