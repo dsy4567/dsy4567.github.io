@@ -1,5 +1,6 @@
 const 资源清单 = [
     "/",
+    "/blog.html",
     "/js/blog.js",
     "/js/global.js",
     "/js/global2.js",
