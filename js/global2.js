@@ -144,3 +144,5 @@ function gtag() {
 }
 gtag("js", new Date());
 gtag("config", "G-060YCRMSSH");
+
+"serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
