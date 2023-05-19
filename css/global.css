@@ -583,6 +583,9 @@ div.侧边按钮 #网抑云阴乐 > #阴乐控件 {
 div.侧边按钮 #网抑云阴乐 #播放列表 {
     background: #fff;
     color: #000;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
     font-size: 0.9em;
     margin: 0;
     overflow-y: auto;
@@ -593,8 +596,6 @@ div.侧边按钮 #网抑云阴乐 #播放列表 {
     left: -34px;
     width: calc(31px * 8);
     height: 118px;
-    flex-direction: column;
-    flex-wrap: nowrap;
 }
 
 div.侧边按钮 #网抑云阴乐 #播放列表 li {
