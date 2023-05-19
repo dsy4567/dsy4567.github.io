@@ -6,7 +6,7 @@
 
 > <https://www.luogu.com.cn/problem/P1932>
 
-```
+```text
 A+B  A-B  A*B  A/B A%B Problem
 
 # 题目背景
