@@ -26,6 +26,82 @@
 </entry>
         -->
 <entry>
+    <title>使用 CloudFlare Workers 免费搭建 Virtual Judge 反代</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=cf-vjmirror" />
+    <id>cf-vjmirror</id>
+    <published>2023-05-20T14:57:26.700Z</published>
+    <updated>2023-05-20T14:57:26.700Z</updated>
+    <summary>使用 CloudFlare Workers 免费搭建 Virtual Judge 反代
+最近闲的没事干，受 如何科学地制作一个镜像反代站点 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。
+</summary>
+    <author>
+        <name>dsy4567</name>
+        <uri>https://dsy4567.github.io/</uri>
+    </author>
+    <category term="Default" />
+    <content type="html" xml:lang="zh-cn">
+        <![CDATA[
+<h1 id="使用-cloudflare-workers-免费搭建-virtual-judge-反代">使用 CloudFlare Workers 免费搭建 Virtual Judge 反代</h1>
+<p>最近闲的没事干，受 <a href="https://blog.immccn123.xyz/archives/362">如何科学地制作一个镜像反代站点</a> 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。</p>
+<!-- more -->
+
+<blockquote>
+<p>千万不要反代<spoiler>反D、色情、赌博等</spoiler>违规网站，小心被叫去喝茶。</p>
+</blockquote>
+<h2 id="注册-cf">注册 CF</h2>
+<p>这个就不用我浪费口水了，传送门 -&gt; <a href="https://dash.cloudflare.com/">https://dash.cloudflare.com/</a></p>
+<h2 id="创建-cf-worker">创建 CF Worker</h2>
+<blockquote>
+<p>这一步需要先把域名绑到 CF 里面，因为 <code>*.workers.dev</code> 有墙。</p>
+</blockquote>
+<blockquote>
+<p>可以到 Freenom 那里搞一个免费域名.</p>
+</blockquote>
+<p>登录 <a href="https://dash.cloudflare.com/">Cloudflare Dashboard</a>，点击右边的 Workers，再点右边的创建服务。</p>
+<p><img src="https://dsy4567.cf/blog-md/cf-workers-ip/img/workers.png" alt="Workers 面板"></p>
+<p>服务名称随便，点击创建服务。</p>
+<p><img src="https://dsy4567.cf/blog-md/cf-workers-ip/img/%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1.png" alt="创建服务"></p>
+<p>绑定自定义域。</p>
+<p>触发器 &gt; 自定义域，在这里输入 Worker 要绑的域名。</p>
+<p><img src="https://dsy4567.cf/blog-md/cf-workers-ip/img/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F.png" alt="自定义域"></p>
+<p>点击快速编辑</p>
+<p><img src="https://dsy4567.cf/blog-md/cf-workers-ip/img/%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF.png" alt="管理面板"></p>
+<p>粘贴并修改以下代码，然后保存并部署：</p>
+<pre><code class="language-js">export default {
+  async fetch(request, env, ctx) {
+    let u = new URL(request.url)
+    const originHost = &quot;vjudge.net&quot;, mirrorHost = u.hostname
+    u.hostname = originHost
+
+    Object.defineProperty(request, &quot;url&quot;, {
+      value: u,
+      writable: true,
+    });
+    let resp = await fetch(u, request)
+
+    if (resp.headers.get(&quot;content-type&quot;).includes(&quot;text/&quot;)) {
+      let body = await resp.text()
+      body.replace(new RegExp(originHost, &quot;g&quot;), mirrorHost)
+      return new Response(body, resp)
+    }
+    return resp
+  },
+};
+</code></pre>
+<p>接下来，访问你绑定的域名。</p>
+<h2 id="登录镜像站">登录镜像站</h2>
+<p>由于 CF Workers 不让改 <code>set-cookie</code> 请求头，你需要花很大力气登录 <code>vjudge.net</code>，然后把 cookies 复制到镜像站里。</p>
+<p>打开 <a href="https://vjudge.net">https://vjudge.net</a>，登录后打开开发者工具 &gt; 应用 &gt; cookie &gt; <a href="https://vjudge.net%E3%80%82">https://vjudge.net。</a></p>
+<p>再打开 <a href="https://%E4%BD%A0%E7%BB%91%E5%AE%9A%E7%9A%84%E5%9F%9F%E5%90%8D">https://你绑定的域名</a>，登录后打开开发者工具 &gt; 应用 &gt; cookie &gt; https://你绑定的域名，将两个 <code>JSESSIONID</code> 复制粘贴过去，然后刷新镜像站，就可以完成登录。</p>
+<p><img src="/blog-md/cf-vjmirror/img/devtools.png" alt="开发者工具"></p>
+<hr>
+<p>最后，尽情享受吧~</p>
+<p>Demo：<a href="https://vjmirror.workers.dsy4567.cf/">https://vjmirror.workers.dsy4567.cf/</a></p>
+
+        ]]>
+    </content>
+</entry>
+<entry>
     <title>翻墙教程</title>
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=gfw-nmsl" />
     <id>gfw-nmsl</id>
@@ -180,39 +256,57 @@
 <blockquote>
 <p><a href="https://www.luogu.com.cn/problem/P1932">https://www.luogu.com.cn/problem/P1932</a></p>
 </blockquote>
-<h3 id="ab--a-b--ab--ab-ab-problem">A+B  A-B  A*B  A/B A%B Problem</h3>
-<h4 id="题目背景">题目背景</h4>
-<p>这个题目很新颖吧！！！</p>
-<h4 id="题目描述">题目描述</h4>
-<p>求A、B的和差积商余！</p>
-<h5 id="由于数据有修改，减法运算结果可能带负号！">由于数据有修改，减法运算结果可能带负号！</h5>
-<h4 id="输入格式">输入格式</h4>
-<p>两个数两行</p>
-<p>A
-B</p>
-<h4 id="输出格式">输出格式</h4>
-<p>五个数</p>
-<p>和
+<pre><code class="language-plaintext">A+B  A-B  A*B  A/B A%B Problem
+
+# 题目背景
+
+这个题目很新颖吧！！！
+
+# 题目描述
+
+求A、B的和差积商余！
+
+由于数据有修改，减法运算结果可能带负号！
+
+# 输入格式
+
+两个数两行
+
+A
+B
+
+# 输出格式
+
+五个数
+
+和
 差
 积
 商
-余</p>
-<h4 id="样例-1">样例 #1</h4>
-<h5 id="样例输入-1">样例输入 #1</h5>
-<pre><code>1
+余
+
+# 样例 #1
+
+样例输入 #1
+
 1
-</code></pre>
-<h5 id="样例输出-1">样例输出 #1</h5>
-<pre><code>2
+1
+
+样例输出 #1
+
+2
 0
 1
 1
 0
+
+# 提示
+
+length(A),length(B)&lt;=10^4
+
+A,B&gt;0
+每个点3s。
 </code></pre>
-<h4 id="提示">提示</h4>
-<p>length(A),length(B)&lt;=10^4</p>
-<p>A,B&gt;0
-每个点3s。</p>
 <hr>
 <h2 id="代码">代码</h2>
 <pre><code class="language-python">a,b=int(input()),int(input())
@@ -458,7 +552,7 @@ J 组取消, S 组继续, 游寄结束
     </content>
 </entry>
 <entry>
-    <title>你好，世界！</title>
+    <title>你好，世界！一级标题一级标题</title>
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=hello-world" />
     <id>hello-world</id>
     <published>2023-01-12T16:00:00.000Z</published>
@@ -477,12 +571,19 @@ J 组取消, S 组继续, 游寄结束
 <p>一篇测试文章 👋🏻👋🏻👋🏻</p>
 <!-- more -->
 
+<h1 id="一级标题">一级标题</h1>
+<h2 id="二级标题">二级标题</h2>
+<h3 id="三级标题">三级标题</h3>
+<h2 id="二级标题-1">二级标题</h2>
+<h4 id="四级标题">四级标题</h4>
+<h1 id="一级标题-1">一级标题</h1>
 <blockquote>
 <p>114514</p>
 </blockquote>
 <p><strong>加粗</strong></p>
 <p><em>斜体</em></p>
 <p><del>删除线</del></p>
+<p>{% endreveal %}</p>
 <p>代码 <code>console.log(0x66ccff)</code> 将在控制台打印 <code>6737151</code></p>
 <pre><code class="language-javascript">import { foo } from &quot;bar&quot;;
 if (438 == 250) while (1) {}

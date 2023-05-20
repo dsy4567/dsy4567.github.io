@@ -38,42 +38,41 @@ self.addEventListener("install", 事件 => {
 });
 
 self.addEventListener("fetch", 事件 => {
-    if (new URL(事件.request.url).hostname != location.hostname) return;
+    let u = new URL(事件.request.url);
+    if (u.hostname != location.hostname && u.hostname != "qwq.dsy4567.cf")
+        return;
+    u.search = "";
+    事件.url = u;
 
-    事件.respondWith(
-        (async (请求, 预加载的响应Promise, fallbackUrl) => {
-            const 来自缓存的响应 = await caches.match(请求);
-            if (来自缓存的响应) {
-                return 来自缓存的响应;
-            }
+    事件.respondWith(async () => {
+        const 来自缓存的响应 = await caches.match(事件.request);
+        if (来自缓存的响应) {
+            return 来自缓存的响应;
+        }
 
-            try {
-                const 预加载的响应 = await 预加载的响应Promise;
-                if (预加载的响应) {
-                    console.info("using preload response", 预加载的响应);
-                    更新缓存(请求, 预加载的响应.clone());
-                    return 预加载的响应;
+        const 预加载的响应 = await 事件.preloadResponse;
+        if (预加载的响应) {
+            更新缓存(事件.request, 预加载的响应.clone());
+            return 预加载的响应;
+        }
+
+        try {
+            const 来自网络的请求 = await fetch(事件.request);
+            更新缓存(事件.request, 来自网络的请求.clone());
+            return 来自网络的请求;
+        } catch (e) {
+            return new Response(
+                new Blob(
+                    ["无法获取资源，您的网络可能存在问题，或该资源不存在。"],
+                    { type: "text/plain;charset=utf8" }
+                ),
+                {
+                    status: 408,
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf8",
+                    },
                 }
-            } catch (e) {}
-
-            try {
-                const 来自网络的请求 = await fetch(请求);
-                更新缓存(请求, 来自网络的请求.clone());
-                return 来自网络的请求;
-            } catch (e) {
-                return new Response(
-                    new Blob(
-                        [
-                            "无法获取资源，您的网络可能存在问题，或该资源不存在。",
-                        ],
-                        { type: "text/plain;charset=utf8" }
-                    ),
-                    {
-                        status: 408,
-                        headers: { "Content-Type": "text/plain;charset=utf8" },
-                    }
-                );
-            }
-        })(事件.request, 事件.preloadResponse)
-    );
+            );
+        }
+    });
 });
