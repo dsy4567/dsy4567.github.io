@@ -195,11 +195,11 @@ svg {
     color: var(--link-color);
 }
 a {
-    text-decoration: 1px underline var(--link-color);
+    text-decoration: 1px underline transparent;
 }
 a:hover,
 a:focus-visible {
-    text-decoration: 1px underline transparent;
+    text-decoration: 1px underline var(--link-color);
 }
 a:active {
 }
