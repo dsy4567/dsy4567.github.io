@@ -66,9 +66,9 @@ export default {
 
 由于 CF Workers 不让改 `set-cookie` 请求头，你需要花很大力气登录 `vjudge.net`，然后把 cookies 复制到镜像站里。
 
-打开 <https://vjudge.net>，登录后打开开发者工具 > 应用 > cookie > https://vjudge.net。
+打开 <https://vjudge.net>，登录后打开开发者工具 > 应用 > cookie > `https://vjudge.net`。
 
-再打开 <https://你绑定的域名>，登录后打开开发者工具 > 应用 > cookie > https://你绑定的域名，将两个 `JSESSIONID` 复制粘贴过去，然后刷新镜像站，就可以完成登录。
+再打开 <https://你绑定的域名>，登录后打开开发者工具 > 应用 > cookie > `https://你绑定的域名`，将两个 `JSESSIONID` 复制粘贴过去，然后刷新镜像站，就可以完成登录。
 
 ![开发者工具](/blog-md/cf-vjmirror/img/devtools.png)
 
