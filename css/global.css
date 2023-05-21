@@ -326,9 +326,11 @@ code {
 }
 pre {
     background-color: #ccc;
+    color: #111;
     border: 1px solid var(--theme-color-transparent);
     border-radius: var(--border-radius);
     overflow: auto;
+    padding: 4px;
 }
 pre code {
     background-color: transparent;
@@ -811,4 +813,15 @@ section#我 img:hover {
 }
 .进度条外面.显示 .进度条 {
     animation-name: 进度条;
+}
+
+.悬浮卡片 {
+    background-color: var(--bg-color);
+    border: 1px solid transparent;
+    border-radius: var(--border-radius);
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
+        rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+    padding: 4px;
+    position: absolute;
+    z-index: 999;
 }

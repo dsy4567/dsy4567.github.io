@@ -124,6 +124,18 @@ function 获取清理后的路径(包含query = false) {
 function 随机数(最大) {
     return Math.floor(Math.random() * 最大 + 1);
 }
+function 添加悬浮卡片(html, x, y, 失去焦点时隐藏) {
+    let div = ce("div");
+    div.className = "悬浮卡片";
+    div.innerHTML = html;
+    div.style.left = x + "px";
+    div.style.top = y + "px";
+    div.tabIndex = 0;
+    document.body.append(div);
+    div.focus();
+    // 失去焦点时隐藏 && div.addEventListener("focusout", () => div.remove());
+    return div;
+}
 
 var URL发生变化事件 = new CustomEvent("URL发生变化");
 

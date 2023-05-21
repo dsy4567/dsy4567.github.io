@@ -8,7 +8,8 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
         "/": [],
         "/blog": ["blog"],
     },
-    歌单id = localStorage.getItem("歌单id") || 8219428260;
+    歌单id = localStorage.getItem("歌单id") || 8219428260,
+    gr_sitekey = "6Ldo1dIkAAAAAM_2VtEneT3l7AE25HdWU45x03ng";
 let 路径 = (location.pathname + location.search)
         .rp(/(index|\.html)/g, "")
         .rp(/\/\//g, ""),
@@ -304,11 +305,49 @@ addEventListener("copy", () => {
 });
 document.addEventListener("DOMContentLoaded", async () => {
     DOMContentLoaded = true;
-    document
-        .querySelector("#回到顶部")
-        .addEventListener("click", () =>
-            document.body.scrollIntoView({ behavior: "smooth" })
+    qs("#回到顶部").addEventListener("click", () =>
+        document.body.scrollIntoView({ behavior: "smooth" })
+    );
+    qs("#电子邮箱").addEventListener("click", 事件 => {
+        事件.preventDefault();
+        if (qs("#recaptcha")) return;
+        let div = 添加悬浮卡片(
+            `<div id="g-recaptcha"></div>
+            <br />
+            <button id="recaptcha">开始人机验证/提交</button>
+            <button id="close_recaptcha">关闭</button>
+            <a href="https://qwq.dsy4567.cf/api/getemail">在新标签页验证</a>`,
+            事件.pageX,
+            事件.pageY
         );
+        添加点击事件和设置图标();
+        添加脚本(
+            "https://www.recaptcha.net/recaptcha/api.js?render=explicit"
+        ).then(() => {
+            qs("#close_recaptcha").addEventListener("click", () => {
+                div.remove();
+            });
+            qs("#recaptcha").addEventListener("click", async 事件 => {
+                try {
+                    qs("#g-recaptcha").innerHTML = await (
+                        await fetch(
+                            "https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
+                                grecaptcha.getResponse()
+                        )
+                    ).text();
+                    添加点击事件和设置图标();
+                } catch (e) {
+                    grecaptcha.render("g-recaptcha", {
+                        sitekey: gr_sitekey,
+                        theme: matchMedia("(prefers-color-scheme: dark)")
+                            .matches
+                            ? "dark"
+                            : "light",
+                    });
+                }
+            });
+        });
+    });
     加载模块();
     完成加载();
 });
