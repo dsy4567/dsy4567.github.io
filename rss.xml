@@ -30,7 +30,7 @@
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=cf-vjmirror" />
     <id>cf-vjmirror</id>
     <published>2023-05-20T14:57:26.700Z</published>
-    <updated>2023-05-20T14:57:26.700Z</updated>
+    <updated>2023-05-21T03:19:53.502Z</updated>
     <summary>使用 CloudFlare Workers 免费搭建 Virtual Judge 反代
 最近闲的没事干，受 如何科学地制作一个镜像反代站点 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。
 </summary>
@@ -64,9 +64,9 @@
 <p>绑定自定义域。</p>
 <p>触发器 &gt; 自定义域，在这里输入 Worker 要绑的域名。</p>
 <p><img src="https://dsy4567.cf/blog-md/cf-workers-ip/img/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F.png" alt="自定义域"></p>
-<p>点击快速编辑</p>
+<p>点击快速编辑。</p>
 <p><img src="https://dsy4567.cf/blog-md/cf-workers-ip/img/%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF.png" alt="管理面板"></p>
-<p>粘贴并修改以下代码，然后保存并部署：</p>
+<p>粘贴以下代码，然后保存并部署：</p>
 <pre><code class="language-js">export default {
   async fetch(request, env, ctx) {
     let u = new URL(request.url)
@@ -91,8 +91,8 @@
 <p>接下来，访问你绑定的域名。</p>
 <h2 id="登录镜像站">登录镜像站</h2>
 <p>由于 CF Workers 不让改 <code>set-cookie</code> 请求头，你需要花很大力气登录 <code>vjudge.net</code>，然后把 cookies 复制到镜像站里。</p>
-<p>打开 <a href="https://vjudge.net">https://vjudge.net</a>，登录后打开开发者工具 &gt; 应用 &gt; cookie &gt; <a href="https://vjudge.net%E3%80%82">https://vjudge.net。</a></p>
-<p>再打开 <a href="https://%E4%BD%A0%E7%BB%91%E5%AE%9A%E7%9A%84%E5%9F%9F%E5%90%8D">https://你绑定的域名</a>，登录后打开开发者工具 &gt; 应用 &gt; cookie &gt; https://你绑定的域名，将两个 <code>JSESSIONID</code> 复制粘贴过去，然后刷新镜像站，就可以完成登录。</p>
+<p>打开 <a href="https://vjudge.net">https://vjudge.net</a>，登录后打开开发者工具 &gt; 应用 &gt; cookie &gt; <code>https://vjudge.net</code>。</p>
+<p>再打开 <a href="https://%E4%BD%A0%E7%BB%91%E5%AE%9A%E7%9A%84%E5%9F%9F%E5%90%8D">https://你绑定的域名</a>，登录后打开开发者工具 &gt; 应用 &gt; cookie &gt; <code>https://你绑定的域名</code>，将两个 <code>JSESSIONID</code> 复制粘贴过去，然后刷新镜像站，就可以完成登录。</p>
 <p><img src="/blog-md/cf-vjmirror/img/devtools.png" alt="开发者工具"></p>
 <hr>
 <p>最后，尽情享受吧~</p>

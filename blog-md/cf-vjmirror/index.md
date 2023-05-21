@@ -30,11 +30,11 @@
 
 ![自定义域](https://dsy4567.cf/blog-md/cf-workers-ip/img/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F.png)
 
-点击快速编辑
+点击快速编辑。
 
 ![管理面板](https://dsy4567.cf/blog-md/cf-workers-ip/img/%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF.png)
 
-粘贴并修改以下代码，然后保存并部署：
+粘贴以下代码，然后保存并部署：
 
 ```js
 export default {
