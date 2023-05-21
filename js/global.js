@@ -316,7 +316,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             <br />
             <button id="recaptcha">开始人机验证/提交</button>
             <button id="close_recaptcha">关闭</button>
-            <a href="https://qwq.dsy4567.cf/api/getemail">在新标签页验证</a>`,
+            <a href="https://qwq.dsy4567.cf/api/getemail">在新标签页验证</a><br/>
+            要查看 dsy4567 的电子邮箱地址，请通过 reCAPTCHA 人机验证。<br />
+            继续查看电子邮箱地址即代表您同意不向 dsy4567<br />
+            发送广告/要饭/雇童工等垃圾邮件。`,
             事件.pageX,
             事件.pageY
         );
