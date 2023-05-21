@@ -24,6 +24,7 @@
     "marked": "^4.3.0"
   },
   "devDependencies": {
+    "@types/node": "^20.2.1",
     "eslint": "^8.40.0"
   }
 }
