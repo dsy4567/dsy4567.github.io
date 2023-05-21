@@ -325,7 +325,7 @@ code {
     padding: 1.5px;
 }
 pre {
-    background-color: #333;
+    background-color: #ccc;
     border: 1px solid var(--theme-color-transparent);
     border-radius: var(--border-radius);
     overflow: auto;
