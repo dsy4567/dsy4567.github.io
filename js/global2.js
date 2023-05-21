@@ -51,7 +51,7 @@ function 添加样式(url) {
             resolve(事件);
         };
         l.href = url;
-        l.r元素 = "stylesheet";
+        l.rel = "stylesheet";
         document.head.append(l);
     });
 }
