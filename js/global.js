@@ -308,46 +308,50 @@ document.addEventListener("DOMContentLoaded", async () => {
     qs("#回到顶部").addEventListener("click", () =>
         document.body.scrollIntoView({ behavior: "smooth" })
     );
-    qs("#电子邮箱").addEventListener("click", 事件 => {
-        事件.preventDefault();
-        if (qs("#recaptcha")) return;
-        let div = 添加悬浮卡片(
-            `<div id="g-recaptcha"></div>
+    qsa("#电子邮箱, #tg").forEach(元素 => {
+        元素.addEventListener("click", 事件 => {
+            事件.preventDefault();
+            if (qs("#recaptcha")) return;
+            let div = 添加悬浮卡片(
+                `<div id="g-recaptcha"></div>
             <br />
             <button id="recaptcha">开始人机验证/提交</button>
             <button id="close_recaptcha">关闭</button>
             <a href="https://qwq.dsy4567.cf/api/getemail">在新标签页验证</a><br/>
-            要查看 dsy4567 的电子邮箱地址，请通过 reCAPTCHA 人机验证。<br />
+            要查看 dsy4567 的电子邮箱地址/TG 用户名，请通过 reCAPTCHA 人机验证。<br />
             继续查看电子邮箱地址即代表您同意不向 dsy4567<br />
-            发送广告/要饭/雇童工等垃圾邮件。`,
-            事件.pageX,
-            事件.pageY
-        );
-        添加点击事件和设置图标();
-        添加脚本(
-            "https://www.recaptcha.net/recaptcha/api.js?render=explicit"
-        ).then(() => {
-            qs("#close_recaptcha").addEventListener("click", () => {
-                div.remove();
-            });
-            qs("#recaptcha").addEventListener("click", async 事件 => {
-                try {
-                    qs("#g-recaptcha").innerHTML = await (
-                        await fetch(
-                            "https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
-                                grecaptcha.getResponse()
-                        )
-                    ).text();
-                    添加点击事件和设置图标();
-                } catch (e) {
-                    grecaptcha.render("g-recaptcha", {
-                        sitekey: gr_sitekey,
-                        theme: matchMedia("(prefers-color-scheme: dark)")
-                            .matches
-                            ? "dark"
-                            : "light",
-                    });
-                }
+            发送广告/要饭/雇童工/炒币等垃圾邮件。`,
+                事件.pageX,
+                事件.pageY
+            );
+            添加点击事件和设置图标();
+            添加脚本(
+                "https://www.recaptcha.net/recaptcha/api.js?render=explicit"
+            ).then(() => {
+                qs("#close_recaptcha").addEventListener("click", () => {
+                    div.remove();
+                });
+                qs("#recaptcha").addEventListener("click", async 事件 => {
+                    try {
+                        const 回复 = grecaptcha.getResponse();
+                        if (!回复) throw new Error();
+                        qs("#g-recaptcha").innerHTML = await (
+                            await fetch(
+                                "https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
+                                    回复
+                            )
+                        ).text();
+                        添加点击事件和设置图标();
+                    } catch (e) {
+                        grecaptcha.render("g-recaptcha", {
+                            sitekey: gr_sitekey,
+                            theme: matchMedia("(prefers-color-scheme: dark)")
+                                .matches
+                                ? "dark"
+                                : "light",
+                        });
+                    }
+                });
             });
         });
     });
