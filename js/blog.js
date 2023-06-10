@@ -89,7 +89,7 @@ export async function main(/** @type {String} */ 路径) {
 
                 qs("#正在加载文章提示").remove();
                 显示或隐藏进度条(false);
-                _global["global.js"]().添加点击事件和设置图标();
+                _global["main.js"]().添加点击事件和设置图标();
                 if (location.href.includes("#")) {
                     try {
                         qs(
@@ -169,14 +169,14 @@ ${(() => {
                             sect.id = "评论区";
                             sect.innerHTML = html;
                             qs("#main .右").append(sect);
-                            _global["global.js"]().添加点击事件和设置图标();
+                            _global["main.js"]().添加点击事件和设置图标();
                             qsa("svg[data-icon]").forEach(元素 => {
                                 元素.outerHTML =
-                                    _global["global.js"]().图标[
+                                    _global["main.js"]().图标[
                                         元素.dataset.icon
                                     ] &&
                                     (元素.outerHTML =
-                                        _global["global.js"]().图标[
+                                        _global["main.js"]().图标[
                                             元素.dataset.icon
                                         ]);
                             });
@@ -220,7 +220,7 @@ ${(() => {
                 });
                 显示或隐藏进度条(false);
                 qs("#正在加载文章提示").remove();
-                _global["global.js"]().添加点击事件和设置图标();
+                _global["main.js"]().添加点击事件和设置图标();
             })
             .catch(e => {
                 console.error(e);

@@ -465,7 +465,7 @@ hr {
 
 #网抑云阴乐封面 {
     animation-duration: 5s;
-    animation-name: 匀速转;
+    animation-name: none;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
     border-radius: 50%;

@@ -1,3 +1,5 @@
+/* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
+
 let 网抑云阴乐 = {
     重试timeout: -1,
     已初始化: false,
@@ -69,6 +71,7 @@ let 网抑云阴乐 = {
                 await fetch("https://ncm.vercel.dsy4567.cf/song/url?id=" + id)
             ).json()
         )?.data[0];
+        // vip 歌曲尝试获取 mv
         if (数据?.fee === 0 || 数据?.fee === 8)
             return 数据?.url?.rp("http://", "https://");
         else
@@ -76,7 +79,18 @@ let 网抑云阴乐 = {
                 await (
                     await fetch(
                         "https://ncm.vercel.dsy4567.cf/mv/url?id=" +
-                            网抑云阴乐.歌单[网抑云阴乐.歌单索引[id]].mv
+                            网抑云阴乐.歌单[网抑云阴乐.歌单索引[id]].mv +
+                            "&r=" +
+                            (
+                                await (
+                                    await fetch(
+                                        "https://ncm.vercel.dsy4567.cf/mv/detail?mvid=" +
+                                            网抑云阴乐.歌单[
+                                                网抑云阴乐.歌单索引[id]
+                                            ].mv
+                                    )
+                                ).json()
+                            )?.data?.brs?.[0]?.br // 最小分辨率
                     )
                 ).json()
             )?.data?.url?.replace("http://", "https://");
