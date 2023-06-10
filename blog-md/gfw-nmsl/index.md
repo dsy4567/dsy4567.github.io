@@ -1,4 +1,4 @@
-# 翻墙教程
+# 用套 Vercel 的 CloudFlare Workers + DevSidecar 实现科学上网
 
 <!-- more -->
 

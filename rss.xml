@@ -102,12 +102,12 @@
     </content>
 </entry>
 <entry>
-    <title>翻墙教程</title>
+    <title>用套 Vercel 的 CloudFlare Workers + DevSidecar 实现科学上网</title>
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=gfw-nmsl" />
     <id>gfw-nmsl</id>
     <published>2023-03-27T05:12:02.585Z</published>
-    <updated>2023-03-27T05:12:02.585Z</updated>
-    <summary>翻墙教程
+    <updated>2023-06-10T14:12:02.359Z</updated>
+    <summary>用套 Vercel 的 CloudFlare Workers + DevSidecar 实现科学上网
 </summary>
     <author>
         <name>dsy4567</name>
@@ -116,7 +116,7 @@
     <category term="Default" />
     <content type="html" xml:lang="zh-cn">
         <![CDATA[
-<h1 id="翻墙教程">翻墙教程</h1>
+<h1 id="用套-vercel-的-cloudflare-workers--devsidecar-实现科学上网">用套 Vercel 的 CloudFlare Workers + DevSidecar 实现科学上网</h1>
 <!-- more -->
 
 <p><img src="/blog-md/gfw-nmsl/img/wf.png" alt="你这是违法行为"></p>
