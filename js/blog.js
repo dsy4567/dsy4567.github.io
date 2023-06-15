@@ -170,16 +170,6 @@ ${(() => {
                             sect.innerHTML = html;
                             qs("#main .右").append(sect);
                             _global["main.js"]().添加点击事件和设置图标();
-                            qsa("svg[data-icon]").forEach(元素 => {
-                                元素.outerHTML =
-                                    _global["main.js"]().图标[
-                                        元素.dataset.icon
-                                    ] &&
-                                    (元素.outerHTML =
-                                        _global["main.js"]().图标[
-                                            元素.dataset.icon
-                                        ]);
-                            });
                             hljs.highlightAll();
                         });
             })

@@ -78,7 +78,7 @@ function 动态加载(元素) {
 function 完成加载() {
     添加点击事件和设置图标();
 }
-function 添加点击事件和设置图标() {
+async function 添加点击事件和设置图标() {
     qsa("svg[data-icon]").forEach(元素 => {
         图标[元素.dataset.icon] && (元素.outerHTML = 图标[元素.dataset.icon]);
     });
@@ -126,7 +126,7 @@ function 添加点击事件和设置图标() {
                     网抑云阴乐.歌单[i].歌手 + " - " + 网抑云阴乐.歌单[i].歌名;
                 网抑云阴乐.歌单索引[音乐信息.id] = i;
             }
-            function svg(
+            async function svg(
                 html,
                 /** @type {(元素:HTMLButtonElement)=>void} */ onclick,
                 title,
@@ -185,7 +185,7 @@ function 添加点击事件和设置图标() {
                     "beforeend",
                     `<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a><ol id="播放列表"></ol>`
                 );
-                网抑云阴乐.歌单.forEach(音乐信息 => {
+                网抑云阴乐.歌单.forEach(async 音乐信息 => {
                     let li = ce("li");
                     li.innerHTML = `${音乐信息.歌名} <span class="淡化">${音乐信息.歌手}</span>`;
                     li.onclick = li.onkeyup = 事件 => {
@@ -197,10 +197,7 @@ function 添加点击事件和设置图标() {
                     li.dataset.id = 音乐信息.id;
                     qs("#播放列表").append(li);
                 });
-                qsa("svg[data-icon]").forEach(元素 => {
-                    图标[元素.dataset.icon] &&
-                        (元素.outerHTML = 图标[元素.dataset.icon]);
-                });
+                添加点击事件和设置图标();
 
                 网抑云阴乐.初始化();
             };
@@ -269,10 +266,7 @@ fetch("/json/icon.json")
     .then(j => {
         let f = () => {
             图标 = j;
-            qsa("svg[data-icon]").forEach(元素 => {
-                图标[元素.dataset.icon] &&
-                    (元素.outerHTML = 图标[元素.dataset.icon]);
-            });
+            添加点击事件和设置图标();
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     })
