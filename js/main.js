@@ -7,6 +7,7 @@ import 网抑云阴乐 from "./ncm.js";
 const /** @type {Record<string, string[]>} */ 加载清单 = {
         "/": [],
         "/blog": ["blog"],
+        "/friends": ["friends"],
     },
     歌单id = localStorage.getItem("歌单id") || 8219428260,
     gr_sitekey = "6Ldo1dIkAAAAAM_2VtEneT3l7AE25HdWU45x03ng";
@@ -302,6 +303,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     qs("#回到顶部").addEventListener("click", () =>
         document.body.scrollIntoView({ behavior: "smooth" })
     );
+    qs("#分界线").addEventListener("click", () => {
+        document.body.classList.toggle("宽屏");
+        qs("#分界线 > svg").style.transform = document.body.classList.contains(
+            "宽屏"
+        )
+            ? "rotate(180deg)"
+            : "";
+    });
     qsa("#电子邮箱, #tg").forEach(元素 => {
         元素.addEventListener("click", 事件 => {
             事件.preventDefault();

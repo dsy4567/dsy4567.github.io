@@ -7,10 +7,10 @@ let 所有文章信息 = [],
 
 export async function main(/** @type {String} */ 路径) {
     await import("/js/marked.min.js");
-    if (路径.startsWith("/blog?")) {
+    let u = new URL(location.href);
+    if (u.searchParams.get("id")) {
         if (!所有文章信息[0])
             所有文章信息 = await (await fetch("/json/blog.json")).json();
-        let u = new URL(location.href);
         let id = u.searchParams.get("id");
         let 当前文章信息 = {};
         for (let i = 0; i < 所有文章信息.length; i++) {
@@ -180,7 +180,7 @@ ${(() => {
                 qs("#正在加载文章提示").innerText =
                     "加载失败, 加载时可能遇到了错误, 或此文章不存在";
             });
-    } else if (路径 === "/blog")
+    } else if (获取清理后的路径() === "/blog")
         fetch("/json/blog.json")
             .then(res => res.json())
             .then((/** @type {Array} */ j) => {

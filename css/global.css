@@ -272,11 +272,51 @@ svg[data-icon] {
     max-width: 1500px;
 }
 #main .左 {
-    width: 25%;
+    overflow-y: auto;
+    position: sticky;
+    top: 0;
+    width: calc(25% - 5px);
+    max-height: 100vh;
 }
 #main .右 {
-    width: 75%;
+    width: calc(75% - 5px);
 }
+
+#main #分界线 {
+    background-color: var(--bg-color);
+    border: 8px solid var(--theme-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    position: sticky;
+    top: 0;
+    width: 4px;
+    height: 100vh;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+body.宽屏 #main #分界线 {
+    margin-left: -40px;
+}
+#main #分界线 > svg {
+    background: var(--bg-color);
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
+        rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+    filter: opacity(0);
+    transition: 0.5s filter;
+}
+#main #分界线:hover > svg {
+    filter: opacity(1);
+}
+body.宽屏 #main .左 {
+    display: none;
+    width: 0%;
+}
+body.宽屏 #main .右 {
+    width: calc(100% - 20px);
+}
+
 #copyright {
     background-color: var(--bg-color);
     border-top-left-radius: var(--border-radius);
@@ -370,7 +410,19 @@ section video {
 hr {
     border: 1px solid var(--theme-color-transparent);
 }
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 1600px) {
+    #main .左 {
+        display: block !important;
+        width: calc(25% - 5px) !important;
+    }
+    #main .右 {
+        width: calc(75% - 5px) !important;
+    }
+    #main #分界线 {
+        display: none;
+    }
+}
+@media only screen and (max-width: 1000px) {
     #main {
         flex-direction: column;
         padding-left: 0;
@@ -383,7 +435,9 @@ hr {
     }
     #main .左,
     #main .右 {
-        width: 100%;
+        position: unset;
+        width: 100% !important;
+        max-height: unset;
     }
     .左 > section,
     .右 > section {
@@ -729,7 +783,8 @@ section#我 img {
 section#我 img:hover {
     transform: rotateZ(360deg);
 }
-#main > div.右 > section:nth-child(1) {
+#main > div.右 > section:nth-child(1),
+#main > .分界线 {
     margin-top: 64px;
 }
 
@@ -824,4 +879,16 @@ section#我 img:hover {
     padding: 4px;
     position: absolute;
     z-index: 999;
+}
+
+#友链 > div > section > span {display: flex;flex-direction: row;align-items: center;}
+
+#友链 > div > section > span > * {
+    margin: 4px;
+}
+
+#友链 > div > section > span > img {
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
 }

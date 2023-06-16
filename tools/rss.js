@@ -1,3 +1,5 @@
+/* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
+
 const cheerio = require("cheerio");
 const fs = require("fs");
 const marked = require("marked");
