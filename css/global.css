@@ -686,7 +686,7 @@ div.侧边按钮 .拥有更多选项:focus > .更多选项,
     pointer-events: all !important;
     filter: opacity(1) !important;
 }
-div.侧边按钮 .拥有更多选项 > .更多选项 > span {
+div.侧边按钮 .拥有更多选项 > .更多选项 > button {
     background-color: #fff;
     border: 1px solid #888;
     border-radius: 50%;
