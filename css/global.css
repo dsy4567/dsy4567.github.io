@@ -268,7 +268,7 @@ svg[data-icon] {
     align-items: flex-start;
     justify-content: space-around;
     filter: opacity(0);
-    width: 100%;
+    width: calc(100vw - 90px);
     max-width: 1500px;
 }
 #main .左 {
@@ -412,14 +412,14 @@ hr {
 }
 @media only screen and (max-width: 1600px) {
     #main .左 {
-        display: block !important;
-        width: calc(25% - 5px) !important;
+        /* display: block !important; */
+/*         width: calc(25% - 5px) !important; */
     }
     #main .右 {
-        width: calc(75% - 5px) !important;
+/*         width: calc(75% - 5px) !important; */
     }
     #main #分界线 {
-        display: none;
+        /* display: none; */
     }
 }
 @media only screen and (max-width: 1000px) {
@@ -435,9 +435,14 @@ hr {
     }
     #main .左,
     #main .右 {
+        display: block !important;
         position: unset;
         width: 100% !important;
         max-height: unset;
+    }
+    #main #分界线 {
+        display: none;
+        /* transform: rotateZ(90deg); */
     }
     .左 > section,
     .右 > section {
