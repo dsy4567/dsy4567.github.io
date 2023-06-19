@@ -545,9 +545,6 @@ div.侧边按钮 {
 div#主侧边按钮 {
     top: calc(75vh - 33px * 4);
 }
-div.侧边按钮 button {
-    cursor: pointer;
-}
 div.侧边按钮 .fill {
     fill: #000;
 }

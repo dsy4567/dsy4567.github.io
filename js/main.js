@@ -212,7 +212,6 @@ fetch("/json/theme.json")
             let btn = ce("button");
             btn.style.backgroundColor = 主题[t]["--theme-color"];
             btn.title = t;
-            btn.type = "button";
             btn.role = "radio";
             btn.ariaChecked = false;
             btn.onclick = 提示用户 => {
