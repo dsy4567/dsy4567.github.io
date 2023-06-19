@@ -269,7 +269,7 @@ svg[data-icon] {
     justify-content: space-around;
     filter: opacity(0);
     width: calc(100vw - 90px);
-    max-width: 1500px;
+    max-width: 1600px;
 }
 #main .左 {
     overflow-y: auto;
@@ -290,12 +290,13 @@ svg[data-icon] {
     position: sticky;
     top: 0;
     width: 4px;
-    height: 100vh;
+    height: calc(100vh - 16px);
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 body.宽屏 #main #分界线 {
+    filter: opacity(0);
     margin-left: -40px;
 }
 #main #分界线 > svg {
@@ -305,6 +306,9 @@ body.宽屏 #main #分界线 {
         rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
     filter: opacity(0);
     transition: 0.5s filter, 0.3s transform;
+}
+body.宽屏 #main #分界线:hover {
+    filter: opacity(1);
 }
 #main #分界线:hover > svg {
     filter: opacity(1);
