@@ -363,6 +363,22 @@ addEventListener("copy", () => {
         加载模块();
         完成加载();
     };
+
+    let style = ce("style");
+    style.innerText = `a,
+    button,
+    div,
+    section,
+    img,
+    li {
+        transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s background-image,
+            0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration,
+            0.5s background-color, 0.5s opacity;
+    }`;
+    setTimeout(() => {
+        document.head.append(style);
+    }, 500);
+
     DOMContentLoaded ? f() : document.addEventListener("DOMContentLoaded", f);
 })();
 addEventListener("popstate", 事件 => {

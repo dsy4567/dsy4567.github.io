@@ -147,16 +147,16 @@ html {
     }
 }
 
-a,
+/* a,
 button,
 div,
 section,
 img,
 li {
-    transition: 0.5s backdrop-filter, 0.5s background-image, 0.5s transform,
-        0.5s box-shadow, 0.5s filter, 0.5s text-decoration,
+    transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s background-image,
+        0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration,
         0.5s background-color, 0.5s opacity;
-}
+} */
 
 html {
     --border-radius: 8px;
@@ -273,6 +273,7 @@ main {
     display: flex;
     align-items: flex-start;
     justify-content: space-around;
+    /* margin-top: 2px; */
     width: calc(100vw - 90px);
     max-width: 1600px;
 }
@@ -495,14 +496,14 @@ hr {
 }
 
 #导航栏 {
-    background-image: linear-gradient(var(--theme-color), rgba(0, 0, 0, 0));
+    background-color: var(--bg-color);
     color: var(--text-color);
     display: flex;
     align-items: center;
     flex-direction: row;
     flex-wrap: nowrap;
     justify-content: space-around;
-    position: absolute;
+    position: relative;
     top: 0;
     width: 100%;
     height: 48px;
@@ -566,8 +567,6 @@ div.侧边按钮 > * {
     padding: 4px;
     position: relative;
     transform: translateX(-4px);
-    transition: 0.5s border-radius, 0.5s transform, 0.5s box-shadow,
-        0.5s opacity, 0.5s background-color;
 }
 div.侧边按钮 > *:hover,
 div.侧边按钮 > *:focus-visible,
@@ -729,14 +728,14 @@ div.通知 {
 }
 
 .背景图片 {
-    background-image: url("/img/bg.jpg");
+    /* background-image: url("/img/bg.jpg"); */
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
     filter: brightness(0.8);
     margin-bottom: 8px;
     width: 100%;
-    height: 16vh;
+    height: 64px;
 }
 .背景图片:hover {
     filter: brightness(1);
