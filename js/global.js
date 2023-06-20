@@ -5,7 +5,7 @@
 window.onerror = function () {
     try {
         qs("div#加载界面").style.display = "none";
-        qs("div#main").style.display = "flex";
+        qs("main").style.display = "flex";
     } catch (e) {}
 };
 
@@ -137,12 +137,21 @@ function 添加悬浮卡片(html, x, y, 失去焦点时隐藏) {
     return div;
 }
 
-var URL发生变化事件 = new CustomEvent("URL发生变化");
+let URL发生变化事件 = new CustomEvent("URL发生变化");
 
 // 方便暴露到全局变量
-var _global = {};
+let _global = {};
 addEventListener("storage", 尽快设置主题色);
 尽快设置主题色();
+
+let DOMContentLoaded = false,
+    loaded = false;
+addEventListener("load", () => {
+    loaded = true;
+});
+document.addEventListener("DOMContentLoaded", async () => {
+    DOMContentLoaded = true;
+});
 
 // 谷歌统计代码
 let s = ce("script");

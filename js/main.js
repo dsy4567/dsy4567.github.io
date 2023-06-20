@@ -14,8 +14,6 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
 let 路径 = (location.pathname + location.search)
         .rp(/(index|\.html)/g, "")
         .rp(/\/\//g, ""),
-    DOMContentLoaded = false,
-    loaded = false,
     正在动态加载 = false,
     图标 = {};
 
@@ -57,7 +55,7 @@ function 动态加载(元素) {
             document.title = mt[0].rp(/<\/?title>/g, "");
             dispatchEvent(URL发生变化事件);
             try {
-                qs("#main .右").innerHTML = m[0];
+                qs("main .右").innerHTML = m[0];
                 await 加载模块();
 
                 u.pathname.rp(/(index|\.html)/g, "").rp(/\/\//g, "") === "/" &&
@@ -203,7 +201,8 @@ async function 添加点击事件和设置图标() {
                 网抑云阴乐.初始化();
             };
             DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
-        });
+        })
+        .catch(e => console.error(e));
 // 主题
 fetch("/json/theme.json")
     .then(res => res.json())
@@ -246,7 +245,8 @@ fetch("/json/theme.json")
             let f = () => qs("#所有主题").append(btn);
             DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
         });
-    });
+    })
+    .catch(e => console.error(e));
 fetch("https://v1.hitokoto.cn/")
     .then(res => res.json())
     .then(j => {
@@ -282,13 +282,13 @@ fetch("https://api.github.com/users/dsy4567")
                 new Date(个人信息.created_at).getFullYear()
             }年 `;
 
-            qs("#个性签名").innerText = "";
-            let arr = [...String(个人信息.bio)],
-                interval = setInterval(() => {
-                    let t = arr.shift();
-                    t || clearInterval(interval);
-                    qs("#个性签名").innerText += t || "";
-                }, 3000 / arr.length);
+            // qs("#个性签名").innerText = "";
+            // let arr = [...String(个人信息.bio)],
+            //     interval = setInterval(() => {
+            //         let t = arr.shift();
+            //         t || clearInterval(interval);
+            //         qs("#个性签名").innerText += t || "";
+            //     }, 3000 / arr.length);
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     })
@@ -297,25 +297,24 @@ fetch("https://api.github.com/users/dsy4567")
 addEventListener("copy", () => {
     提示("复制成功");
 });
-document.addEventListener("DOMContentLoaded", async () => {
-    DOMContentLoaded = true;
-    qs("#回到顶部").addEventListener("click", () =>
-        document.body.scrollIntoView({ behavior: "smooth" })
-    );
-    qs("#分界线").addEventListener("click", () => {
-        document.body.classList.toggle("宽屏");
-        qs("#分界线 > svg").style.transform = document.body.classList.contains(
-            "宽屏"
-        )
-            ? "rotate(180deg)"
-            : "";
-    });
-    qsa("#电子邮箱, #tg").forEach(元素 => {
-        元素.addEventListener("click", 事件 => {
-            事件.preventDefault();
-            if (qs("#recaptcha")) return;
-            let div = 添加悬浮卡片(
-                `<div id="g-recaptcha"></div>
+(() => {
+    let f = async () => {
+        qs("#回到顶部").addEventListener("click", () =>
+            document.body.scrollIntoView({ behavior: "smooth" })
+        );
+        qs("#分界线").addEventListener("click", () => {
+            document.body.classList.toggle("宽屏");
+            qs("#分界线 > svg").style.transform =
+                document.body.classList.contains("宽屏")
+                    ? "rotate(180deg)"
+                    : "";
+        });
+        qsa("#电子邮箱, #tg").forEach(元素 => {
+            元素.addEventListener("click", 事件 => {
+                事件.preventDefault();
+                if (qs("#recaptcha")) return;
+                let div = 添加悬浮卡片(
+                    `<div id="g-recaptcha"></div>
             <br />
             <button id="recaptcha">开始人机验证/提交</button>
             <button id="close_recaptcha">关闭</button>
@@ -323,46 +322,46 @@ document.addEventListener("DOMContentLoaded", async () => {
             要查看 dsy4567 的电子邮箱地址/TG 用户名，请通过 reCAPTCHA 人机验证。<br />
             继续查看电子邮箱地址即代表您同意不向 dsy4567<br />
             发送广告/要饭/雇童工/炒币等垃圾邮件。`,
-                事件.pageX,
-                事件.pageY
-            );
-            添加点击事件和设置图标();
-            添加脚本(
-                "https://www.recaptcha.net/recaptcha/api.js?render=explicit"
-            ).then(() => {
-                qs("#close_recaptcha").addEventListener("click", () => {
-                    div.remove();
-                });
-                qs("#recaptcha").addEventListener("click", async 事件 => {
-                    try {
-                        const 回复 = grecaptcha.getResponse();
-                        if (!回复) throw new Error();
-                        qs("#g-recaptcha").innerHTML = await (
-                            await fetch(
-                                "https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
-                                    回复
-                            )
-                        ).text();
-                        添加点击事件和设置图标();
-                    } catch (e) {
-                        grecaptcha.render("g-recaptcha", {
-                            sitekey: gr_sitekey,
-                            theme: matchMedia("(prefers-color-scheme: dark)")
-                                .matches
-                                ? "dark"
-                                : "light",
-                        });
-                    }
+                    事件.pageX,
+                    事件.pageY
+                );
+                添加点击事件和设置图标();
+                添加脚本(
+                    "https://www.recaptcha.net/recaptcha/api.js?render=explicit"
+                ).then(() => {
+                    qs("#close_recaptcha").addEventListener("click", () => {
+                        div.remove();
+                    });
+                    qs("#recaptcha").addEventListener("click", async 事件 => {
+                        try {
+                            const 回复 = grecaptcha.getResponse();
+                            if (!回复) throw new Error();
+                            qs("#g-recaptcha").innerHTML = await (
+                                await fetch(
+                                    "https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
+                                        回复
+                                )
+                            ).text();
+                            添加点击事件和设置图标();
+                        } catch (e) {
+                            grecaptcha.render("g-recaptcha", {
+                                sitekey: gr_sitekey,
+                                theme: matchMedia(
+                                    "(prefers-color-scheme: dark)"
+                                ).matches
+                                    ? "dark"
+                                    : "light",
+                            });
+                        }
+                    });
                 });
             });
         });
-    });
-    加载模块();
-    完成加载();
-});
-addEventListener("load", () => {
-    loaded = true;
-});
+        加载模块();
+        完成加载();
+    };
+    DOMContentLoaded ? f() : document.addEventListener("DOMContentLoaded", f);
+})();
 addEventListener("popstate", 事件 => {
     if (
         (获取清理后的路径(true) === 路径 && location.href.includes("#")) ||

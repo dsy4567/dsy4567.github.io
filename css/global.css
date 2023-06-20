@@ -25,6 +25,14 @@
         transform: translateY(0px);
     }
 }
+@keyframes 隐藏 {
+    0% {
+        filter: opacity(1);
+    }
+    100% {
+        filter: opacity(0);
+    }
+}
 @keyframes 闪烁 {
     0% {
         filter: opacity(0);
@@ -259,7 +267,7 @@ svg[data-icon] {
 .stroke {
     stroke: var(--link-color);
 }
-#main {
+main {
     animation-duration: 1s;
     animation-fill-mode: forwards;
     animation-iteration-count: 1;
@@ -271,18 +279,22 @@ svg[data-icon] {
     width: calc(100vw - 90px);
     max-width: 1600px;
 }
-#main .左 {
+main .左 {
     overflow-y: auto;
     position: sticky;
     top: 0;
     width: calc(25% - 5px);
     max-height: 100vh;
 }
-#main .右 {
+main .右 {
     width: calc(75% - 5px);
 }
+main .左,
+main .右 {
+    padding: 4px;
+}
 
-#main #分界线 {
+main #分界线 {
     background-color: var(--bg-color);
     border: 8px solid var(--theme-color);
     border-radius: var(--border-radius);
@@ -295,11 +307,11 @@ svg[data-icon] {
     justify-content: center;
     align-items: center;
 }
-body.宽屏 #main #分界线 {
+body.宽屏 main #分界线 {
     filter: opacity(0);
     margin-left: -40px;
 }
-#main #分界线 > svg {
+main #分界线 > svg {
     background: var(--bg-color);
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
@@ -307,17 +319,17 @@ body.宽屏 #main #分界线 {
     filter: opacity(0);
     transition: 0.5s filter, 0.3s transform;
 }
-body.宽屏 #main #分界线:hover {
+body.宽屏 main #分界线:hover {
     filter: opacity(1);
 }
-#main #分界线:hover > svg {
+main #分界线:hover > svg {
     filter: opacity(1);
 }
-body.宽屏 #main .左 {
+body.宽屏 main .左 {
     display: none;
     width: 0%;
 }
-body.宽屏 #main .右 {
+body.宽屏 main .右 {
     width: calc(100% - 20px);
 }
 
@@ -394,8 +406,7 @@ section section {
     background-color: var(--bg-color-dark);
 }
 section:hover {
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
-        rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 }
 section h2 {
     display: flex;
@@ -414,20 +425,9 @@ section video {
 hr {
     border: 1px solid var(--theme-color-transparent);
 }
-@media only screen and (max-width: 1600px) {
-    #main .左 {
-        /* display: block !important; */
-/*         width: calc(25% - 5px) !important; */
-    }
-    #main .右 {
-/*         width: calc(75% - 5px) !important; */
-    }
-    #main #分界线 {
-        /* display: none; */
-    }
-}
+
 @media only screen and (max-width: 1000px) {
-    #main {
+    main {
         flex-direction: column;
         padding-left: 0;
         padding-right: 0;
@@ -437,16 +437,15 @@ hr {
         margin-top: unset;
         padding: 8px;
     }
-    #main .左,
-    #main .右 {
+    main .左,
+    main .右 {
         display: block !important;
         position: unset;
         width: 100% !important;
         max-height: unset;
     }
-    #main #分界线 {
+    main #分界线 {
         display: none;
-        /* transform: rotateZ(90deg); */
     }
     .左 > section,
     .右 > section {
@@ -557,8 +556,8 @@ div.侧边按钮 .stroke {
 }
 div.侧边按钮 > * {
     background-color: #fff;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
-        rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+        rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
     border: 1px solid transparent;
     border-bottom-left-radius: 50%;
     border-bottom-right-radius: 50%;
@@ -721,8 +720,8 @@ div.通知 {
     background-color: var(--theme-color);
     border: 1px solid transparent;
     border-radius: var(--border-radius);
-    box-shadow: rgb(0 0 0 / 24%) 0px 12px 15px 0px,
-        rgb(0 0 0 / 19%) 0px 17px 50px 0px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+        rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
     filter: opacity(0);
     margin: 16px;
     padding: 8px;
@@ -738,41 +737,15 @@ div.通知 {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
+    filter: brightness(0.8);
     margin-bottom: 8px;
     width: 100%;
     height: 30vh;
 }
-.背景图片 > div {
-    -webkit-backdrop-filter: brightness(0.8);
-    backdrop-filter: brightness(0.8);
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    justify-content: space-around;
-    stroke: white;
-    width: 100%;
-    height: 30vh;
+.背景图片:hover {
+    filter: brightness(1);
 }
-.背景图片:hover > div.文字 {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-    filter: opacity(0);
-}
-#个性签名 {
-    color: #fff;
-    font-size: 16px;
-    padding: 36px;
-    text-align: center;
-    word-break: break-all;
-}
-#个性签名::after {
-    animation: 闪烁;
-    animation-duration: 2s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-    content: "|";
-    font-style: initial;
-}
+
 section#我 {
     display: flex;
     align-items: center;
@@ -789,8 +762,8 @@ section#我 img {
 section#我 img:hover {
     transform: rotateZ(360deg);
 }
-#main > div.右 > section:nth-child(1),
-#main > .分界线 {
+main > .右 > section:nth-child(1),
+main > .分界线 {
     margin-top: 64px;
 }
 
@@ -887,7 +860,11 @@ section#我 img:hover {
     z-index: 999;
 }
 
-#友链 > div > section > span {display: flex;flex-direction: row;align-items: center;}
+#友链 > div > section > span {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
 
 #友链 > div > section > span > * {
     margin: 4px;
