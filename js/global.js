@@ -2,13 +2,6 @@
 
 "use strict";
 
-window.onerror = function () {
-    try {
-        qs("div#加载界面").style.display = "none";
-        qs("main").style.display = "flex";
-    } catch (e) {}
-};
-
 String.prototype.rp = String.prototype.replace;
 
 /**

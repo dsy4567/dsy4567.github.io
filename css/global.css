@@ -87,6 +87,7 @@
         --theme-color-l: 0.87;
         --theme-color-transparent: #fff8;
         --text-color: #222;
+        color-scheme: light;
     }
 }
 @media (prefers-color-scheme: dark) {
@@ -97,6 +98,7 @@
         --theme-color-l: 0.13;
         --theme-color-transparent: #fff2;
         --text-color: #ddd;
+        color-scheme: dark;
     }
 }
 html {
@@ -248,7 +250,7 @@ nav h1 {
     cursor: not-allowed;
 }
 *:focus-visible {
-    outline: 2px solid var(--theme-color);
+    outline: 2px solid var(--link-color);
 }
 .标记 {
     animation-duration: 3s;

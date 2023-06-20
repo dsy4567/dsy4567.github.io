@@ -1,5 +1,7 @@
 /* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
 
+"use strict";
+
 let 网抑云阴乐 = {
     重试timeout: -1,
     已初始化: false,

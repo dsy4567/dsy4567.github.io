@@ -314,8 +314,8 @@ addEventListener("copy", () => {
                 事件.preventDefault();
                 if (qs("#recaptcha")) return;
                 let div = 添加悬浮卡片(
-                    `<div id="g-recaptcha"></div>
-            <br />
+                    `
+            <div id="g-recaptcha"></div><br />
             <button id="recaptcha">开始人机验证/提交</button>
             <button id="close_recaptcha">关闭</button>
             <a href="https://qwq.dsy4567.cf/api/getemail">在新标签页验证</a><br/>
@@ -343,7 +343,10 @@ addEventListener("copy", () => {
                                 )
                             ).text();
                             添加点击事件和设置图标();
+                            qs("#g-recaptcha").focus();
                         } catch (e) {
+                            qs("#g-recaptcha").tabIndex = "0";
+                            qs("#g-recaptcha").focus();
                             grecaptcha.render("g-recaptcha", {
                                 sitekey: gr_sitekey,
                                 theme: matchMedia(
