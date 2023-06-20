@@ -38,7 +38,7 @@ function 动态加载(元素) {
     fetch(元素.href)
         .then(res => res.text())
         .then(async html => {
-            let m = html.match(/<!-- START MAIN -->.+<!-- END MAIN -->/s),
+            let m = html.match(/<!-- BEGIN MAIN -->.+<!-- END MAIN -->/s),
                 mt = html.match(/<title>.+<\/title>/s);
             if (!m) throw new Error("动态加载失败: 匹配结果为空");
             let u = new URL(元素.href, location.href);

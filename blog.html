@@ -35,10 +35,23 @@
 
         <link rel="dns-prefetch" href="https://api.github.com" />
         <link rel="dns-prefetch" href="https://v1.hitokoto.cn" />
+        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
         <link
             rel="preload"
+            href="/js/ncm.js"
+            as="script"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="preload"
             href="/js/blog.js"
+            as="script"
+            crossorigin="anonymous"
+        />
+        <link
+            rel="preload"
+            href="/json/blog.json"
             as="script"
             crossorigin="anonymous"
         />
@@ -176,7 +189,7 @@
                 <svg class="特小尺寸" data-icon="隐藏显示"></svg>
             </div>
             <article class="右">
-                <!-- START MAIN -->
+                <!-- BEGIN MAIN -->
                 <section id="正在加载文章提示">
                     正在加载文章
                     <noscript

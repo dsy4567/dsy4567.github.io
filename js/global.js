@@ -147,8 +147,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // 谷歌统计代码
-let s = ce("script");
+let /** @type {HTMLScriptElement} */ s = ce("script");
 s.async = true;
+s.defer = true;
 s.src = "https://www.googletagmanager.com/gtag/js?id=G-060YCRMSSH";
 document.head.append(s);
 

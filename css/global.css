@@ -17,34 +17,34 @@
 }
 @keyframes 显示 {
     0% {
-        filter: opacity(0);
+        opacity: 0;
         transform: translateY(64px);
     }
     100% {
-        filter: opacity(1);
+        opacity: 1;
         transform: translateY(0px);
     }
 }
 @keyframes 隐藏 {
     0% {
-        filter: opacity(1);
+        opacity: 1;
     }
     100% {
-        filter: opacity(0);
+        opacity: 0;
     }
 }
 @keyframes 闪烁 {
     0% {
-        filter: opacity(0);
+        opacity: 1;
     }
     50% {
-        filter: opacity(0);
+        opacity: 0;
     }
     50.1% {
-        filter: opacity(1);
+        opacity: 1;
     }
     100% {
-        filter: opacity(1);
+        opacity: 1;
     }
 }
 @keyframes 标记 {
@@ -152,11 +152,10 @@ button,
 div,
 section,
 img,
-li,
-spoiler {
+li {
     transition: 0.5s backdrop-filter, 0.5s background-image, 0.5s transform,
         0.5s box-shadow, 0.5s filter, 0.5s text-decoration,
-        0.5s background-color;
+        0.5s background-color, 0.5s opacity;
 }
 
 html {
@@ -239,6 +238,7 @@ video {
 spoiler {
     background-color: #000 !important;
     color: #000 !important;
+    transition: 0.5s color;
 }
 spoiler:hover {
     color: #fff !important;
@@ -257,7 +257,7 @@ nav h1 {
     animation-name: 标记;
     animation-iteration-count: 1;
     animation-timing-function: linear;
-    transition: 0.5s all;
+    transition: 0.5s color, 0.5s background-color;
 }
 svg[data-icon] {
     background-color: var(--theme-color);
@@ -270,14 +270,9 @@ svg[data-icon] {
     stroke: var(--link-color);
 }
 main {
-    animation-duration: 1s;
-    animation-fill-mode: forwards;
-    animation-iteration-count: 1;
-    animation-name: 显示;
     display: flex;
     align-items: flex-start;
     justify-content: space-around;
-    filter: opacity(0);
     width: calc(100vw - 90px);
     max-width: 1600px;
 }
@@ -310,7 +305,7 @@ main #分界线 {
     align-items: center;
 }
 body.宽屏 main #分界线 {
-    filter: opacity(0);
+    opacity: 0;
     margin-left: -40px;
 }
 main #分界线 > svg {
@@ -318,14 +313,14 @@ main #分界线 > svg {
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
         rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
-    filter: opacity(0);
-    transition: 0.5s filter, 0.3s transform;
+    opacity: 0;
+    transition: 0.5s opacity, 0.3s transform;
 }
 body.宽屏 main #分界线:hover {
-    filter: opacity(1);
+    opacity: 1;
 }
 main #分界线:hover > svg {
-    filter: opacity(1);
+    opacity: 1;
 }
 body.宽屏 main .左 {
     display: none;
@@ -566,21 +561,20 @@ div.侧边按钮 > * {
     border-top-left-radius: 50%;
     border-top-right-radius: 50%;
     display: flex;
-    filter: opacity(0.5);
+    opacity: 0.5;
     margin-top: 5px;
     padding: 4px;
     position: relative;
     transform: translateX(-4px);
-    transition: 0.5s border-radius, 1.5s backdrop-filter, 0.5s background-image,
-        0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration,
-        0.5s background-color;
+    transition: 0.5s border-radius, 0.5s transform, 0.5s box-shadow,
+        0.5s opacity, 0.5s background-color;
 }
 div.侧边按钮 > *:hover,
 div.侧边按钮 > *:focus-visible,
 div.侧边按钮 > *:focus-within {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
-    filter: opacity(1);
+    opacity: 1;
     transform: translateX(0);
 }
 
@@ -608,7 +602,7 @@ div.侧边按钮 .拥有更多选项 > .更多选项 {
     background: #fff;
     border: 1px solid transparent;
     display: flex;
-    filter: opacity(0);
+    opacity: 0;
     padding-right: 32px;
     pointer-events: none;
     position: absolute;
@@ -694,7 +688,7 @@ div.侧边按钮 .拥有更多选项:hover > .更多选项,
 div.侧边按钮 .拥有更多选项:focus > .更多选项,
 .更多选项:focus-within {
     pointer-events: all !important;
-    filter: opacity(1) !important;
+    opacity: 1 !important;
 }
 div.侧边按钮 .拥有更多选项 > .更多选项 > button {
     background-color: #fff;
@@ -724,7 +718,7 @@ div.通知 {
     border-radius: var(--border-radius);
     box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
         rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
-    filter: opacity(0);
+    opacity: 0;
     margin: 16px;
     padding: 8px;
     pointer-events: none;
@@ -742,7 +736,7 @@ div.通知 {
     filter: brightness(0.8);
     margin-bottom: 8px;
     width: 100%;
-    height: 30vh;
+    height: 16vh;
 }
 .背景图片:hover {
     filter: brightness(1);
