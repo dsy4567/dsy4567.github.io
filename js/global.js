@@ -146,13 +146,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     DOMContentLoaded = true;
 });
 
-// 谷歌统计代码
-let /** @type {HTMLScriptElement} */ s = ce("script");
-s.async = true;
-s.defer = true;
-s.src = "https://www.googletagmanager.com/gtag/js?id=G-060YCRMSSH";
-document.head.append(s);
-
 window.dataLayer = window.dataLayer || [];
 function gtag() {
     dataLayer.push(arguments);
