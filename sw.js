@@ -41,7 +41,7 @@ self.addEventListener("install", 事件 => {
 
 self.addEventListener("fetch", 事件 => {
     let u = new URL(事件.request.url);
-    if (u.hostname !== location.hostname) return;
+    if (u.hostname !== location.hostname || u.pathname.includes("/_")) return;
     u.search = "";
     事件.url = u;
 
