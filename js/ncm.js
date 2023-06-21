@@ -207,74 +207,71 @@ let 网抑云阴乐 = {
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
             );
             网抑云阴乐.正在播放.Audio.preload = "none";
-            网抑云阴乐.正在播放.Audio.autoplay =
-                (localStorage.getItem("自动播放") &&
-                    JSON.parse(localStorage.getItem("自动播放"))) ??
-                true;
+            网抑云阴乐.正在播放.Audio.autoplay = false;
             网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量;
             网抑云阴乐.正在播放.Audio.onended = 网抑云阴乐.下一首;
-            if (navigator.mediaSession) {
-                // 使用浏览器/系统提供的控件控制音乐播放
-                navigator.mediaSession.setActionHandler("play", function () {
-                    网抑云阴乐.正在播放.Audio.play();
-                    navigator.mediaSession.playbackState = "playing";
-                });
-                navigator.mediaSession.setActionHandler("pause", function () {
-                    网抑云阴乐.正在播放.Audio.pause();
-                    navigator.mediaSession.playbackState = "paused";
-                });
-                navigator.mediaSession.setActionHandler(
-                    "previoustrack",
-                    网抑云阴乐.上一首
-                );
-                navigator.mediaSession.setActionHandler(
-                    "nexttrack",
-                    网抑云阴乐.下一首
-                );
-                网抑云阴乐.正在播放.Audio.onloadedmetadata = async () => {
-                    qs("#歌词").innerText = "";
-                    clearInterval(网抑云阴乐.正在播放.歌词interval);
-                    网抑云阴乐.正在播放.所有歌词 = [];
-                    网抑云阴乐.正在播放.所有歌词翻译 = [];
-                    fetch(
-                        `https://ncm.vercel.dsy4567.cf/lyric?id=${
-                            网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-                        }&realIP=111.18.65.162`
-                    )
-                        .then(res => res.json())
-                        .then(async j => {
-                            let 待解析歌词,
-                                待解析歌词翻译 = j.tlyric?.lyric;
-                            if (
-                                (!(待解析歌词 = j.lrc.lyric) &&
-                                    j.lrc.version !== 6) ||
-                                !j.lrc.lyric.includes("[")
-                            ) {
-                                qs("#歌词").innerText = "";
-                                clearInterval(网抑云阴乐.正在播放.歌词interval);
-                                网抑云阴乐.正在播放.所有歌词 = [];
-                                return;
-                            }
-                            await 添加脚本("/js/lrc-parser.js");
-                            网抑云阴乐.正在播放.所有歌词 = lrcParser(
-                                待解析歌词 + "[99:59.59]\n"
-                            ).scripts;
-                            待解析歌词翻译?.includes("[") &&
-                                (网抑云阴乐.正在播放.所有歌词翻译 = lrcParser(
-                                    待解析歌词翻译 + "[99:59.99]\n"
-                                ).scripts);
+            // 使用浏览器/系统提供的控件控制音乐播放
+            navigator.mediaSession?.setActionHandler("play", function () {
+                网抑云阴乐.正在播放.Audio.play();
+                navigator.mediaSession.playbackState = "playing";
+            });
+            navigator.mediaSession?.setActionHandler("pause", function () {
+                网抑云阴乐.正在播放.Audio.pause();
+                navigator.mediaSession.playbackState = "paused";
+            });
+            navigator.mediaSession?.setActionHandler(
+                "previoustrack",
+                网抑云阴乐.上一首
+            );
+            navigator.mediaSession?.setActionHandler(
+                "nexttrack",
+                网抑云阴乐.下一首
+            );
+            网抑云阴乐.正在播放.Audio.onloadedmetadata = async () => {
+                qs("#歌词").innerText = "";
+                clearInterval(网抑云阴乐.正在播放.歌词interval);
+                网抑云阴乐.正在播放.所有歌词 = [];
+                网抑云阴乐.正在播放.所有歌词翻译 = [];
+                fetch(
+                    `https://ncm.vercel.dsy4567.cf/lyric?id=${
+                        网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
+                    }&realIP=111.18.65.162`
+                )
+                    .then(res => res.json())
+                    .then(async j => {
+                        let 待解析歌词,
+                            待解析歌词翻译 = j.tlyric?.lyric;
+                        if (
+                            (!(待解析歌词 = j.lrc.lyric) &&
+                                j.lrc.version !== 6) ||
+                            !j.lrc.lyric.includes("[")
+                        ) {
+                            qs("#歌词").innerText = "";
+                            clearInterval(网抑云阴乐.正在播放.歌词interval);
+                            网抑云阴乐.正在播放.所有歌词 = [];
+                            return;
+                        }
+                        await 添加脚本("/js/lrc-parser.js");
+                        网抑云阴乐.正在播放.所有歌词 = lrcParser(
+                            待解析歌词 + "[99:59.59]\n"
+                        ).scripts;
+                        待解析歌词翻译?.includes("[") &&
+                            (网抑云阴乐.正在播放.所有歌词翻译 = lrcParser(
+                                待解析歌词翻译 + "[99:59.99]\n"
+                            ).scripts);
 
-                            网抑云阴乐.恢复歌词();
-                        });
+                        网抑云阴乐.恢复歌词();
+                    });
 
-                    qs("#播放列表").scrollTop = qs(
-                        "li[data-id='" +
-                            网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id +
-                            "']"
-                    )?.offsetTop;
+                qs("#播放列表").scrollTop = qs(
+                    "li[data-id='" +
+                        网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id +
+                        "']"
+                )?.offsetTop;
 
-                    let 封面;
-                    navigator.mediaSession.metadata = new MediaMetadata({
+                let 封面;
+                navigator.mediaSession &&
+                    (navigator.mediaSession.metadata = new MediaMetadata({
                         title: 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].歌名,
                         artist: 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].歌手,
                         artwork: [
@@ -284,15 +281,13 @@ let 网抑云阴乐 = {
                                         .封面),
                             },
                         ],
-                    });
-                    qs("#网抑云阴乐封面").onerror = () => {
-                        qs("#网抑云阴乐封面").src = "";
-                    };
-                    qs("#网抑云阴乐封面").src = 封面 + "?param=24x24";
+                    }));
+                qs("#网抑云阴乐封面").onerror = () => {
+                    qs("#网抑云阴乐封面").src = "";
                 };
-            }
+                qs("#网抑云阴乐封面").src = 封面 + "?param=24x24";
+            };
             网抑云阴乐.正在播放.Audio.onplay = () => {
-                localStorage.setItem("自动播放", true);
                 qs("#网抑云阴乐封面").style.animationName = "匀速转";
                 qsa("li.正在播放")?.forEach(元素 => {
                     元素.classList.remove("正在播放");
@@ -305,7 +300,6 @@ let 网抑云阴乐 = {
                 网抑云阴乐.恢复歌词();
             };
             网抑云阴乐.正在播放.Audio.onpause = () => {
-                localStorage.setItem("自动播放", false);
                 qs("#网抑云阴乐封面").style.animationName = "unset";
                 clearInterval(网抑云阴乐.正在播放.歌词interval);
             };
