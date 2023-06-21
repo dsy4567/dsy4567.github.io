@@ -101,25 +101,6 @@
         color-scheme: dark;
     }
 }
-html {
-    --bg-color: hsl(
-        calc(var(--theme-color-h) * 360),
-        calc(var(--theme-color-s) * 100%),
-        calc(var(--theme-color-l) * 100% - 3%)
-    );
-    --bg-color-dark: hsl(
-        calc(var(--theme-color-h) * 360),
-        calc(var(--theme-color-s) * 100%),
-        calc(var(--theme-color-l) * 100%)
-    );
-    --bg-color-dark-2: hsl(
-        calc(var(--theme-color-h) * 360),
-        calc(var(--theme-color-s) * 100%),
-        calc(var(--theme-color-l) * 100% + 3%)
-    );
-    --bg-color-light: 0;
-    --link-color: var(--text-color);
-}
 @media (forced-colors: active) {
     a:hover {
         outline: 2px solid #ffff00;
@@ -146,6 +127,73 @@ html {
         background: none !important;
     }
 }
+@media print {
+    html,
+    body {
+        --theme-color: #fff !important;
+        --theme-color-h: 1 !important;
+        --theme-color-s: 1 !important;
+        --theme-color-l: 1 !important;
+        --theme-color-transparent: #fff0 !important;
+        --text-color: #000 !important;
+        color-scheme: light !important;
+    }
+    a::after {
+        font-size: 0.8em;
+        opacity: 0.8;
+        word-break: break-all;
+        content: " (" attr(href) ")" !important;
+    }
+    a.hash链接::after {
+        content: "" !important;
+    }
+    main {
+        flex-direction: column !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        width: 100% !important;
+    }
+    section,
+    img,
+    video {
+        border: 1px solid #000 !important;
+    }
+    section {
+        margin-top: unset !important;
+        padding: 8px !important;
+    }
+    main .右 {
+        display: block !important;
+        padding: 0 !important;
+        position: unset !important;
+        width: 100% !important;
+    }
+    nav {
+        transform: translateY(0px) !important;
+        box-shadow: none !important;
+        position: relative !important;
+        border-bottom: 1px solid #000;
+    }
+    spoiler {
+        color: #fff !important;
+    }
+    p:has(spoiler) {
+        transform: rotateX(180deg) !important;
+    }
+    pre {
+        background-color: #fff !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+    }
+    main .左,
+    main #分界线,
+    footer,
+    nav .右 *,
+    #主侧边按钮,
+    #评论区 {
+        display: none !important;
+    }
+}
 
 /* a,
 button,
@@ -160,7 +208,25 @@ li {
 } */
 
 html {
+    --bg-color: hsl(
+        calc(var(--theme-color-h) * 360),
+        calc(var(--theme-color-s) * 100%),
+        calc(var(--theme-color-l) * 100% - 3%)
+    );
+    --bg-color-dark: hsl(
+        calc(var(--theme-color-h) * 360),
+        calc(var(--theme-color-s) * 100%),
+        calc(var(--theme-color-l) * 100%)
+    );
+    --bg-color-dark-2: hsl(
+        calc(var(--theme-color-h) * 360),
+        calc(var(--theme-color-s) * 100%),
+        calc(var(--theme-color-l) * 100% + 3%)
+    );
+    --bg-color-light: 0;
+    --link-color: var(--text-color);
     --border-radius: 8px;
+    --hostname: "dsy4567.cf";
     scroll-behavior: smooth;
 }
 body {
@@ -211,17 +277,11 @@ a:hover,
 a:focus-visible {
     text-decoration: 1px underline var(--link-color);
 }
-a:active {
-}
-a.无滤镜,
-a.无滤镜:hover,
-a.无滤镜:focus-visible,
-a.无滤镜:active {
-    filter: none;
-}
-a.外链::after,
-a.外链:hover:active::after {
+a.外链::after {
     content: "↗";
+}
+a.外链.无滤镜::after {
+    content: "";
 }
 
 a[title]::after {
@@ -237,8 +297,8 @@ video {
     border-radius: var(--border-radius);
 }
 spoiler {
-    background-color: #000 !important;
-    color: #000 !important;
+    background-color: #000;
+    color: #000;
     transition: 0.5s color;
 }
 spoiler:hover {
@@ -439,8 +499,9 @@ hr {
         margin-top: unset;
         padding: 8px;
     }
-    main .左 {transform: translateY(48px) !important;
-    } 
+    main .左 {
+        transform: translateY(48px) !important;
+    }
     main .左,
     main .右 {
         display: block !important;

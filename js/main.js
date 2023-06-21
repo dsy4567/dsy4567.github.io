@@ -82,10 +82,17 @@ async function 添加点击事件和设置图标() {
         图标[元素.dataset.icon] && (元素.outerHTML = 图标[元素.dataset.icon]);
     });
     qsa("a").forEach(元素 => {
-        if (元素.pathname === location.pathname && 元素.href.includes("#"))
+        if (元素.pathname === location.pathname && 元素.href.includes("#")) {
+            if (!元素.className.includes("hash链接"))
+                元素.classList.add("hash链接");
             return;
+        }
+        if (!元素.className.includes("内链") && 元素.host === location.host) {
+            元素.classList.add("内链");
+            元素.href = new URL(元素.href, location.href);
+        }
         if (元素.host !== location.host && !元素.className.includes("外链")) {
-            if (!元素.querySelector("img, svg")) 元素.classList.add("外链");
+            元素.classList.add("外链");
             元素.target = "_blank";
         } else if (
             元素.host === location.host &&
@@ -97,7 +104,10 @@ async function 添加点击事件和设置图标() {
                 动态加载(元素);
             });
         }
-        if (元素.querySelector("img") && !元素.className.includes("无滤镜"))
+        if (
+            元素.querySelector("img, svg") &&
+            !元素.className.includes("无滤镜")
+        )
             元素.classList.add("无滤镜");
     });
     qsa("img").forEach(元素 => {
