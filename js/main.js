@@ -370,6 +370,7 @@ addEventListener("copy", () => {
     div,
     section,
     img,
+    nav,
     li {
         transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s background-image,
             0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration,
@@ -377,6 +378,26 @@ addEventListener("copy", () => {
     }`;
     setTimeout(() => {
         document.head.append(style);
+
+        let scrollTop = 0,
+            导航栏 = qs("#导航栏"),
+            左 = qs("main .左");
+        addEventListener("scroll", async () => {
+            if (document.documentElement.scrollTop === 0) {
+                // 左.style.transform =
+                导航栏.style.transform = "translateY(0px)";
+                导航栏.style.boxShadow = "none";
+            } else if (document.documentElement.scrollTop > scrollTop) {
+                导航栏.style.transform = "translateY(-48px)";
+                左.style.transform = "translateY(0px)";
+                导航栏.style.boxShadow = "none";
+            } else if (document.documentElement.scrollTop < scrollTop) {
+                导航栏.style.transform = "translateY(0px)";
+                左.style.transform = "translateY(48px)";
+                导航栏.style.boxShadow = "rgba(0, 0, 0, 0.24) 0px 0px 16px 0px";
+            }
+            scrollTop = document.documentElement.scrollTop;
+        });
     }, 500);
 
     DOMContentLoaded ? f() : document.addEventListener("DOMContentLoaded", f);
