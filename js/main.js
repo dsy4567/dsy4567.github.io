@@ -247,7 +247,7 @@ fetch("/json/theme.json")
         });
     })
     .catch(e => console.error(e));
-fetch("https://v1.hitokoto.cn/")
+fetch("https://dsy4567.cf/api/hitokoto")
     .then(res => res.json())
     .then(j => {
         let f = () => {
