@@ -9,7 +9,7 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
         "/blog": ["blog"],
         "/friends": ["friends"],
     },
-    歌单id = localStorage.getItem("歌单id") || 8219428260,
+    歌单id = /*localStorage.getItem("歌单id") ||*/ 8219428260,
     gr_sitekey = "6Ldo1dIkAAAAAM_2VtEneT3l7AE25HdWU45x03ng";
 let 路径 = (location.pathname + location.search)
         .rp(/(index|\.html)/g, "")
@@ -34,7 +34,7 @@ function 动态加载(元素) {
     }
     正在动态加载 = true;
     显示或隐藏进度条(true);
-    qs("meta[name='robots']").content = "";
+    gd("robots").content = "";
     fetch(元素.href)
         .then(res => res.text())
         .then(async html => {
@@ -55,7 +55,7 @@ function 动态加载(元素) {
             document.title = mt[0].rp(/<\/?title>/g, "");
             dispatchEvent(URL发生变化事件);
             try {
-                qs("main .右").innerHTML = m[0];
+                qs("main .右", true).innerHTML = m[0];
                 await 加载模块();
 
                 u.pathname.rp(/(index|\.html)/g, "").rp(/\/\//g, "") === "/" &&
@@ -80,9 +80,11 @@ function 完成加载() {
 async function 添加点击事件和设置图标() {
     图标["首页"] &&
         qsa("svg[data-icon]").forEach(元素 => {
-            let h=图标[元素.dataset.icon]?.replace(/特?小尺寸/,元素.getAttribute("class"))
-           h &&
-                (元素.outerHTML = h);
+            let h = 图标[元素.dataset.icon]?.replace(
+                /特?小尺寸/,
+                元素.getAttribute("class")
+            );
+            h && (元素.outerHTML = h);
         });
     qsa("a").forEach(元素 => {
         if (元素.pathname === location.pathname && 元素.href.includes("#")) {
@@ -118,7 +120,7 @@ async function 添加点击事件和设置图标() {
     });
 }
 // 网抑云阴乐歌单+控件
-!navigator.userAgent.toLowerCase().match(/bot|spider/g) &&
+!navigator.userAgent.match(/bot|spider/ig) &&
     fetch("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=" + 歌单id)
         .then(res => res.json())
         .then(j => {
@@ -153,7 +155,7 @@ async function 添加点击事件和设置图标() {
                 btn.title = title;
                 btn.role = role;
                 btn.ariaChecked = role === "checkbox" ? false : null;
-                qs("#阴乐控件").append(btn);
+                gd("阴乐控件").append(btn);
             }
             let f = () => {
                 svg(
@@ -193,7 +195,7 @@ async function 添加点击事件和设置图标() {
                     网抑云阴乐.更改音量,
                     "音量"
                 );
-                qs("#阴乐控件").insertAdjacentHTML(
+                gd("阴乐控件").insertAdjacentHTML(
                     "beforeend",
                     `<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a><ol id="播放列表"></ol>`
                 );
@@ -207,7 +209,7 @@ async function 添加点击事件和设置图标() {
                     li.tabIndex = 0;
                     li.title = 音乐信息.完整歌名;
                     li.dataset.id = 音乐信息.id;
-                    qs("#播放列表").append(li);
+                    gd("播放列表").append(li);
                 });
                 添加点击事件和设置图标();
 
@@ -241,7 +243,7 @@ fetch("/json/theme.json")
                 ].forEach(n => {
                     document.documentElement.style.setProperty(n, 主题[t][n]);
                 });
-                qs("#主题色").content = 主题[t]["--theme-color"];
+                gd("主题色").content = 主题[t]["--theme-color"];
                 localStorage.setItem("theme", t);
                 localStorage.setItem("主题色", 主题[t]["--theme-color"]);
                 localStorage.setItem("主题色h", 主题[t]["--theme-color-h"]);
@@ -255,7 +257,7 @@ fetch("/json/theme.json")
                 提示用户 !== false && 提示("已切换主题: " + t);
             };
             if (t === localStorage.getItem("theme")) btn.onclick(false);
-            let f = () => qs("#所有主题").append(btn);
+            let f = () => gd("所有主题").append(btn);
             DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
         });
     })
@@ -264,12 +266,9 @@ fetch("https://dsy4567.cf/api/hitokoto")
     .then(res => res.json())
     .then(j => {
         let f = () => {
-            qs("#一言").innerText = j.hitokoto;
-            qsa("#一言, .一言 .date").forEach(
-                元素 =>
-                    (元素.ondblclick = () =>
-                        open("https://hitokoto.cn/?uuid=" + j.uuid, "_blank"))
-            );
+            gd("一言").innerText = j.hitokoto;
+            qs("#一言+.date").ondblclick = gd("一言").ondblclick =
+                () => open("https://hitokoto.cn/?uuid=" + j.uuid, "_blank");
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     })
@@ -288,20 +287,12 @@ fetch("https://api.github.com/users/dsy4567")
     .then(res => res.json())
     .then(个人信息 => {
         let f = () => {
-            qs("#关注粉丝码龄").innerHTML = ` 关注: ${
+            gd("关注粉丝码龄").innerHTML = ` 关注: ${
                 个人信息.following
             } | 粉丝: ${个人信息.followers} | 码龄: ${
                 new Date().getFullYear() -
                 new Date(个人信息.created_at).getFullYear()
             }年 `;
-
-            // qs("#个性签名").innerText = "";
-            // let arr = [...String(个人信息.bio)],
-            //     interval = setInterval(() => {
-            //         let t = arr.shift();
-            //         t || clearInterval(interval);
-            //         qs("#个性签名").innerText += t || "";
-            //     }, 3000 / arr.length);
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     })
@@ -312,16 +303,16 @@ addEventListener("copy", () => {
 });
 (() => {
     let f = async () => {
-        qs("#回到顶部").addEventListener("click", () =>
+        gd("回到顶部").addEventListener("click", () =>
             document.body.scrollIntoView({ behavior: "smooth" })
         );
-        qs("#分界线").addEventListener("click", () => {
+        gd("分界线").addEventListener("click", () => {
             document.body.classList.toggle("宽屏");
         });
         qsa("#电子邮箱, #tg").forEach(元素 => {
             元素.addEventListener("click", 事件 => {
                 事件.preventDefault();
-                if (qs("#recaptcha")) return;
+                if (gd("recaptcha")) return;
                 let div = 添加悬浮卡片(
                     `
             <div id="g-recaptcha"></div><br />
@@ -338,24 +329,24 @@ addEventListener("copy", () => {
                 添加脚本(
                     "https://www.recaptcha.net/recaptcha/api.js?render=explicit"
                 ).then(() => {
-                    qs("#close_recaptcha").addEventListener("click", () => {
+                    gd("close_recaptcha").addEventListener("click", () => {
                         div.remove();
                     });
-                    qs("#recaptcha").addEventListener("click", async 事件 => {
+                    gd("recaptcha").addEventListener("click", async 事件 => {
                         try {
                             const 回复 = grecaptcha.getResponse();
                             if (!回复) throw new Error();
-                            qs("#g-recaptcha").innerHTML = await (
+                            gd("g-recaptcha").innerHTML = await (
                                 await fetch(
                                     "https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
                                         回复
                                 )
                             ).text();
                             添加点击事件和设置图标();
-                            qs("#g-recaptcha").focus();
+                            gd("g-recaptcha").focus();
                         } catch (e) {
-                            qs("#g-recaptcha").tabIndex = "0";
-                            qs("#g-recaptcha").focus();
+                            gd("g-recaptcha").tabIndex = "0";
+                            gd("g-recaptcha").focus();
                             grecaptcha.render("g-recaptcha", {
                                 sitekey: gr_sitekey,
                                 theme: matchMedia(
@@ -403,7 +394,7 @@ addEventListener("copy", () => {
         document.head.append(style);
 
         let scrollTop = 0,
-            导航栏 = qs("#导航栏"),
+            导航栏 = gd("导航栏"),
             左 = qs("main .左");
         addEventListener("scroll", async () => {
             if (document.documentElement.scrollTop === 0) {

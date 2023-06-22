@@ -45,7 +45,7 @@ let 网抑云阴乐 = {
                     歌词开始时间 = 歌词.start;
                     if (歌词.text !== 网抑云阴乐.正在播放.上一句歌词) {
                         网抑云阴乐.正在播放.上一句歌词 = 歌词.text;
-                        qs("#歌词").innerText = 歌词.text;
+                        gd("歌词").innerText = 歌词.text;
                         需要添加翻译 = true;
                     }
                     break;
@@ -61,7 +61,7 @@ let 网抑云阴乐 = {
 
                     if (歌词翻译.start === 歌词开始时间) {
                         if (需要添加翻译)
-                            qs("#歌词").innerText += ` (${歌词翻译.text})`;
+                            gd("歌词").innerText += ` (${歌词翻译.text})`;
                         break;
                     }
                 }
@@ -111,7 +111,7 @@ let 网抑云阴乐 = {
                     网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
                 );
                 网抑云阴乐.正在播放.Audio.autoplay = true;
-                qs("#网抑云阴乐").title =
+                gd("网抑云阴乐").title =
                     "网抑云阴乐 - 正在播放: " +
                     网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
                 localStorage.setItem(
@@ -138,7 +138,7 @@ let 网抑云阴乐 = {
     async 上一首() {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
-            qs("#歌词").innerText = "";
+            gd("歌词").innerText = "";
             clearInterval(网抑云阴乐.正在播放.歌词interval);
             await 网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
@@ -151,7 +151,7 @@ let 网抑云阴乐 = {
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
             );
             网抑云阴乐.正在播放.Audio.autoplay = true;
-            qs("#网抑云阴乐").title =
+            gd("网抑云阴乐").title =
                 "网抑云阴乐 - 正在播放: " +
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
             localStorage.setItem(
@@ -166,7 +166,7 @@ let 网抑云阴乐 = {
     async 下一首() {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
-            qs("#歌词").innerText = "";
+            gd("歌词").innerText = "";
             clearInterval(网抑云阴乐.正在播放.歌词interval);
             await 网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
@@ -179,7 +179,7 @@ let 网抑云阴乐 = {
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
             );
             网抑云阴乐.正在播放.Audio.autoplay = true;
-            qs("#网抑云阴乐").title =
+            gd("网抑云阴乐").title =
                 "网抑云阴乐 - 正在播放: " +
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
             localStorage.setItem(
@@ -199,7 +199,7 @@ let 网抑云阴乐 = {
             if (localStorage.getItem("上次播放")) {
                 let 上次播放 = localStorage.getItem("上次播放");
                 网抑云阴乐.切换音乐(上次播放);
-                qs("#播放列表").scrollTop = qs(
+                gd("播放列表").scrollTop = qs(
                     "li[data-id='" + 上次播放 + "']"
                 )?.offsetTop;
             }
@@ -228,7 +228,7 @@ let 网抑云阴乐 = {
                 网抑云阴乐.下一首
             );
             网抑云阴乐.正在播放.Audio.onloadedmetadata = async () => {
-                qs("#歌词").innerText = "";
+                gd("歌词").innerText = "";
                 clearInterval(网抑云阴乐.正在播放.歌词interval);
                 网抑云阴乐.正在播放.所有歌词 = [];
                 网抑云阴乐.正在播放.所有歌词翻译 = [];
@@ -246,7 +246,7 @@ let 网抑云阴乐 = {
                                 j.lrc.version !== 6) ||
                             !j.lrc.lyric.includes("[")
                         ) {
-                            qs("#歌词").innerText = "";
+                            gd("歌词").innerText = "";
                             clearInterval(网抑云阴乐.正在播放.歌词interval);
                             网抑云阴乐.正在播放.所有歌词 = [];
                             return;
@@ -263,7 +263,7 @@ let 网抑云阴乐 = {
                         网抑云阴乐.恢复歌词();
                     });
 
-                qs("#播放列表").scrollTop = qs(
+                gd("播放列表").scrollTop = qs(
                     "li[data-id='" +
                         网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id +
                         "']"
@@ -282,13 +282,13 @@ let 网抑云阴乐 = {
                             },
                         ],
                     }));
-                qs("#网抑云阴乐封面").onerror = () => {
-                    qs("#网抑云阴乐封面").src = "";
+                gd("网抑云阴乐封面").onerror = () => {
+                    gd("网抑云阴乐封面").src = "";
                 };
-                qs("#网抑云阴乐封面").src = 封面 + "?param=24x24";
+                gd("网抑云阴乐封面").src = 封面 + "?param=24x24";
             };
             网抑云阴乐.正在播放.Audio.onplay = () => {
-                qs("#网抑云阴乐封面").style.animationName = "匀速转";
+                gd("网抑云阴乐封面").style.animationName = "匀速转";
                 qsa("li.正在播放")?.forEach(元素 => {
                     元素.classList.remove("正在播放");
                 });
@@ -300,7 +300,7 @@ let 网抑云阴乐 = {
                 网抑云阴乐.恢复歌词();
             };
             网抑云阴乐.正在播放.Audio.onpause = () => {
-                qs("#网抑云阴乐封面").style.animationName = "unset";
+                gd("网抑云阴乐封面").style.animationName = "unset";
                 clearInterval(网抑云阴乐.正在播放.歌词interval);
             };
             网抑云阴乐.正在播放.Audio.onerror = e => {
@@ -313,7 +313,7 @@ let 网抑云阴乐 = {
                 clearTimeout(网抑云阴乐.重试timeout);
                 网抑云阴乐.重试timeout = setTimeout(网抑云阴乐.下一首, 3000);
             };
-            qs("#网抑云阴乐").title =
+            gd("网抑云阴乐").title =
                 "网抑云阴乐 - 正在播放: " +
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
         } catch (e) {
