@@ -280,7 +280,7 @@ a:focus-visible {
     text-decoration: 1px underline var(--link-color);
 }
 a.外链::after {
-    content: "↗";
+    content: "";
 }
 a.外链.无滤镜::after {
     content: "";
