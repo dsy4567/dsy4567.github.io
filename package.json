@@ -6,7 +6,7 @@
     "example": "example"
   },
   "scripts": {
-    "rss": "node ./tools/rss.js"
+    "upd": "node ./tools/update.js"
   },
   "repository": {
     "type": "git",

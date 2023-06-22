@@ -136,6 +136,7 @@
         --theme-color-l: 1 !important;
         --theme-color-transparent: #fff0 !important;
         --text-color: #000 !important;
+        --bg-color: #fff !important;
         color-scheme: light !important;
     }
     a::after {
@@ -163,7 +164,7 @@
         margin-top: unset !important;
         padding: 8px !important;
     }
-    main .右 {
+    main > .右 {
         display: block !important;
         padding: 0 !important;
         position: unset !important;
@@ -186,10 +187,10 @@
         color: #000 !important;
         border: 1px solid #000 !important;
     }
-    main .左,
-    main #分界线,
+    main > .左,
+    main > #分界线,
     footer,
-    nav .右 *,
+    nav > .右 > *,
     #主侧边按钮,
     #评论区 {
         display: none !important;
@@ -263,9 +264,9 @@ span#联系方式 {
     justify-content: center;
 }
 
-span#联系方式 * {
-    margin-left: 2px;
-    margin-right: 2px;
+span#联系方式 > * {
+    margin-left: 4px;
+    margin-right: 4px;
 }
 a,
 svg {
@@ -305,9 +306,6 @@ spoiler {
 spoiler:hover {
     color: #fff !important;
 }
-nav h1 {
-    color: var(--theme-color);
-}
 *:disabled {
     cursor: not-allowed;
 }
@@ -338,7 +336,7 @@ main {
     width: calc(100vw - 90px);
     max-width: 1600px;
 }
-main .左 {
+main > .左 {
     overflow-y: auto;
     position: sticky;
     top: 0;
@@ -346,16 +344,16 @@ main .左 {
     width: calc(25% - 5px);
     max-height: 100vh;
 }
-main .右 {
+main > .右 {
     margin-top: 48px;
     width: calc(75% - 5px);
 }
-main .左,
-main .右 {
+main > .左,
+main > .右 {
     padding: 4px;
 }
 
-main #分界线 {
+main > #分界线 {
     background-color: var(--bg-color);
     border: 8px solid var(--theme-color);
     border-radius: var(--border-radius);
@@ -369,11 +367,11 @@ main #分界线 {
     justify-content: center;
     align-items: center;
 }
-body.宽屏 main #分界线 {
+body.宽屏 > main > #分界线 {
     opacity: 0;
     margin-left: -40px;
 }
-main #分界线 > svg {
+main > #分界线 > svg {
     background: var(--bg-color);
     border-radius: 50%;
     box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
@@ -381,17 +379,17 @@ main #分界线 > svg {
     opacity: 0;
     transition: 0.5s opacity, 0.3s transform;
 }
-body.宽屏 main #分界线:hover {
+body.宽屏 > main > #分界线:hover {
     opacity: 1;
 }
-main #分界线:hover > svg {
+main > #分界线:hover > svg {
     opacity: 1;
 }
-body.宽屏 main .左 {
+body.宽屏 > main > .左 {
     display: none;
     width: 0%;
 }
-body.宽屏 main .右 {
+body.宽屏 > main > .右 {
     width: calc(100% - 20px);
 }
 
@@ -451,7 +449,7 @@ pre {
     overflow: auto;
     padding: 4px;
 }
-pre code {
+pre > code {
     background-color: transparent;
     border: none;
     margin: 0;
@@ -500,18 +498,18 @@ hr {
         margin-top: unset;
         padding: 8px;
     }
-    main .左 {
+    main > .左 {
         transform: translateY(48px) !important;
     }
-    main .左,
-    main .右 {
+    main > .左,
+    main > .右 {
         display: block !important;
         padding: 0;
         position: unset;
         width: 100% !important;
         max-height: unset;
     }
-    main #分界线 {
+    main > #分界线 {
         display: none;
     }
     .左 > section,
@@ -540,30 +538,6 @@ hr {
     border-radius: 50%;
 }
 
-#加载界面 {
-    display: none;
-    width: 100%;
-    height: 70vh;
-}
-#加载界面 * {
-    position: absolute;
-    top: calc(50vh - 24px);
-    left: calc(50% - 24px);
-}
-#加载界面 .头像 {
-    margin-top: 6px;
-    margin-left: 6px;
-    width: 36px;
-    height: 36px;
-}
-#加载界面 .加载圆圈 {
-    animation-duration: 1s;
-    animation-name: 加载圆圈;
-    animation-iteration-count: infinite;
-    width: 48px;
-    height: 48px;
-}
-
 #导航栏 {
     background-color: var(--bg-color);
     /* box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px; */
@@ -579,18 +553,24 @@ hr {
     height: 48px;
     z-index: 998;
 }
-#导航栏 .左,
-#导航栏 .右 {
+#导航栏 > .左,
+#导航栏 > .右 {
     display: flex;
 }
-#导航栏 .左 *,
-#导航栏 .右 * {
+#导航栏 > .左 > a,
+#导航栏 > .右 > a {
     margin-left: 8px;
     margin-right: 8px;
 }
 #导航栏 a {
     color: var(--text-color);
+    display: flex;
     text-decoration: none;
+    align-items: center;
+}
+#导航栏 > .左 > .标题 {
+    font-size: x-large;
+    font-weight: 600;
 }
 
 #网抑云阴乐封面 {
@@ -667,7 +647,7 @@ div.侧边按钮 > #网抑云阴乐:focus,
 div.侧边按钮 > #网抑云阴乐:focus-within {
     transform: translateX(calc(-32px * 7));
 }
-div.侧边按钮 .拥有更多选项 > .更多选项 {
+div.侧边按钮 > .拥有更多选项 > .更多选项 {
     background: #fff;
     border: 1px solid transparent;
     display: flex;
@@ -680,11 +660,11 @@ div.侧边按钮 .拥有更多选项 > .更多选项 {
     flex-direction: row;
     flex-wrap: wrap;
 }
-div.侧边按钮 #切换主题 > #所有主题 {
+div.侧边按钮 > #切换主题 > #所有主题 {
     width: calc(32px * 4);
     height: calc(32px * 3);
 }
-div.侧边按钮 #网抑云阴乐 #歌词 {
+div.侧边按钮 > #网抑云阴乐 #歌词 {
     font-size: 12px;
     position: absolute;
     user-select: none;
@@ -696,17 +676,17 @@ div.侧边按钮 #网抑云阴乐 #歌词 {
     width: calc(100vw - 64px);
 }
 
-div.侧边按钮 #网抑云阴乐 #歌词 p {
+div.侧边按钮 > #网抑云阴乐 #歌词> p {
     font-size: 12px;
     height: 16px;
     line-height: 16px;
     margin: 0;
     padding: 0;
 }
-div.侧边按钮 #网抑云阴乐 > #阴乐控件 {
+div.侧边按钮 > #网抑云阴乐 > #阴乐控件 {
     width: calc(32px * 6);
 }
-div.侧边按钮 #网抑云阴乐 #播放列表 {
+div.侧边按钮 > #网抑云阴乐 #播放列表 {
     background: #fff;
     color: #000;
     display: flex;
@@ -724,20 +704,18 @@ div.侧边按钮 #网抑云阴乐 #播放列表 {
     height: 118px;
 }
 
-div.侧边按钮 #网抑云阴乐 #播放列表 li {
+div.侧边按钮 > #网抑云阴乐 #播放列表 li {
     border-top: 1px solid #888;
     cursor: pointer;
     display: table-caption;
     user-select: none;
     white-space: nowrap;
 }
-div.侧边按钮 #网抑云阴乐 #播放列表 li::marker {
-}
-div.侧边按钮 #网抑云阴乐 #播放列表 li.正在播放,
-div.侧边按钮 #网抑云阴乐 #播放列表 li:hover {
+div.侧边按钮 > #网抑云阴乐 #播放列表 > li.正在播放,
+div.侧边按钮 > #网抑云阴乐 #播放列表 > li:hover {
     background-color: #ccc;
 }
-div.侧边按钮 #网抑云阴乐 #播放列表 li.正在播放::before {
+div.侧边按钮 > #网抑云阴乐 #播放列表 > li.正在播放::before {
     background-color: var(--theme-color);
     display: block;
     width: 5px;
@@ -747,19 +725,19 @@ div.侧边按钮 #网抑云阴乐 #播放列表 li.正在播放::before {
     content: "";
 }
 
-div.侧边按钮 #网抑云阴乐 #播放列表 li * {
+div.侧边按钮 > #网抑云阴乐 #播放列表 li * {
     display: block;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
 
-div.侧边按钮 .拥有更多选项:hover > .更多选项,
-div.侧边按钮 .拥有更多选项:focus > .更多选项,
+div.侧边按钮 > .拥有更多选项:hover > .更多选项,
+div.侧边按钮 > .拥有更多选项:focus > .更多选项,
 .更多选项:focus-within {
     pointer-events: all !important;
     opacity: 1 !important;
 }
-div.侧边按钮 .拥有更多选项 > .更多选项 > button {
+div.侧边按钮 > .拥有更多选项 > .更多选项 > button {
     background-color: #fff;
     border: 1px solid #888;
     border-radius: 50%;
@@ -770,9 +748,9 @@ div.侧边按钮 .拥有更多选项 > .更多选项 > button {
     width: 24px;
     height: 24px;
 }
-div.侧边按钮 .拥有更多选项 > .更多选项 > *.激活,
-div.侧边按钮 .拥有更多选项 > .更多选项 > *:hover,
-div.侧边按钮 .拥有更多选项 > .更多选项 > *:focus-visible {
+div.侧边按钮 > .拥有更多选项 > .更多选项 > *.激活,
+div.侧边按钮 > .拥有更多选项 > .更多选项 > *:hover,
+div.侧边按钮 > .拥有更多选项 > .更多选项 > *:focus-visible {
     background-color: #888;
 }
 
@@ -797,20 +775,6 @@ div.通知 {
     z-index: 1000;
 }
 
-.背景图片 {
-    /* background-image: url("/img/bg.jpg"); */
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
-    filter: brightness(0.8);
-    margin-bottom: 8px;
-    width: 100%;
-    height: 64px;
-}
-.背景图片:hover {
-    filter: brightness(1);
-}
-
 section#我 {
     display: flex;
     align-items: center;
@@ -818,13 +782,13 @@ section#我 {
     justify-content: center;
     margin-top: 64px;
 }
-section#我 img {
+section#我 > img {
     margin-bottom: -64px;
     position: relative;
     top: -64px;
 }
 
-section#我 img:hover {
+section#我 > img:hover {
     transform: rotateZ(360deg);
 }
 main > .右 > section:nth-child(1),
@@ -910,7 +874,7 @@ main > .分界线 {
     max-width: 100%;
     height: 2px;
 }
-.进度条外面.显示 .进度条 {
+.进度条外面.显示 > .进度条 {
     animation-name: 进度条;
 }
 
