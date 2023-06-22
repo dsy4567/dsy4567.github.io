@@ -78,9 +78,12 @@ function 完成加载() {
     添加点击事件和设置图标();
 }
 async function 添加点击事件和设置图标() {
-    qsa("svg[data-icon]").forEach(元素 => {
-        图标[元素.dataset.icon] && (元素.outerHTML = 图标[元素.dataset.icon]);
-    });
+    图标["首页"] &&
+        qsa("svg[data-icon]").forEach(元素 => {
+            let h=图标[元素.dataset.icon]?.replace(/特?小尺寸/,元素.getAttribute("class"))
+           h &&
+                (元素.outerHTML = h);
+        });
     qsa("a").forEach(元素 => {
         if (元素.pathname === location.pathname && 元素.href.includes("#")) {
             if (!元素.className.includes("hash链接"))
