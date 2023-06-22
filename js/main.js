@@ -11,9 +11,7 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
     },
     歌单id = /*localStorage.getItem("歌单id") ||*/ 8219428260,
     gr_sitekey = "6Ldo1dIkAAAAAM_2VtEneT3l7AE25HdWU45x03ng";
-let 路径 = (location.pathname + location.search)
-        .rp(/(index|\.html)/g, "")
-        .rp(/\/\//g, ""),
+let 路径 = 获取清理后的路径(true),
     正在动态加载 = false,
     图标 = {};
 
@@ -34,7 +32,7 @@ function 动态加载(元素) {
     }
     正在动态加载 = true;
     显示或隐藏进度条(true);
-    gd("robots").content = "";
+    gd("robots", true).content = "";
     fetch(元素.href)
         .then(res => res.text())
         .then(async html => {
@@ -45,21 +43,23 @@ function 动态加载(元素) {
             !元素.popstate &&
                 history.pushState(
                     {
-                        路径: (u.pathname + u.search)
-                            .rp(/(index|\.html)/g, "")
-                            .rp(/\/\//g, ""),
+                        路径:
+                            u.pathname
+                                .replace(/(index|\.html)/g, "")
+                                .replace(/\/\//g, "") + u.search,
                     },
                     "",
                     元素.href
                 );
-            document.title = mt[0].rp(/<\/?title>/g, "");
+            document.title = mt[0].replace(/<\/?title>/g, "");
             dispatchEvent(URL发生变化事件);
             try {
                 qs("main .右", true).innerHTML = m[0];
                 await 加载模块();
 
-                u.pathname.rp(/(index|\.html)/g, "").rp(/\/\//g, "") === "/" &&
-                    显示或隐藏进度条(false);
+                u.pathname
+                    .replace(/(index|\.html)/g, "")
+                    .replace(/\/\//g, "") === "/" && 显示或隐藏进度条(false);
                 正在动态加载 = false;
                 添加点击事件和设置图标();
             } catch (e) {
@@ -78,14 +78,13 @@ function 完成加载() {
     添加点击事件和设置图标();
 }
 async function 添加点击事件和设置图标() {
-    图标["首页"] &&
-        qsa("svg[data-icon]").forEach(元素 => {
-            let h = 图标[元素.dataset.icon]?.replace(
-                /特?小尺寸/,
-                元素.getAttribute("class")
-            );
-            h && (元素.outerHTML = h);
-        });
+    qsa("svg[data-icon]").forEach(元素 => {
+        let h = 图标[元素.dataset.icon]?.replace(
+            /特?小尺寸/,
+            元素.getAttribute("class")
+        );
+        h && (元素.outerHTML = h);
+    });
     qsa("a").forEach(元素 => {
         if (元素.pathname === location.pathname && 元素.href.includes("#")) {
             if (!元素.className.includes("hash链接"))
@@ -120,7 +119,7 @@ async function 添加点击事件和设置图标() {
     });
 }
 // 网抑云阴乐歌单+控件
-!navigator.userAgent.match(/bot|spider/ig) &&
+!navigator.userAgent.match(/bot|spider/gi) &&
     fetch("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=" + 歌单id)
         .then(res => res.json())
         .then(j => {
@@ -155,7 +154,7 @@ async function 添加点击事件和设置图标() {
                 btn.title = title;
                 btn.role = role;
                 btn.ariaChecked = role === "checkbox" ? false : null;
-                gd("阴乐控件").append(btn);
+                gd("阴乐控件", true).append(btn);
             }
             let f = () => {
                 svg(
@@ -168,7 +167,7 @@ async function 添加点击事件和设置图标() {
                     网抑云阴乐.播放暂停,
                     "播放/暂停"
                 );
-                svg(
+                !svg(
                     `<svg class="特小尺寸" data-icon="下一首"></svg>`,
                     网抑云阴乐.下一首,
                     "下一首"
@@ -195,7 +194,7 @@ async function 添加点击事件和设置图标() {
                     网抑云阴乐.更改音量,
                     "音量"
                 );
-                gd("阴乐控件").insertAdjacentHTML(
+                gd("阴乐控件", true).insertAdjacentHTML(
                     "beforeend",
                     `<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a><ol id="播放列表"></ol>`
                 );
@@ -209,7 +208,7 @@ async function 添加点击事件和设置图标() {
                     li.tabIndex = 0;
                     li.title = 音乐信息.完整歌名;
                     li.dataset.id = 音乐信息.id;
-                    gd("播放列表").append(li);
+                    gd("播放列表", true).append(li);
                 });
                 添加点击事件和设置图标();
 
@@ -257,7 +256,7 @@ fetch("/json/theme.json")
                 提示用户 !== false && 提示("已切换主题: " + t);
             };
             if (t === localStorage.getItem("theme")) btn.onclick(false);
-            let f = () => gd("所有主题").append(btn);
+            let f = () => gd("所有主题", true).append(btn);
             DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
         });
     })
@@ -266,9 +265,9 @@ fetch("https://dsy4567.cf/api/hitokoto")
     .then(res => res.json())
     .then(j => {
         let f = () => {
-            gd("一言").innerText = j.hitokoto;
-            qs("#一言+.date").ondblclick = gd("一言").ondblclick =
-                () => open("https://hitokoto.cn/?uuid=" + j.uuid, "_blank");
+            gd("一言", true).innerText = j.hitokoto;
+            qs("#一言+.date").ondblclick = gd("一言", true).ondblclick = () =>
+                open("https://hitokoto.cn/?uuid=" + j.uuid, "_blank");
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     })
@@ -395,20 +394,29 @@ addEventListener("copy", () => {
 
         let scrollTop = 0,
             导航栏 = gd("导航栏"),
-            左 = qs("main .左");
+            左 = qs("main .左", true),
+            状态 = -1;
         addEventListener("scroll", async () => {
-            if (document.documentElement.scrollTop === 0) {
-                // 左.style.transform =
+            if (document.documentElement.scrollTop === 0 && 状态 !== 0) {
                 导航栏.style.transform = "translateY(0px)";
                 导航栏.style.boxShadow = "none";
-            } else if (document.documentElement.scrollTop > scrollTop) {
+                状态 = 0;
+            } else if (
+                document.documentElement.scrollTop > scrollTop &&
+                状态 !== 1
+            ) {
                 导航栏.style.transform = "translateY(-48px)";
                 左.style.transform = "translateY(0px)";
                 导航栏.style.boxShadow = "none";
-            } else if (document.documentElement.scrollTop < scrollTop) {
+                状态 = 1;
+            } else if (
+                document.documentElement.scrollTop < scrollTop &&
+                状态 !== 2
+            ) {
                 导航栏.style.transform = "translateY(0px)";
                 左.style.transform = "translateY(48px)";
                 导航栏.style.boxShadow = "rgba(0, 0, 0, 0.24) 0px 0px 16px 0px";
+                状态 = 2;
             }
             scrollTop = document.documentElement.scrollTop;
         });
@@ -441,50 +449,3 @@ _global["main.js"] = () => ({
     添加点击事件和设置图标,
     图标,
 });
-
-console.log(`
-               +----------------------------------------------------------+              —————————————————————————————————
-              /                                                         / |             ｜ | ｜ 永 ｜ 限 ｜ 由 ｜ 三 ｜ 一 ｜
-              +--------------------------------------------------------+  |             ｜ | ｜ 垂 ｜ 制 ｜ 此 ｜ 年 ｜ 年 ｜
-              |                                                        |  |             ｜ d ｜ 不 ｜ ， ｜ 上 ｜ 以 ｜ 以 ｜
-              |                                                        |  |             ｜ s ｜ 朽 ｜ 争 ｜ 溯 ｜ 来 ｜ 来 ｜
-              |    +---------         ---+---          +---------      |  |             ｜ y ｜ 　 ｜ 取 ｜ 到 ｜ ， ｜ ， ｜
-              |    |         )           |             |         )     |  |             ｜ 4 ｜ 　 ｜ 游 ｜ 二 ｜ 为 ｜ 为 ｜
-              |    +---------            |             +---------      |  |             ｜ 5 ｜ 　 ｜ 戏 ｜ 千 ｜ 保 ｜ 人 ｜
-              |    | \\                   |             |               |  |             ｜ 6 ｜ 　 ｜ 自 ｜ 零 ｜ 护 ｜ 们 ｜
-              |    |   \\                 |             |               |  |             ｜ 7 ｜ 　 ｜ 由 ｜ 七 ｜ 孩 ｜ 争 ｜
-              |    |     \\               |             |               |  |             ｜   ｜ 　 ｜ ， ｜ 年 ｜ 子 ｜ 取 ｜
-              |    |       \\       o  ---+---       o  |            o  |  |             ｜   ｜ 　 ｜ 在 ｜ ， ｜ 们 ｜ 游 ｜
-              |                                                        |  |             ｜   ｜ 　 ｜ 历 ｜ 从 ｜ 游 ｜ 戏 ｜
-              |                                                        |  |             ｜   ｜ 　 ｜ 次 ｜ 那 ｜ 自 ｜ 自 ｜
-              |                                                        |  |             ｜   ｜ 　 ｜ 斗 ｜ 时 ｜ 自 ｜ 由 ｜
-              |                                                        |  |             ｜   ｜ 　 ｜ 争 ｜ 起 ｜ 由 ｜ 的 ｜
-              |    A tombstone of the MOTHERFUCKING anti indulgence.   |  |             ｜   ｜ 　 ｜ 后 ｜ ， ｜ 的 ｜ 程 ｜
-              |                                                        |  |             ｜ 2 ｜ 　 ｜ 不 ｜ 为 ｜ 家 ｜ 序 ｜
-              |                                                        |  |             ｜ 0 ｜ 　 ｜ 见 ｜ 了 ｜ 长 ｜ 员 ｜
-              |                                                        |  |             ｜ 2 ｜ 　 ｜ 天 ｜ 反 ｜ 们 ｜ 们 ｜
-              |                                                        |  |             ｜ 2 ｜ 　 ｜ 日 ｜ 对 ｜ 永 ｜ 永 ｜
-              |                Established by dsy4567.                 |  |             ｜ . ｜ 　 ｜ 的 ｜ 防 ｜ 垂 ｜ 垂 ｜
-              |                                                        |  |             ｜ 1 ｜ 　 ｜ 人 ｜ 沉 ｜ 不 ｜ 不 ｜
-              |                                                        |  |             ｜ 1 ｜ 　 ｜ 们 ｜ 迷 ｜ 朽 ｜ 朽 ｜
-              |                                                        |  |              —————————————————————————————————
-              |           No anti indulgence, no unhappiness.          |  |
-              |               May it NEVER rest in peace.              |  |
-              |                                                        |  |
-              |                                                        |  |
-              |                        FUCK IT↓                        |  |
-              |    +----------------------------------------------+    |  |
-              |    |       MINOR LOGIN RESTRICTION REMINDER       |    |  |
-              |    |  You are using a minor's account...          |    |  |
-              |    |                                              |    |  |
-              |    |          OK           SWITCH ACCOUNT         |    |  |
-        +-----|    |                                              |    |  |------------+
-       /      |    +----------------------------------------------+    |  |           /|
-      /       |                                                        | /           / |
-     /        |                                                        |/           /  |
-    /         +--------------------------------------------------------+           /  /
-   /                                                                              /  /
-  +------------------------------------------------------------------------------+  /
-  |                                                                              | /
-  +------------------------------------------------------------------------------+
-`);

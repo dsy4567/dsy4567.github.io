@@ -26,7 +26,7 @@ export async function main(/** @type {String} */ 路径) {
                 let sect = ce("section"),
                     html = marked.parse(t),
                     span = ce("span");
-                qs("main .右",true).append(sect);
+                qs("main .右", true).append(sect);
                 sect.innerHTML =
                     html +
                     (html.includes('<nocopyright value="true"></nocopyright>')
@@ -51,7 +51,7 @@ export async function main(/** @type {String} */ 路径) {
                 let t1 = [0, 0, 0, 0, 0, 0],
                     t2 = 0,
                     t3 = 0;
-                qs("main .右",true)
+                qs("main .右", true)
                     .querySelectorAll("h1, h2, h3, h4, h5, h6")
                     ?.forEach(元素 => {
                         if (
@@ -74,7 +74,9 @@ export async function main(/** @type {String} */ 路径) {
                         let li = ce("li"),
                             a = ce("a");
                         a.innerText =
-                            t1.join(".").rp(/.0/g, "") + " " + 元素.innerText;
+                            t1.join(".").replace(/.0/g, "") +
+                            " " +
+                            元素.innerText;
                         a.href = "#" + 元素.id;
                         li.append(a);
                         ul.append(li);
@@ -85,7 +87,7 @@ export async function main(/** @type {String} */ 路径) {
                 );
                 目录.append(ul);
                 目录.classList.add("目录");
-                qs("main > .左",true).append(目录);
+                qs("main > .左", true).append(目录);
 
                 gd("正在加载文章提示").remove();
                 显示或隐藏进度条(false);
@@ -101,7 +103,8 @@ export async function main(/** @type {String} */ 路径) {
                     let h = location.hash;
                     location.hash = "";
                     location.hash = h;
-                } else qs("main .右",true).scrollIntoView({ behavior: "smooth" });
+                } else
+                    qs("main .右", true).scrollIntoView({ behavior: "smooth" });
 
                 await 添加脚本("/js/highlight.min.js");
                 添加样式("/css/hl.min.css");
@@ -168,7 +171,7 @@ ${(() => {
                             let sect = ce("section");
                             sect.id = "评论区";
                             sect.innerHTML = html;
-                            qs("main .右",true).append(sect);
+                            qs("main .右", true).append(sect);
                             _global["main.js"]().添加点击事件和设置图标();
                             hljs.highlightAll();
                         });
@@ -206,7 +209,7 @@ ${(() => {
                         img.alt = img.title = "封面图";
                     } else img = "";
                     sect.append(img, p, a, br, span);
-                    qs("main .右",true).append(sect);
+                    qs("main .右", true).append(sect);
                 });
                 显示或隐藏进度条(false);
                 gd("正在加载文章提示").remove();

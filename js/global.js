@@ -2,14 +2,20 @@
 
 "use strict";
 
-String.prototype.rp = String.prototype.replace;
+String.prototype.replace = String.prototype.replace;
 
+let gd缓存 = {};
 /**
  * document.getElementById
  * @param {string} s
+ * @param {boolean} 缓存
  * @returns {HTMLElement}
  */
-function gd(s) {
+function gd(s, 缓存) {
+    if (缓存) {
+        let r = gd缓存[s];
+        return r || (gd缓存[s] = document.getElementById(s));
+    }
     return document.getElementById(s);
 }
 let qs缓存 = {};
@@ -44,8 +50,8 @@ function ce(s) {
 }
 function 显示或隐藏进度条(状态) {
     状态
-        ? qs(".进度条外面",true)?.classList.add("显示")
-        : qs(".进度条外面",true)?.classList.remove("显示");
+        ? qs(".进度条外面", true)?.classList.add("显示")
+        : qs(".进度条外面", true)?.classList.remove("显示");
 }
 /**
  * @param {string} url
@@ -96,7 +102,7 @@ function 尽快设置主题色() {
     if (localStorage.getItem("主题色h")) {
         document.documentElement.style.setProperty(
             "--theme-color",
-            (gd("主题色").content = localStorage.getItem("主题色"))
+            (gd("主题色", true).content = localStorage.getItem("主题色"))
         );
         document.documentElement.style.setProperty(
             "--theme-color-h",
@@ -121,12 +127,16 @@ function 尽快设置主题色() {
     }
 }
 function 阻止搜索引擎收录() {
-    gd("robots").content = "noindex";
+    gd("robots", true).content = "noindex";
 }
-function 获取清理后的路径(包含query = false) {
-    return (location.pathname + (包含query ? location.search : ""))
-        .rp(/(index|\.html)/g, "")
-        .rp(/\/\//g, "");
+let 清理后的路径缓存 = {};
+function 获取清理后的路径(包含search = false) {
+    let l = 清理后的路径缓存[location.pathname];
+    return l
+        ? l+ (包含search ? location.search : "")
+        : (清理后的路径缓存[location.pathname] = location.pathname
+              .replace(/(index|\.html)/g, "")
+              .replace(/\/\//g, "")) + (包含search ? location.search : "");
 }
 function 随机数(最大) {
     return Math.floor(Math.random() * 最大 + 1);
