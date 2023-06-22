@@ -371,6 +371,20 @@ addEventListener("copy", () => {
         });
         加载模块();
         完成加载();
+
+        // 谷歌/Vercel 统计代码
+        let s1 = ce("script"),
+            s2 = ce("script");
+        s1.async = s1.defer = s2.async = s2.defer = true;
+        s1.src = "https://www.googletagmanager.com/gtag/js?id=G-060YCRMSSH";
+        s2.src = "/_vercel/insights/script.js";
+        document.body.append(s1, s2);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", "G-060YCRMSSH");
     };
 
     let style = ce("style");
