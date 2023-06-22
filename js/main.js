@@ -314,10 +314,6 @@ addEventListener("copy", () => {
         );
         qs("#分界线").addEventListener("click", () => {
             document.body.classList.toggle("宽屏");
-            qs("#分界线 > svg").style.transform =
-                document.body.classList.contains("宽屏")
-                    ? "rotate(180deg)"
-                    : "";
         });
         qsa("#电子邮箱, #tg").forEach(元素 => {
             元素.addEventListener("click", 事件 => {
