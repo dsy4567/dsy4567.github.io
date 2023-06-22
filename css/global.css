@@ -381,17 +381,18 @@ main #分界线 > svg {
     opacity: 0;
     transition: 0.5s opacity, 0.3s transform;
 }
-body.宽屏 main #分界线:hover {
+body.宽屏 > main #分界线:hover,
+main > #分界线:hover > svg {
     opacity: 1;
 }
-main #分界线:hover > svg {
-    opacity: 1;
+body.宽屏 > main #分界线 > svg {
+    transform: rotateY(180deg);
 }
-body.宽屏 main .左 {
+body.宽屏 > main .左 {
     display: none;
     width: 0%;
 }
-body.宽屏 main .右 {
+body.宽屏 > main .右 {
     width: calc(100% - 20px);
 }
 
