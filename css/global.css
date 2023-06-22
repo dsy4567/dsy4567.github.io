@@ -489,6 +489,9 @@ hr {
 }
 
 @media only screen and (max-width: 1000px) {
+    #导航栏 > .右 > a svg {
+        display: none;
+    }
     main {
         flex-direction: column;
         padding-left: 0;
@@ -677,7 +680,7 @@ div.侧边按钮 > #网抑云阴乐 #歌词 {
     width: calc(100vw - 64px);
 }
 
-div.侧边按钮 > #网抑云阴乐 #歌词> p {
+div.侧边按钮 > #网抑云阴乐 #歌词 > p {
     font-size: 12px;
     height: 16px;
     line-height: 16px;
