@@ -156,7 +156,7 @@
     section,
     img,
     video {
-        border: 1px solid #000 !important;
+        border: 1px solid #0000 !important;
     }
     section {
         margin-top: unset !important;
