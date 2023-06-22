@@ -5,33 +5,47 @@
 String.prototype.rp = String.prototype.replace;
 
 /**
- * document.querySelector
- * @param {keyof HTMLElementTagNameMap} arg
+ * document.getElementById
+ * @param {string} s
  * @returns {HTMLElement}
  */
-function qs(arg) {
-    return document.querySelector(arg);
+function gd(s) {
+    return document.getElementById(s);
+}
+let qs缓存 = {};
+/**
+ * document.querySelector
+ * @param {keyof HTMLElementTagNameMap} s
+ * @param {boolean} 缓存
+ * @returns {HTMLElement}
+ */
+function qs(s, 缓存) {
+    if (缓存) {
+        let r = qs缓存[s];
+        return r || (qs缓存[s] = document.querySelector(s));
+    }
+    return document.querySelector(s);
 }
 /**
  * document.querySelectorAll
- * @param {keyof HTMLElementTagNameMap} arg
+ * @param {keyof HTMLElementTagNameMap} s
  * @returns {HTMLElement[]}
  */
-function qsa(arg) {
-    return document.querySelectorAll(arg);
+function qsa(s) {
+    return document.querySelectorAll(s);
 }
 /**
  * document.createElement
- * @param {keyof HTMLElementTagNameMap} arg
+ * @param {keyof HTMLElementTagNameMap} s
  * @returns {HTMLElement}
  */
-function ce(arg) {
-    return document.createElement(arg);
+function ce(s) {
+    return document.createElement(s);
 }
 function 显示或隐藏进度条(状态) {
     状态
-        ? qs(".进度条外面")?.classList.add("显示")
-        : qs(".进度条外面")?.classList.remove("显示");
+        ? qs(".进度条外面",true)?.classList.add("显示")
+        : qs(".进度条外面",true)?.classList.remove("显示");
 }
 /**
  * @param {string} url
@@ -82,7 +96,7 @@ function 尽快设置主题色() {
     if (localStorage.getItem("主题色h")) {
         document.documentElement.style.setProperty(
             "--theme-color",
-            (qs("#主题色").content = localStorage.getItem("主题色"))
+            (gd("主题色").content = localStorage.getItem("主题色"))
         );
         document.documentElement.style.setProperty(
             "--theme-color-h",
@@ -107,7 +121,7 @@ function 尽快设置主题色() {
     }
 }
 function 阻止搜索引擎收录() {
-    qs("meta[name='robots']").content = "noindex";
+    gd("robots").content = "noindex";
 }
 function 获取清理后的路径(包含query = false) {
     return (location.pathname + (包含query ? location.search : ""))
