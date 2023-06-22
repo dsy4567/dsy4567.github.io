@@ -4,27 +4,8 @@
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html" />
     <link rel="self" type="application/atom+xml" href="https://dsy4567.github.io/rss.xml" />
     <updated>2023-01-22T12:48:59.719Z</updated>
-    <generator uri="https://dsy4567.github.io/">dsy4567's hands</generator>
+    <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>
 
-    <!--
-    <entry>
-        <title>   </title>
-        <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=   " />
-        <id>   </id>
-        <published>   </published>
-        <updated>   </updated>
-        <summary>   </summary>
-        <author>
-            <name>dsy4567</name>
-            <uri>https://dsy4567.github.io/</uri>
-        </author>
-        <category term="Default" />
-        <content type="html" xml:lang="zh-cn">
-            <![CDATA[
-            ]]>
-</content>
-</entry>
-        -->
 <entry>
     <title>使用 CloudFlare Workers 免费搭建 Virtual Judge 反代</title>
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=cf-vjmirror" />
@@ -46,7 +27,7 @@
 <!-- more -->
 
 <blockquote>
-<p>千万不要反代<spoiler>反D、色情、赌博等</spoiler>违规网站，小心被叫去喝茶。</p>
+<p>千万不要反代<spoiler>反D、色情、赌博等</spoiler>违规网站，小心你家水表坏了。</p>
 </blockquote>
 <h2 id="注册-cf">注册 CF</h2>
 <p>这个就不用我浪费口水了，传送门 -&gt; <a href="https://dash.cloudflare.com/">https://dash.cloudflare.com/</a></p>

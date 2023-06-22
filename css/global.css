@@ -265,8 +265,8 @@ span#联系方式 {
 }
 
 span#联系方式 > * {
-    margin-left: 2px;
-    margin-right: 2px;
+    margin-left: 4px;
+    margin-right: 4px;
 }
 a,
 svg {

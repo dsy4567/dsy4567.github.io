@@ -4,6 +4,7 @@ const cheerio = require("cheerio");
 const fs = require("fs");
 const marked = require("marked");
 const jsonfile = require("jsonfile");
+const hostname = "dsy4567.github.io";
 
 let articles = [];
 
@@ -32,36 +33,35 @@ jsonfile.writeFileSync("./json/blog.json", articles, { spaces: 4 });
 let rss = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title>博客 | dsy4567 的小站</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html" />
-    <link rel="self" type="application/atom+xml" href="https://dsy4567.github.io/rss.xml" />
+    <link rel="alternate" type="text/html" href="https://${hostname}/blog.html" />
+    <link rel="self" type="application/atom+xml" href="https://${hostname}/rss.xml" />
     <updated>2023-01-22T12:48:59.719Z</updated>
-    <generator uri="https://dsy4567.github.io/">dsy4567's hands</generator>
-
-    <!--
-    <entry>
-        <title>   </title>
-        <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=   " />
-        <id>   </id>
-        <published>   </published>
-        <updated>   </updated>
-        <summary>   </summary>
-        <author>
-            <name>dsy4567</name>
-            <uri>https://dsy4567.github.io/</uri>
-        </author>
-        <category term="Default" />
-        <content type="html" xml:lang="zh-cn">
-            <![CDATA[
-            ]]>
-</content>
-</entry>
-        -->`;
+    <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>
+`;
+let sitemap=`<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+    <loc>https://${hostname}/</loc>
+    <lastmod>2023-06-22T05:02:50.783Z</lastmod>
+</url>
+<url>
+    <loc>https://${hostname}/blog.html</loc>
+    <lastmod>2023-06-22T05:02:50.783Z</lastmod>
+</url>
+<url>
+    <loc>https://${hostname}/friends.html</loc>
+    <lastmod>2023-06-22T05:02:50.783Z</lastmod>
+</url>
+<url>
+    <loc>https://${hostname}/game.html</loc>
+    <lastmod>2023-06-22T05:02:50.783Z</lastmod>
+</url>`
 
 articles.forEach(a => {
     rss += `
 <entry>
     <title>${a.title}</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=${
+    <link rel="alternate" type="text/html" href="https://${hostname}/blog.html?id=${
         a.id
     }" />
     <id>${a.id}</id>
@@ -70,7 +70,7 @@ articles.forEach(a => {
     <summary>${cheerio.load(marked.marked(a.desc)).text()}</summary>
     <author>
         <name>dsy4567</name>
-        <uri>https://dsy4567.github.io/</uri>
+        <uri>https://${hostname}/</uri>
     </author>
     <category term="Default" />
     <content type="html" xml:lang="zh-cn">
@@ -79,7 +79,16 @@ ${marked.marked(fs.readFileSync("./blog-md/" + a.id + "/index.md").toString())}
         ]]>
     </content>
 </entry>`;
+    sitemap += `
+<url>
+    <loc>https://${hostname}/blog.html?id=${
+        a.id
+    }</loc>
+    <lastmod>${a.updated}</lastmod>
+</url>`;
 });
 
 rss += "</feed>";
+sitemap += "</urlset>"
 fs.writeFileSync("./rss.xml", rss);
+fs.writeFileSync("./sitemap.xml", sitemap);
