@@ -266,7 +266,7 @@ fetch("https://dsy4567.cf/api/hitokoto")
     .then(j => {
         let f = () => {
             gd("一言", true).innerText = j.hitokoto;
-            qs("#一言+.date").ondblclick = gd("一言", true).ondblclick = () =>
+            qs("#一言+.淡化").ondblclick = gd("一言", true).ondblclick = 事件 =>
                 open("https://hitokoto.cn/?uuid=" + j.uuid, "_blank");
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
@@ -385,9 +385,9 @@ addEventListener("copy", () => {
     img,
     nav,
     li {
-        transition: 0.5s border-radius, 0.5s backdrop-filter, 0.5s background-image,
-            0.5s transform, 0.5s box-shadow, 0.5s filter, 0.5s text-decoration,
-            0.5s background-color, 0.5s opacity;
+        transition: 0.3s border-radius, 0.3s backdrop-filter, 0.3s background-image,
+            0.3s transform, 0.3s box-shadow, 0.3s filter, 0.3s text-decoration,
+            0.3s background-color, 0.3s opacity;
     }`;
     setTimeout(() => {
         document.head.append(style);

@@ -38,7 +38,7 @@ export async function main(/** @type {String} */ 路径) {
                 ).toLocaleString()}, 更新于: ${new Date(
                     当前文章信息.updated
                 ).toLocaleString()}`;
-                span.classList.add("date");
+                span.classList.add("淡化");
                 sect.append(span);
 
                 document.title =
@@ -143,8 +143,8 @@ ${(() => {
         <span class="用户名"><a href="${评论.user.html_url}">${评论.user.login}</a></span>
     </div>
     <div class="评论正文">${marked.parse(评论.body)}</div>
-    <span class="date">发表于: ${new Date(评论.created_at).toLocaleString()} 更新于: ${new Date(评论.updated_at).toLocaleString()}</span><br />
-    <span class="date">${(() => {
+    <span class="淡化">发表于: ${new Date(评论.created_at).toLocaleString()} 更新于: ${new Date(评论.updated_at).toLocaleString()}</span><br />
+    <span class="淡化">${(() => {
             let emojis = {
                     "+1": "👍",
                     "-1": "👎",
@@ -203,7 +203,7 @@ ${(() => {
                     ).toLocaleString()}, 更新于: ${new Date(
                         文章.updated
                     ).toLocaleString()}`;
-                    span.classList.add("date");
+                    span.classList.add("淡化");
                     if (文章.img) {
                         img.src = `/blog-md/${文章.id}/img/` + 文章.img;
                         img.alt = img.title = "封面图";
