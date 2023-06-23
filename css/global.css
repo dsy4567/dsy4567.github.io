@@ -301,7 +301,7 @@ video {
 spoiler {
     background-color: #000;
     color: #000;
-    transition: 0.5s color;
+    transition: 0.3s color;
 }
 spoiler:hover {
     color: #fff !important;
@@ -553,6 +553,7 @@ hr {
     justify-content: space-around;
     position: sticky;
     top: 0;
+    transition: 0.5s background-color, 0.3s transform, 0.3s box-shadow;
     width: 100%;
     height: 48px;
     z-index: 998;
