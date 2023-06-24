@@ -2,8 +2,6 @@
 
 "use strict";
 
-import 网抑云阴乐 from "./ncm.js";
-
 const /** @type {Record<string, string[]>} */ 加载清单 = {
         "/": [],
         "/blog": ["blog"],
@@ -85,7 +83,7 @@ async function 添加点击事件和设置图标() {
         );
         h && (元素.outerHTML = h);
     });
-    qsa("a").forEach(元素 => {
+    ge("a").forEach(元素 => {
         if (元素.pathname === location.pathname && 元素.href.includes("#")) {
             if (!元素.className.includes("hash链接"))
                 元素.classList.add("hash链接");
@@ -114,7 +112,7 @@ async function 添加点击事件和设置图标() {
         )
             元素.classList.add("无滤镜");
     });
-    qsa("img").forEach(元素 => {
+    ge("img").forEach(元素 => {
         元素.ondblclick = () => open(元素.src, "_blank");
     });
 }
@@ -122,7 +120,9 @@ async function 添加点击事件和设置图标() {
 !navigator.userAgent.match(/bot|spider/gi) &&
     fetch("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=" + 歌单id)
         .then(res => res.json())
-        .then(j => {
+        .then(async j => {
+            const 网抑云阴乐 = (await import("./ncm.js")).default;
+
             for (let i = 0; i < j.songs.length; i++) {
                 const 音乐信息 = j.songs[i];
                 let 所有歌手 = [];

@@ -41,6 +41,14 @@ function qsa(s) {
     return document.querySelectorAll(s);
 }
 /**
+ * document.getElementsByTagName
+ * @param {keyof HTMLElementTagNameMap} s
+ * @returns {HTMLElement[]}
+ */
+function ge(s) {
+    return [...(document.getElementsByTagName(s) || [])];
+}
+/**
  * document.createElement
  * @param {keyof HTMLElementTagNameMap} s
  * @returns {HTMLElement}
@@ -133,7 +141,7 @@ let 清理后的路径缓存 = {};
 function 获取清理后的路径(包含search = false) {
     let l = 清理后的路径缓存[location.pathname];
     return l
-        ? l+ (包含search ? location.search : "")
+        ? l + (包含search ? location.search : "")
         : (清理后的路径缓存[location.pathname] = location.pathname
               .replace(/(index|\.html)/g, "")
               .replace(/\/\//g, "")) + (包含search ? location.search : "");

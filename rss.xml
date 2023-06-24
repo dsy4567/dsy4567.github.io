@@ -7,6 +7,88 @@
     <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>
 
 <entry>
+    <title>如何优化网站加载速度</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=how-to-improve-performance" />
+    <id>how-to-improve-performance</id>
+    <published>2023-06-24T07:38:27.834Z</published>
+    <updated>2023-06-24T07:38:27.834Z</updated>
+    <summary>如何优化网站加载速度
+中考完了之后，想到我以前逛过某个（在我这台老爷机上）卡的要命的网站，然后拿
+LightHouse 测了一下，分数低的可怜。这时我开始想，我的网站可不能这么慢，于是捏，
+闲的没事的我一不小心把网站性能提了一大截。
+</summary>
+    <author>
+        <name>dsy4567</name>
+        <uri>https://dsy4567.github.io/</uri>
+    </author>
+    <category term="Default" />
+    <content type="html" xml:lang="zh-cn">
+        <![CDATA[
+<h1 id="如何优化网站加载速度">如何优化网站加载速度</h1>
+<p>中考完了之后，想到我以前逛过某个（在我这台老爷机上）卡的要命的网站，然后拿
+LightHouse 测了一下，分数低的可怜。这时我开始想，我的网站可不能这么慢，于是捏，
+闲的没事的我一不小心把网站性能提了一大截。</p>
+<!-- more -->
+
+<p>废话不多说，先把图放上来。</p>
+<p>优化前：</p>
+<p><a href="https://pagespeed.web.dev/analysis/https-dsy4567-cf/gf94qbiu4z"><img src="/blog-md/how-to-improve-performance/img/before.png" alt="优化前"></a></p>
+<p>优化后：</p>
+<p><a href="https://pagespeed.web.dev/analysis/https-dsy4567-cf/jyhkiaf907"><img src="/blog-md/how-to-improve-performance/img/after.png" alt="优化后"></a></p>
+<h2 id="为什么优化网站加载速度很重要">为什么优化网站加载速度很重要</h2>
+<p>像我这种有点耐心<spoiler>（还不是被某堵墙和我这老爷机逼的）</spoiler>的人，逛加载速度慢网站通常会一边忍着一边想带妈的词语。而一些没耐心的人进了这种网站，肯定会想<code>这™什么破网站</code>，然后立马点叉。对于用户很多的电商平台来说，网站加载时间每多100ms，用户越没有耐心看下去，然后电商平台就要少赚好几沓钞票。</p>
+<h2 id="少说废话，进入正题">少说废话，进入正题</h2>
+<h3 id="多用-getelementsbyxxx，少用-queryselectorall">多用 <code>getElement(s)ByXxx</code>，少用 <code>querySelector(All)</code></h3>
+<p><img src="/blog-md/how-to-improve-performance/img/compare-gebxxx-qs.png" alt="用一段代码比较 getElement(s)ByXxx 和 querySelector(All) 的性能"></p>
+<p>由图可知，二者的速度差距挺大的。虽然 <code>querySelector(All)</code> 用起来又舒服又方便，但它是真的慢。平时写代码的时候，我们应该权衡方便和性能，最好只在 <code>getElement(s)ByXxx</code> 满足不了要求时才用 <code>querySelector(All)</code>。我觉得 <code>querySelector(All)</code> 慢的一个原因是 CSS 选择器语法很灵活，浏览器需要花些力气解析完选择器才能找需要的元素。</p>
+<h3 id="善用预加载">善用预加载</h3>
+<p>如果你的网页有可能会晚些加载的资源（比如动态加载脚本、CSS 里的背景图片），可以在<code>&lt;head&gt;</code> 里添加 <code>&lt;link rel=&quot;preload&quot;/&gt;</code> 或 <code>&lt;link rel=&quot;dns-prefetch&quot;&gt;</code>，声明稍后可能会加载的资源，以下是一段示例代码：</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;zh-CN&quot;&gt;
+    &lt;head&gt;
+        &lt;!-- ... --&gt;
+
+        &lt;link rel=&quot;dns-prefetch&quot; href=&quot;https://api.github.com&quot; /&gt;
+        &lt;link rel=&quot;dns-prefetch&quot; href=&quot;https://www.googletagmanager.com&quot; /&gt;
+
+        &lt;link
+            rel=&quot;preload&quot;
+            href=&quot;/js/ncm.js&quot;
+            as=&quot;script&quot;
+            crossorigin=&quot;anonymous&quot;
+        /&gt;
+        &lt;link
+            rel=&quot;preload&quot;
+            href=&quot;/json/icon.json&quot;
+            as=&quot;fetch&quot;
+            crossorigin=&quot;anonymous&quot;
+        /&gt;
+        &lt;link
+            rel=&quot;preload&quot;
+            href=&quot;/json/theme.json&quot;
+            as=&quot;fetch&quot;
+            crossorigin=&quot;anonymous&quot;
+        /&gt;
+    &lt;/head&gt;
+    &lt;!-- ... --&gt;
+&lt;/html&gt;
+</code></pre>
+<p>具体用法可以看看<a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/rel/preload">这篇 MDN 文档（英语）</a>。</p>
+<h3 id="为-script-标签添加-async-或-defer-属性">为 <code>&lt;script&gt;</code> 标签添加 <code>async</code> 或 <code>defer</code> 属性</h3>
+<p>如果脚本不需要尽快执行，添加这两个属性可以让浏览器尽快渲染网页，而不必等待脚本执行完毕。</p>
+<p>需要注意的是，添加 <code>async</code> 属性后，<code>DOMContentLoaded</code> 事件可能无法触发。</p>
+<h3 id="更多做法">更多做法</h3>
+<p>这些做法我就不细说了</p>
+<ul>
+<li>推迟加载不太重要的资源</li>
+<li>压缩资源（这个我不想搞）</li>
+<li>不要用太多费资源的 CSS 方法（比如 <code>blur()</code>）</li>
+</ul>
+
+        ]]>
+    </content>
+</entry>
+<entry>
     <title>使用 CloudFlare Workers 免费搭建 Virtual Judge 反代</title>
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=cf-vjmirror" />
     <id>cf-vjmirror</id>

@@ -189,6 +189,7 @@ ${(() => {
             .then((/** @type {Array} */ j) => {
                 所有文章信息 = j;
                 j.forEach(文章 => {
+                    if (文章.hidden) return;
                     let a = ce("a"),
                         br = ce("br"),
                         p = ce("p"),
@@ -226,7 +227,7 @@ ${(() => {
 addEventListener("URL发生变化", () => {
     if (路径 !== 获取清理后的路径(true)) {
         路径 = 获取清理后的路径(true);
-        qsa(".目录")?.forEach(元素 => {
+        [...(document.getElementsByClassName("目录") || [])]?.forEach(元素 => {
             元素.remove();
         });
     }
