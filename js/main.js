@@ -362,23 +362,8 @@ addEventListener("copy", () => {
         加载模块();
         完成加载();
 
-        // 谷歌/Vercel 统计代码
-        let s1 = ce("script"),
-            s2 = ce("script");
-        s1.async = s1.defer = s2.async = s2.defer = true;
-        s1.src = "https://www.googletagmanager.com/gtag/js?id=G-060YCRMSSH";
-        s2.src = "/_vercel/insights/script.js";
-        document.body.append(s1, s2);
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag("js", new Date());
-        gtag("config", "G-060YCRMSSH");
-    };
-
-    let style = ce("style");
-    style.innerText = `a,
+        let style = ce("style");
+        style.innerText = `a,
     button,
     div,
     section,
@@ -389,38 +374,54 @@ addEventListener("copy", () => {
             0.3s transform, 0.3s box-shadow, 0.3s filter, 0.3s text-decoration,
             0.3s background-color, 0.3s opacity;
     }`;
-    setTimeout(() => {
-        document.head.append(style);
+        setTimeout(() => {
+            document.head.append(style);
 
-        let scrollTop = 0,
-            导航栏 = gd("导航栏"),
-            左 = qs("main .左", true),
-            状态 = -1;
-        addEventListener("scroll", async () => {
-            if (document.documentElement.scrollTop === 0 && 状态 !== 0) {
-                导航栏.style.transform = "translateY(0px)";
-                导航栏.style.boxShadow = "none";
-                状态 = 0;
-            } else if (
-                document.documentElement.scrollTop > scrollTop &&
-                状态 !== 1
-            ) {
-                导航栏.style.transform = "translateY(-48px)";
-                左.style.transform = "translateY(0px)";
-                导航栏.style.boxShadow = "none";
-                状态 = 1;
-            } else if (
-                document.documentElement.scrollTop < scrollTop &&
-                状态 !== 2
-            ) {
-                导航栏.style.transform = "translateY(0px)";
-                左.style.transform = "translateY(48px)";
-                导航栏.style.boxShadow = "rgba(0, 0, 0, 0.24) 0px 0px 16px 0px";
-                状态 = 2;
-            }
-            scrollTop = document.documentElement.scrollTop;
-        });
-    }, 500);
+            let scrollTop = 0,
+                导航栏 = gd("导航栏"),
+                左 = qs("main .左", true),
+                状态 = -1;
+            addEventListener("scroll", async () => {
+                if (document.documentElement.scrollTop === 0 && 状态 !== 0) {
+                    导航栏.style.transform = "translateY(0px)";
+                    导航栏.style.boxShadow = "none";
+                    状态 = 0;
+                } else if (
+                    document.documentElement.scrollTop > scrollTop &&
+                    状态 !== 1
+                ) {
+                    导航栏.style.transform = "translateY(-48px)";
+                    左.style.transform = "translateY(0px)";
+                    导航栏.style.boxShadow = "none";
+                    状态 = 1;
+                } else if (
+                    document.documentElement.scrollTop < scrollTop &&
+                    状态 !== 2
+                ) {
+                    导航栏.style.transform = "translateY(0px)";
+                    左.style.transform = "translateY(48px)";
+                    导航栏.style.boxShadow =
+                        "rgba(0, 0, 0, 0.24) 0px 0px 16px 0px";
+                    状态 = 2;
+                }
+                scrollTop = document.documentElement.scrollTop;
+            });
+        }, 500);
+
+        // 谷歌/Vercel 统计代码
+        let s1 = ce("script"),
+            s2 = ce("script");
+        s1.async = s1.defer = s2.async = s2.defer = true;
+        // s1.src = "https://www.googletagmanager.com/gtag/js?id=G-060YCRMSSH";
+        s2.src = "/_vercel/insights/script.js";
+        document.body.append(s1, s2);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", "G-060YCRMSSH");
+    };
 
     DOMContentLoaded ? f() : document.addEventListener("DOMContentLoaded", f);
 })();

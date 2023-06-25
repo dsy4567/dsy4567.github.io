@@ -2,8 +2,6 @@
 
 "use strict";
 
-String.prototype.replace = String.prototype.replace;
-
 let gd缓存 = {};
 /**
  * document.getElementById
