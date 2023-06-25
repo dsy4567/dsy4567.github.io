@@ -2,6 +2,8 @@
 
 "use strict";
 
+if (location.hostname === "dsy4567.github.io") location.hostname = "dsy4567.cf";
+
 let gd缓存 = {};
 /**
  * document.getElementById
@@ -176,4 +178,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     DOMContentLoaded = true;
 });
 
-"serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
+"serviceWorker" in navigator && location.hostname !== "dsy4567.github.io" && navigator.serviceWorker.register("/sw.js");
