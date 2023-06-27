@@ -41,6 +41,7 @@ const 更新缓存 = async (
 
 self.addEventListener("activate", 事件 => {
     console.log("SW 已激活");
+    caches.delete("offline");
 });
 
 self.addEventListener("install", 事件 => {
