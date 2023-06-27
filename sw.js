@@ -27,7 +27,6 @@ const url白名单 = [
     "https://ncm.vercel.dsy4567.cf/playlist/track/all?id=",
     "https://ncm.vercel.dsy4567.cf/mv/detail?mvid=",
     "https://ncm.vercel.dsy4567.cf/lyric?id=",
-    "https://t1.gstatic.cn/faviconV2?",
     "https://api.github.com/users/dsy4567",
 ];
 
