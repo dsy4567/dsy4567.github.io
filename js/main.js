@@ -125,7 +125,8 @@ async function 添加点击事件和设置图标() {
 
             for (let i = 0; i < j.songs.length; i++) {
                 const 音乐信息 = j.songs[i];
-                let 所有歌手 = [];
+
+                let /** @type {string[]} */ 所有歌手 = [];
                 音乐信息.ar.forEach(歌手 => 所有歌手.push(歌手.name));
                 网抑云阴乐.歌单[i] = {
                     歌名: 音乐信息.name,
@@ -147,7 +148,8 @@ async function 添加点击事件和设置图标() {
             ) {
                 let btn = ce("button");
                 btn.innerHTML = html;
-                btn.onclick = () => {
+                btn.onclick = async () => {
+                    await 网抑云阴乐.初始化();
                     onclick(btn);
                 };
                 btn.type = "button";
@@ -167,7 +169,7 @@ async function 添加点击事件和设置图标() {
                     网抑云阴乐.播放暂停,
                     "播放/暂停"
                 );
-                !svg(
+                svg(
                     `<svg class="特小尺寸" data-icon="下一首"></svg>`,
                     网抑云阴乐.下一首,
                     "下一首"
@@ -222,7 +224,8 @@ fetch("/json/theme.json")
     .then(res => res.json())
     .then(主题 => {
         Object.keys(主题).forEach(t => {
-            let /** @type {HTMLButtonElement} */ btn = ce("button");
+            let /** @type {HTMLButtonElement} */ btn = ce("div");
+            btn.className = "button";
             btn.style.backgroundColor = 主题[t]["--theme-color"];
             btn.title = t;
             btn.role = "radio";

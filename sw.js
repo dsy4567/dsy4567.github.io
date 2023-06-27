@@ -1,54 +1,77 @@
 /* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
 
-const 资源清单 = [
-    "/",
-    "/blog.html",
-    "/js/blog.js",
-    "/js/global.js",
-    "/js/main.js",
-    "/js/highlight.min.js",
-    "/js/lrc-parser.js",
-    "/js/marked.min.js",
-    "/js/ncm.js",
-    "/css/global.css",
-    "/css/hl.min.css",
-    "/img/avatar.jpg",
-    "/img/bg.jpg",
-    "/json/blog.json",
-    "/json/icon.json",
-    "/json/theme.json",
+"use strict";
+
+if (location.hostname === "dsy4567.github.io")
+    throw new Error("无法在 dsy4567.github.io 域名下运行 SW");
+
+// const 资源清单 = [
+//     "/",
+//     "/blog.html",
+//     "/js/blog.js",
+//     "/js/global.js",
+//     "/js/main.js",
+//     "/js/highlight.min.js",
+//     "/js/lrc-parser.js",
+//     "/js/marked.min.js",
+//     "/js/ncm.js",
+//     "/css/global.css",
+//     "/css/hl.min.css",
+//     "/img/avatar.jpg",
+//     "/json/blog.json",
+//     "/json/icon.json",
+//     "/json/theme.json",
+// ];
+
+const url白名单 = [
+    "https://ncm.vercel.dsy4567.cf/playlist/track/all?id=",
+    "https://ncm.vercel.dsy4567.cf/mv/detail?mvid=",
+    "https://ncm.vercel.dsy4567.cf/lyric?id=",
+    "https://t1.gstatic.cn/faviconV2?",
+    "https://api.github.com/users/dsy4567",
 ];
 
-const 添加资源至缓存 = async 资源 => {
-    const 缓存 = await caches.open("offline");
-    await 缓存.addAll(资源);
-};
-
-const 更新缓存 = async (请求, 响应) => {
-    const 缓存 = await caches.open("offline");
+const 更新缓存 = async (
+    /** @type {RequestInfo | URL} */ 请求,
+    /** @type {Response} */ 响应
+) => {
+    const 缓存 = await caches.open(请求.hostname);
     await 缓存.put(请求, 响应);
 };
 
 self.addEventListener("activate", 事件 => {
-    // 事件.waitUntil(self.registration.navigationPreload.enable());
     console.log("SW 已激活");
 });
 
 self.addEventListener("install", 事件 => {
-    // 事件.waitUntil(添加资源至缓存(资源清单));
     console.log("SW 已安装");
 });
 
 self.addEventListener("fetch", 事件 => {
-    let u = new URL(事件.request.url);
-    if (u.hostname !== location.hostname || u.pathname.includes("/_")) return;
-    u.search = "";
+    let u = new URL(事件.request.url),
+        r = false;
+    for (let i = 0; i < url白名单.length; i++)
+        if (("" + u).startsWith(url白名单[i])) {
+            r = true;
+            break;
+        }
+
+    if (!r) {
+        if (
+            (u.hostname !== location.hostname || u.pathname.includes("/_")) &&
+            u.hostname !== "dsy4567.cf" // 照顾本地环境/备用域名调用 dsy4567.cf 接口
+        )
+            return;
+        u.search = "";
+    }
+
     事件.url = u;
 
     事件.respondWith(
         (async () =>
             new Promise(async (resolve, reject) => {
                 let resolved = false;
+
                 const 预加载的响应 = await 事件.preloadResponse;
                 if (预加载的响应) {
                     更新缓存(u, 预加载的响应.clone());

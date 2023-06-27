@@ -739,14 +739,15 @@ div.侧边按钮 > .拥有更多选项:focus > .更多选项,
     pointer-events: all !important;
     opacity: 1 !important;
 }
-div.侧边按钮 > .拥有更多选项 > .更多选项 > button {
+div.侧边按钮 > .拥有更多选项 > .更多选项 > button,
+div.侧边按钮 > .拥有更多选项 > .更多选项 > div.button {
     background-color: #fff;
     border: 1px solid #888;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 4px;
+    margin: 3px;
     cursor: pointer;
     width: 24px;
     height: 24px;
