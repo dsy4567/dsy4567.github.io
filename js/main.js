@@ -224,8 +224,7 @@ fetch("/json/theme.json")
     .then(res => res.json())
     .then(主题 => {
         Object.keys(主题).forEach(t => {
-            let /** @type {HTMLButtonElement} */ btn = ce("div");
-            btn.className = "button";
+            let /** @type {HTMLButtonElement} */ btn = ce("button");
             btn.style.backgroundColor = 主题[t]["--theme-color"];
             btn.title = t;
             btn.role = "radio";
