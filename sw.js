@@ -57,10 +57,7 @@ self.addEventListener("fetch", 事件 => {
         }
 
     if (!r) {
-        if (
-            (u.hostname !== location.hostname || u.pathname.includes("/_")) &&
-            u.hostname !== "dsy4567.cf" // 照顾本地环境/备用域名调用 dsy4567.cf 接口
-        )
+        if (u.hostname !== location.hostname || u.pathname.includes("/_"))
             return;
         u.search = "";
     }
