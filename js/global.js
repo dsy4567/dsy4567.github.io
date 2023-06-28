@@ -2,7 +2,7 @@
 
 "use strict";
 
-if (location.hostname === "dsy4567.github.io") location.hostname = "dsy4567.cf";
+// if (location.hostname === "dsy4567.github.io") location.hostname = "dsy4567.cf";
 
 let gd缓存 = {};
 /**
