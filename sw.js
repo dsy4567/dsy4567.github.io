@@ -60,12 +60,12 @@ const 读取临时缓存 = async (/** @type {URL} */ 请求) => {
 self.addEventListener("activate", 事件 => {
     console.log("SW 已激活");
     caches.delete("temp");
-    // 事件.waitUntil(clients.claim());
+    事件.waitUntil(clients.claim());
 });
 
 self.addEventListener("install", 事件 => {
     console.log("SW 已安装");
-    // self.skipWaiting();
+    self.skipWaiting();
 });
 
 self.addEventListener("fetch", 事件 => {
