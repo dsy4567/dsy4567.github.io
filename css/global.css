@@ -1,4 +1,5 @@
 @charset "utf-8";
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300&family=Source+Code+Pro:wght@500&display=swap");
 @keyframes 进度条 {
     from {
         width: 0%;
@@ -237,6 +238,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-family: "Noto Sans SC", sans-serif;
+    line-height: 1.5;
     margin: 0;
     padding: 0;
 }
@@ -358,6 +361,15 @@ main > .右 {
     padding: 4px;
 }
 
+.标签 > div > * {
+    background-color: var(--bg-color-dark-2);
+    border: 1px solid #0000;
+    border-radius: var(--border-radius);
+    line-height: 2.5;
+    margin: 2px;
+    padding: 4px;
+}
+
 main > #分界线 {
     background-color: var(--bg-color);
     border: 8px solid var(--theme-color);
@@ -401,6 +413,7 @@ body.宽屏 > main .右 {
 
 #copyright {
     background-color: var(--bg-color);
+    border-top: 1px solid #0000;
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
     padding-top: 16px;
@@ -430,14 +443,15 @@ blockquote {
     border: 1px solid transparent;
     border-left: 8px solid var(--theme-color-transparent);
     border-radius: var(--border-radius);
-    margin: 0px;
+    margin: 4px 0;
     padding: 4px;
 }
 code {
     background-color: var(--theme-color-transparent);
     border: 1px solid transparent;
     border-radius: var(--border-radius);
-    padding: 1.5px;
+    font-family: "Source Code Pro", monospace;
+    padding: 1px;
 }
 pre {
     background-color: #ccc;
@@ -541,6 +555,7 @@ hr {
 
 #导航栏 {
     background-color: var(--bg-color);
+    border-bottom: 1px solid #0000;
     /* box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px; */
     color: var(--text-color);
     display: flex;
@@ -642,7 +657,7 @@ div.侧边按钮 > #切换主题 {
 div.侧边按钮 > #切换主题:hover,
 div.侧边按钮 > #切换主题:focus,
 div.侧边按钮 > #切换主题:focus-within {
-    transform: translateX(calc(-32px * 5));
+    transform: translateX(calc(-32px * 4));
 }
 div.侧边按钮 > #网抑云阴乐:hover,
 div.侧边按钮 > #网抑云阴乐:focus,
@@ -663,7 +678,7 @@ div.侧边按钮 > .拥有更多选项 > .更多选项 {
     flex-wrap: wrap;
 }
 div.侧边按钮 > #切换主题 > #所有主题 {
-    width: calc(32px * 4);
+    width: calc(32px * 3);
     height: calc(32px * 3);
 }
 div.侧边按钮 > #网抑云阴乐 #歌词 {

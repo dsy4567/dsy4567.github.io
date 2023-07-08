@@ -8,4 +8,8 @@ export async function main(/** @type {String} */ 路径) {
             `https://t1.gstatic.cn/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${a.host}&size=16`;
         img.alt = img.title = a.innerText;
     });
+    if (!location.href.includes("#") && 可以滚动到视图中)
+        qs("main .右", true).scrollIntoView({
+            behavior: "smooth",
+        });
 }

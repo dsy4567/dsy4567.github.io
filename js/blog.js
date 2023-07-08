@@ -31,13 +31,19 @@ export async function main(/** @type {String} */ 路径) {
                     html +
                     (html.includes('<nocopyright value="true"></nocopyright>')
                         ? ""
-                        : '<hr /><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />如无特别说明，本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br />');
+                        : '<hr /><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br />');
 
-                span.innerText = `发表于: ${new Date(
+                span.innerHTML = `发表于: ${new Date(
                     当前文章信息.date
                 ).toLocaleString()}, 更新于: ${new Date(
                     当前文章信息.updated
-                ).toLocaleString()}`;
+                ).toLocaleString()}</br>标签: ${(() => {
+                    let html = "";
+                    当前文章信息.tags.forEach(标签 => {
+                        html += `<a href="/blog.html?tag=${标签}">${标签}</a> `;
+                    });
+                    return html;
+                })()}`;
                 span.classList.add("淡化");
                 sect.append(span);
 
@@ -103,8 +109,10 @@ export async function main(/** @type {String} */ 路径) {
                     let h = location.hash;
                     location.hash = "";
                     location.hash = h;
-                } else
-                    qs("main .右", true).scrollIntoView({ behavior: "smooth" });
+                } else if (可以滚动到视图中)
+                    qs("main .右", true).scrollIntoView({
+                        behavior: "smooth",
+                    });
 
                 await 添加脚本("/js/highlight.min.js");
                 添加样式("/css/hl.min.css");
@@ -188,8 +196,15 @@ ${(() => {
             .then(res => res.json())
             .then((/** @type {Array} */ j) => {
                 所有文章信息 = j;
+                let 所有标签 = new Set(),
+                    限定标签 = u.searchParams.get("tag");
                 j.forEach(文章 => {
-                    if (文章.hidden) return;
+                    文章.tags?.forEach(标签 => 所有标签.add(标签));
+                    if (
+                        文章.hidden ||
+                        (限定标签 && !文章.tags.includes(限定标签))
+                    )
+                        return;
                     let a = ce("a"),
                         br = ce("br"),
                         p = ce("p"),
@@ -199,11 +214,17 @@ ${(() => {
                     a.href = "/blog.html?id=" + 文章.id;
                     a.innerText = "阅读更多";
                     p.innerHTML = marked.parse(文章.desc);
-                    span.innerText = `发表于: ${new Date(
+                    span.innerHTML = `发表于: ${new Date(
                         文章.date
                     ).toLocaleString()}, 更新于: ${new Date(
                         文章.updated
-                    ).toLocaleString()}`;
+                    ).toLocaleString()}</br>标签: ${(() => {
+                        let html = "";
+                        文章.tags.forEach(标签 => {
+                            html += `<a href="/blog.html?tag=${标签}">${标签}</a> `;
+                        });
+                        return html;
+                    })()}`;
                     span.classList.add("淡化");
                     if (文章.img) {
                         img.src = `/blog-md/${文章.id}/img/` + 文章.img;
@@ -212,9 +233,36 @@ ${(() => {
                     sect.append(img, p, a, br, span);
                     qs("main .右", true).append(sect);
                 });
+                let 标签元素 = ce("section"),
+                    div = ce("div");
+                所有标签.forEach(标签 => {
+                    let a = ce("a");
+                    a.innerText = 标签;
+                    a.href = "?tag=" + 标签;
+                    if (标签 === 限定标签)
+                        a.style.border = "1px solid var(--text-color)";
+                    div.append(a);
+                });
+                标签元素.insertAdjacentHTML(
+                    "afterbegin",
+                    '<h2><svg class="小尺寸" data-icon="标签"></svg><span>标签</span></h2>'
+                );
+                [...(document.getElementsByClassName("标签") || [])]?.forEach(
+                    元素 => {
+                        元素.remove();
+                    }
+                );
+                标签元素.classList.add("标签");
+                标签元素.append(div);
+                qs("main > .左", true).append(标签元素);
+
                 显示或隐藏进度条(false);
                 gd("正在加载文章提示").remove();
                 _global["main.js"]().添加点击事件和设置图标();
+                if (!location.href.includes("#") && 可以滚动到视图中)
+                    qs("main .右", true).scrollIntoView({
+                        behavior: "smooth",
+                    });
             })
             .catch(e => {
                 console.error(e);
@@ -227,9 +275,16 @@ ${(() => {
 addEventListener("URL发生变化", () => {
     if (路径 !== 获取清理后的路径(true)) {
         路径 = 获取清理后的路径(true);
-        [...(document.getElementsByClassName("目录") || [])]?.forEach(元素 => {
+        [
+            ...(document.getElementsByClassName("目录") || []),
+            ...(document.getElementsByClassName("标签") || []),
+        ]?.forEach(元素 => {
             元素.remove();
         });
+        // if (
+        //     location.pathname === "/blog.html" &&
+        //     location.search.includes("id=")
+        // )
     }
 });
 

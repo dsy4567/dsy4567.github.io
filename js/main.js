@@ -55,9 +55,18 @@ function 动态加载(元素) {
                 qs("main .右", true).innerHTML = m[0];
                 await 加载模块();
 
-                u.pathname
-                    .replace(/(index|\.html)/g, "")
-                    .replace(/\/\//g, "") === "/" && 显示或隐藏进度条(false);
+                if (
+                    u.pathname
+                        .replace(/(index|\.html)/g, "")
+                        .replace(/\/\//g, "") === "/"
+                ) {
+                    显示或隐藏进度条(false);
+                    可以滚动到视图中 = true;
+                    if (!location.href.includes("#"))
+                        qs("main .右", true).scrollIntoView({
+                            behavior: "smooth",
+                        });
+                }
                 正在动态加载 = false;
                 添加点击事件和设置图标();
             } catch (e) {
@@ -411,6 +420,7 @@ addEventListener("copy", () => {
         }, 500);
 
         // 谷歌/Vercel 统计代码
+        if (location.hostname === "dev.dsy4567.cf") return;
         let s1 = ce("script"),
             s2 = ce("script");
         s1.async = s1.defer = s2.async = s2.defer = true;

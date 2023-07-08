@@ -2,100 +2,125 @@
 
 "use strict";
 
-if (location.hostname === "dsy4567.github.io")
-    throw new Error("无法在 dsy4567.github.io 域名下运行 SW");
-
-// const 资源清单 = [
-//     "/",
-//     "/blog.html",
-//     "/js/blog.js",
-//     "/js/global.js",
-//     "/js/main.js",
-//     "/js/highlight.min.js",
-//     "/js/lrc-parser.js",
-//     "/js/marked.min.js",
-//     "/js/ncm.js",
-//     "/css/global.css",
-//     "/css/hl.min.css",
-//     "/img/avatar.jpg",
-//     "/json/blog.json",
-//     "/json/icon.json",
-//     "/json/theme.json",
-// ];
-
-const url白名单 = [
+const 要缓存的资源 = [
     "https://ncm.vercel.dsy4567.cf/playlist/track/all?id=",
     "https://ncm.vercel.dsy4567.cf/mv/detail?mvid=",
     "https://ncm.vercel.dsy4567.cf/lyric?id=",
     "https://api.github.com/users/dsy4567",
+    "https://dsy4567.cf/api/hitokoto",
+    "https://camo.githubusercontent.com/",
+    "/css/hl.min.css",
+    "/img/avatar.jpg",
+    "/js/highlight.min.js",
+    "/js/lrc-parser.js",
+    "/js/marked.min.js",
 ];
+const 要临时缓存的资源 = [
+    "/index.html",
+    "/blog.html",
+    "/friends.html",
+    "/blog-md/",
+    "/css/",
+    "/js/",
+    "/json/",
+];
+let /** @type {Record<string, Cache>} */ 缓存 = {},
+    /** @type {Cache} */ 临时缓存;
+
+for (let i = 0; i < 要缓存的资源.length; i++)
+    要缓存的资源[i] = new URL(要缓存的资源[i], location.href);
+for (let i = 0; i < 要临时缓存的资源.length; i++)
+    要临时缓存的资源[i] = new URL(要临时缓存的资源[i], location.href);
 
 const 更新缓存 = async (
-    /** @type {RequestInfo | URL} */ 请求,
+    /** @type {URL} */ 请求,
     /** @type {Response} */ 响应
 ) => {
-    const 缓存 = await caches.open(请求.hostname);
-    await 缓存.put(请求, 响应);
+    if (!缓存[请求.hostname])
+        缓存[请求.hostname] = await caches.open(请求.hostname);
+    return await 缓存[请求.hostname].put(请求, 响应);
+};
+const 更新临时缓存 = async (
+    /** @type {URL} */ 请求,
+    /** @type {Response} */ 响应
+) => {
+    if (!临时缓存) 临时缓存 = await caches.open("temp");
+    return await 临时缓存.put(请求, 响应);
+};
+const 读取缓存 = async (/** @type {URL} */ 请求) => {
+    if (!缓存[请求.hostname])
+        缓存[请求.hostname] = await caches.open(请求.hostname);
+    return await 缓存[请求.hostname].match(请求);
+};
+const 读取临时缓存 = async (/** @type {URL} */ 请求) => {
+    if (!临时缓存) 临时缓存 = await caches.open("temp");
+    return await 临时缓存.match(请求, { ignoreSearch: true });
 };
 
 self.addEventListener("activate", 事件 => {
     console.log("SW 已激活");
-    caches.delete("offline");
+    caches.delete("temp");
+    // 事件.waitUntil(clients.claim());
 });
 
 self.addEventListener("install", 事件 => {
     console.log("SW 已安装");
+    // self.skipWaiting();
 });
 
 self.addEventListener("fetch", 事件 => {
     let u = new URL(事件.request.url),
-        r = false;
-    for (let i = 0; i < url白名单.length; i++)
-        if (("" + u).startsWith(url白名单[i])) {
-            r = true;
+        从缓存读取 = false,
+        从临时缓存读取 = false;
+    for (let i = 0; i < 要缓存的资源.length; i++) {
+        let u2 = 要缓存的资源[i];
+        if (u.host + u.pathname === u2.host + u2.pathname) {
+            从缓存读取 = true;
             break;
         }
-
-    if (!r) {
-        if (u.hostname !== location.hostname || u.pathname.includes("/_"))
-            return;
+    }
+    if (u.hostname === location.hostname) {
         u.search = "";
+        if (!从缓存读取)
+            if (u.pathname === "/") 从临时缓存读取 = true;
+            else
+                for (let i = 0; i < 要临时缓存的资源.length; i++) {
+                    let u2 = 要临时缓存的资源[i];
+                    if (u.pathname.startsWith(u2.pathname)) {
+                        从临时缓存读取 = true;
+                        break;
+                    }
+                }
     }
 
-    事件.url = u;
+    if (!从缓存读取 && !从临时缓存读取) return;
 
     事件.respondWith(
         (async () =>
             new Promise(async (resolve, reject) => {
                 let resolved = false;
 
-                const 预加载的响应 = await 事件.preloadResponse;
-                if (预加载的响应) {
-                    更新缓存(u, 预加载的响应.clone());
-                    resolve(预加载的响应);
-                    return;
-                } else {
-                    const 来自缓存的响应 = await caches.match(u);
-                    if (来自缓存的响应) {
-                        resolve(来自缓存的响应);
-                        resolved = true;
-                    }
+                let 来自缓存的响应, 来自临时缓存的响应;
+                if (从缓存读取) 来自缓存的响应 = await 读取缓存(u);
+                else if (从临时缓存读取)
+                    来自临时缓存的响应 = await 读取临时缓存(u);
+                if (来自缓存的响应 || 来自临时缓存的响应) {
+                    resolve(来自缓存的响应 || 来自临时缓存的响应);
+                    resolved = true;
                 }
 
                 try {
                     const 来自网络的请求 = await fetch(u);
-                    更新缓存(u, 来自网络的请求.clone());
+                    从缓存读取 && 更新缓存(u, 来自网络的请求.clone());
+                    从临时缓存读取 && 更新临时缓存(u, 来自网络的请求.clone());
                     !resolved && resolve(来自网络的请求);
                 } catch (e) {
                     !resolved &&
                         resolve(
                             new Response(
-                                new Blob(
-                                    [
-                                        "无法获取资源，您的网络可能存在问题，或该资源不存在。",
-                                    ],
-                                    { type: "text/plain;charset=utf8" }
-                                ),
+                                new Blob(["无法获取资源\n" + e], {
+                                    type: "text/plain;charset=utf8",
+                                }),
                                 {
                                     status: 408,
                                     headers: {

@@ -13,7 +13,8 @@ f.forEach(file => {
     if (file && fs.statSync("./blog-md/" + file).isDirectory()) {
         const md = fs
             .readFileSync("./blog-md/" + file + "/index.md")
-            .toString();
+            .toString()
+            .replaceAll("\r", "");
 
         const $ = cheerio.load(marked.marked(md));
         let j = jsonfile.readFileSync("./blog-md/" + file + "/article.json");
@@ -38,7 +39,7 @@ let rss = `<?xml version="1.0" encoding="UTF-8"?>
     <updated>2023-01-22T12:48:59.719Z</updated>
     <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>
 `;
-let sitemap=`<?xml version="1.0" encoding="UTF-8"?>
+let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
     <loc>https://${hostname}/</loc>
@@ -55,7 +56,7 @@ let sitemap=`<?xml version="1.0" encoding="UTF-8"?>
 <url>
     <loc>https://${hostname}/game.html</loc>
     <lastmod>2023-06-22T05:02:50.783Z</lastmod>
-</url>`
+</url>`;
 
 articles.forEach(a => {
     rss += `
@@ -75,20 +76,23 @@ articles.forEach(a => {
     <category term="Default" />
     <content type="html" xml:lang="zh-cn">
         <![CDATA[
-${marked.marked(fs.readFileSync("./blog-md/" + a.id + "/index.md").toString())}
+${marked.marked(
+    fs
+        .readFileSync("./blog-md/" + a.id + "/index.md")
+        .toString()
+        .replaceAll("\r", "")
+)}
         ]]>
     </content>
 </entry>`;
     sitemap += `
 <url>
-    <loc>https://${hostname}/blog.html?id=${
-        a.id
-    }</loc>
+    <loc>https://${hostname}/blog.html?id=${a.id}</loc>
     <lastmod>${a.updated}</lastmod>
 </url>`;
 });
 
 rss += "</feed>";
-sitemap += "</urlset>"
+sitemap += "</urlset>";
 fs.writeFileSync("./rss.xml", rss);
 fs.writeFileSync("./sitemap.xml", sitemap);

@@ -162,7 +162,8 @@ function 添加悬浮卡片(html, x, y, 失去焦点时隐藏) {
     return div;
 }
 
-let URL发生变化事件 = new CustomEvent("URL发生变化");
+let URL发生变化事件 = new CustomEvent("URL发生变化"),
+    可以滚动到视图中 = false;
 
 // 方便暴露到全局变量
 let _global = {};
@@ -178,4 +179,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     DOMContentLoaded = true;
 });
 
-"serviceWorker" in navigator && location.hostname !== "dsy4567.github.io" && navigator.serviceWorker.register("/sw.js");
+"serviceWorker" in navigator &&
+    location.hostname !== "dsy4567.github.io" &&
+    navigator.serviceWorker.register("/sw.js");
