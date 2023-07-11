@@ -1,5 +1,4 @@
 @charset "utf-8";
-@import url("https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400&family=Source+Code+Pro:wght@400&display=swap");
 @keyframes 进度条 {
     from {
         width: 0%;
@@ -836,7 +835,9 @@ main > .分界线 {
     background-color: transparent !important;
 }
 
-#个人简介 img {height: 20px;}
+#个人简介 img {
+    height: 20px;
+}
 
 #技能 {
     display: flex;
