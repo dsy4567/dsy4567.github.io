@@ -185,3 +185,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     navigator.serviceWorker.getRegistrations().then(registrations => {
         registrations.forEach(sw => sw.unregister());
     });
+
+caches.keys().then(t => {
+    return Promise.all(
+        t.map(n => {
+            return caches.delete(n);
+        })
+    );
+});
