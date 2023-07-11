@@ -82,7 +82,7 @@
             ]
         },
         {
-            "source": "/img/svg/c艹.svg",
+            "source": "/img/svg/c%E8%89%B9.svg",
             "headers": [
                 {
                     "key": "Cache-Control",
