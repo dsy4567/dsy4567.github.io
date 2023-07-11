@@ -61,7 +61,7 @@ self.addEventListener("activate", 事件 => {
     console.log("SW 已激活");
     事件.waitUntil(clients.claim());
     // 事件.waitUntil(caches.delete("temp"));
-    e.waitUntil(
+    事件.waitUntil(
         caches.keys().then(t => {
             return Promise.all(
                 t.map(n => {
