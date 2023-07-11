@@ -123,9 +123,6 @@
     }
 }
 @media (prefers-reduced-data: reduce) {
-    .背景图片 {
-        background: none !important;
-    }
 }
 @media print {
     html,
@@ -280,7 +277,10 @@ a {
 }
 a.无滤镜,
 a.无滤镜:hover,
-a.无滤镜:focus-visible,
+a.无滤镜:focus-visible {
+    opacity: 1;
+    text-decoration: none;
+}
 a:hover,
 a:focus-visible {
     opacity: 1;
@@ -302,7 +302,7 @@ abbr {
 }
 img,
 video {
-    background-color: var(--theme-color-transparent);
+    background-color: var(--theme-color);
     border-radius: var(--border-radius);
 }
 spoiler {
@@ -833,10 +833,6 @@ main > .分界线 {
 
 .hljs {
     background-color: transparent !important;
-}
-
-#个人简介 img {
-    height: 20px;
 }
 
 #技能 {
