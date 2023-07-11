@@ -58,6 +58,11 @@ let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <loc>https://${hostname}/game.html</loc>
     <lastmod>2023-06-22T05:02:50.783Z</lastmod>
 </url>`;
+let readme = `## 📚 文章列表
+
+> **Note：** 在 <https://dsy4567.cf/blog.html> 上阅读体验更佳
+
+`;
 
 articles.forEach(a => {
     rss += `
@@ -91,12 +96,20 @@ ${marked.marked(
     <loc>https://${hostname}/blog.html?id=${a.id}</loc>
     <lastmod>${a.updated}</lastmod>
 </url>`;
+    readme += `[${a.title}](./${a.id}/index.md)\n\n`;
 });
 
 rss += "</feed>";
 sitemap += "</urlset>";
+readme += `
+## ⚖️ 许可证
+
+[知识共享署名-相同方式共享 4.0 国际许可协议](./LICENSE.txt)
+`;
+
 fs.writeFileSync("./rss.xml", rss);
 fs.writeFileSync("./sitemap.xml", sitemap);
+fs.writeFileSync("./blog-md/README.md", readme);
 
 axios
     .get("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=8219428260", {

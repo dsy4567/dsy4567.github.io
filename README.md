@@ -2,7 +2,7 @@
 
 一个 90% 自己造轮子做的个人网站
 
-# 🔨 功能和特色
+## 🔨 功能和特色
 
 -   对 IE /老旧 Chrome 有着高达 -114514% 的兼容性(最低兼容到 360 只因速浏览器)
 -   网抑云阴乐
@@ -11,7 +11,7 @@
 -   RSS 订阅
 -   一丢丢无障碍适配
 
-# 👖 第三方库/接口
+## 👖 第三方库/接口
 
 -   [ByteDance IconPark](https://github.com/bytedance/IconPark)
 -   <https://api.github.com>
@@ -20,7 +20,7 @@
 -   [网易云音乐](https://music.163.com) + [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
 -   [一言](https://hitokoto.cn/)
 
-# ⚖️ 许可证
+## ⚖️ 许可证
 
 “死妈的防沉迷”许可证
 
