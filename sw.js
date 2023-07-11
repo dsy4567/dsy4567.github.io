@@ -2,65 +2,74 @@
 
 "use strict";
 
-const 要缓存的资源 = [
-    "https://ncm.vercel.dsy4567.cf/playlist/track/all?id=",
-    "https://ncm.vercel.dsy4567.cf/mv/detail?mvid=",
-    "https://ncm.vercel.dsy4567.cf/lyric?id=",
-    "https://api.github.com/users/dsy4567",
-    "https://dsy4567.cf/api/hitokoto",
-    "https://camo.githubusercontent.com/",
-    "/css/hl.min.css",
-    "/img/avatar.jpg",
-    "/js/highlight.min.js",
-    "/js/lrc-parser.js",
-    "/js/marked.min.js",
-];
-const 要临时缓存的资源 = [
-    "/index.html",
-    "/blog.html",
-    "/friends.html",
-    "/blog-md/",
-    "/css/",
-    "/js/",
-    "/json/",
-];
-let /** @type {Record<string, Cache>} */ 缓存 = {},
-    /** @type {Cache} */ 临时缓存;
+// const 要缓存的资源 = [
+//     "https://ncm.vercel.dsy4567.cf/playlist/track/all?id=",
+//     "https://ncm.vercel.dsy4567.cf/mv/detail?mvid=",
+//     "https://ncm.vercel.dsy4567.cf/lyric?id=",
+//     "https://api.github.com/users/dsy4567",
+//     "https://dsy4567.cf/api/hitokoto",
+//     "https://camo.githubusercontent.com/",
+//     "/css/hl.min.css",
+//     "/img/avatar.jpg",
+//     "/js/highlight.min.js",
+//     "/js/lrc-parser.js",
+//     "/js/marked.min.js",
+// ];
+// const 要临时缓存的资源 = [
+//     "/index.html",
+//     "/blog.html",
+//     "/friends.html",
+//     "/blog-md/",
+//     "/css/",
+//     "/js/",
+//     "/json/",
+// ];
+// let /** @type {Record<string, Cache>} */ 缓存 = {},
+//     /** @type {Cache} */ 临时缓存;
 
-for (let i = 0; i < 要缓存的资源.length; i++)
-    要缓存的资源[i] = new URL(要缓存的资源[i], location.href);
-for (let i = 0; i < 要临时缓存的资源.length; i++)
-    要临时缓存的资源[i] = new URL(要临时缓存的资源[i], location.href);
+// for (let i = 0; i < 要缓存的资源.length; i++)
+//     要缓存的资源[i] = new URL(要缓存的资源[i], location.href);
+// for (let i = 0; i < 要临时缓存的资源.length; i++)
+//     要临时缓存的资源[i] = new URL(要临时缓存的资源[i], location.href);
 
-const 更新缓存 = async (
-    /** @type {URL} */ 请求,
-    /** @type {Response} */ 响应
-) => {
-    if (!缓存[请求.hostname])
-        缓存[请求.hostname] = await caches.open(请求.hostname);
-    return await 缓存[请求.hostname].put(请求, 响应);
-};
-const 更新临时缓存 = async (
-    /** @type {URL} */ 请求,
-    /** @type {Response} */ 响应
-) => {
-    if (!临时缓存) 临时缓存 = await caches.open("temp");
-    return await 临时缓存.put(请求, 响应);
-};
-const 读取缓存 = async (/** @type {URL} */ 请求) => {
-    if (!缓存[请求.hostname])
-        缓存[请求.hostname] = await caches.open(请求.hostname);
-    return await 缓存[请求.hostname].match(请求);
-};
-const 读取临时缓存 = async (/** @type {URL} */ 请求) => {
-    if (!临时缓存) 临时缓存 = await caches.open("temp");
-    return await 临时缓存.match(请求, { ignoreSearch: true });
-};
+// const 更新缓存 = async (
+//     /** @type {URL} */ 请求,
+//     /** @type {Response} */ 响应
+// ) => {
+//     if (!缓存[请求.hostname])
+//         缓存[请求.hostname] = await caches.open(请求.hostname);
+//     return await 缓存[请求.hostname].put(请求, 响应);
+// };
+// const 更新临时缓存 = async (
+//     /** @type {URL} */ 请求,
+//     /** @type {Response} */ 响应
+// ) => {
+//     if (!临时缓存) 临时缓存 = await caches.open("temp");
+//     return await 临时缓存.put(请求, 响应);
+// };
+// const 读取缓存 = async (/** @type {URL} */ 请求) => {
+//     if (!缓存[请求.hostname])
+//         缓存[请求.hostname] = await caches.open(请求.hostname);
+//     return await 缓存[请求.hostname].match(请求);
+// };
+// const 读取临时缓存 = async (/** @type {URL} */ 请求) => {
+//     if (!临时缓存) 临时缓存 = await caches.open("temp");
+//     return await 临时缓存.match(请求, { ignoreSearch: true });
+// };
 
 self.addEventListener("activate", 事件 => {
     console.log("SW 已激活");
-    caches.delete("temp");
     事件.waitUntil(clients.claim());
+    // 事件.waitUntil(caches.delete("temp"));
+    e.waitUntil(
+        caches.keys().then(t => {
+            return Promise.all(
+                t.map(n => {
+                    return caches.delete(n);
+                })
+            );
+        })
+    );
 });
 
 self.addEventListener("install", 事件 => {
@@ -69,6 +78,8 @@ self.addEventListener("install", 事件 => {
 });
 
 self.addEventListener("fetch", 事件 => {
+    return; // NOTE: 破代码改完了再删掉这行
+
     let u = new URL(事件.request.url),
         从缓存读取 = false,
         从临时缓存读取 = false;
