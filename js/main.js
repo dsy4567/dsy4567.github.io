@@ -7,7 +7,6 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
         "/blog": ["blog"],
         "/friends": ["friends"],
     },
-    歌单id = /*localStorage.getItem("歌单id") ||*/ 8219428260,
     gr_sitekey = "6Ldo1dIkAAAAAM_2VtEneT3l7AE25HdWU45x03ng";
 let 路径 = 获取清理后的路径(true),
     正在动态加载 = false,
@@ -127,7 +126,7 @@ async function 添加点击事件和设置图标() {
 }
 // 网抑云阴乐歌单+控件
 !navigator.userAgent.match(/bot|spider/gi) &&
-    fetch("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=" + 歌单id)
+    fetch("/json/ncm.json")
         .then(res => res.json())
         .then(async j => {
             const 网抑云阴乐 = (await import("./ncm.js")).default;

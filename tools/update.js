@@ -1,9 +1,10 @@
 /* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
 
+const axios = require("axios").default;
 const cheerio = require("cheerio");
 const fs = require("fs");
-const marked = require("marked");
 const jsonfile = require("jsonfile");
+const marked = require("marked");
 const hostname = "dsy4567.github.io";
 
 let articles = [];
@@ -96,3 +97,13 @@ rss += "</feed>";
 sitemap += "</urlset>";
 fs.writeFileSync("./rss.xml", rss);
 fs.writeFileSync("./sitemap.xml", sitemap);
+
+axios
+    .get("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=8219428260", {
+        responseType: "json",
+    })
+    .then(res => {
+        let j = res.data;
+        delete j.privileges;
+        jsonfile.writeFileSync("./json/ncm.json", j);
+    });

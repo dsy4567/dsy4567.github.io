@@ -1,20 +1,47 @@
 {
     "headers": [
         {
-          "source": "/api/hitokoto",
-          "headers": [
-            {
-              "key": "Access-Control-Allow-Origin",
-              "value": "*"
-            }
-          ]
+            "source": "/api/hitokoto",
+            "headers": [
+                {
+                    "key": "Access-Control-Allow-Origin",
+                    "value": "*"
+                }
+            ]
         },
         {
             "source": "/(.*)",
             "headers": [
                 {
                     "key": "Strict-Transport-Security",
-                    "value": "max-age=31536000; includeSubDomains; preload"
+                    "value": "max-age=78840000; includeSubDomains; preload"
+                }
+            ]
+        },
+        {
+            "source": "/json/icon.json",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=300, must-revalidate"
+                }
+            ]
+        },
+        {
+            "source": "/img/:i*|/js/highlight.min.js|/js/lrc-parser.js|/js/marked.min.js",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=86400, must-revalidate"
+                }
+            ]
+        },
+        {
+            "source": "/|/index.html|/blog.html|/friends.html",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=300, must-revalidate"
                 }
             ]
         }
