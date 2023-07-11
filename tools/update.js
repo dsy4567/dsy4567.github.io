@@ -60,7 +60,7 @@ let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 </url>`;
 let readme = `## 📚 文章列表
 
-> **Note：** 在 <https://dsy4567.cf/blog.html> 上阅读体验更佳
+> **Note**: 在 <https://dsy4567.cf/blog.html> 上阅读体验更佳
 
 `;
 

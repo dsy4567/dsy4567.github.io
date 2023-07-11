@@ -1,6 +1,6 @@
 ## 📚 文章列表
 
-> **Note：** 在 <https://dsy4567.cf/blog.html> 上阅读体验更佳
+> **Note**: 在 <https://dsy4567.cf/blog.html> 上阅读体验更佳
 
 [如何优化网站加载速度](./how-to-improve-performance/index.md)
 
