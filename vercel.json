@@ -64,6 +64,15 @@
             ]
         },
         {
+            "source": "/img/avatar.jpg",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=259200, must-revalidate"
+                }
+            ]
+        },
+        {
             "source": "/img/svg/css.svg",
             "headers": [
                 {
@@ -299,6 +308,51 @@
         },
         {
             "source": "/friends.html",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=300, must-revalidate"
+                }
+            ]
+        },
+        {
+            "source": "/js/friends.js",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=300, must-revalidate"
+                }
+            ]
+        },
+        {
+            "source": "/js/global.js",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=300, must-revalidate"
+                }
+            ]
+        },
+        {
+            "source": "/js/main.js",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=300, must-revalidate"
+                }
+            ]
+        },
+        {
+            "source": "/js/ncm.js",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=300, must-revalidate"
+                }
+            ]
+        },
+        {
+            "source": "/css/global.css",
             "headers": [
                 {
                     "key": "Cache-Control",
