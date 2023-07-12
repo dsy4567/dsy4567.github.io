@@ -367,6 +367,7 @@ main > .右 {
     line-height: 2.5;
     margin: 2px;
     padding: 4px;
+    white-space: nowrap;
 }
 
 main > #分界线 {
