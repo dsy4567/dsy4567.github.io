@@ -17,8 +17,8 @@
 -   <https://api.github.com>
 -   [highlight.js](https://github.com/highlightjs/highlight.js/)
 -   [Marked](https://github.com/markedjs/marked)
--   [网易云音乐](https://music.163.com) + [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
--   [一言](https://hitokoto.cn/)
+-   [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
+-   [自托管一言接口](https://github.com/dsy4567/hitokoto-api)
 
 ## ⚖️ 许可证
 
