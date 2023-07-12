@@ -361,6 +361,15 @@
             ]
         },
         {
+            "source": "/json/blog.json",
+            "headers": [
+                {
+                    "key": "Cache-Control",
+                    "value": "public, max-age=300, must-revalidate"
+                }
+            ]
+        },
+        {
             "source": "/css/global.css",
             "headers": [
                 {
