@@ -208,7 +208,6 @@ ${(() => {
                     let a = ce("a"),
                         br = ce("br"),
                         p = ce("p"),
-                        img = ce("img"),
                         span = ce("span"),
                         sect = ce("section");
                     a.href = "/blog.html?id=" + 文章.id;
@@ -226,11 +225,11 @@ ${(() => {
                         return html;
                     })()}`;
                     span.classList.add("淡化");
-                    if (文章.img) {
-                        img.src = `/blog-md/${文章.id}/img/` + 文章.img;
-                        img.alt = img.title = "封面图";
-                    } else img = "";
-                    sect.append(img, p, a, br, span);
+                    sect.append(p, a, br, span);
+                    sect.addEventListener("click", 事件 => {
+                        if (事件.target.tagName !== "A")
+                            _global["main.js"]().动态加载(a)
+                    })
                     qs("main .右", true).append(sect);
                 });
                 let 标签元素 = ce("section"),
