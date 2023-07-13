@@ -209,7 +209,8 @@ ${(() => {
                         br = ce("br"),
                         p = ce("p"),
                         span = ce("span"),
-                        sect = ce("section");
+                        sect = ce("section"),
+                        鼠标已移动 = false;
                     a.href = "/blog.html?id=" + 文章.id;
                     a.innerText = "阅读更多";
                     p.innerHTML = marked.parse(文章.desc);
@@ -226,10 +227,16 @@ ${(() => {
                     })()}`;
                     span.classList.add("淡化");
                     sect.append(p, a, br, span);
+                    sect.addEventListener("mousedown", 事件 => {
+                        鼠标已移动 = false;
+                    });
+                    sect.addEventListener("mousemove", 事件 => {
+                        鼠标已移动 = true;
+                    });
                     sect.addEventListener("click", 事件 => {
                         if (事件.target.tagName !== "A")
                             _global["main.js"]().动态加载(a)
-                    })
+                    });
                     qs("main .右", true).append(sect);
                 });
                 let 标签元素 = ce("section"),
