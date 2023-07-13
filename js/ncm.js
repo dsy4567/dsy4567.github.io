@@ -6,17 +6,17 @@ let 网抑云阴乐 = {
     重试timeout: -1,
     已初始化: false,
     立即播放: false,
-    设置: { 音量: 50 / 100, 随机播放: false },
+    设置: { 音量: 50 / 100, 随机播放: false, 域名: "ncm.vercel.dsy4567.cf" },
     /** @type {{完整歌名:string, 歌名:string, 歌手:string, 专辑:string, 封面:string, id:number, mv:number}[]} */ 歌单: [],
     /** @type {Record<number, number>} */ 歌单索引: {},
     /** @type {Record<number, number>} */ 歌单索引备份: null,
     正在播放: {
         索引: 0,
         /** @type {HTMLAudioElement} */ Audio: new Audio(),
-        所有歌词: [],
-        所有歌词翻译: [],
-        歌词interval: -1,
-        上一句歌词: "",
+        /** @type {VTTCue[]} */ 所有歌词: [],
+        /** @type {VTTCue[]} */ 所有歌词翻译: [],
+        /** @type {TextTrack} */ 歌词track: null,
+        /** @type {TextTrack} */ 翻译track: null,
     },
     启用或禁用随机播放(按钮) {
         网抑云阴乐.设置.随机播放 = !网抑云阴乐.设置.随机播放;
@@ -28,49 +28,10 @@ let 网抑云阴乐 = {
         网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量 =
             ((网抑云阴乐.设置.音量 * 100 + 25) % 125) / 100;
     },
-    恢复歌词() {
-        clearInterval(网抑云阴乐.正在播放.歌词interval);
-        网抑云阴乐.正在播放.歌词interval = setInterval(() => {
-            const 时间 = 网抑云阴乐.正在播放.Audio.currentTime + 0.2;
-            let 需要添加翻译 = false,
-                歌词开始时间 = 0;
-            for (
-                let 索引 = 网抑云阴乐.正在播放.所有歌词.length - 1;
-                索引 >= 0;
-                索引--
-            ) {
-                const 歌词 = 网抑云阴乐.正在播放.所有歌词[索引];
-
-                if (歌词.start <= 时间) {
-                    歌词开始时间 = 歌词.start;
-                    if (歌词.text !== 网抑云阴乐.正在播放.上一句歌词) {
-                        网抑云阴乐.正在播放.上一句歌词 = 歌词.text;
-                        gd("歌词", true).innerText = 歌词.text;
-                        需要添加翻译 = true;
-                    }
-                    break;
-                }
-            }
-            if (网抑云阴乐.正在播放.所有歌词翻译[0])
-                for (
-                    let 索引 = 网抑云阴乐.正在播放.所有歌词翻译.length - 1;
-                    索引 >= 0;
-                    索引--
-                ) {
-                    const 歌词翻译 = 网抑云阴乐.正在播放.所有歌词翻译[索引];
-
-                    if (歌词翻译.start === 歌词开始时间) {
-                        if (需要添加翻译)
-                            gd("歌词", true).innerText += ` (${歌词翻译.text})`;
-                        break;
-                    }
-                }
-        }, 200);
-    },
     async 获取音乐地址(id) {
         let 数据 = (
             await (
-                await fetch("https://ncm.vercel.dsy4567.cf/song/url?id=" + id)
+                await fetch(`https://${网抑云阴乐.设置.域名}/song/url?id=${id}`)
             ).json()
         )?.data[0];
         // vip 歌曲尝试获取 mv
@@ -80,19 +41,23 @@ let 网抑云阴乐 = {
             return (
                 await (
                     await fetch(
-                        "https://ncm.vercel.dsy4567.cf/mv/url?id=" +
-                            网抑云阴乐.歌单[网抑云阴乐.歌单索引[id]].mv +
-                            "&r=" +
+                        `https://${网抑云阴乐.设置.域名}/mv/url?id=${
+                            网抑云阴乐.歌单[网抑云阴乐.歌单索引[id]].mv
+                        }&r=${
                             (
                                 await (
                                     await fetch(
-                                        "https://ncm.vercel.dsy4567.cf/mv/detail?mvid=" +
+                                        `https://${
+                                            网抑云阴乐.设置.域名
+                                        }/mv/detail?mvid=${
                                             网抑云阴乐.歌单[
                                                 网抑云阴乐.歌单索引[id]
                                             ].mv
+                                        }`
                                     )
                                 ).json()
                             )?.data?.brs?.[0]?.br // 最小分辨率
+                        }`
                     )
                 ).json()
             )?.data?.url?.replace("http://", "https://");
@@ -139,7 +104,6 @@ let 网抑云阴乐 = {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
             gd("歌词", true).innerText = "";
-            clearInterval(网抑云阴乐.正在播放.歌词interval);
             await 网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
@@ -167,7 +131,6 @@ let 网抑云阴乐 = {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
             gd("歌词", true).innerText = "";
-            clearInterval(网抑云阴乐.正在播放.歌词interval);
             await 网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
@@ -206,10 +169,28 @@ let 网抑云阴乐 = {
             网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
             );
+
             网抑云阴乐.正在播放.Audio.preload = "none";
             网抑云阴乐.正在播放.Audio.autoplay = false;
             网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量;
             网抑云阴乐.正在播放.Audio.onended = 网抑云阴乐.下一首;
+            网抑云阴乐.正在播放.歌词track =
+                网抑云阴乐.正在播放.Audio.addTextTrack("captions", "歌词");
+            网抑云阴乐.正在播放.翻译track =
+                网抑云阴乐.正在播放.Audio.addTextTrack(
+                    "subtitles",
+                    "翻译",
+                    "zh-CN"
+                );
+            网抑云阴乐.正在播放.歌词track.oncuechange = () => {
+                let 歌词 = 网抑云阴乐.正在播放.歌词track?.activeCues[0]?.text;
+                if (歌词) gd("歌词", true).innerText = 歌词;
+            };
+            网抑云阴乐.正在播放.翻译track.oncuechange = () => {
+                let 翻译 = 网抑云阴乐.正在播放.翻译track?.activeCues[0]?.text;
+                if (翻译) gd("歌词", true).innerText += ` (${翻译})`;
+            };
+
             // 使用浏览器/系统提供的控件控制音乐播放
             navigator.mediaSession?.setActionHandler("play", function () {
                 网抑云阴乐.正在播放.Audio.play();
@@ -227,13 +208,18 @@ let 网抑云阴乐 = {
                 "nexttrack",
                 网抑云阴乐.下一首
             );
-            网抑云阴乐.正在播放.Audio.onloadedmetadata = async () => {
+            网抑云阴乐.正在播放.Audio.onloadedmetadata = () => {
                 gd("歌词", true).innerText = "";
-                clearInterval(网抑云阴乐.正在播放.歌词interval);
+                网抑云阴乐.正在播放.所有歌词.forEach(歌词 =>
+                    网抑云阴乐.正在播放.歌词track.removeCue(歌词)
+                );
+                网抑云阴乐.正在播放.所有歌词翻译.forEach(歌词翻译 =>
+                    网抑云阴乐.正在播放.翻译track.removeCue(歌词翻译)
+                );
                 网抑云阴乐.正在播放.所有歌词 = [];
                 网抑云阴乐.正在播放.所有歌词翻译 = [];
                 fetch(
-                    `https://ncm.vercel.dsy4567.cf/lyric?id=${
+                    `https://${网抑云阴乐.设置.域名}/lyric?id=${
                         网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
                     }&realIP=111.18.65.162`
                 )
@@ -247,20 +233,33 @@ let 网抑云阴乐 = {
                             !j.lrc.lyric.includes("[")
                         ) {
                             gd("歌词", true).innerText = "";
-                            clearInterval(网抑云阴乐.正在播放.歌词interval);
                             网抑云阴乐.正在播放.所有歌词 = [];
                             return;
                         }
                         await 添加脚本("/js/lrc-parser.js");
-                        网抑云阴乐.正在播放.所有歌词 = lrcParser(
-                            待解析歌词 + "[99:59.59]\n"
+                        let 所有歌词 = lrcParser(
+                            待解析歌词 + "[999:59.59]\n"
                         ).scripts;
-                        待解析歌词翻译?.includes("[") &&
-                            (网抑云阴乐.正在播放.所有歌词翻译 = lrcParser(
-                                待解析歌词翻译 + "[99:59.99]\n"
-                            ).scripts);
+                        所有歌词.forEach(歌词 => {
+                            let c = new VTTCue(歌词.start, 歌词.end, 歌词.text);
+                            网抑云阴乐.正在播放.所有歌词.push(c);
+                            网抑云阴乐.正在播放.歌词track.addCue(c);
+                        });
 
-                        网抑云阴乐.恢复歌词();
+                        if (待解析歌词翻译?.includes("[")) {
+                            let 所有歌词翻译 = lrcParser(
+                                待解析歌词翻译 + "[999:59.99]\n"
+                            ).scripts;
+                            所有歌词翻译.forEach(歌词翻译 => {
+                                let c = new VTTCue(
+                                    歌词翻译.start,
+                                    歌词翻译.end,
+                                    歌词翻译.text
+                                );
+                                网抑云阴乐.正在播放.所有歌词翻译.push(c);
+                                网抑云阴乐.正在播放.翻译track.addCue(c);
+                            });
+                        }
                     });
 
                 gd("播放列表", true).scrollTop = qs(
@@ -297,11 +296,9 @@ let 网抑云阴乐 = {
                         网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id +
                         "']"
                 )?.classList.add("正在播放");
-                网抑云阴乐.恢复歌词();
             };
             网抑云阴乐.正在播放.Audio.onpause = () => {
                 gd("网抑云阴乐封面", true).style.animationName = "unset";
-                clearInterval(网抑云阴乐.正在播放.歌词interval);
             };
             网抑云阴乐.正在播放.Audio.onerror = e => {
                 提示(
@@ -324,3 +321,7 @@ let 网抑云阴乐 = {
 };
 
 export default 网抑云阴乐;
+
+_global["ncm.js"] = () => ({
+    网抑云阴乐,
+});
