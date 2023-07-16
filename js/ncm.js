@@ -190,7 +190,6 @@ let 网抑云阴乐 = {
                 let 翻译 = 网抑云阴乐.正在播放.翻译track?.activeCues[0]?.text;
                 if (翻译) gd("歌词", true).innerText += ` (${翻译})`;
             };
-            gd("歌词", true).ariaLive = "polite";
 
             // 使用浏览器/系统提供的控件控制音乐播放
             navigator.mediaSession?.setActionHandler("play", function () {

@@ -98,6 +98,7 @@ function 提示(m) {
     元素.innerHTML = m;
     元素.classList.add("通知");
     元素.ariaLive = "assertive";
+    元素.role = "alert";
     document.body.append(元素);
     setTimeout(function () {
         元素.style.animationName = "隐藏";
@@ -186,6 +187,7 @@ function 添加悬浮卡片(html, x = 0, y = 0, 失去焦点时隐藏 = true) {
     div.style.left = x + "px";
     div.style.top = y + "px";
     div.tabIndex = 0;
+    div.role = "dialog";
     document.body.append(div);
     div.focus();
     失去焦点时隐藏 && div.addEventListener("focusout", () => div.remove());
