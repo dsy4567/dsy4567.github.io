@@ -149,7 +149,37 @@ function 获取清理后的路径(包含search = false) {
 function 随机数(最大) {
     return Math.floor(Math.random() * 最大 + 1);
 }
-function 添加悬浮卡片(html, x, y, 失去焦点时隐藏) {
+function rgb转hsl(r, g, b) {
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    let 最大 = Math.max(r, g, b),
+        最小 = Math.min(r, g, b);
+    let h,
+        s,
+        l = (最大 + 最小) / 2;
+
+    if (最大 === 最小) h = s = 0;
+    else {
+        let d = 最大 - 最小;
+        s = l > 0.5 ? d / (2 - 最大 - 最小) : d / (最大 + 最小);
+        switch (最大) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+        }
+        h /= 6;
+    }
+
+    return [h, s, l];
+}
+function 添加悬浮卡片(html, x = 0, y = 0, 失去焦点时隐藏 = true) {
     let div = ce("div");
     div.className = "悬浮卡片";
     div.innerHTML = html;
@@ -158,7 +188,7 @@ function 添加悬浮卡片(html, x, y, 失去焦点时隐藏) {
     div.tabIndex = 0;
     document.body.append(div);
     div.focus();
-    // 失去焦点时隐藏 && div.addEventListener("focusout", () => div.remove());
+    失去焦点时隐藏 && div.addEventListener("focusout", () => div.remove());
     return div;
 }
 

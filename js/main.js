@@ -238,37 +238,106 @@ fetch("/json/theme.json")
             btn.role = "radio";
             btn.ariaChecked = false;
             btn.onclick = 提示用户 => {
+                if (提示用户 !== false) {
+                    [
+                        "--theme-color",
+                        "--theme-color-h",
+                        "--theme-color-s",
+                        "--theme-color-l",
+                        "--theme-color-transparent",
+                        "--text-color",
+                    ].forEach(n => {
+                        document.documentElement.style.setProperty(
+                            n,
+                            主题[t][n]
+                        );
+                    });
+                    localStorage.setItem("theme", t);
+                    localStorage.setItem(
+                        "主题色",
+                        (gd("自定义主题色", true).value =
+                            主题[t]["--theme-color"])
+                    );
+                    localStorage.setItem("主题色h", 主题[t]["--theme-color-h"]);
+                    localStorage.setItem("主题色s", 主题[t]["--theme-color-s"]);
+                    localStorage.setItem("主题色l", 主题[t]["--theme-color-l"]);
+                    localStorage.setItem(
+                        "透明色",
+                        主题[t]["--theme-color-transparent"]
+                    );
+                    localStorage.setItem("字体色", 主题[t]["--text-color"]);
+                    提示("已切换主题: " + t);
+                }
+
+                gd("主题色").content = 主题[t]["--theme-color"];
                 qsa("#所有主题 > button").forEach(
                     元素 => (元素.ariaChecked = false)
                 );
                 btn.ariaChecked = true;
-                [
-                    "--theme-color",
-                    "--theme-color-h",
-                    "--theme-color-s",
-                    "--theme-color-l",
-                    "--theme-color-transparent",
-                    "--text-color",
-                ].forEach(n => {
-                    document.documentElement.style.setProperty(n, 主题[t][n]);
-                });
-                gd("主题色").content = 主题[t]["--theme-color"];
-                localStorage.setItem("theme", t);
-                localStorage.setItem("主题色", 主题[t]["--theme-color"]);
-                localStorage.setItem("主题色h", 主题[t]["--theme-color-h"]);
-                localStorage.setItem("主题色s", 主题[t]["--theme-color-s"]);
-                localStorage.setItem("主题色l", 主题[t]["--theme-color-l"]);
-                localStorage.setItem(
-                    "透明色",
-                    主题[t]["--theme-color-transparent"]
-                );
-                localStorage.setItem("字体色", 主题[t]["--text-color"]);
-                提示用户 !== false && 提示("已切换主题: " + t);
             };
             if (t === localStorage.getItem("theme")) btn.onclick(false);
             let f = () => gd("所有主题", true).append(btn);
             DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
         });
+
+        let /** @type {HTMLButtonElement} */ btn = ce("button");
+        btn.title = "自定义主题色";
+        btn.role = "radio";
+        btn.ariaChecked = false;
+        btn.innerHTML =
+            "<svg class='特小尺寸' data-icon='调色盘'></svg></svg><input style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0;tabindex='-1' id='自定义主题色' type='color' />";
+        btn.onclick = 提示用户 => {
+            if (提示用户 !== false) {
+                gd("自定义主题色", true).click();
+                gd("自定义主题色", true).onchange = () => {
+                    let rgb, r, g, b, hsl;
+                    if (提示用户 !== false) {
+                        rgb = gd("自定义主题色", true).value;
+                        r = parseInt("0x" + rgb.substring(1, 3));
+                        g = parseInt("0x" + rgb.substring(3, 5));
+                        b = parseInt("0x" + rgb.substring(5, 7));
+                        hsl = rgb转hsl(r, g, b);
+                        let 字体色 =
+                            (r * 0.2126 + g * 0.7152 + b * 0.0722) / 255 >= 0.5
+                                ? "#222"
+                                : "#ccc";
+                        btn.ariaChecked = true;
+                        Object.entries({
+                            "--theme-color": rgb,
+                            "--theme-color-h": hsl[0],
+                            "--theme-color-s": hsl[1],
+                            "--theme-color-l": hsl[2],
+                            "--theme-color-transparent": "#8888",
+                            "--text-color": 字体色,
+                        }).forEach(a => {
+                            document.documentElement.style.setProperty(
+                                a[0],
+                                a[1]
+                            );
+                        });
+                        localStorage.setItem("theme", "自定义主题");
+                        localStorage.setItem("主题色", rgb);
+                        localStorage.setItem("主题色h", hsl[0]);
+                        localStorage.setItem("主题色s", hsl[1]);
+                        localStorage.setItem("主题色l", hsl[2]);
+                        localStorage.setItem("透明色", "#8888");
+                        localStorage.setItem("字体色", 字体色);
+                    }
+
+                    提示用户 !== false && 提示("已切换自定义主题");
+                };
+            } else gd("主题色").content = localStorage.getItem("主题色");
+            qsa("#所有主题 > button").forEach(
+                元素 => (元素.ariaChecked = false)
+            );
+            btn.ariaChecked = true;
+        };
+        let f = () => {
+            gd("所有主题", true).append(btn);
+            添加点击事件和设置图标();
+        };
+        if (localStorage.getItem("theme") === "自定义主题") btn.onclick(false);
+        DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     })
     .catch(e => console.error(e));
 fetch("https://dsy4567.cf/api/hitokoto")
@@ -332,7 +401,8 @@ addEventListener("copy", () => {
             继续查看电子邮箱地址即代表您同意不向 dsy4567<br />
             发送广告/要饭/雇童工/炒币等垃圾邮件。`,
                     事件.pageX,
-                    事件.pageY
+                    事件.pageY,
+                    false
                 );
                 添加点击事件和设置图标();
                 添加脚本(

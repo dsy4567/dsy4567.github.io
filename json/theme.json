@@ -1,6 +1,6 @@
 {
     "深色": {
-        "--theme-color": "#222",
+        "--theme-color": "#222222",
         "--theme-color-h": 0.0,
         "--theme-color-s": 0.0,
         "--theme-color-l": 0.13,
@@ -8,7 +8,7 @@
         "--text-color": "#ccc"
     },
     "浅色": {
-        "--theme-color": "#ddd",
+        "--theme-color": "#dddddd",
         "--theme-color-h": 0.0,
         "--theme-color-s": 0.0,
         "--theme-color-l": 0.87,
@@ -62,13 +62,5 @@
         "--theme-color-l": 0.4,
         "--theme-color-transparent": "#fff2",
         "--text-color": "#ccc"
-    },
-    "恶臭绿": {
-        "--theme-color": "#114514",
-        "--theme-color-h": 0.34,
-        "--theme-color-s": 0.6,
-        "--theme-color-l": 0.17,
-        "--theme-color-transparent": "#fff2",
-        "--text-color": "#ddd"
     }
 }
