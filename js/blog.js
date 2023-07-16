@@ -234,7 +234,7 @@ ${(() => {
                         鼠标已移动 = true;
                     });
                     sect.addEventListener("click", 事件 => {
-                        if (事件.target.tagName !== "A" && !鼠标已移动)
+                        if (事件.target.tagName !== "A" && 事件.target.parentElement.tagName !== "A" && !鼠标已移动)
                             _global["main.js"]().动态加载(a)
                     });
                     qs("main .右", true).append(sect);
