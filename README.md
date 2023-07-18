@@ -30,8 +30,7 @@
 > 可以添加修改后代码的仓库链接及作者信息
 >
 > ```html
-> Made with ❤️ by <a href="https://github.com/dsy4567">dsy4567</a> |
-> <a href="https://github.com/dsy4567/dsy4567.github.io">源代码(GitHub)</a>
+> Powered by <a href="https://github.com/dsy4567/dsy4567.github.io">dsy4567/dsy4567.github.io</a>
 > ```
 >
 > ```js
