@@ -1,31 +1,30 @@
 /* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
 
+// @ts-check
 "use strict";
 
-// if (location.hostname === "dsy4567.github.io") location.hostname = "dsy4567.cf";
-
-let gd缓存 = {};
+let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
+    /** @type {Record<string, HTMLElement | null>} */ qs缓存 = {};
 /**
  * document.getElementById
  * @param {string} s
  * @param {boolean} 缓存
- * @returns {HTMLElement}
+ * @returns {HTMLElement | null}
  */
-function gd(s, 缓存) {
+function gd(s, 缓存 = false) {
     if (缓存) {
         let r = gd缓存[s];
         return r || (gd缓存[s] = document.getElementById(s));
     }
     return document.getElementById(s);
 }
-let qs缓存 = {};
 /**
  * document.querySelector
- * @param {keyof HTMLElementTagNameMap} s
+ * @param {string} s
  * @param {boolean} 缓存
- * @returns {HTMLElement}
+ * @returns {HTMLElement | null}
  */
-function qs(s, 缓存) {
+function qs(s, 缓存 = false) {
     if (缓存) {
         let r = qs缓存[s];
         return r || (qs缓存[s] = document.querySelector(s));
@@ -34,29 +33,26 @@ function qs(s, 缓存) {
 }
 /**
  * document.querySelectorAll
- * @param {keyof HTMLElementTagNameMap} s
- * @returns {HTMLElement[]}
+ * @type {typeof document.querySelectorAll}
  */
-function qsa(s) {
+const qsa = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
     return document.querySelectorAll(s);
-}
+};
 /**
  * document.getElementsByTagName
- * @param {keyof HTMLElementTagNameMap} s
- * @returns {HTMLElement[]}
+ * @type {typeof document.getElementsByTagName}
  */
-function ge(s) {
-    return [...(document.getElementsByTagName(s) || [])];
-}
+const ge = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
+    return document.getElementsByTagName(s);
+};
 /**
  * document.createElement
- * @param {keyof HTMLElementTagNameMap} s
- * @returns {HTMLElement}
+ * @type {typeof document.createElement}
  */
-function ce(s) {
+const ce = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
     return document.createElement(s);
-}
-function 显示或隐藏进度条(状态) {
+};
+function 显示或隐藏进度条(/** @type {boolean} */ 状态) {
     状态
         ? qs(".进度条外面", true)?.classList.add("显示")
         : qs(".进度条外面", true)?.classList.remove("显示");
@@ -111,7 +107,10 @@ function 尽快设置主题色() {
     if (localStorage.getItem("主题色h")) {
         document.documentElement.style.setProperty(
             "--theme-color",
-            (gd("主题色", true).content = localStorage.getItem("主题色"))
+            gd("主题色", true)?.setAttribute(
+                "content",
+                localStorage.getItem("主题色") || ""
+            ) || ""
         );
         document.documentElement.style.setProperty(
             "--theme-color-h",
@@ -136,9 +135,9 @@ function 尽快设置主题色() {
     }
 }
 function 阻止搜索引擎收录() {
-    gd("robots", true).content = "noindex";
+    gd("robots", true)?.setAttribute("content", "noindex");
 }
-let 清理后的路径缓存 = {};
+let /** @type {Record<string, string>} */ 清理后的路径缓存 = {};
 function 获取清理后的路径(包含search = false) {
     let l = 清理后的路径缓存[location.pathname];
     return l
@@ -147,9 +146,14 @@ function 获取清理后的路径(包含search = false) {
               .replace(/(index|\.html)/g, "")
               .replace(/\/\//g, "")) + (包含search ? location.search : "");
 }
-function 随机数(最大) {
+function 随机数(/** @type {number} */ 最大) {
     return Math.floor(Math.random() * 最大 + 1);
 }
+/**
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ */
 function rgb转hsl(r, g, b) {
     r /= 255;
     g /= 255;
@@ -175,12 +179,18 @@ function rgb转hsl(r, g, b) {
                 h = (r - g) / d + 4;
                 break;
         }
+        // @ts-ignore
         h /= 6;
     }
 
     return [h, s, l];
 }
-function 添加悬浮卡片(html, x = 0, y = 0, 失去焦点时隐藏 = true) {
+function 添加悬浮卡片(
+    /** @type {string} */ html,
+    x = 0,
+    y = 0,
+    失去焦点时隐藏 = true
+) {
     let div = ce("div");
     div.className = "悬浮卡片";
     div.innerHTML = html;

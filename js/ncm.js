@@ -1,26 +1,35 @@
 /* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
 
+// @ts-check
 "use strict";
 
+// @ts-ignore
+let /** @type {HTMLDivElement} */ 网抑云阴乐元素 = gd("网抑云阴乐", true),
+    // @ts-ignore
+    /** @type {HTMLDivElement} */ 歌词元素 = gd("歌词", true),
+    // @ts-ignore
+    /** @type {HTMLImageElement} */ 网抑云阴乐封面元素 = gd(
+        "网抑云阴乐封面",
+        true
+    );
 let 网抑云阴乐 = {
     重试timeout: -1,
     已初始化: false,
     立即播放: false,
     设置: { 音量: 50 / 100, 随机播放: false, 域名: "ncm.vercel.dsy4567.cf" },
-    /** @type {{完整歌名:string, 歌名:string, 歌手:string, 专辑:string, 封面:string, id:number, mv:number}[]} */ 歌单: [],
+    /** @type {歌单[]} */ 歌单: [],
     /** @type {Record<number, number>} */ 歌单索引: {},
-    /** @type {Record<number, number>} */ 歌单索引备份: null,
     正在播放: {
         索引: 0,
         /** @type {HTMLAudioElement} */ Audio: new Audio(),
         /** @type {VTTCue[]} */ 所有歌词: [],
         /** @type {VTTCue[]} */ 所有歌词翻译: [],
-        /** @type {TextTrack} */ 歌词track: null,
-        /** @type {TextTrack} */ 翻译track: null,
+        /** @type {TextTrack | undefined} */ 歌词track: undefined,
+        /** @type {TextTrack | undefined} */ 翻译track: undefined,
     },
-    启用或禁用随机播放(按钮) {
+    启用或禁用随机播放(/** @type {HTMLButtonElement} */ 按钮) {
         网抑云阴乐.设置.随机播放 = !网抑云阴乐.设置.随机播放;
-        按钮.ariaChecked = 网抑云阴乐.设置.随机播放;
+        按钮.ariaChecked = "" + 网抑云阴乐.设置.随机播放;
         if (网抑云阴乐.设置.随机播放) 按钮.classList.add("激活");
         else 按钮.classList.remove("激活");
     },
@@ -28,7 +37,7 @@ let 网抑云阴乐 = {
         网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量 =
             ((网抑云阴乐.设置.音量 * 100 + 25) % 125) / 100;
     },
-    async 获取音乐地址(id) {
+    async 获取音乐地址(/** @type {number} */ id) {
         let 数据 = (
             await (
                 await fetch(`https://${网抑云阴乐.设置.域名}/song/url?id=${id}`)
@@ -62,7 +71,7 @@ let 网抑云阴乐 = {
                 ).json()
             )?.data?.url?.replace("http://", "https://");
     },
-    async 切换音乐(欲播放的音乐id, 立即播放 = false) {
+    async 切换音乐(/** @type {number} */ 欲播放的音乐id, 立即播放 = false) {
         if (typeof 网抑云阴乐.歌单索引[欲播放的音乐id] !== "undefined")
             网抑云阴乐.正在播放.索引 = 网抑云阴乐.歌单索引[欲播放的音乐id];
 
@@ -76,12 +85,13 @@ let 网抑云阴乐 = {
                     网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
                 );
                 网抑云阴乐.正在播放.Audio.autoplay = true;
-                gd("网抑云阴乐", true).title =
-                    "网抑云阴乐 - 正在播放: " +
-                    网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
+                网抑云阴乐元素 &&
+                    (网抑云阴乐元素.title =
+                        "网抑云阴乐 - 正在播放: " +
+                        网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名);
                 localStorage.setItem(
                     "上次播放",
-                    网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
+                    "" + 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
                 );
             } catch (e) {
                 提示("播放失败");
@@ -103,7 +113,7 @@ let 网抑云阴乐 = {
     async 上一首() {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
-            gd("歌词", true).innerText = "";
+            歌词元素.innerText = "";
             await 网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
@@ -115,12 +125,12 @@ let 网抑云阴乐 = {
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
             );
             网抑云阴乐.正在播放.Audio.autoplay = true;
-            gd("网抑云阴乐", true).title =
+            网抑云阴乐元素.title =
                 "网抑云阴乐 - 正在播放: " +
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
             localStorage.setItem(
                 "上次播放",
-                网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
+                "" + 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
             );
         } catch (e) {
             提示("播放失败");
@@ -130,7 +140,7 @@ let 网抑云阴乐 = {
     async 下一首() {
         try {
             clearTimeout(网抑云阴乐.重试timeout);
-            gd("歌词", true).innerText = "";
+            歌词元素.innerText = "";
             await 网抑云阴乐.初始化();
             网抑云阴乐.正在播放.Audio.pause();
             网抑云阴乐.正在播放.Audio.currentTime = 0;
@@ -142,12 +152,12 @@ let 网抑云阴乐 = {
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
             );
             网抑云阴乐.正在播放.Audio.autoplay = true;
-            gd("网抑云阴乐", true).title =
+            网抑云阴乐元素.title =
                 "网抑云阴乐 - 正在播放: " +
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
             localStorage.setItem(
                 "上次播放",
-                网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
+                "" + 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
             );
         } catch (e) {
             提示("播放失败");
@@ -161,10 +171,10 @@ let 网抑云阴乐 = {
             // 根据 id 定位上次播放的音乐
             if (localStorage.getItem("上次播放")) {
                 let 上次播放 = localStorage.getItem("上次播放");
-                网抑云阴乐.切换音乐(上次播放);
-                gd("播放列表", true).scrollTop = qs(
-                    "li[data-id='" + 上次播放 + "']"
-                )?.offsetTop;
+                网抑云阴乐.切换音乐(+(上次播放 || -1));
+                // @ts-ignore
+                gd("播放列表", true).scrollTop =
+                    qs("li[data-id='" + 上次播放 + "']")?.offsetTop || 0;
             }
             网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
@@ -183,12 +193,14 @@ let 网抑云阴乐 = {
                     "zh-CN"
                 );
             网抑云阴乐.正在播放.歌词track.oncuechange = () => {
+                // @ts-ignore
                 let 歌词 = 网抑云阴乐.正在播放.歌词track?.activeCues[0]?.text;
-                if (歌词) gd("歌词", true).innerText = 歌词;
+                if (歌词) 歌词元素.innerText = 歌词;
             };
             网抑云阴乐.正在播放.翻译track.oncuechange = () => {
+                // @ts-ignore
                 let 翻译 = 网抑云阴乐.正在播放.翻译track?.activeCues[0]?.text;
-                if (翻译) gd("歌词", true).innerText += ` (${翻译})`;
+                if (翻译) 歌词元素.innerText += ` (${翻译})`;
             };
 
             // 使用浏览器/系统提供的控件控制音乐播放
@@ -209,12 +221,12 @@ let 网抑云阴乐 = {
                 网抑云阴乐.下一首
             );
             网抑云阴乐.正在播放.Audio.onloadedmetadata = () => {
-                gd("歌词", true).innerText = "";
+                歌词元素.innerText = "";
                 网抑云阴乐.正在播放.所有歌词.forEach(歌词 =>
-                    网抑云阴乐.正在播放.歌词track.removeCue(歌词)
+                    网抑云阴乐.正在播放.歌词track?.removeCue(歌词)
                 );
                 网抑云阴乐.正在播放.所有歌词翻译.forEach(歌词翻译 =>
-                    网抑云阴乐.正在播放.翻译track.removeCue(歌词翻译)
+                    网抑云阴乐.正在播放.翻译track?.removeCue(歌词翻译)
                 );
                 网抑云阴乐.正在播放.所有歌词 = [];
                 网抑云阴乐.正在播放.所有歌词翻译 = [];
@@ -232,7 +244,7 @@ let 网抑云阴乐 = {
                                 j.lrc.version !== 6) ||
                             !j.lrc.lyric.includes("[")
                         ) {
-                            gd("歌词", true).innerText = "";
+                            歌词元素.innerText = "";
                             网抑云阴乐.正在播放.所有歌词 = [];
                             return;
                         }
@@ -243,7 +255,7 @@ let 网抑云阴乐 = {
                         所有歌词.forEach(歌词 => {
                             let c = new VTTCue(歌词.start, 歌词.end, 歌词.text);
                             网抑云阴乐.正在播放.所有歌词.push(c);
-                            网抑云阴乐.正在播放.歌词track.addCue(c);
+                            网抑云阴乐.正在播放.歌词track?.addCue(c);
                         });
 
                         if (待解析歌词翻译?.includes("[")) {
@@ -257,16 +269,18 @@ let 网抑云阴乐 = {
                                     歌词翻译.text
                                 );
                                 网抑云阴乐.正在播放.所有歌词翻译.push(c);
-                                网抑云阴乐.正在播放.翻译track.addCue(c);
+                                网抑云阴乐.正在播放.翻译track?.addCue(c);
                             });
                         }
                     });
 
-                gd("播放列表", true).scrollTop = qs(
-                    "li[data-id='" +
-                        网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id +
-                        "']"
-                )?.offsetTop;
+                // @ts-ignore
+                gd("播放列表", true).scrollTop =
+                    qs(
+                        "li[data-id='" +
+                            网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id +
+                            "']"
+                    )?.offsetTop || 0;
 
                 let 封面;
                 navigator.mediaSession &&
@@ -281,13 +295,13 @@ let 网抑云阴乐 = {
                             },
                         ],
                     }));
-                gd("网抑云阴乐封面", true).onerror = () => {
-                    gd("网抑云阴乐封面", true).src = "";
+                网抑云阴乐封面元素.onerror = () => {
+                    网抑云阴乐封面元素.src = "";
                 };
-                gd("网抑云阴乐封面", true).src = 封面 + "?param=24x24";
+                网抑云阴乐封面元素.src = 封面 + "?param=24x24";
             };
             网抑云阴乐.正在播放.Audio.onplay = () => {
-                gd("网抑云阴乐封面", true).style.animationName = "匀速转";
+                网抑云阴乐封面元素.style.animationName = "匀速转";
                 qsa("li.正在播放")?.forEach(元素 => {
                     元素.classList.remove("正在播放");
                 });
@@ -298,7 +312,7 @@ let 网抑云阴乐 = {
                 )?.classList.add("正在播放");
             };
             网抑云阴乐.正在播放.Audio.onpause = () => {
-                gd("网抑云阴乐封面", true).style.animationName = "unset";
+                网抑云阴乐封面元素.style.animationName = "unset";
             };
             网抑云阴乐.正在播放.Audio.onerror = e => {
                 提示(
@@ -308,9 +322,10 @@ let 网抑云阴乐 = {
                 );
                 console.error(e);
                 clearTimeout(网抑云阴乐.重试timeout);
+                // @ts-ignore
                 网抑云阴乐.重试timeout = setTimeout(网抑云阴乐.下一首, 3000);
             };
-            gd("网抑云阴乐", true).title =
+            网抑云阴乐元素.title =
                 "网抑云阴乐 - 正在播放: " +
                 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].完整歌名;
         } catch (e) {

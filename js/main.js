@@ -1,8 +1,9 @@
 /* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
 
+// @ts-check
 "use strict";
 
-const /** @type {Record<string, string[]>} */ 加载清单 = {
+const /** @type {Record<string, string[] | undefined>} */ 加载清单 = {
         "/": [],
         "/blog": ["blog"],
         "/friends": ["friends"],
@@ -10,18 +11,16 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
     gr_sitekey = "6Ldo1dIkAAAAAM_2VtEneT3l7AE25HdWU45x03ng";
 let 路径 = 获取清理后的路径(true),
     正在动态加载 = false,
-    图标 = {};
+    /** @type {Record<string, string | undefined>} */ 图标 = {};
 
 async function 加载模块() {
     路径 = 获取清理后的路径();
     let 路径2 = 获取清理后的路径(true);
-    for (let i = 0; i < 加载清单[路径].length; i++) {
-        let s = 加载清单[路径][i];
+    for (const s of 加载清单[路径] || [])
         (await import(`/js/${s}.js`)).main(路径2);
-    }
     路径 = 路径2;
 }
-/** @param {{href: string, popstate:boolean}} el */
+/** @param {{ href: string; popstate?: boolean }} 元素 */
 function 动态加载(元素) {
     if (正在动态加载) {
         open(元素.href, "_self");
@@ -29,7 +28,7 @@ function 动态加载(元素) {
     }
     正在动态加载 = true;
     显示或隐藏进度条(true);
-    gd("robots", true).content = "";
+    gd("robots", true)?.setAttribute("content", "");
     fetch(元素.href)
         .then(res => res.text())
         .then(async html => {
@@ -48,10 +47,14 @@ function 动态加载(元素) {
                     "",
                     元素.href
                 );
-            document.title = mt[0].replace(/<\/?title>/g, "");
+            document.title = mt
+                ? mt[0].replace(/<\/?title>/g, "")
+                : "dsy4567 的小站";
             dispatchEvent(URL发生变化事件);
             try {
-                qs("main .右", true).innerHTML = m[0];
+                let 右 = qs("main .右", true);
+                if (!右) return;
+                右.innerHTML = m[0];
                 await 加载模块();
 
                 if (
@@ -61,8 +64,8 @@ function 动态加载(元素) {
                 ) {
                     显示或隐藏进度条(false);
                     可以滚动到视图中 = true;
-                    if (!location.href.includes("#"))
-                        qs("main .右", true).scrollIntoView({
+                    if (!location.hash)
+                        右.scrollIntoView({
                             behavior: "smooth",
                         });
                 }
@@ -84,29 +87,36 @@ function 完成加载() {
     添加点击事件和设置图标();
 }
 async function 添加点击事件和设置图标() {
-    qsa("svg[data-icon]").forEach(元素 => {
-        let h = 图标[元素.dataset.icon]?.replace(
-            /特?小尺寸/,
-            元素.getAttribute("class")
-        );
-        h && (元素.outerHTML = h);
-    });
-    ge("a").forEach(元素 => {
-        if (元素.pathname === location.pathname && 元素.href.includes("#")) {
-            if (!元素.className.includes("hash链接"))
+    qsa("svg[data-icon]").forEach(
+        /** @type {HTMLElement} */ 元素 => {
+            // @ts-ignore
+            if (!元素.dataset.icon) return;
+            let c = 元素.getAttribute("class");
+            let h = c
+                ? // @ts-ignore
+                  图标[元素.dataset.icon]?.replace(/特?小尺寸/, c)
+                : // @ts-ignore
+                  图标[元素.dataset.icon];
+            h && (元素.outerHTML = h);
+        }
+    );
+    const a = ge("a");
+    for (const 元素 of a) {
+        if (元素.pathname === location.pathname && 元素.hash) {
+            if (!元素.classList.contains("hash链接"))
                 元素.classList.add("hash链接");
-            return;
+            continue;
         }
-        if (!元素.className.includes("内链") && 元素.host === location.host) {
+        if (!元素.classList.contains("内链") && 元素.host === location.host) {
             元素.classList.add("内链");
-            元素.href = new URL(元素.href, location.href);
+            元素.href = new URL(元素.href, location.href).href;
         }
-        if (元素.host !== location.host && !元素.className.includes("外链")) {
+        if (元素.host !== location.host && !元素.classList.contains("外链")) {
             元素.classList.add("外链");
             元素.target = "_blank";
         } else if (
             元素.host === location.host &&
-            !元素.className.includes("动态加载")
+            !元素.classList.contains("动态加载")
         ) {
             元素.classList.add("动态加载");
             元素.addEventListener("click", 事件 => {
@@ -116,13 +126,12 @@ async function 添加点击事件和设置图标() {
         }
         if (
             元素.querySelector("img, svg") &&
-            !元素.className.includes("无滤镜")
+            !元素.classList.contains("无滤镜")
         )
             元素.classList.add("无滤镜");
-    });
-    ge("img").forEach(元素 => {
-        元素.ondblclick = () => open(元素.src, "_blank");
-    });
+    }
+    const img = ge("img");
+    for (const 元素 of img) 元素.ondblclick = () => open(元素.src, "_blank");
 }
 // 网抑云阴乐歌单+控件
 !navigator.userAgent.match(/bot|spider/gi) &&
@@ -132,11 +141,12 @@ async function 添加点击事件和设置图标() {
             const 网抑云阴乐 = (await import("./ncm.js")).default;
 
             for (let i = 0; i < j.songs.length; i++) {
-                const 音乐信息 = j.songs[i];
+                const /** @type {音乐信息} */ 音乐信息 = j.songs[i];
 
                 let /** @type {string[]} */ 所有歌手 = [];
                 音乐信息.ar.forEach(歌手 => 所有歌手.push(歌手.name));
                 网抑云阴乐.歌单[i] = {
+                    完整歌名: "",
                     歌名: 音乐信息.name,
                     歌手: 所有歌手.join(" / "),
                     专辑: 音乐信息.al.name,
@@ -149,12 +159,13 @@ async function 添加点击事件和设置图标() {
                 网抑云阴乐.歌单索引[音乐信息.id] = i;
             }
             async function svg(
-                html,
-                /** @type {(元素:HTMLButtonElement)=>void} */ onclick,
-                title,
+                /** @type {string} */ html,
+                /** @type {( 元素: HTMLButtonElement ) => void} */ onclick,
+                /** @type {string} */ title,
                 role = "button"
             ) {
-                let btn = ce("button");
+                // @ts-ignore
+                let /** @type {HTMLButtonElement} */ btn = ce("button");
                 btn.innerHTML = html;
                 btn.onclick = async () => {
                     await 网抑云阴乐.初始化();
@@ -163,8 +174,8 @@ async function 添加点击事件和设置图标() {
                 btn.type = "button";
                 btn.title = title;
                 btn.role = role;
-                btn.ariaChecked = role === "checkbox" ? false : null;
-                gd("阴乐控件", true).append(btn);
+                btn.ariaChecked = role === "checkbox" ? "false" : null;
+                gd("阴乐控件", true)?.append(btn);
             }
             let f = () => {
                 svg(
@@ -204,21 +215,22 @@ async function 添加点击事件和设置图标() {
                     网抑云阴乐.更改音量,
                     "音量"
                 );
-                gd("阴乐控件", true).insertAdjacentHTML(
+                gd("阴乐控件", true)?.insertAdjacentHTML(
                     "beforeend",
                     `<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a><ol id="播放列表"></ol>`
                 );
                 网抑云阴乐.歌单.forEach(async 音乐信息 => {
                     let li = ce("li");
                     li.innerHTML = `${音乐信息.歌名} <span class="淡化">${音乐信息.歌手}</span>`;
+                    // @ts-ignore
                     li.onclick = li.onkeyup = 事件 => {
                         if (事件?.key === "Enter" || !事件?.key)
                             网抑云阴乐.切换音乐(音乐信息.id, true);
                     };
                     li.tabIndex = 0;
                     li.title = 音乐信息.完整歌名;
-                    li.dataset.id = 音乐信息.id;
-                    gd("播放列表", true).append(li);
+                    li.dataset.id = "" + 音乐信息.id;
+                    gd("播放列表", true)?.append(li);
                 });
                 添加点击事件和设置图标();
 
@@ -232,12 +244,14 @@ fetch("/json/theme.json")
     .then(res => res.json())
     .then(主题 => {
         Object.keys(主题).forEach(t => {
+            // @ts-ignore
             let /** @type {HTMLButtonElement} */ btn = ce("button");
             btn.style.backgroundColor = 主题[t]["--theme-color"];
             btn.title = t;
             btn.role = "radio";
-            btn.ariaChecked = false;
+            btn.ariaChecked = "false";
             btn.onclick = 提示用户 => {
+                // @ts-ignore
                 if (提示用户 !== false) {
                     [
                         "--theme-color",
@@ -255,6 +269,7 @@ fetch("/json/theme.json")
                     localStorage.setItem("theme", t);
                     localStorage.setItem(
                         "主题色",
+                        // @ts-ignore
                         (gd("自定义主题色", true).value =
                             主题[t]["--theme-color"])
                     );
@@ -269,30 +284,38 @@ fetch("/json/theme.json")
                     提示("已切换主题: " + t);
                 }
 
-                gd("主题色").content = 主题[t]["--theme-color"];
+                gd("主题色")?.setAttribute("content", 主题[t]["--theme-color"]);
                 qsa("#所有主题 > button").forEach(
-                    元素 => (元素.ariaChecked = false)
+                    元素 => (元素.ariaChecked = "false")
                 );
-                btn.ariaChecked = true;
+                btn.ariaChecked = "true";
             };
+            // @ts-ignore
             if (t === localStorage.getItem("theme")) btn.onclick(false);
-            let f = () => gd("所有主题", true).append(btn);
+            let f = () => gd("所有主题", true)?.append(btn);
             DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
         });
 
+        // @ts-ignore
         let /** @type {HTMLButtonElement} */ btn = ce("button");
         btn.title = "自定义主题色";
         btn.role = "radio";
-        btn.ariaChecked = false;
+        btn.ariaChecked = "false";
         btn.innerHTML =
-            "<svg class='特小尺寸' data-icon='调色盘'></svg></svg><input style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0;tabindex='-1' id='自定义主题色' type='color' />";
+            "<svg class='特小尺寸' data-icon='调色盘'></svg></svg><input aria-label='自定义主题色调色盘' style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0;tabindex='-1' id='自定义主题色' type='color' />";
         btn.onclick = 提示用户 => {
+            // @ts-ignore
             if (提示用户 !== false) {
-                gd("自定义主题色", true).click();
-                gd("自定义主题色", true).onchange = () => {
+                let 自定义主题色 = gd("自定义主题色", true);
+                if (!自定义主题色) return;
+                自定义主题色.click();
+                自定义主题色.onchange = () => {
                     let rgb, r, g, b, hsl;
+                    // @ts-ignore
                     if (提示用户 !== false) {
-                        rgb = gd("自定义主题色", true).value;
+                        rgb =
+                            // @ts-ignore
+                            gd("自定义主题色", true)?.value || "#000000";
                         r = parseInt("0x" + rgb.substring(1, 3));
                         g = parseInt("0x" + rgb.substring(3, 5));
                         b = parseInt("0x" + rgb.substring(5, 7));
@@ -301,7 +324,7 @@ fetch("/json/theme.json")
                             (r * 0.2126 + g * 0.7152 + b * 0.0722) / 255 >= 0.5
                                 ? "#222"
                                 : "#ccc";
-                        btn.ariaChecked = true;
+                        btn.ariaChecked = "true";
                         Object.entries({
                             "--theme-color": rgb,
                             "--theme-color-h": hsl[0],
@@ -312,30 +335,36 @@ fetch("/json/theme.json")
                         }).forEach(a => {
                             document.documentElement.style.setProperty(
                                 a[0],
-                                a[1]
+                                "" + a[1]
                             );
                         });
                         localStorage.setItem("theme", "自定义主题");
                         localStorage.setItem("主题色", rgb);
-                        localStorage.setItem("主题色h", hsl[0]);
-                        localStorage.setItem("主题色s", hsl[1]);
-                        localStorage.setItem("主题色l", hsl[2]);
+                        localStorage.setItem("主题色h", "" + hsl[0]);
+                        localStorage.setItem("主题色s", "" + hsl[1]);
+                        localStorage.setItem("主题色l", "" + hsl[2]);
                         localStorage.setItem("透明色", "#8888");
                         localStorage.setItem("字体色", 字体色);
                     }
 
+                    // @ts-ignore
                     提示用户 !== false && 提示("已切换自定义主题");
                 };
-            } else gd("主题色").content = localStorage.getItem("主题色");
+            } else
+                gd("主题色")?.setAttribute(
+                    "content",
+                    localStorage.getItem("主题色") || ""
+                );
             qsa("#所有主题 > button").forEach(
-                元素 => (元素.ariaChecked = false)
+                元素 => (元素.ariaChecked = "false")
             );
-            btn.ariaChecked = true;
+            btn.ariaChecked = "true";
         };
         let f = () => {
-            gd("所有主题", true).append(btn);
+            gd("所有主题", true)?.append(btn);
             添加点击事件和设置图标();
         };
+        // @ts-ignore
         if (localStorage.getItem("theme") === "自定义主题") btn.onclick(false);
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
     })
@@ -344,8 +373,11 @@ fetch("https://dsy4567.cf/api/hitokoto")
     .then(res => res.json())
     .then(j => {
         let f = () => {
-            gd("一言", true).innerText = j.hitokoto;
-            qs("#一言+.淡化").ondblclick = gd("一言", true).ondblclick = 事件 =>
+            let 一言 = gd("一言", true),
+                淡化文字 = qs("#一言+.淡化");
+            if (!一言 || !淡化文字) return;
+            一言.innerText = j.hitokoto;
+            淡化文字.ondblclick = 一言.ondblclick = 事件 =>
                 open("https://hitokoto.cn/?uuid=" + j.uuid, "_blank");
         };
         DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
@@ -365,9 +397,11 @@ fetch("https://api.github.com/users/dsy4567")
     .then(res => res.json())
     .then(个人信息 => {
         let f = () => {
-            gd("关注粉丝码龄").innerHTML = ` 关注: ${
-                个人信息.following
-            } | 粉丝: ${个人信息.followers} | 码龄: ${
+            const 关注粉丝码龄 = gd("关注粉丝码龄");
+            if (!关注粉丝码龄) return;
+            关注粉丝码龄.innerHTML = ` 关注: ${个人信息.following} | 粉丝: ${
+                个人信息.followers
+            } | 码龄: ${
                 new Date().getFullYear() -
                 new Date(个人信息.created_at).getFullYear()
             }年 `;
@@ -381,10 +415,10 @@ addEventListener("copy", () => {
 });
 (() => {
     let f = async () => {
-        gd("回到顶部").addEventListener("click", () =>
+        gd("回到顶部")?.addEventListener("click", () =>
             document.body.scrollIntoView({ behavior: "smooth" })
         );
-        gd("分界线").addEventListener("click", () => {
+        gd("分界线")?.addEventListener("click", () => {
             document.body.classList.toggle("宽屏");
         });
         qsa("#电子邮箱, #tg").forEach(元素 => {
@@ -400,7 +434,9 @@ addEventListener("copy", () => {
             要查看 dsy4567 的电子邮箱地址/TG 用户名，请通过 reCAPTCHA 人机验证。<br />
             继续查看电子邮箱地址即代表您同意不向 dsy4567<br />
             发送广告/要饭/雇童工/炒币等垃圾邮件。`,
+                    // @ts-ignore
                     事件.pageX,
+                    // @ts-ignore
                     事件.pageY,
                     false
                 );
@@ -408,24 +444,26 @@ addEventListener("copy", () => {
                 添加脚本(
                     "https://www.recaptcha.net/recaptcha/api.js?render=explicit"
                 ).then(() => {
-                    gd("close_recaptcha").addEventListener("click", () => {
+                    gd("close_recaptcha")?.addEventListener("click", () => {
                         div.remove();
                     });
-                    gd("recaptcha").addEventListener("click", async 事件 => {
+                    gd("recaptcha")?.addEventListener("click", async 事件 => {
+                        const gr = gd("g-recaptcha");
+                        if (!gr) return;
                         try {
                             const 回复 = grecaptcha.getResponse();
                             if (!回复) throw new Error();
-                            gd("g-recaptcha").innerHTML = await (
+                            gr.innerHTML = await (
                                 await fetch(
                                     "https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
                                         回复
                                 )
                             ).text();
                             添加点击事件和设置图标();
-                            gd("g-recaptcha").focus();
+                            gr.focus();
                         } catch (e) {
-                            gd("g-recaptcha").tabIndex = "0";
-                            gd("g-recaptcha").focus();
+                            gr.tabIndex = 0;
+                            gr.focus();
                             grecaptcha.render("g-recaptcha", {
                                 sitekey: gr_sitekey,
                                 theme: matchMedia(
@@ -462,6 +500,7 @@ addEventListener("copy", () => {
                 左 = qs("main .左", true),
                 状态 = -1;
             addEventListener("scroll", async () => {
+                if (!导航栏 || !左) return;
                 if (document.documentElement.scrollTop === 0 && 状态 !== 0) {
                     导航栏.style.transform = "translateY(0px)";
                     导航栏.style.boxShadow = "none";
@@ -490,8 +529,10 @@ addEventListener("copy", () => {
 
         // 谷歌/Vercel 统计代码
         if (location.hostname === "dev.dsy4567.cf") return;
-        let s1 = ce("script"),
-            s2 = ce("script");
+        // @ts-ignore
+        let /** @type {HTMLScriptElement} */ s1 = ce("script"),
+            // @ts-ignore
+            /** @type {HTMLScriptElement} */ s2 = ce("script");
         s1.async = s1.defer = s2.async = s2.defer = true;
         s1.src = "https://www.googletagmanager.com/gtag/js?id=G-060YCRMSSH";
         s2.src = "/_vercel/insights/script.js";
@@ -507,10 +548,7 @@ addEventListener("copy", () => {
     DOMContentLoaded ? f() : document.addEventListener("DOMContentLoaded", f);
 })();
 addEventListener("popstate", 事件 => {
-    if (
-        (获取清理后的路径(true) === 路径 && location.href.includes("#")) ||
-        事件.state?.路径 === 路径
-    )
+    if (获取清理后的路径(true) === 路径 || 事件.state?.路径 === 路径)
         return 事件.preventDefault();
     动态加载({
         href: location.pathname,
@@ -528,5 +566,4 @@ _global["main.js"] = () => ({
     动态加载,
     完成加载,
     添加点击事件和设置图标,
-    图标,
 });
