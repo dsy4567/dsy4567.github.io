@@ -9,7 +9,7 @@
 <script>
     let p1 =
             (location.pathname.includes(".htm") &&
-            !location.pathname.endsWith("/")
+            location.pathname.endsWith("/")
                 ? location.pathname
                 : location.pathname + ".html") +
             location.search +
@@ -17,7 +17,7 @@
         p2 =
             "https://dsy4567.github.io" +
             (location.pathname.includes(".htm") &&
-            !location.pathname.endsWith("/")
+            location.pathname.endsWith("/")
                 ? location.pathname
                 : location.pathname + ".html") +
             location.search +
