@@ -8,14 +8,16 @@
 </style>
 <script>
     let p1 =
-            (location.pathname.includes(".htm")
+            (location.pathname.includes(".htm") &&
+            !location.pathname.endsWith("/")
                 ? location.pathname
                 : location.pathname + ".html") +
             location.search +
             location.hash,
         p2 =
             "https://dsy4567.github.io" +
-            (location.pathname.includes(".htm")
+            (location.pathname.includes(".htm") &&
+            !location.pathname.endsWith("/")
                 ? location.pathname
                 : location.pathname + ".html") +
             location.search +
