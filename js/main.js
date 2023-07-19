@@ -527,22 +527,7 @@ addEventListener("copy", () => {
             });
         }, 500);
 
-        // 谷歌/Vercel 统计代码
-        if (location.hostname === "dev.dsy4567.cf") return;
-        // @ts-ignore
-        let /** @type {HTMLScriptElement} */ s1 = ce("script"),
-            // @ts-ignore
-            /** @type {HTMLScriptElement} */ s2 = ce("script");
-        s1.async = s1.defer = s2.async = s2.defer = true;
-        s1.src = "https://www.googletagmanager.com/gtag/js?id=G-060YCRMSSH";
-        s2.src = "/_vercel/insights/script.js";
-        document.body.append(s1, s2);
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag("js", new Date());
-        gtag("config", "G-060YCRMSSH");
+        import("./analytics.js");
     };
 
     DOMContentLoaded ? f() : document.addEventListener("DOMContentLoaded", f);

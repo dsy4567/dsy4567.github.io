@@ -1,5 +1,34 @@
 <h1>404 找不到您需要的页面</h1>
-<a href="javascript:location.host='dsy4567.github.io'"
-  >转到 dsy4567.github.io</a
->
 <a href="/">回首页</a>
+<style>
+    html,
+    body {
+        color-scheme: dark light;
+    }
+</style>
+<script>
+    let p1 =
+            (location.pathname.includes(".htm")
+                ? location.pathname
+                : location.pathname + ".html") +
+            location.search +
+            location.hash,
+        p2 =
+            "https://dsy4567.github.io" +
+            (location.pathname.includes(".htm")
+                ? location.pathname
+                : location.pathname + ".html") +
+            location.search +
+            location.hash;
+    fetch(p1, {
+        method: "HEAD",
+    }).then(res => {
+        if (res.status >= 200 && res.status < 300) location.href = p1;
+        else if (location.hostname !== "dsy4567.github.io")
+            fetch(p2, {
+                method: "HEAD",
+            }).then(res => {
+                if (res.status >= 200 && res.status < 300) location.href = p2;
+            });
+    });
+</script>
