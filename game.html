@@ -26,10 +26,10 @@
             }
             @keyframes 答辩 {
                 from {
-                    transform: translate(0, 0);
+                    transform: translateY(0);
                 }
                 to {
-                    transform: translate(0, -100vh);
+                    transform: translateY(-100vh);
                 }
             }
 
@@ -67,8 +67,8 @@
                 font-size: 50px;
             }
             .手指 {
-                font-size: 100px;
                 bottom: 0;
+                font-size: 100px;
             }
 
             p#工具 {
@@ -260,6 +260,10 @@
                 font-weight: bold;
                 color: #54ba3d;
             }
+
+            .stitle span {
+                color: black !important;
+            }
         </style>
         <script src="/_vercel/insights/script.js" defer></script>
     </head>
@@ -283,11 +287,13 @@
                 自动发射
             </button>
             <button
-                onclick="navigator.share({
-                title: '防沉迷和答辩小游戏',
-                text: `我在这个小游戏里干掉了${累计弹窗}个防沉迷弹窗, 你也来试试吧~`,
-                url: 'https://dsy4567.cf/game',
-                });"
+                onclick="
+                navigator.share({
+                    title: '防沉迷和答辩小游戏',
+                    text: `我在这个小游戏里干掉了${累计弹窗}个防沉迷弹窗, 你也来试试吧~`,
+                    url: 'https://dsy4567.cf/game',
+                });
+                "
             >
                 分享</button
             ><br />
@@ -296,7 +302,7 @@
             累计发射 <span id="累计答辩"></span> 坨答辩, 干掉
             <span id="累计弹窗"></span> 个防沉迷弹窗<br />
             <input type="number" placeholder="飙速" id="飙速" /><button
-                onclick="setInterval(发射,1000/Number(飙速.value))"
+                onclick="setInterval(发射, 1000 / Number(飙速.value))"
             >
                 √</button
             ><br />
@@ -309,11 +315,6 @@
                     <span class="close-btn">关闭</span>
                     <h2 class="title 攻击对象">未成年限制登录提醒</h2>
                     <div class="stitle 攻击对象">
-                        <style>
-                            .stitle span {
-                                color: black !important;
-                            }
-                        </style>
                         <span>您使用的是未成年账号</span>
                         <span>，仅周五</span><span>、周六、</span
                         ><span>周日及法定节假日晚上8:00-9:00可以游戏！</span
@@ -355,11 +356,6 @@
                             <span class="close-btn">关闭</span>
                             <h2 class="title 攻击对象">未成年限制登录提醒</h2>
                             <div class="stitle 攻击对象">
-                                <style>
-                                    .stitle span {
-                                        color: black !important;
-                                    }
-                                </style>
                                 <span>您使用的是未成年账号</span>
                                 <span>，仅周五</span><span>、周六、</span
                                 ><span>周日及法定节假日晚上8:00-9:00可以游戏！</span
@@ -389,11 +385,17 @@
                         </div>
                     </div>`;
                 防沉迷弹窗.style.zIndex = zIndex--;
-                document.querySelector(".游戏").appendChild(防沉迷弹窗);
+                游戏.appendChild(防沉迷弹窗);
             }
 
             var 游戏 = document.querySelector("div.游戏"),
                 答辩 = document.querySelector("div.答辩"),
+                手指 = document.querySelector("div.手指"),
+                攻击速度 = document.querySelector("div.攻击速度"),
+                答辩速度元素 = document.querySelector("#答辩速度"),
+                弹窗速度元素 = document.querySelector("#弹窗速度"),
+                累计答辩元素 = document.querySelector("#累计答辩"),
+                累计弹窗元素 = document.querySelector("#累计弹窗"),
                 zIndex = 0x66ccff + 114514,
                 答辩速度 = 0,
                 弹窗速度 = 0,
@@ -402,16 +404,14 @@
 
             function 移动(e) {
                 try {
-                    document.querySelector(".手指").style.left =
-                        e.touches[0].pageX - 75 + "px";
+                    手指.style.left = e.touches[0].pageX - 75 + "px";
                 } catch (err) {
-                    document.querySelector(".手指").style.left =
-                        e.pageX - 75 + "px";
+                    手指.style.left = e.pageX - 75 + "px";
                 }
             }
             function 发射(e) {
                 let 答辩_bottom = 50,
-                    答辩_left = document.querySelector(".手指").offsetLeft + 75;
+                    答辩_left = 手指.offsetLeft + 75;
                 let 答辩 = document.createElement("div");
                 答辩.className = "答辩";
                 答辩.innerText = "💩";
@@ -421,10 +421,13 @@
                 答辩速度++;
                 累计答辩++;
                 let interval = setTimeout(() => {
-                    if (document.querySelector(".攻击对象")) {
-                        document.querySelector(".攻击对象").remove();
-                    } else if (document.querySelector(".攻击对象2")) {
-                        document.querySelector(".攻击对象2").remove();
+                    let 攻击对象, 攻击对象2;
+                    if ((攻击对象 = document.querySelector(".攻击对象"))) {
+                        攻击对象.remove();
+                    } else if (
+                        (攻击对象2 = document.querySelector(".攻击对象2"))
+                    ) {
+                        攻击对象2.remove();
                     } else {
                         弹窗速度++;
                         累计弹窗++;
@@ -447,10 +450,10 @@
             addEventListener("contextmenu", e => e.preventDefault());
             addEventListener("keyup", 发射);
             setInterval(() => {
-                document.querySelector("#答辩速度").innerText = 答辩速度;
-                document.querySelector("#弹窗速度").innerText = 弹窗速度;
-                document.querySelector("#累计答辩").innerText = 累计答辩;
-                document.querySelector("#累计弹窗").innerText = 累计弹窗;
+                答辩速度元素.innerText = 答辩速度;
+                弹窗速度元素.innerText = 弹窗速度;
+                累计答辩元素.innerText = 累计答辩;
+                累计弹窗元素.innerText = 累计弹窗;
                 答辩速度 = 弹窗速度 = 0;
             }, 1000);
         </script>
