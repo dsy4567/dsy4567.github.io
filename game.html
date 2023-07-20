@@ -1,13 +1,13 @@
-<!-- Copyright (c) 2022 dsy4567, view license at <https://github.com/dsy4567/fcm-and-shit/blob/main/LICENSE.md> -->
 <!DOCTYPE html>
 <html lang="zh-CN">
     <head>
         <meta charset="UTF-8" />
+        <!-- Copyright (c) 2022 dsy4567, view license at <https://github.com/dsy4567/fcm-and-shit/blob/main/LICENSE.md> -->
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta
             name="description"
-            content="一个超解压的小游戏, 快向防沉迷弹窗发射答辩, 让它们消失"
+            content="欢迎来玩这款简陋的小游戏，在这里，你将用一个又一个的答辩干掉一个又一个的防沉迷弹窗"
         />
         <title>防沉迷和答辩</title>
         <style>
@@ -48,9 +48,13 @@
                 -webkit-user-drag: none;
                 background-color: var(--theme-color1);
                 color: var(--theme-color2);
+                color-scheme: light dark;
             }
             ::-webkit-scrollbar {
                 display: none;
+            }
+            #简介 {
+                opacity: 0;
             }
             .游戏 {
                 width: 100%;
@@ -71,10 +75,18 @@
                 font-size: 100px;
             }
 
-            p#工具 {
+            #工具 {
                 position: absolute;
                 bottom: 0;
                 z-index: 8888889;
+            }
+
+            #答辩速度,
+            #弹窗速度,
+            #累计答辩,
+            #累计弹窗 {
+                margin-left: 4px;
+                margin-right: 4px;
             }
         </style>
         <style>
@@ -181,7 +193,7 @@
                 line-height: 26px;
             }
 
-            .mysdkDialog .myfcmdialog .tip-info a {
+            .mysdkDialog .myfcmdialog .tip-info .link {
                 color: #faa61b;
                 text-decoration: underline;
                 margin: 0 4px;
@@ -271,43 +283,15 @@
             <script>
                 if (navigator.userAgent.includes("Edg/"))
                     document.write(
-                        "<br />如果你正在使用 Edge 浏览器, 请<br />在设置中关闭效率模式, 以提升游<br />戏体验"
+                        "<br />如果你正在使用 Edge 浏览器，请<br />在设置中关闭效率模式，以提升游<br />戏体验"
                     );
             </script>
         </p>
-        <p id="工具">
-            <button ontouchend="添加防沉迷弹窗()" onclick="添加防沉迷弹窗()">
-                添加防沉迷弹窗
-            </button>
-            <button
-                ontouchend="setInterval(发射,500)"
-                onclick="setInterval(发射,500)"
-            >
-                自动发射
-            </button>
-            <button
-                onclick="
-                navigator.share({
-                    title: '防沉迷和答辩小游戏',
-                    text: `我在这个小游戏里干掉了${累计弹窗}个防沉迷弹窗, 你也来试试吧~`,
-                    url: 'https://dsy4567.cf/game',
-                });
-                "
-            >
-                分享</button
-            ><br />
-            速度: <span id="答辩速度"></span> 坨答辩/秒
-            <span id="弹窗速度"></span> 个防沉迷弹窗/秒<br />
-            累计发射 <span id="累计答辩"></span> 坨答辩, 干掉
-            <span id="累计弹窗"></span> 个防沉迷弹窗<br />
-            <input min="1" type="number" placeholder="飙速" id="飙速" /><button
-                onclick="+飙速.value > 0 && setInterval(发射, 1000 / Number(飙速.value))"
-            >
-                √</button
-            ><br />
-            Made with 😡 by <a href="https://github.com/dsy4567">dsy4567</a>
+        <p id="简介">
+            欢迎来玩这款简陋的小游戏，在这里，你将用一个又一个的答辩干掉一个又一个的防沉迷弹窗，按任意键发射答辩
         </p>
-        <div class="游戏">
+        <span id="警告" role="alert" aria-label=""></span>
+        <div aria-label="游戏" tabindex="0" aria-live="off" class="游戏">
             <!-- 从四位数小游戏那里偷来的代码 -->
             <div class="mysdkDialog fcm 攻击对象2">
                 <div class="myfcmdialog">
@@ -323,16 +307,14 @@
                         <p class="txt1">下次可玩游戏时段</p>
                         <p class="txt2">本周五晚上8:00-9:00</p>
                     </div>
-                    <div class="countDown 攻击对象" style="display: none">
-                        当前已限制游戏
-                    </div>
                     <div class="mod-tip 攻击对象">
                         <h3 class="tip-title">温馨提示：</h3>
                         <ul class="tip-info">
-                            1.如果身份信息有误，请点击<a href="#"
-                                >》》申请修改《《</a
-                            ><br />2.如果您身份信息已经变动，可点击<a href="#"
-                                >》》刷新身份《《</a
+                            1.如果身份信息有误，请点击<span class="link"
+                                >》》申请修改《《</span
+                            ><br />2.如果您身份信息已经变动，可点击<span
+                                class="link"
+                                >》》刷新身份《《</span
                             >
                         </ul>
                     </div>
@@ -342,54 +324,102 @@
                     </div>
                 </div>
             </div>
-            <div class="手指">👆</div>
-            <!-- <div class="答辩">💩</div> -->
+            <div class="手指" aria-hidden="true">👆</div>
+            <!-- <div class="答辩" aria-hidden="true">💩</div> -->
+        </div>
+        <div id="工具">
+            <button ontouchend="添加防沉迷弹窗()" onclick="添加防沉迷弹窗()">
+                添加防沉迷弹窗
+            </button>
+            <button
+                ontouchend="setInterval(发射,500)"
+                onclick="setInterval(发射,500)"
+            >
+                自动发射
+            </button>
+            <button
+                onclick="
+                navigator.share({
+                    title: '防沉迷和答辩小游戏',
+                    text: `我在这个小游戏里干掉了${累计弹窗}个防沉迷弹窗，你也来试试吧~`,
+                    url: 'https://dsy4567.cf/game',
+                });
+                "
+            >
+                分享
+            </button>
+            <br />
+            <form
+                onsubmit="+飙速.value > 0 && setInterval(发射, 1000 / Number(飙速.value));return false;"
+            >
+                <input
+                    min="1"
+                    type="number"
+                    placeholder="速度"
+                    id="飙速"
+                /><input type="submit" value="飙速" />
+            </form>
+            <p aria-live="off">
+                速度：<span id="答辩速度"></span>坨答辩/秒<span
+                    id="弹窗速度"
+                ></span
+                >个防沉迷弹窗/秒<br />累计发射<span id="累计答辩"></span
+                >坨答辩，干掉<span id="累计弹窗"></span>个防沉迷弹窗
+            </p>
+            <p>
+                由 <a href="https://github.com/dsy4567">dsy4567</a> 用😡制作，<a
+                    href="https://github.com/dsy4567/fcm-and-shit/"
+                    >GitHub</a
+                >
+            </p>
         </div>
         <script>
+            function 发出警告(t) {
+                警告.ariaLabel = t;
+            }
             function 添加防沉迷弹窗() {
                 let 防沉迷弹窗 = document.createElement("div");
                 防沉迷弹窗.className = "mysdkDialog fcm 攻击对象2";
                 防沉迷弹窗.innerHTML = `
-                    <div class="mysdkDialog fcm 攻击对象2">
-                        <div class="myfcmdialog">
-                            <span class="close-btn">关闭</span>
-                            <h2 class="title 攻击对象">未成年限制登录提醒</h2>
-                            <div class="stitle 攻击对象">
-                                <span>您使用的是未成年账号</span>
-                                <span>，仅周五</span><span>、周六、</span
-                                ><span>周日及法定节假日晚上8:00-9:00可以游戏！</span
-                                ><span>当前已被限制！</span>
-                            </div>
-                            <div class="countDown 攻击对象">
-                                <p class="txt1">下次可玩游戏时段</p>
-                                <p class="txt2">本周五晚上8:00-9:00</p>
-                            </div>
-                            <div class="countDown 攻击对象" style="display: none">
-                                当前已限制游戏
-                            </div>
-                            <div class="mod-tip 攻击对象">
-                                <h3 class="tip-title">温馨提示：</h3>
-                                <ul class="tip-info">
-                                    1.如果身份信息有误，请点击<a href="#"
-                                        >》》申请修改《《</a
-                                    ><br />2.如果您身份信息已经变动，可点击<a href="#"
-                                        >》》刷新身份《《</a
-                                    >
-                                </ul>
-                            </div>
-                            <div class="mod-btn">
-                                <span class="btn-fcmprimary 攻击对象">更换账号</span
-                                ><span class="btn-fcmprimary 攻击对象">确定</span>
-                            </div>
-                        </div>
-                    </div>`;
+<div class="mysdkDialog fcm 攻击对象2">
+    <div class="myfcmdialog">
+        <span class="close-btn">关闭</span>
+        <h2 class="title 攻击对象">未成年限制登录提醒</h2>
+        <div class="stitle 攻击对象">
+            <span>您使用的是未成年账号</span>
+            <span>，仅周五</span><span>、周六、</span
+            ><span>周日及法定节假日晚上8:00-9:00可以游戏！</span
+            ><span>当前已被限制！</span>
+        </div>
+        <div class="countDown 攻击对象">
+            <p class="txt1">下次可玩游戏时段</p>
+            <p class="txt2">本周五晚上8:00-9:00</p>
+        </div>
+        <div class="mod-tip 攻击对象">
+            <h3 class="tip-title">温馨提示：</h3>
+            <ul class="tip-info">
+                1.如果身份信息有误，请点击<span class="link"
+                    >》》申请修改《《</span
+                ><br />2.如果您身份信息已经变动，可点击<span
+                    class="link"
+                    >》》刷新身份《《</span
+                >
+            </ul>
+        </div>
+        <div class="mod-btn">
+            <span class="btn-fcmprimary 攻击对象">更换账号</span
+            ><span class="btn-fcmprimary 攻击对象">确定</span>
+        </div>
+    </div>
+</div>`;
                 防沉迷弹窗.style.zIndex = zIndex--;
                 游戏.appendChild(防沉迷弹窗);
+                发出警告("已干掉一个防沉迷弹窗");
             }
 
             var 游戏 = document.querySelector("div.游戏"),
-                答辩 = document.querySelector("div.答辩"),
                 手指 = document.querySelector("div.手指"),
+                警告 = document.querySelector("#警告"),
                 攻击速度 = document.querySelector("div.攻击速度"),
                 答辩速度元素 = document.querySelector("#答辩速度"),
                 弹窗速度元素 = document.querySelector("#弹窗速度"),
@@ -414,9 +444,11 @@
                 let 答辩 = document.createElement("div");
                 答辩.className = "答辩";
                 答辩.innerText = "💩";
+                答辩.ariaHidden = "true";
                 答辩.style.bottom = 答辩_bottom + "px";
                 答辩.style.left = 答辩_left - 50 + "px";
                 游戏.appendChild(答辩);
+                发出警告("砰");
                 答辩速度++;
                 累计答辩++;
                 let interval = setTimeout(() => {
@@ -449,10 +481,14 @@
             addEventListener("contextmenu", e => e.preventDefault());
             addEventListener("keyup", 发射);
             setInterval(() => {
-                答辩速度元素.innerText = 答辩速度;
-                弹窗速度元素.innerText = 弹窗速度;
-                累计答辩元素.innerText = 累计答辩;
-                累计弹窗元素.innerText = 累计弹窗;
+                答辩速度元素.innerText !== 答辩速度 &&
+                    (答辩速度元素.innerText = 答辩速度);
+                弹窗速度元素.innerText !== 弹窗速度 &&
+                    (弹窗速度元素.innerText = 弹窗速度);
+                累计答辩元素.innerText !== 累计答辩 &&
+                    (累计答辩元素.innerText = 累计答辩);
+                累计弹窗元素.innerText !== 累计弹窗 &&
+                    (累计弹窗元素.innerText = 累计弹窗);
                 答辩速度 = 弹窗速度 = 0;
             }, 1000);
         </script>
