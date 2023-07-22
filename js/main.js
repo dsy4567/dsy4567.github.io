@@ -302,7 +302,7 @@ fetch("/json/theme.json")
         btn.role = "radio";
         btn.ariaChecked = "false";
         btn.innerHTML =
-            "<svg class='特小尺寸' data-icon='调色盘'></svg></svg><input aria-label='自定义主题色调色盘' style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0;tabindex='-1' id='自定义主题色' type='color' />";
+            "<svg class='特小尺寸' data-icon='调色盘'></svg></svg><input aria-label='自定义主题色调色盘' style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0' tabindex='-1' id='自定义主题色' type='color' />";
         btn.onclick = 提示用户 => {
             // @ts-ignore
             if (提示用户 !== false) {
