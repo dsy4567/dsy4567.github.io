@@ -304,57 +304,54 @@ fetch("/json/theme.json")
         btn.innerHTML =
             "<svg class='特小尺寸' data-icon='调色盘'></svg></svg><input aria-label='自定义主题色调色盘' style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0' tabindex='-1' id='自定义主题色' type='color' />";
         btn.onclick = 提示用户 => {
-            // @ts-ignore
-            if (提示用户 !== false) {
-                let 自定义主题色 = gd("自定义主题色", true);
-                if (!自定义主题色) return;
-                自定义主题色.click();
-                自定义主题色.onchange = () => {
-                    let rgb, r, g, b, hsl;
-                    // @ts-ignore
-                    if (提示用户 !== false) {
-                        rgb =
-                            // @ts-ignore
-                            gd("自定义主题色", true)?.value || "#000000";
-                        r = parseInt("0x" + rgb.substring(1, 3));
-                        g = parseInt("0x" + rgb.substring(3, 5));
-                        b = parseInt("0x" + rgb.substring(5, 7));
-                        hsl = rgb转hsl(r, g, b);
-                        let 字体色 =
-                            (r * 0.2126 + g * 0.7152 + b * 0.0722) / 255 >= 0.5
-                                ? "#222"
-                                : "#ccc";
-                        btn.ariaChecked = "true";
-                        Object.entries({
-                            "--theme-color": rgb,
-                            "--theme-color-h": hsl[0],
-                            "--theme-color-s": hsl[1],
-                            "--theme-color-l": hsl[2],
-                            "--theme-color-transparent": "#8888",
-                            "--text-color": 字体色,
-                        }).forEach(a => {
-                            document.documentElement.style.setProperty(
-                                a[0],
-                                "" + a[1]
-                            );
-                        });
-                        localStorage.setItem("theme", "自定义主题");
-                        localStorage.setItem("主题色", rgb);
-                        localStorage.setItem("主题色h", "" + hsl[0]);
-                        localStorage.setItem("主题色s", "" + hsl[1]);
-                        localStorage.setItem("主题色l", "" + hsl[2]);
-                        localStorage.setItem("透明色", "#8888");
-                        localStorage.setItem("字体色", 字体色);
-                    }
+            let 自定义主题色 = gd("自定义主题色", true);
+            if (!自定义主题色) return;
+            自定义主题色.click();
+            自定义主题色.onchange = () => {
+                let rgb, r, g, b, hsl;
+                // @ts-ignore
+                if (提示用户 !== false) {
+                    rgb =
+                        // @ts-ignore
+                        gd("自定义主题色", true)?.value || "#000000";
+                    r = parseInt("0x" + rgb.substring(1, 3));
+                    g = parseInt("0x" + rgb.substring(3, 5));
+                    b = parseInt("0x" + rgb.substring(5, 7));
+                    hsl = rgb转hsl(r, g, b);
+                    let 字体色 =
+                        (r * 0.2126 + g * 0.7152 + b * 0.0722) / 255 >= 0.5
+                            ? "#222"
+                            : "#ccc";
+                    btn.ariaChecked = "true";
+                    Object.entries({
+                        "--theme-color": rgb,
+                        "--theme-color-h": hsl[0],
+                        "--theme-color-s": hsl[1],
+                        "--theme-color-l": hsl[2],
+                        "--theme-color-transparent": "#8888",
+                        "--text-color": 字体色,
+                    }).forEach(a => {
+                        document.documentElement.style.setProperty(
+                            a[0],
+                            "" + a[1]
+                        );
+                    });
+                    localStorage.setItem("theme", "自定义主题");
+                    localStorage.setItem("主题色", rgb);
+                    localStorage.setItem("主题色h", "" + hsl[0]);
+                    localStorage.setItem("主题色s", "" + hsl[1]);
+                    localStorage.setItem("主题色l", "" + hsl[2]);
+                    localStorage.setItem("透明色", "#8888");
+                    localStorage.setItem("字体色", 字体色);
+                }
 
-                    // @ts-ignore
-                    提示用户 !== false && 提示("已切换自定义主题");
-                };
-            } else
-                gd("主题色")?.setAttribute(
-                    "content",
-                    localStorage.getItem("主题色") || ""
-                );
+                // @ts-ignore
+                提示用户 !== false && 提示("已切换自定义主题");
+            };
+            gd("主题色")?.setAttribute(
+                "content",
+                localStorage.getItem("主题色") || ""
+            );
             qsa("#所有主题 > button").forEach(
                 元素 => (元素.ariaChecked = "false")
             );
