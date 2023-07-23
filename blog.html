@@ -1,231 +1,231 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8" />
-        <!-- Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="
+	<head>
+		<meta charset="UTF-8" />
+		<!-- Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="
                         upgrade-insecure-requests;
                         script-src 'self' *.googletagmanager.com www.recaptcha.net www.gstatic.cn www.gstatic.com;
                         object-src none
                     "
-        />
-        <meta name="description" content="站长很懒, 不想写网站介绍" />
-        <meta
-            name="keywords"
-            content="dsy4567 博客 个人网站 编程 HTML CSS JS"
-        />
-        <meta id="主题色" name="theme-color" content="#ddd" />
-        <meta id="robots" name="robots" content="all" />
-        <meta
-            name="template"
-            content="https://github.com/dsy4567/dsy4567.github.io"
-        />
-        <title>博客 | dsy4567 的小站</title>
-        <base target="_self" />
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-        <link
-            rel="alternate"
-            type="application/atom+xml"
-            title="博客 | dsy4567 的小站"
-            href="https://dsy4567.github.io/rss.xml"
-        />
+		/>
+		<meta name="description" content="站长很懒, 不想写网站介绍" />
+		<meta
+			name="keywords"
+			content="dsy4567 博客 个人网站 编程 HTML CSS JS"
+		/>
+		<meta id="主题色" name="theme-color" content="#ddd" />
+		<meta id="robots" name="robots" content="all" />
+		<meta
+			name="template"
+			content="https://github.com/dsy4567/dsy4567.github.io"
+		/>
+		<title>博客 | dsy4567 的小站</title>
+		<base target="_self" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link
+			rel="alternate"
+			type="application/atom+xml"
+			title="博客 | dsy4567 的小站"
+			href="https://dsy4567.github.io/rss.xml"
+		/>
 
-        <link rel="dns-prefetch" href="https://api.github.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="dns-prefetch" href="https://api.github.com" />
+		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-        <link
-            rel="preload"
-            href="/js/ncm.js"
-            as="script"
-            crossorigin="anonymous"
-        />
-        <link
-            rel="preload"
-            href="/js/blog.js"
-            as="script"
-            crossorigin="anonymous"
-        />
-        <link
-            rel="preload"
-            href="/json/blog.json"
-            as="fetch"
-            crossorigin="anonymous"
-        />
-        <link
-            rel="preload"
-            href="/json/icon.json"
-            as="fetch"
-            crossorigin="anonymous"
-        />
-        <link
-            rel="preload"
-            href="/json/theme.json"
-            as="fetch"
-            crossorigin="anonymous"
-        />
+		<link
+			rel="preload"
+			href="/js/ncm.js"
+			as="script"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="/js/blog.js"
+			as="script"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="/json/blog.json"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="/json/icon.json"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="/json/theme.json"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
 
-        <script src="/js/global.js"></script>
-        <script src="/js/main.js" type="module" async></script>
-        <link rel="stylesheet" href="/css/global.css" />
-    </head>
-    <body>
-        <a href="#main" class="隐藏链接">转到正文</a>
-        <div id="主侧边按钮" class="侧边按钮">
-            <button type="button" title="回到顶部" id="回到顶部">
-                <svg class="特小尺寸" data-icon="回到顶部"></svg>
-            </button>
-            <div
-                class="拥有更多选项"
-                type="button"
-                title="网抑云阴乐"
-                id="网抑云阴乐"
-            >
-                <img
-                    aria-hidden="true"
-                    class="特小尺寸"
-                    id="网抑云阴乐封面"
-                    alt="封面"
-                />
-                <svg class="特小尺寸" data-icon="网抑云阴乐"></svg>
-                <div class="更多选项" id="阴乐控件"></div>
-                <div id="歌词"></div>
-            </div>
-            <div
-                class="拥有更多选项"
-                type="button"
-                title="切换主题"
-                id="切换主题"
-            >
-                <svg class="特小尺寸" data-icon="切换主题"></svg>
-                <div role="radiogroup" class="更多选项" id="所有主题"></div>
-            </div>
-        </div>
+		<script src="/js/global.js"></script>
+		<script src="/js/main.js" type="module" async></script>
+		<link rel="stylesheet" href="/css/global.css" />
+	</head>
+	<body>
+		<a href="#main" class="隐藏链接">转到正文</a>
+		<div id="主侧边按钮" class="侧边按钮">
+			<button type="button" title="回到顶部" id="回到顶部">
+				<svg class="特小尺寸" data-icon="回到顶部"></svg>
+			</button>
+			<div
+				class="拥有更多选项"
+				type="button"
+				title="网抑云阴乐"
+				id="网抑云阴乐"
+			>
+				<img
+					aria-hidden="true"
+					class="特小尺寸"
+					id="网抑云阴乐封面"
+					alt="封面"
+				/>
+				<svg class="特小尺寸" data-icon="网抑云阴乐"></svg>
+				<div class="更多选项" id="阴乐控件"></div>
+				<div id="歌词"></div>
+			</div>
+			<div
+				class="拥有更多选项"
+				type="button"
+				title="切换主题"
+				id="切换主题"
+			>
+				<svg class="特小尺寸" data-icon="切换主题"></svg>
+				<div role="radiogroup" class="更多选项" id="所有主题"></div>
+			</div>
+		</div>
 
-        <nav id="导航栏">
-            <div class="左">
-                <a class="标题" href="/">dsy4567 的小站</a>
-            </div>
-            <div class="右">
-                <a href="/">
-                    <svg class="特小尺寸" data-icon="首页"></svg>
-                    <span>首页</span>
-                </a>
-                <a href="/blog.html">
-                    <svg class="特小尺寸" data-icon="博客"></svg>
-                    <span>博客</span>
-                </a>
-                <a href="/friends.html">
-                    <svg class="特小尺寸" data-icon="友情链接"></svg>
-                    <span>友链</span>
-                </a>
-            </div>
-        </nav>
+		<nav id="导航栏">
+			<div class="左">
+				<a class="标题" href="/">dsy4567 的小站</a>
+			</div>
+			<div class="右">
+				<a href="/">
+					<svg class="特小尺寸" data-icon="首页"></svg>
+					<span>首页</span>
+				</a>
+				<a href="/blog.html">
+					<svg class="特小尺寸" data-icon="博客"></svg>
+					<span>博客</span>
+				</a>
+				<a href="/friends.html">
+					<svg class="特小尺寸" data-icon="友情链接"></svg>
+					<span>友链</span>
+				</a>
+			</div>
+		</nav>
 
-        <div class="进度条外面"><div class="进度条"></div></div>
+		<div class="进度条外面"><div class="进度条"></div></div>
 
-        <main id="main">
-            <div class="左">
-                <section id="我">
-                    <img
-                        aria-label="头像(一个蘑菇头揍防沉迷弹窗)"
-                        class="头像 大尺寸"
-                        src="/img/avatar.jpg"
-                        alt="头像(一个蘑菇头揍防沉迷弹窗)"
-                        title="头像"
-                    />
-                    <h2>dsy4567</h2>
-                    <span id="关注粉丝码龄">
-                        关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中
-                    </span>
-                    <br />
-                    <span id="联系方式">
-                        <a
-                            href="https://qwq.dsy4567.cf/api/getemail"
-                            title="电子邮箱"
-                            id="电子邮箱"
-                        >
-                            <svg class="小尺寸" data-icon="电子邮箱"></svg>
-                        </a>
-                        <a
-                            href="https://qwq.dsy4567.cf/api/getemail"
-                            title="Telegram"
-                            id="tg"
-                        >
-                            <svg class="小尺寸" data-icon="Telegram"></svg>
-                        </a>
-                        <a href="https://github.com/dsy4567" title="GitHub">
-                            <svg class="小尺寸" data-icon="GitHub"></svg>
-                        </a>
-                        <a href="https://twitter.com/dsy4567" title="Twitter">
-                            <svg class="小尺寸" data-icon="Twitter"></svg>
-                        </a>
-                        <a href="https://weibo.com/dsy4567" title="微博">
-                            <svg class="小尺寸" data-icon="微博"></svg>
-                        </a>
-                        <a
-                            href="https://www.luogu.com.cn/user/776713"
-                            title="洛谷"
-                        >
-                            <svg class="小尺寸" data-icon="洛谷"></svg>
-                        </a>
-                        <a href="/rss.xml" title="RSS">
-                            <svg class="小尺寸" data-icon="RSS"></svg>
-                        </a>
-                    </span>
-                </section>
-                <section class="一言">
-                    <h2>
-                        <svg class="小尺寸" data-icon="一言"></svg>
-                        <span>一言</span>
-                    </h2>
-                    <p id="一言">加载中</p>
-                    <span class="淡化">双击查看详细信息</span>
-                </section>
-            </div>
-            <div aria-hidden="true" id="分界线">
-                <svg class="特小尺寸" data-icon="隐藏显示"></svg>
-            </div>
-            <article class="右">
-                <!-- BEGIN MAIN -->
-                <section id="正在加载文章提示">
-                    正在加载文章
-                    <noscript
-                        >在
-                        <a
-                            href="https://github.com/dsy4567/dsy4567.github.io/tree/main/blog-md"
-                            >GitHub</a
-                        >
-                        上阅读文章</noscript
-                    >
-                </section>
+		<main id="main">
+			<div class="左">
+				<section id="我">
+					<img
+						aria-label="头像(一个蘑菇头揍防沉迷弹窗)"
+						class="头像 大尺寸"
+						src="/img/avatar.jpg"
+						alt="头像(一个蘑菇头揍防沉迷弹窗)"
+						title="头像"
+					/>
+					<h2>dsy4567</h2>
+					<span id="关注粉丝码龄">
+						关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中
+					</span>
+					<br />
+					<span id="联系方式">
+						<a
+							href="https://qwq.dsy4567.cf/api/getemail"
+							title="电子邮箱"
+							id="电子邮箱"
+						>
+							<svg class="小尺寸" data-icon="电子邮箱"></svg>
+						</a>
+						<a
+							href="https://qwq.dsy4567.cf/api/getemail"
+							title="Telegram"
+							id="tg"
+						>
+							<svg class="小尺寸" data-icon="Telegram"></svg>
+						</a>
+						<a href="https://github.com/dsy4567" title="GitHub">
+							<svg class="小尺寸" data-icon="GitHub"></svg>
+						</a>
+						<a href="https://twitter.com/dsy4567" title="Twitter">
+							<svg class="小尺寸" data-icon="Twitter"></svg>
+						</a>
+						<a href="https://weibo.com/dsy4567" title="微博">
+							<svg class="小尺寸" data-icon="微博"></svg>
+						</a>
+						<a
+							href="https://www.luogu.com.cn/user/776713"
+							title="洛谷"
+						>
+							<svg class="小尺寸" data-icon="洛谷"></svg>
+						</a>
+						<a href="/rss.xml" title="RSS">
+							<svg class="小尺寸" data-icon="RSS"></svg>
+						</a>
+					</span>
+				</section>
+				<section class="一言">
+					<h2>
+						<svg class="小尺寸" data-icon="一言"></svg>
+						<span>一言</span>
+					</h2>
+					<p id="一言">加载中</p>
+					<span class="淡化">双击查看详细信息</span>
+				</section>
+			</div>
+			<div aria-hidden="true" id="分界线">
+				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
+			</div>
+			<article class="右">
+				<!-- BEGIN MAIN -->
+				<section id="正在加载文章提示">
+					正在加载文章
+					<noscript
+						>在
+						<a
+							href="https://github.com/dsy4567/dsy4567.github.io/tree/main/blog-md"
+							>GitHub</a
+						>
+						上阅读文章</noscript
+					>
+				</section>
 
-                <!-- END MAIN -->
-            </article>
-        </main>
+				<!-- END MAIN -->
+			</article>
+		</main>
 
-        <footer id="copyright">
-            © 2022-2023
-            <a href="https://github.com/dsy4567">dsy4567</a><br />
-            <a href="https://icp.gov.moe/?keyword=20230212" target="_blank"
-                >萌ICP备20230212号</a
-            >
-            |
-            <a href="https://beian.miit.gov.cn/" target="_blank"
-                >陕ICP备 备你妈的案</a
-            ><br />
-            <!-- 修改代码时必须保留此链接和原作者信息, 可以添加修改后源代码的链接及作者信息 -->
-            Powered by
-            <a href="https://github.com/dsy4567/dsy4567.github.io"
-                >dsy4567/dsy4567.github.io</a
-            >
-        </footer>
-        <noscript>
-            <div>请启用 JavaScript 以获得更好的浏览体验</div>
-        </noscript>
-        <link rel="stylesheet" href="/css/font.css" />
-        <script src="/js/main.js" type="module" async></script>
-    </body>
+		<footer id="copyright">
+			© 2022-2023
+			<a href="https://github.com/dsy4567">dsy4567</a><br />
+			<a href="https://icp.gov.moe/?keyword=20230212" target="_blank"
+				>萌ICP备20230212号</a
+			>
+			|
+			<a href="https://beian.miit.gov.cn/" target="_blank"
+				>陕ICP备 备你妈的案</a
+			><br />
+			<!-- 修改代码时必须保留此链接和原作者信息, 可以添加修改后源代码的链接及作者信息 -->
+			Powered by
+			<a href="https://github.com/dsy4567/dsy4567.github.io"
+				>dsy4567/dsy4567.github.io</a
+			>
+		</footer>
+		<noscript>
+			<div>请启用 JavaScript 以获得更好的浏览体验</div>
+		</noscript>
+		<link rel="stylesheet" href="/css/font.css" />
+		<script src="/js/main.js" type="module" async></script>
+	</body>
 </html>

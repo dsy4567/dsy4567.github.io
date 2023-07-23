@@ -30,17 +30,18 @@
     "prettier.bracketSpacing": true,
     "prettier.endOfLine": "lf",
     "prettier.printWidth": 80,
-    "prettier.proseWrap": "always",
+    "prettier.proseWrap": "never",
     "prettier.quoteProps": "as-needed",
     "prettier.semi": true,
     "prettier.singleQuote": false,
     "prettier.tabWidth": 4,
     "prettier.trailingComma": "es5",
-    "prettier.useTabs": false,
+    "prettier.useTabs": true,
     "search.exclude": {
         "out": true
     },
     "typescript.tsc.autoDetect": "off",
     "typescript.tsdk": "node_modules/typescript/lib",
-    "files.eol": "\n"
+    "files.eol": "\n",
+    "editor.tabSize": 4
 }

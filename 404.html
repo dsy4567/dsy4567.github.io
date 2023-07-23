@@ -1,54 +1,54 @@
 <h1>404 找不到您需要的页面</h1>
 <p>
-    <span id="span">
-        正在尝试跳转到可用页面，您也可以
-        <script>
-            function err() {
-                document.getElementById("span").innerHTML =
-                    "抱歉，未找到可用页面，您可以";
-            }
-        </script>
-    </span>
-    <a href="/">回到首页</a>
+	<span id="span">
+		正在尝试跳转到可用页面，您也可以
+		<script>
+			function err() {
+				document.getElementById("span").innerHTML =
+					"抱歉，未找到可用页面，您可以";
+			}
+		</script>
+	</span>
+	<a href="/">回到首页</a>
 </p>
 <style>
-    html,
-    body {
-        color-scheme: dark light;
-    }
+	html,
+	body {
+	    color-scheme: dark light;
+	}
 </style>
 <script>
-    let p = location.pathname,
-        s = location.search,
-        h = location.hash;
-    let p1 =
-            (p.endsWith("/")
-                ? p.substring(0, p.length - 1)
-                : p.includes(".htm")
-                ? p
-                : p + ".html") + s,
-        p2 = "https://dsy4567.github.io" + p + s;
-    function f1() {
-        fetch(p1, {
-            method: "HEAD",
-        })
-            .then(res => {
-                if (res.status >= 200 && res.status < 300)
-                    location.href = p1 + h;
-                else if (location.hostname !== "dsy4567.github.io") f2();
-            })
-            .catch(e => err());
-    }
-    function f2() {
-        fetch(p2, {
-            method: "HEAD",
-        })
-            .then(res => {
-                if (res.status >= 200 && res.status <= 399)
-                    location.href = p2 + h;
-                else err();
-            })
-            .catch(e => err());
-    }
-    f1();
+	let p = location.pathname,
+		s = location.search,
+		h = location.hash;
+	let p1 =
+			(p.endsWith("/")
+				? p.substring(0, p.length - 1)
+				: p.includes(".htm")
+				? p
+				: p + ".html") + s,
+		p2 = "https://dsy4567.github.io" + p + s;
+	function f1() {
+		fetch(p1, {
+			method: "HEAD",
+		})
+			.then(res => {
+				if (res.status >= 200 && res.status < 300)
+					location.href = p1 + h;
+				else if (location.hostname !== "dsy4567.github.io") f2();
+			})
+			.catch(e => err());
+	}
+	function f2() {
+		fetch(p2, {
+			method: "HEAD",
+		})
+			.then(res => {
+				if (res.status >= 200 && res.status <= 399)
+					location.href = p2 + h;
+				else err();
+			})
+			.catch(e => err());
+	}
+	f1();
 </script>

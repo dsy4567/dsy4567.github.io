@@ -1,53 +1,53 @@
 type 音乐信息 = {
-    /** 歌名 */ name: string;
-    /** 歌手 */ ar: { name: string }[];
-    /** 专辑 */ al: { name: string; picUrl: string };
-    mv: number;
-    id: number;
+	/** 歌名 */ name: string;
+	/** 歌手 */ ar: { name: string }[];
+	/** 专辑 */ al: { name: string; picUrl: string };
+	mv: number;
+	id: number;
 };
 type 歌单 = {
-    完整歌名: string;
-    歌名: string;
-    歌手: string;
-    专辑: string;
-    封面: string;
-    id: number;
-    mv: number;
+	完整歌名: string;
+	歌名: string;
+	歌手: string;
+	专辑: string;
+	封面: string;
+	id: number;
+	mv: number;
 };
 type 文章信息 = {
-    updated: string;
-    date: string;
-    issue?: number;
-    tags: string[];
-    id: string;
-    title: string;
-    desc: string;
-    url?: string;
-    hidden?: boolean;
+	updated: string;
+	date: string;
+	issue?: number;
+	tags: string[];
+	id: string;
+	title: string;
+	desc: string;
+	url?: string;
+	hidden?: boolean;
 };
 
 declare class Hljs {
-    highlightAll();
+	highlightAll();
 }
 declare class Recaptcha {
-    getResponse(): string;
-    render(
-        id: string,
-        options: {
-            sitekey: string;
-            theme: "light" | "dark";
-        }
-    );
+	getResponse(): string;
+	render(
+		id: string,
+		options: {
+			sitekey: string;
+			theme: "light" | "dark";
+		}
+	);
 }
 
 var dataLayer: any[];
 var grecaptcha = new Recaptcha();
 var hljs = new Hljs();
 var lrcParser: (s: string) => {
-    scripts: {
-        start: number;
-        end: number;
-        text: string;
-    }[];
+	scripts: {
+		start: number;
+		end: number;
+		text: string;
+	}[];
 };
 var marked = new Marked();
