@@ -105,13 +105,9 @@ function 提示(m) {
 }
 function 尽快设置主题色() {
     if (localStorage.getItem("主题色h")) {
-        document.documentElement.style.setProperty(
-            "--theme-color",
-            gd("主题色", true)?.setAttribute(
-                "content",
-                localStorage.getItem("主题色") || ""
-            ) || ""
-        );
+        const 主题色 = localStorage.getItem("主题色") || "";
+        gd("主题色", true)?.setAttribute("content", 主题色);
+        document.documentElement.style.setProperty("--theme-color", 主题色);
         document.documentElement.style.setProperty(
             "--theme-color-h",
             localStorage.getItem("主题色h")
