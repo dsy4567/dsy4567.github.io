@@ -344,6 +344,10 @@ fetch("/json/theme.json")
 					localStorage.setItem("透明色", "#8888");
 					localStorage.setItem("字体色", 字体色);
 				}
+				gd("主题色")?.setAttribute(
+					"content",
+					localStorage.getItem("主题色") || ""
+				);
 
 				// @ts-ignore
 				提示用户 !== false && 提示("已切换自定义主题");
