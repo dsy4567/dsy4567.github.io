@@ -1,7 +1,6 @@
 # 如何优化网站加载速度
 
-
-中考完了之后，想到我以前逛过某个（在我这台老爷机上）卡的要命的网站，然后拿 LightHouse 测了一下，分数低的可怜。这时我开始想，我的网站可不能这么慢，于是捏，闲的没事的我一不小心把网站性能提了一大截。
+中考完了之后，闲的没事的我拿 LightHouse 测了一下自己的网站，发现分数有点低。为了拿到四个圆圈圈~~以满足我的虚荣心~~，我决定花些力气来优化网站性能。
 
 <!-- more -->
 
@@ -9,21 +8,21 @@
 
 优化前：
 
-[![优化前](/blog-md/how-to-improve-performance/img/before.png)](https://pagespeed.web.dev/analysis/https-dsy4567-cf/gf94qbiu4z)
+[![s:969x835 优化前](/blog-md/how-to-improve-performance/img/before.png)](https://pagespeed.web.dev/analysis/https-dsy4567-cf/gf94qbiu4z)
 
 优化后：
 
-[![优化后](/blog-md/how-to-improve-performance/img/after.png)](https://pagespeed.web.dev/analysis/https-dsy4567-cf/jyhkiaf907)
+[![s:964x831 优化后](/blog-md/how-to-improve-performance/img/after.png)](https://pagespeed.web.dev/analysis/https-dsy4567-cf/jyhkiaf907)
 
 ## 为什么优化网站加载速度很重要
 
-像我这种有点耐心<spoiler>（还不是被某堵墙和我这老爷机逼的）</spoiler>的人，逛加载速度慢网站通常会一边忍着一边想带妈的词语。而一些没耐心的人进了这种网站，肯定会想`这™什么破网站`，然后立马点叉。对于用户很多的电商平台来说，网站加载时间每多100ms，用户越没有耐心看下去，然后电商平台就要少赚好几沓钞票。
+像我这种有点耐心<spoiler>（还不是被某堵墙和我这老爷机逼的）</spoiler>的人，逛加载速度慢网站通常会一边忍着一边想带妈的词语。而一些没耐心的人进了这种网站，肯定会想`这™什么破网站`，然后立马点叉。对于用户很多的电商平台来说，网站加载时间每多 100ms，用户越没有耐心看下去，然后电商平台就要少赚好几沓钞票。
 
 ## 少说废话，进入正题
 
 ### 多用 `getElement(s)ByXxx`，少用 `querySelector(All)`
 
-![用一段代码比较 getElement(s)ByXxx 和 querySelector(All) 的性能](/blog-md/how-to-improve-performance/img/compare-gebxxx-qs.png)
+![s:428x362 用一段代码比较 getElement(s)ByXxx 和 querySelector(All) 的性能](/blog-md/how-to-improve-performance/img/compare-gebxxx-qs.png)
 
 由图可知，二者的速度差距挺大的。虽然 `querySelector(All)` 用起来又舒服又方便，但它是真的慢。平时写代码的时候，我们应该权衡方便和性能，最好只在 `getElement(s)ByXxx` 满足不了要求时才用 `querySelector(All)`。
 
@@ -75,7 +74,7 @@
 
 这些做法我就不细说了
 
-- 推迟加载不太重要的资源
-- 压缩资源（这个我不想搞）
-- 少用小站长提供的接口，说不定哪一天就变慢或者崩掉了，建议自行搭建
-- 少用费资源的 CSS 方法（比如 `blur()`）
+-   推迟加载不太重要的资源
+-   压缩资源（这个我不想搞）
+-   少用小站长提供的接口，说不定哪一天就变慢或者崩掉了，建议自行搭建
+-   少用费资源的 CSS 方法（比如 `blur()`）
