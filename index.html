@@ -1,607 +1,607 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <meta charset="UTF-8" />
-        <!-- Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta
-            http-equiv="Content-Security-Policy"
-            content="
+	<head>
+		<meta charset="UTF-8" />
+		<!-- Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="
                         upgrade-insecure-requests;
                         script-src 'self' *.googletagmanager.com www.recaptcha.net www.gstatic.cn www.gstatic.com;
                         object-src 'self' none
                     "
-        />
-        <meta name="description" content="站长很懒, 不想写网站介绍" />
-        <meta
-            name="keywords"
-            content="dsy4567 博客 个人网站 编程 HTML CSS JS"
-        />
-        <meta id="主题色" name="theme-color" content="#ddd" />
-        <meta id="robots" name="robots" content="all" />
-        <meta
-            name="template"
-            content="https://github.com/dsy4567/dsy4567.github.io"
-        />
-        <title>首页 | dsy4567 的小站</title>
-        <base target="_self" />
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-        <link
-            rel="alternate"
-            type="application/atom+xml"
-            title="博客 | dsy4567 的小站"
-            href="https://dsy4567.github.io/rss.xml"
-        />
+		/>
+		<meta name="description" content="站长很懒, 不想写网站介绍" />
+		<meta
+			name="keywords"
+			content="dsy4567 博客 个人网站 编程 HTML CSS JS"
+		/>
+		<meta id="主题色" name="theme-color" content="#ddd" />
+		<meta id="robots" name="robots" content="all" />
+		<meta
+			name="template"
+			content="https://github.com/dsy4567/dsy4567.github.io"
+		/>
+		<title>首页 | dsy4567 的小站</title>
+		<base target="_self" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link
+			rel="alternate"
+			type="application/atom+xml"
+			title="博客 | dsy4567 的小站"
+			href="https://dsy4567.github.io/rss.xml"
+		/>
 
-        <link rel="dns-prefetch" href="https://api.github.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://fonts.googleapis.cn" />
-        <link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
+		<link rel="dns-prefetch" href="https://api.github.com" />
+		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="dns-prefetch" href="https://fonts.googleapis.cn" />
+		<link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
 
-        <link
-            rel="preload"
-            href="/js/ncm.js"
-            as="script"
-            crossorigin="anonymous"
-        />
-        <link
-            rel="preload"
-            href="/json/icon.json"
-            as="fetch"
-            crossorigin="anonymous"
-        />
-        <link
-            rel="preload"
-            href="/json/theme.json"
-            as="fetch"
-            crossorigin="anonymous"
-        />
+		<link
+			rel="preload"
+			href="/js/ncm.js"
+			as="script"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="/json/icon.json"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="/json/theme.json"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
 
-        <script src="/js/global.js"></script>
-        <link rel="stylesheet" href="/css/global.css" />
-    </head>
-    <body>
-        <a href="#main" class="隐藏链接">转到正文</a>
-        <div id="主侧边按钮" class="侧边按钮">
-            <button type="button" title="回到顶部" id="回到顶部">
-                <svg class="特小尺寸" data-icon="回到顶部"></svg>
-            </button>
-            <div
-                class="拥有更多选项"
-                type="button"
-                title="网抑云阴乐"
-                id="网抑云阴乐"
-            >
-                <img
-                    aria-hidden="true"
-                    class="特小尺寸"
-                    id="网抑云阴乐封面"
-                    alt="封面"
-                />
-                <svg class="特小尺寸" data-icon="网抑云阴乐"></svg>
-                <div class="更多选项" id="阴乐控件"></div>
-                <div id="歌词"></div>
-            </div>
-            <div
-                class="拥有更多选项"
-                type="button"
-                title="切换主题"
-                id="切换主题"
-            >
-                <svg class="特小尺寸" data-icon="切换主题"></svg>
-                <div role="radiogroup" class="更多选项" id="所有主题"></div>
-            </div>
-        </div>
+		<script src="/js/global.js"></script>
+		<link rel="stylesheet" href="/css/global.css" />
+	</head>
+	<body>
+		<a href="#main" class="隐藏链接">转到正文</a>
+		<div id="主侧边按钮" class="侧边按钮">
+			<button type="button" title="回到顶部" id="回到顶部">
+				<svg class="特小尺寸" data-icon="回到顶部"></svg>
+			</button>
+			<div
+				class="拥有更多选项"
+				type="button"
+				title="网抑云阴乐"
+				id="网抑云阴乐"
+			>
+				<img
+					aria-hidden="true"
+					class="特小尺寸"
+					id="网抑云阴乐封面"
+					alt="封面"
+				/>
+				<svg class="特小尺寸" data-icon="网抑云阴乐"></svg>
+				<div class="更多选项" id="阴乐控件"></div>
+				<div id="歌词"></div>
+			</div>
+			<div
+				class="拥有更多选项"
+				type="button"
+				title="切换主题"
+				id="切换主题"
+			>
+				<svg class="特小尺寸" data-icon="切换主题"></svg>
+				<div role="radiogroup" class="更多选项" id="所有主题"></div>
+			</div>
+		</div>
 
-        <nav id="导航栏">
-            <div class="左">
-                <a class="标题" href="/">dsy4567 的小站</a>
-            </div>
-            <div class="右">
-                <a href="/">
-                    <svg class="特小尺寸" data-icon="首页"></svg>
-                    <span>首页</span>
-                </a>
-                <a href="/blog.html">
-                    <svg class="特小尺寸" data-icon="博客"></svg>
-                    <span>博客</span>
-                </a>
-                <a href="/friends.html">
-                    <svg class="特小尺寸" data-icon="友情链接"></svg>
-                    <span>友链</span>
-                </a>
-            </div>
-        </nav>
+		<nav id="导航栏">
+			<div class="左">
+				<a class="标题" href="/">dsy4567 的小站</a>
+			</div>
+			<div class="右">
+				<a href="/">
+					<svg class="特小尺寸" data-icon="首页"></svg>
+					<span>首页</span>
+				</a>
+				<a href="/blog.html">
+					<svg class="特小尺寸" data-icon="博客"></svg>
+					<span>博客</span>
+				</a>
+				<a href="/friends.html">
+					<svg class="特小尺寸" data-icon="友情链接"></svg>
+					<span>友链</span>
+				</a>
+			</div>
+		</nav>
 
-        <div class="进度条外面"><div class="进度条"></div></div>
+		<div class="进度条外面"><div class="进度条"></div></div>
 
-        <main id="main">
-            <div class="左">
-                <section id="我">
-                    <img
-                        aria-label="头像(一个蘑菇头揍防沉迷弹窗)"
-                        class="头像 大尺寸"
-                        src="/img/avatar.jpg"
-                        alt="头像(一个蘑菇头揍防沉迷弹窗)"
-                        title="头像"
-                    />
-                    <h2>dsy4567</h2>
-                    <span id="关注粉丝码龄">
-                        关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中
-                    </span>
-                    <br />
-                    <span id="联系方式">
-                        <a
-                            href="https://qwq.dsy4567.cf/api/getemail"
-                            title="电子邮箱"
-                            id="电子邮箱"
-                        >
-                            <svg class="小尺寸" data-icon="电子邮箱"></svg>
-                        </a>
-                        <a
-                            href="https://qwq.dsy4567.cf/api/getemail"
-                            title="Telegram"
-                            id="tg"
-                        >
-                            <svg class="小尺寸" data-icon="Telegram"></svg>
-                        </a>
-                        <a href="https://github.com/dsy4567" title="GitHub">
-                            <svg class="小尺寸" data-icon="GitHub"></svg>
-                        </a>
-                        <a href="https://twitter.com/dsy4567" title="Twitter">
-                            <svg class="小尺寸" data-icon="Twitter"></svg>
-                        </a>
-                        <a href="https://weibo.com/dsy4567" title="微博">
-                            <svg class="小尺寸" data-icon="微博"></svg>
-                        </a>
-                        <a
-                            href="https://www.luogu.com.cn/user/776713"
-                            title="洛谷"
-                        >
-                            <svg class="小尺寸" data-icon="洛谷"></svg>
-                        </a>
-                        <a href="/rss.xml" title="RSS">
-                            <svg class="小尺寸" data-icon="RSS"></svg>
-                        </a>
-                    </span>
-                </section>
-                <section class="一言">
-                    <h2>
-                        <svg class="小尺寸" data-icon="一言"></svg>
-                        <span>一言</span>
-                    </h2>
-                    <p id="一言">加载中</p>
-                    <span class="淡化">双击查看详细信息</span>
-                </section>
-            </div>
-            <div aria-hidden="true" id="分界线">
-                <svg class="特小尺寸" data-icon="隐藏显示"></svg>
-            </div>
-            <article class="右">
-                <!-- BEGIN MAIN -->
-                <section id="个人简介">
-                    <h2>
-                        <svg class="小尺寸" data-icon="笑脸"></svg>
-                        <span>个人简介</span>
-                    </h2>
-                    <div>
-                        <h3>👋 基本信息</h3>
-                        <ul>
-                            <li>🆔 真实姓名：（不想说）</li>
-                            <li>🍼 出生年份：2008 年（15岁）</li>
-                            <li>
-                                🚻 性别：<code
-                                    >0.1 + 0.2 == 0.3 ? "女" : "男"</code
-                                >
-                            </li>
-                            <li>🏠 居住地：西安市附近 300 km 内</li>
-                            <li>
-                                🍴 饮食习惯：
-                                <details>
-                                    <summary>点击展开</summary>
-                                    <ul>
-                                        <li>偏重口味</li>
-                                        <li>
-                                            <a
-                                                href="https://zh.wikipedia.org/zh-cn/%E7%B4%A0%E9%A3%9F%E4%B8%BB%E7%BE%A9#%E7%A8%AE%E9%A1%9E%E3%83%BB%E5%9E%8B%E6%85%8B"
-                                                >蛋奶素主义 + 锅边素食主义 +
-                                                方便素食主义</a
-                                            >
-                                        </li>
-                                        <li>
-                                            不喜欢碗里出现葱姜蒜和韭菜，洋葱不能太多
-                                        </li>
-                                        <li>喜欢菌类食物</li>
-                                    </ul>
-                                </details>
-                            </li>
-                            <li>
-                                🕺 人格类型：<a
-                                    href="https://www.16personalities.com/profiles/c55ee084cac53"
-                                    >Turbulent Logician (INTP-T)</a
-                                >
-                            </li>
-                            <li>
-                                ❤️ 喜欢的：7*24
-                                小时开着深色主题、造轮子、信息学竞赛、使用
-                                <code>.</code> 作为提交信息
-                            </li>
-                            <li>
-                                💔
-                                不喜欢的：没有深色主题的网站/软件、看不见摸不着的墙、防沉迷
-                            </li>
-                        </ul>
-                        <h3>🌱 正在学习</h3>
-                        <ul>
-                            <li>
-                                <a href="https://www.python.org/">
-                                    <img
-                                        src="/img/svg/python.svg"
-                                        alt="Python"
-                                        width="67"
-                                        height="20"
-                                    />
-                                </a>
-                            </li>
-                            <li>
-                                <a
-                                    href="https://developer.mozilla.org/zh-CN/docs/Web/HTML"
-                                >
-                                    <img
-                                        src="/img/svg/html.svg"
-                                        alt="HTML"
-                                        width="59"
-                                        height="20"
-                                    />
-                                </a>
-                                <a
-                                    href="https://developer.mozilla.org/zh-CN/docs/Web/CSS"
-                                >
-                                    <img
-                                        src="/img/svg/css.svg"
-                                        alt="CSS"
-                                        width="51"
-                                        height="20"
-                                    />
-                                </a>
-                                <a
-                                    href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript"
-                                >
-                                    <img
-                                        src="/img/svg/javascript.svg"
-                                        alt="JavaScript"
-                                        width="85"
-                                        height="20"
-                                    />
-                                </a>
-                                <a href="https://www.typescriptlang.org/">
-                                    <img
-                                        src="/img/svg/typescript.svg"
-                                        alt="TypeScript"
-                                        width="87"
-                                        height="20"
-                                    />
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://cplusplus.com/">
-                                    <img
-                                        src="/img/svg/c艹.svg"
-                                        alt="c⺿"
-                                        width="45"
-                                        height="20"
-                                    />
-                                </a>
-                            </li>
-                        </ul>
-                        <h3>💪 技能</h3>
-                        <ul>
-                            <li>
-                                JavaScript/TypeScript
-                                <ul>
-                                    <li>Web</li>
-                                    <li>Tampermonkey 脚本</li>
-                                    <li>Node.js</li>
-                                    <li>VSCode 扩展</li>
-                                </ul>
-                            </li>
-                            <li>
-                                Python
-                                <ul>
-                                    <li>turtle 绘图</li>
-                                    <li>Pygame Zero Game</li>
-                                </ul>
-                            </li>
-                            <li>
-                                C/C艹
-                                <ul>
-                                    <li>信息学竞赛</li>
-                                </ul>
-                            </li>
-                            <li>
-                                Linux
-                                <ul>
-                                    <li>安装和救砖</li>
-                                    <li>使用常见命令</li>
-                                </ul>
-                            </li>
-                        </ul>
-                        <h3>🔧 开发环境</h3>
-                        <ul>
-                            <li>
-                                2011 年买的老爷机
-                                <ul>
-                                    <li>
-                                        CPU:
-                                        <a
-                                            href="https://ark.intel.com/content/www/us/en/ark/products/40478/intel-pentium-processor-e5400-2m-cache-2-70-ghz-800-mhz-fsb.html"
-                                        >
-                                            <img
-                                                src="/img/svg/e5400.svg"
-                                                alt="Intel® Pentium® Processor E5400"
-                                                width="63"
-                                                height="20"
-                                            />
-                                        </a>
-                                    </li>
-                                    <li>
-                                        显卡:
-                                        <img
-                                            src="/img/svg/g41.svg"
-                                            alt="Intel(R) G41 Express Chipset"
-                                            width="143"
-                                            height="20"
-                                        />
-                                    </li>
-                                    <li>
-                                        硬盘: 固态
-                                        <img
-                                            src="/img/svg/m667.svg"
-                                            alt="ShineDisk M667 120G"
-                                            width="133"
-                                            height="20"
-                                        />, 机械
-                                        <img
-                                            src="/img/svg/wd.svg"
-                                            alt="WD5000AAKS 08WWPA0 500GB"
-                                            width="207"
-                                            height="20"
-                                        />
-                                    </li>
-                                    <li>
-                                        内存:
-                                        <img
-                                            src="/img/svg/mem.svg"
-                                            alt="2*2GB"
-                                            width="47"
-                                            height="20"
-                                        />
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                操作系统:
-                                <a
-                                    href="https://www.microsoft.com/zh-cn/software-download/windows10"
-                                >
-                                    <img
-                                        src="/img/svg/w10.svg"
-                                        alt="Windows 10"
-                                        width="95"
-                                        height="20"
-                                    />
-                                </a>
-                                <a
-                                    href="https://www.microsoft.com/zh-cn/software-download/windows11"
-                                >
-                                    <img
-                                        src="/img/svg/w11.svg"
-                                        alt="Windows 11"
-                                        width="95"
-                                        height="20"
-                                    />
-                                </a>
-                                <a href="https://deepin.org/">
-                                    <img
-                                        src="/img/svg/deepin.svg"
-                                        alt="deepin"
-                                        width="65"
-                                        height="20"
-                                    />
-                                </a>
-                            </li>
-                            <li>
-                                编辑器:
-                                <a
-                                    href="https://code.visualstudio.com/download"
-                                >
-                                    <img
-                                        src="/img/svg/vsc.svg"
-                                        alt="VSCode"
-                                        width="131"
-                                        height="20"
-                                    />
-                                </a>
-                                <a href="https://github.com/vim/vim">
-                                    <img
-                                        src="/img/svg/vim.svg"
-                                        alt="Vim"
-                                        width="49"
-                                        height="20"
-                                    />
-                                </a>
-                            </li>
-                            <li>
-                                其他工具:
-                                <a href="https://git-scm.com/">
-                                    <img
-                                        src="/img/svg/git.svg"
-                                        alt="Git"
-                                        width="43"
-                                        height="20"
-                                    />
-                                </a>
-                                <a href="https://www.microsoft.com/zh-cn/edge">
-                                    <img
-                                        src="/img/svg/msedge.svg"
-                                        alt="Microsoft Edge"
-                                        width="109"
-                                        height="20"
-                                    />
-                                </a>
-                                <a
-                                    href="https://learn.microsoft.com/zh-cn/windows/terminal/install"
-                                >
-                                    <img
-                                        src="/img/svg/wt.svg"
-                                        alt="Windows Terminal"
-                                        width="129"
-                                        height="20"
-                                    />
-                                </a>
-                                <a href="https://www.tampermonkey.net/">
-                                    <img
-                                        src="/img/svg/tm.svg"
-                                        alt="Windows Terminal"
-                                        width="115"
-                                        height="20"
-                                    />
-                                </a>
-                            </li>
-                        </ul>
-                        <p>
-                            <a
-                                href="https://github.com/dsy4567?tab=repositories&q=&type=source&language=&sort=stargazers"
-                            >
-                                <img
-                                    src="https://img.shields.io/github/stars/dsy4567?affiliations=OWNER&label=Github%20stars"
-                                    alt="GitHub User's stars"
-                                    width="100"
-                                    height="20"
-                                />
-                            </a>
-                        </p>
-                    </div>
-                </section>
-                <section>
-                    <h2>
-                        <svg class="小尺寸" data-icon="置顶仓库"></svg>
-                        <span>置顶仓库</span>
-                    </h2>
-                    <div class="组">
-                        <section>
-                            <h3>
-                                <a
-                                    href="https://github.com/dsy4567/4399-on-vscode"
-                                    >4399-on-vscode</a
-                                >
-                            </h3>
-                            <p>
-                                在 vscode 上玩 4399 小游戏, 帮助你劳逸结合,
-                                提高开发效率
-                            </p>
-                        </section>
-                        <section>
-                            <h3>
-                                <a
-                                    href="https://github.com/dsy4567/Anti-addiction-terminator"
-                                    >Anti-addiction-terminator</a
-                                >
-                            </h3>
-                            <p>
-                                (🐌 缓更) 一个可以干掉防沉迷 chrome
-                                浏览器扩展，支持4399，7k7k，17yy，37，9377，游戏狗，u7u9，7724，qq空间部分游戏，07073，4366
-                            </p>
-                        </section>
-                        <section>
-                            <h3>
-                                <a href="https://github.com/dsy4567/ikun"
-                                    >ikun</a
-                                >
-                            </h3>
-                            <p>ikun 专属乐器</p>
-                        </section>
-                        <section>
-                            <h3>
-                                <a
-                                    href="https://github.com/dsy4567/fcm-and-shit"
-                                    >fcm-and-shit</a
-                                >
-                            </h3>
-                            <p>防沉迷和答辩小游戏</p>
-                        </section>
-                        <section>
-                            <h3>
-                                <a
-                                    href="https://github.com/dsy4567/Fucking-Anti-Indulgence"
-                                    >Fucking-Anti-Indulgence</a
-                                >
-                            </h3>
-                            <p>
-                                (🐌 缓更) 破解防沉迷的 Tampermonkey
-                                脚本，支持4399，7k7k，17yy，37，9377，游戏狗，u7u9，7724，qq空间部分游戏，07073，4366
-                            </p>
-                        </section>
-                        <section>
-                            <h3>
-                                <a
-                                    href="https://github.com/dsy4567/Fucking-Anti-Indulgence"
-                                    >Fucking-Anti-Indulgence</a
-                                >
-                            </h3>
-                            <p>
-                                写得非常烂的《“死妈的防沉迷”许可证》,
-                                律师读完都有打我的冲动
-                            </p>
-                        </section>
-                    </div>
-                </section>
-                <section>
-                    <h2>
-                        <svg class="小尺寸" data-icon="小游戏"></svg>
-                        <span>小游戏</span>
-                    </h2>
-                    <ul>
-                        <li><a href="/game.html">防沉迷和答辩</a></li>
-                        <li>
-                            <a href="/no-anti.html">没有防沉迷的游戏平台</a>
-                        </li>
-                        <li>
-                            <a href="https://dsy4567.github.io/ikun/"
-                                >ikun 专属乐器</a
-                            >
-                        </li>
-                        <li>
-                            <a href="https://ayh.dsy4567.cf/"
-                                >谷歌奥运会游戏（搬运）</a
-                            >
-                        </li>
-                    </ul>
-                </section>
-                <!-- END MAIN -->
-            </article>
-        </main>
+		<main id="main">
+			<div class="左">
+				<section id="我">
+					<img
+						aria-label="头像(一个蘑菇头揍防沉迷弹窗)"
+						class="头像 大尺寸"
+						src="/img/avatar.jpg"
+						alt="头像(一个蘑菇头揍防沉迷弹窗)"
+						title="头像"
+					/>
+					<h2>dsy4567</h2>
+					<span id="关注粉丝码龄">
+						关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中
+					</span>
+					<br />
+					<span id="联系方式">
+						<a
+							href="https://qwq.dsy4567.cf/api/getemail"
+							title="电子邮箱"
+							id="电子邮箱"
+						>
+							<svg class="小尺寸" data-icon="电子邮箱"></svg>
+						</a>
+						<a
+							href="https://qwq.dsy4567.cf/api/getemail"
+							title="Telegram"
+							id="tg"
+						>
+							<svg class="小尺寸" data-icon="Telegram"></svg>
+						</a>
+						<a href="https://github.com/dsy4567" title="GitHub">
+							<svg class="小尺寸" data-icon="GitHub"></svg>
+						</a>
+						<a href="https://twitter.com/dsy4567" title="Twitter">
+							<svg class="小尺寸" data-icon="Twitter"></svg>
+						</a>
+						<a href="https://weibo.com/dsy4567" title="微博">
+							<svg class="小尺寸" data-icon="微博"></svg>
+						</a>
+						<a
+							href="https://www.luogu.com.cn/user/776713"
+							title="洛谷"
+						>
+							<svg class="小尺寸" data-icon="洛谷"></svg>
+						</a>
+						<a href="/rss.xml" title="RSS">
+							<svg class="小尺寸" data-icon="RSS"></svg>
+						</a>
+					</span>
+				</section>
+				<section class="一言">
+					<h2>
+						<svg class="小尺寸" data-icon="一言"></svg>
+						<span>一言</span>
+					</h2>
+					<p id="一言">加载中</p>
+					<span class="淡化">双击查看详细信息</span>
+				</section>
+			</div>
+			<div aria-hidden="true" id="分界线">
+				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
+			</div>
+			<article class="右">
+				<!-- BEGIN MAIN -->
+				<section id="个人简介">
+					<h2>
+						<svg class="小尺寸" data-icon="笑脸"></svg>
+						<span>个人简介</span>
+					</h2>
+					<div>
+						<h3>👋 基本信息</h3>
+						<ul>
+							<li>🆔 真实姓名：（不想说）</li>
+							<li>🍼 出生年份：2008 年（15岁）</li>
+							<li>
+								🚻 性别：<code
+									>0.1 + 0.2 == 0.3 ? "女" : "男"</code
+								>
+							</li>
+							<li>🏠 居住地：西安市附近 300 km 内</li>
+							<li>
+								🍴 饮食习惯：
+								<details>
+									<summary>点击展开</summary>
+									<ul>
+										<li>偏重口味</li>
+										<li>
+											<a
+												href="https://zh.wikipedia.org/zh-cn/%E7%B4%A0%E9%A3%9F%E4%B8%BB%E7%BE%A9#%E7%A8%AE%E9%A1%9E%E3%83%BB%E5%9E%8B%E6%85%8B"
+												>蛋奶素主义 + 锅边素食主义 +
+												方便素食主义</a
+											>
+										</li>
+										<li>
+											不喜欢碗里出现葱姜蒜和韭菜，洋葱不能太多
+										</li>
+										<li>喜欢菌类食物</li>
+									</ul>
+								</details>
+							</li>
+							<li>
+								🕺 人格类型：<a
+									href="https://www.16personalities.com/profiles/c55ee084cac53"
+									>Turbulent Logician (INTP-T)</a
+								>
+							</li>
+							<li>
+								❤️ 喜欢的：7*24
+								小时开着深色主题、造轮子、信息学竞赛、使用
+								<code>.</code> 作为提交信息
+							</li>
+							<li>
+								💔
+								不喜欢的：没有深色主题的网站/软件、看不见摸不着的墙、防沉迷
+							</li>
+						</ul>
+						<h3>🌱 正在学习</h3>
+						<ul>
+							<li>
+								<a href="https://www.python.org/">
+									<img
+										src="/img/svg/python.svg"
+										alt="Python"
+										width="67"
+										height="20"
+									/>
+								</a>
+							</li>
+							<li>
+								<a
+									href="https://developer.mozilla.org/zh-CN/docs/Web/HTML"
+								>
+									<img
+										src="/img/svg/html.svg"
+										alt="HTML"
+										width="59"
+										height="20"
+									/>
+								</a>
+								<a
+									href="https://developer.mozilla.org/zh-CN/docs/Web/CSS"
+								>
+									<img
+										src="/img/svg/css.svg"
+										alt="CSS"
+										width="51"
+										height="20"
+									/>
+								</a>
+								<a
+									href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript"
+								>
+									<img
+										src="/img/svg/javascript.svg"
+										alt="JavaScript"
+										width="85"
+										height="20"
+									/>
+								</a>
+								<a href="https://www.typescriptlang.org/">
+									<img
+										src="/img/svg/typescript.svg"
+										alt="TypeScript"
+										width="87"
+										height="20"
+									/>
+								</a>
+							</li>
+							<li>
+								<a href="https://cplusplus.com/">
+									<img
+										src="/img/svg/c艹.svg"
+										alt="c⺿"
+										width="45"
+										height="20"
+									/>
+								</a>
+							</li>
+						</ul>
+						<h3>💪 技能</h3>
+						<ul>
+							<li>
+								JavaScript/TypeScript
+								<ul>
+									<li>Web</li>
+									<li>Tampermonkey 脚本</li>
+									<li>Node.js</li>
+									<li>VSCode 扩展</li>
+								</ul>
+							</li>
+							<li>
+								Python
+								<ul>
+									<li>turtle 绘图</li>
+									<li>Pygame Zero</li>
+								</ul>
+							</li>
+							<li>
+								C/C艹
+								<ul>
+									<li>信息学竞赛</li>
+								</ul>
+							</li>
+							<li>
+								Linux
+								<ul>
+									<li>安装和救砖</li>
+									<li>使用常见命令</li>
+								</ul>
+							</li>
+						</ul>
+						<h3>🔧 开发环境</h3>
+						<ul>
+							<li>
+								2011 年买的老爷机
+								<ul>
+									<li>
+										CPU:
+										<a
+											href="https://ark.intel.com/content/www/us/en/ark/products/40478/intel-pentium-processor-e5400-2m-cache-2-70-ghz-800-mhz-fsb.html"
+										>
+											<img
+												src="/img/svg/e5400.svg"
+												alt="Intel® Pentium® Processor E5400"
+												width="63"
+												height="20"
+											/>
+										</a>
+									</li>
+									<li>
+										显卡:
+										<img
+											src="/img/svg/g41.svg"
+											alt="Intel(R) G41 Express Chipset"
+											width="143"
+											height="20"
+										/>
+									</li>
+									<li>
+										硬盘: 固态
+										<img
+											src="/img/svg/m667.svg"
+											alt="ShineDisk M667 120G"
+											width="133"
+											height="20"
+										/>, 机械
+										<img
+											src="/img/svg/wd.svg"
+											alt="WD5000AAKS 08WWPA0 500GB"
+											width="207"
+											height="20"
+										/>
+									</li>
+									<li>
+										内存:
+										<img
+											src="/img/svg/mem.svg"
+											alt="2*2GB"
+											width="47"
+											height="20"
+										/>
+									</li>
+								</ul>
+							</li>
+							<li>
+								操作系统:
+								<a
+									href="https://www.microsoft.com/zh-cn/software-download/windows10"
+								>
+									<img
+										src="/img/svg/w10.svg"
+										alt="Windows 10"
+										width="95"
+										height="20"
+									/>
+								</a>
+								<a
+									href="https://www.microsoft.com/zh-cn/software-download/windows11"
+								>
+									<img
+										src="/img/svg/w11.svg"
+										alt="Windows 11"
+										width="95"
+										height="20"
+									/>
+								</a>
+								<a href="https://deepin.org/">
+									<img
+										src="/img/svg/deepin.svg"
+										alt="deepin"
+										width="65"
+										height="20"
+									/>
+								</a>
+							</li>
+							<li>
+								编辑器:
+								<a
+									href="https://code.visualstudio.com/download"
+								>
+									<img
+										src="/img/svg/vsc.svg"
+										alt="VSCode"
+										width="131"
+										height="20"
+									/>
+								</a>
+								<a href="https://github.com/vim/vim">
+									<img
+										src="/img/svg/vim.svg"
+										alt="Vim"
+										width="49"
+										height="20"
+									/>
+								</a>
+							</li>
+							<li>
+								其他工具:
+								<a href="https://git-scm.com/">
+									<img
+										src="/img/svg/git.svg"
+										alt="Git"
+										width="43"
+										height="20"
+									/>
+								</a>
+								<a href="https://www.microsoft.com/zh-cn/edge">
+									<img
+										src="/img/svg/msedge.svg"
+										alt="Microsoft Edge"
+										width="109"
+										height="20"
+									/>
+								</a>
+								<a
+									href="https://learn.microsoft.com/zh-cn/windows/terminal/install"
+								>
+									<img
+										src="/img/svg/wt.svg"
+										alt="Windows Terminal"
+										width="129"
+										height="20"
+									/>
+								</a>
+								<a href="https://www.tampermonkey.net/">
+									<img
+										src="/img/svg/tm.svg"
+										alt="Windows Terminal"
+										width="115"
+										height="20"
+									/>
+								</a>
+							</li>
+						</ul>
+						<p>
+							<a
+								href="https://github.com/dsy4567?tab=repositories&q=&type=source&language=&sort=stargazers"
+							>
+								<img
+									src="https://img.shields.io/github/stars/dsy4567?affiliations=OWNER&label=Github%20stars"
+									alt="GitHub User's stars"
+									width="100"
+									height="20"
+								/>
+							</a>
+						</p>
+					</div>
+				</section>
+				<section>
+					<h2>
+						<svg class="小尺寸" data-icon="置顶仓库"></svg>
+						<span>置顶仓库</span>
+					</h2>
+					<div class="组">
+						<section>
+							<h3>
+								<a
+									href="https://github.com/dsy4567/4399-on-vscode"
+									>4399-on-vscode</a
+								>
+							</h3>
+							<p>
+								在 vscode 上玩 4399 小游戏, 帮助你劳逸结合,
+								提高开发效率
+							</p>
+						</section>
+						<section>
+							<h3>
+								<a
+									href="https://github.com/dsy4567/Anti-addiction-terminator"
+									>Anti-addiction-terminator</a
+								>
+							</h3>
+							<p>
+								(🐌 缓更) 一个可以干掉防沉迷 chrome
+								浏览器扩展，支持4399，7k7k，17yy，37，9377，游戏狗，u7u9，7724，qq空间部分游戏，07073，4366
+							</p>
+						</section>
+						<section>
+							<h3>
+								<a href="https://github.com/dsy4567/ikun"
+									>ikun</a
+								>
+							</h3>
+							<p>ikun 专属乐器</p>
+						</section>
+						<section>
+							<h3>
+								<a
+									href="https://github.com/dsy4567/fcm-and-shit"
+									>fcm-and-shit</a
+								>
+							</h3>
+							<p>防沉迷和答辩小游戏</p>
+						</section>
+						<section>
+							<h3>
+								<a
+									href="https://github.com/dsy4567/Fucking-Anti-Indulgence"
+									>Fucking-Anti-Indulgence</a
+								>
+							</h3>
+							<p>
+								(🐌 缓更) 破解防沉迷的 Tampermonkey
+								脚本，支持4399，7k7k，17yy，37，9377，游戏狗，u7u9，7724，qq空间部分游戏，07073，4366
+							</p>
+						</section>
+						<section>
+							<h3>
+								<a
+									href="https://github.com/dsy4567/Fucking-Anti-Indulgence"
+									>Fucking-Anti-Indulgence</a
+								>
+							</h3>
+							<p>
+								写得非常烂的《“死妈的防沉迷”许可证》,
+								律师读完都有打我的冲动
+							</p>
+						</section>
+					</div>
+				</section>
+				<section>
+					<h2>
+						<svg class="小尺寸" data-icon="小游戏"></svg>
+						<span>小游戏</span>
+					</h2>
+					<ul>
+						<li><a href="/game.html">防沉迷和答辩</a></li>
+						<li>
+							<a href="/no-anti.html">没有防沉迷的游戏平台</a>
+						</li>
+						<li>
+							<a href="https://dsy4567.github.io/ikun/"
+								>ikun 专属乐器</a
+							>
+						</li>
+						<li>
+							<a href="https://ayh.dsy4567.cf/"
+								>谷歌奥运会游戏（搬运）</a
+							>
+						</li>
+					</ul>
+				</section>
+				<!-- END MAIN -->
+			</article>
+		</main>
 
-        <footer id="copyright">
-            © 2022-2023
-            <a href="https://github.com/dsy4567">dsy4567</a><br />
-            <a href="https://icp.gov.moe/?keyword=20230212" target="_blank"
-                >萌ICP备20230212号</a
-            >
-            |
-            <a href="https://beian.miit.gov.cn/" target="_blank"
-                >陕ICP备 备你妈的案</a
-            ><br />
-            <!-- 修改代码时必须保留此链接和原作者信息, 可以添加修改后源代码的链接及作者信息 -->
-            Powered by
-            <a href="https://github.com/dsy4567/dsy4567.github.io"
-                >dsy4567/dsy4567.github.io</a
-            >
-        </footer>
-        <noscript>
-            <div>请启用 JavaScript 以获得更好的浏览体验</div>
-        </noscript>
-        <link rel="stylesheet" href="/css/font.css" />
-        <script src="/js/main.js" type="module" async></script>
-    </body>
+		<footer id="copyright">
+			© 2022-2023
+			<a href="https://github.com/dsy4567">dsy4567</a><br />
+			<a href="https://icp.gov.moe/?keyword=20230212" target="_blank"
+				>萌ICP备20230212号</a
+			>
+			|
+			<a href="https://beian.miit.gov.cn/" target="_blank"
+				>陕ICP备 备你妈的案</a
+			><br />
+			<!-- 修改代码时必须保留此链接和原作者信息, 可以添加修改后源代码的链接及作者信息 -->
+			Powered by
+			<a href="https://github.com/dsy4567/dsy4567.github.io"
+				>dsy4567/dsy4567.github.io</a
+			>
+		</footer>
+		<noscript>
+			<div>请启用 JavaScript 以获得更好的浏览体验</div>
+		</noscript>
+		<link rel="stylesheet" href="/css/font.css" />
+		<script src="/js/main.js" type="module" async></script>
+	</body>
 </html>
