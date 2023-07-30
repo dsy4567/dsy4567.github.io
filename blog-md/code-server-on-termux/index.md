@@ -37,8 +37,9 @@ termux-change-repo
 
 ```bash
 pkg up
-pkg install git nodejs openssh nginx python3 build-essential binutils pkg-config openssl-tool -y
+pkg install git nodejs nginx python3 openssl-tool wget -y
 npm config set registry https://registry.npmmirror.com #更换淘宝源
+wget https://github.com/coder/coder/releases/download/v0.27.2/coder_0.27.2_linux_arm64.deb #
 ```
 
 > 注意：安装时看见 `The default action is to keep your current version.` 这句话可直接按回车
