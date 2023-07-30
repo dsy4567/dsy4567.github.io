@@ -84,13 +84,19 @@ function 动态加载(元素) {
 		});
 }
 function 完成加载() {
-	添加点击事件和设置图标();
+	添加点击事件和设置图标({
+		设置图标: false,
+	});
 }
-async function 添加点击事件和设置图标() {
-	qsa("svg[data-icon]").forEach(
-		/** @type {HTMLElement} */ 元素 => {
+function 添加点击事件和设置图标(
+	/** @type {添加点击事件和设置图标选项} */ 选项 = {}
+) {
+	if (typeof 选项.设置图标 === "undefined" ? true : 选项.设置图标)
+		for (const 元素 of 选项.要设置图标的元素?.[0]
+			? 选项.要设置图标的元素
+			: qsa("svg[data-icon]")) {
 			// @ts-ignore
-			if (!元素.dataset.icon) return;
+			if (!元素.dataset.icon) break;
 			let c = 元素.getAttribute("class");
 			let h = c
 				? // @ts-ignore
@@ -99,39 +105,61 @@ async function 添加点击事件和设置图标() {
 				  图标[元素.dataset.icon];
 			h && (元素.outerHTML = h);
 		}
-	);
-	const a = ge("a");
-	for (const 元素 of a) {
-		if (元素.pathname === location.pathname && 元素.hash) {
-			if (!元素.classList.contains("hash链接"))
-				元素.classList.add("hash链接");
-			continue;
+	if (
+		typeof 选项.添加链接点击事件 === "undefined"
+			? true
+			: 选项.添加链接点击事件
+	) {
+		const a = 选项.要添加链接点击事件的元素?.[0]
+			? 选项.要添加链接点击事件的元素
+			: ge("a");
+		for (const 元素 of a) {
+			if (元素.pathname === location.pathname && 元素.hash) {
+				if (!元素.classList.contains("hash链接"))
+					元素.classList.add("hash链接");
+				continue;
+			}
+			if (
+				!元素.classList.contains("内链") &&
+				元素.host === location.host
+			) {
+				元素.classList.add("内链");
+				元素.href = new URL(元素.href, location.href).href;
+			}
+			if (
+				元素.host !== location.host &&
+				!元素.classList.contains("外链")
+			) {
+				元素.classList.add("外链");
+				元素.target = "_blank";
+			} else if (
+				元素.host === location.host &&
+				!元素.classList.contains("动态加载")
+			) {
+				元素.classList.add("动态加载");
+				元素.addEventListener("click", 事件 => {
+					事件.preventDefault();
+					动态加载(元素);
+				});
+			}
+			if (
+				元素.querySelector("img, svg") &&
+				!元素.classList.contains("无滤镜")
+			)
+				元素.classList.add("无滤镜");
 		}
-		if (!元素.classList.contains("内链") && 元素.host === location.host) {
-			元素.classList.add("内链");
-			元素.href = new URL(元素.href, location.href).href;
-		}
-		if (元素.host !== location.host && !元素.classList.contains("外链")) {
-			元素.classList.add("外链");
-			元素.target = "_blank";
-		} else if (
-			元素.host === location.host &&
-			!元素.classList.contains("动态加载")
-		) {
-			元素.classList.add("动态加载");
-			元素.addEventListener("click", 事件 => {
-				事件.preventDefault();
-				动态加载(元素);
-			});
-		}
-		if (
-			元素.querySelector("img, svg") &&
-			!元素.classList.contains("无滤镜")
-		)
-			元素.classList.add("无滤镜");
 	}
-	const img = ge("img");
-	for (const 元素 of img) 元素.ondblclick = () => open(元素.src, "_blank");
+	if (
+		typeof 选项.添加图片点击事件 === "undefined"
+			? true
+			: 选项.添加图片点击事件
+	) {
+		const img = 选项.要添加图片点击事件的元素?.[0]
+			? 选项.要添加图片点击事件的元素
+			: ge("img");
+		for (const 元素 of img)
+			元素.ondblclick = () => open(元素.src, "_blank");
+	}
 }
 // 网抑云阴乐歌单+控件
 !navigator.userAgent.match(/bot|spider/gi) &&
@@ -158,7 +186,7 @@ async function 添加点击事件和设置图标() {
 					网抑云阴乐.歌单[i].歌手 + " - " + 网抑云阴乐.歌单[i].歌名;
 				网抑云阴乐.歌单索引[音乐信息.id] = i;
 			}
-			async function svg(
+			function svg(
 				/** @type {string} */ html,
 				/** @type {( 元素: HTMLButtonElement ) => void} */ onclick,
 				/** @type {string} */ title,
@@ -219,7 +247,8 @@ async function 添加点击事件和设置图标() {
 					"beforeend",
 					`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a><ol id="播放列表"></ol>`
 				);
-				网抑云阴乐.歌单.forEach(async 音乐信息 => {
+				let 元素 = [];
+				网抑云阴乐.歌单.forEach(音乐信息 => {
 					let li = ce("li");
 					li.innerHTML = `${音乐信息.歌名} <span class="淡化">${音乐信息.歌手}</span>`;
 					// @ts-ignore
@@ -363,7 +392,12 @@ fetch("/json/theme.json")
 		};
 		let f = () => {
 			gd("所有主题", true)?.append(btn);
-			添加点击事件和设置图标();
+			添加点击事件和设置图标({
+				添加图片点击事件: false,
+				添加链接点击事件: false,
+				设置图标: true,
+				要设置图标的元素: btn.getElementsByTagName("svg"),
+			});
 		};
 		// @ts-ignore
 		if (localStorage.getItem("theme") === "自定义主题") btn.onclick(false);
@@ -375,11 +409,17 @@ fetch("https://dsy4567.cf/api/hitokoto")
 	.then(j => {
 		let f = () => {
 			let 一言 = gd("一言", true),
-				淡化文字 = qs("#一言+.淡化");
-			if (!一言 || !淡化文字) return;
+				// @ts-ignore
+				/** @type {HTMLAnchorElement} */ 链接 = qs("#一言+a");
+			if (!一言 || !链接) return;
 			一言.innerText = j.hitokoto;
-			淡化文字.ondblclick = 一言.ondblclick = 事件 =>
-				open("https://hitokoto.cn/?uuid=" + j.uuid, "_blank");
+			链接.href = "https://hitokoto.cn/?uuid=" + j.uuid;
+			添加点击事件和设置图标({
+				添加图片点击事件: false,
+				添加链接点击事件: true,
+				设置图标: false,
+				要添加链接点击事件的元素: [链接],
+			});
 		};
 		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 	})
@@ -389,7 +429,11 @@ fetch("/json/icon.json")
 	.then(j => {
 		let f = () => {
 			图标 = j;
-			添加点击事件和设置图标();
+			添加点击事件和设置图标({
+				添加图片点击事件: false,
+				添加链接点击事件: false,
+				设置图标: true,
+			});
 		};
 		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 	})
@@ -441,7 +485,12 @@ addEventListener("copy", () => {
 					事件.pageY,
 					false
 				);
-				添加点击事件和设置图标();
+				添加点击事件和设置图标({
+					设置图标: false,
+					添加图片点击事件: false,
+					添加链接点击事件: true,
+					要添加链接点击事件的元素: div.getElementsByTagName("a"),
+				});
 				添加脚本(
 					"https://www.recaptcha.net/recaptcha/api.js?render=explicit"
 				).then(() => {
@@ -460,7 +509,13 @@ addEventListener("copy", () => {
 										回复
 								)
 							).text();
-							添加点击事件和设置图标();
+							添加点击事件和设置图标({
+								设置图标: false,
+								添加图片点击事件: false,
+								添加链接点击事件: true,
+								要添加链接点击事件的元素:
+									div.getElementsByTagName("a"),
+							});
 							gr.focus();
 						} catch (e) {
 							gr.tabIndex = 0;
@@ -477,6 +532,44 @@ addEventListener("copy", () => {
 					});
 				});
 			});
+		});
+		let fuck = gd("fuck");
+		if (fuck)
+			fuck.innerText =
+				[
+					"\u4f60\u5988",
+					"\u5c3c\u739b",
+					"\u4f60\u5927\u7237",
+					"\u5bc4\u5427",
+				][随机数(3)] || "\u4f60\u5988";
+		let scrollTop = 0,
+			导航栏 = gd("导航栏"),
+			左 = qs("main .左", true),
+			状态 = -1;
+		addEventListener("scroll", async () => {
+			if (!导航栏 || !左) return;
+			if (document.documentElement.scrollTop === 0 && 状态 !== 0) {
+				导航栏.style.transform = "translateY(0px)";
+				导航栏.style.boxShadow = "none";
+				状态 = 0;
+			} else if (
+				document.documentElement.scrollTop > scrollTop &&
+				状态 !== 1
+			) {
+				导航栏.style.transform = "translateY(-48px)";
+				左.style.transform = "translateY(0px)";
+				导航栏.style.boxShadow = "none";
+				状态 = 1;
+			} else if (
+				document.documentElement.scrollTop < scrollTop &&
+				状态 !== 2
+			) {
+				导航栏.style.transform = "translateY(0px)";
+				左.style.transform = "translateY(48px)";
+				导航栏.style.boxShadow = "rgba(0, 0, 0, 0.24) 0px 0px 16px 0px";
+				状态 = 2;
+			}
+			scrollTop = document.documentElement.scrollTop;
 		});
 		加载模块();
 		完成加载();
@@ -495,37 +588,6 @@ addEventListener("copy", () => {
     }`;
 		setTimeout(() => {
 			document.head.append(style);
-
-			let scrollTop = 0,
-				导航栏 = gd("导航栏"),
-				左 = qs("main .左", true),
-				状态 = -1;
-			addEventListener("scroll", async () => {
-				if (!导航栏 || !左) return;
-				if (document.documentElement.scrollTop === 0 && 状态 !== 0) {
-					导航栏.style.transform = "translateY(0px)";
-					导航栏.style.boxShadow = "none";
-					状态 = 0;
-				} else if (
-					document.documentElement.scrollTop > scrollTop &&
-					状态 !== 1
-				) {
-					导航栏.style.transform = "translateY(-48px)";
-					左.style.transform = "translateY(0px)";
-					导航栏.style.boxShadow = "none";
-					状态 = 1;
-				} else if (
-					document.documentElement.scrollTop < scrollTop &&
-					状态 !== 2
-				) {
-					导航栏.style.transform = "translateY(0px)";
-					左.style.transform = "translateY(48px)";
-					导航栏.style.boxShadow =
-						"rgba(0, 0, 0, 0.24) 0px 0px 16px 0px";
-					状态 = 2;
-				}
-				scrollTop = document.documentElement.scrollTop;
-			});
 		}, 500);
 
 		import("./analytics.js");

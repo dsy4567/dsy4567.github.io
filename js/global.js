@@ -143,7 +143,9 @@ function 获取清理后的路径(包含search = false) {
 				.replace(/\/\//g, "")) + (包含search ? location.search : "");
 }
 function 随机数(/** @type {number} */ 最大) {
-	return Math.floor(Math.random() * 最大 + 1);
+	let r = Math.floor(Math.random() * (最大 + 1));
+	if (r < 0) r = 0;
+	return r;
 }
 /**
  * @param {number} r

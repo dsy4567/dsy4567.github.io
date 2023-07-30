@@ -57,11 +57,12 @@ export async function main(/** @type {String} */ 路径) {
 				})()}`;
 				span.classList.add("淡化");
 				sect.append(span);
-				// 设置大小
+				// 设置大小和懒加载
 				for (const img of sect.getElementsByTagName("img")) {
 					const m = img.alt.match(/^s:[0-9]+x[0-9]+/gi);
 					if (!m) continue;
 					img.alt = img.alt.replace(m[0], "");
+					img.loading = "lazy";
 					[img.width, img.height] = m[0]
 						.replace(/s:/g, "")
 						.split("x")

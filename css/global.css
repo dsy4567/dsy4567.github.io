@@ -273,7 +273,7 @@ svg {
 }
 a {
 	opacity: 0.9;
-	text-decoration: 1px underline transparent;
+	text-decoration: 1px underline #888;
 }
 a.无滤镜,
 a.无滤镜:hover,
