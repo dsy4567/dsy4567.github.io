@@ -11,3 +11,12 @@
 
 ## 安装 Termux
 
+点击下面的链接，在 Assets 里下载合适的安装包。大多数安卓机应该选择文件名含 `arm64` 的安装包。
+
+<https://github.com/termux/termux-app/releases/latest>
+
+> 附：对于已开启纯净模式的哄蒙系统，安装时可能需要断网。
+
+## 安装开发工具
+
+
