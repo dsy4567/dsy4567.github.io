@@ -8,7 +8,6 @@
 
 - 一个域名（没有的话可以尝试折腾 hosts 文件）
 - 一部可以完美运行 Termux 的安卓手机
-- 一台已安装 Git 的 Windows 电脑
 
 ## 安装 Termux
 
@@ -28,7 +27,20 @@
 termux-change-repo
 ```
 
-
+![s:540x1194](/blog-md/code-server-on-termux/img/repo.jpg)![s:540x1194](/blog-md/code-server-on-termux/img/mirror.jpg)
 
 确保 `Main repository` 被选中，然后按下回车，再使用上下键将光标移至清华镜像后按下空格和回车。
+
+### 安装软件
+
+依次执行以下命令：
+
+```bash
+pkg up
+pkg install git nodejs openssh nginx python3 build-essential binutils pkg-config openssl-tool -y
+npm config set registry https://registry.npmmirror.com #更换淘宝源
+```
+
+> 注意：安装时看见 `The default action is to keep your current version.` 这句话可直接按回车
+
 
