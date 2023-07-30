@@ -8,6 +8,7 @@
 
 - 一个域名（没有的话可以尝试折腾 hosts 文件）
 - 一部可以完美运行 Termux 的安卓手机
+- 一台已安装 Git 的 Windows 电脑
 
 ## 安装 Termux
 
@@ -19,4 +20,15 @@
 
 ## 安装开发工具
 
+### 更换清华 Termux 镜像
+
+启动 Termux，初始化完成后执行以下命令：
+
+```bash
+termux-change-repo
+```
+
+
+
+确保 `Main repository` 被选中，然后按下回车，再使用上下键将光标移至清华镜像后按下空格和回车。
 
