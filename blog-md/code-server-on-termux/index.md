@@ -1,6 +1,6 @@
 # 记一次在 Termux 上搭建 code-server 环境
 
-我经常来店里帮大人看店，但是店里的电脑装着 Windows7，许多开发工具不能跑，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>电信，裸连时访问速度在几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
+我经常来店里帮大人看店，但是店里的电脑装着 Windows7，许多开发工具不能跑，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连时访问速度在几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
 
 <!-- more -->
 
@@ -19,7 +19,7 @@
 
 ## 安装开发工具
 
-### 更换清华 Termux 镜像
+### 更换清华 Termux 镜像（可选）
 
 启动 Termux，初始化完成后执行以下命令：
 
@@ -36,12 +36,15 @@ termux-change-repo
 依次执行以下命令：
 
 ```bash
+pkg install tur-repo
+pkg install git nodejs nginx python3 openssl-tool wget openssh vim screen code-server -y
 pkg up
-pkg install git nodejs nginx python3 openssl-tool wget -y
-npm config set registry https://registry.npmmirror.com #更换淘宝源
-wget https://github.com/coder/coder/releases/download/v0.27.2/coder_0.27.2_linux_arm64.deb #
+#更换淘宝源
+npm config set registry https://registry.npmmirror.com
 ```
 
-> 注意：安装时看见 `The default action is to keep your current version.` 这句话可直接按回车
+> 注意：
+> 1. 下载速度可能会很慢，建议施法或换某动运营商
+> 2. 安装时看见 `The default action is to keep your current version.` 这句话可直接按回车
 
 
