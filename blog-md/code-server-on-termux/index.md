@@ -64,11 +64,11 @@ git config --global user.name "username"
 
 打开 WLAN 设置，按住已连接的网络，点击 “修改网络”。
 
-![s:1080x688 修改网络](/blog-md/code-server-on-termux/img/wlan.jpg)
+![s:540x344 修改网络](/blog-md/code-server-on-termux/img/wlan.jpg)
 
 点击“IP”，将“DHCP”改为“静态”。
 
-![s:1080x1434 网络设置](/blog-md/code-server-on-termux/img/dhcp.jpg)
+![s:540x717 网络设置](/blog-md/code-server-on-termux/img/dhcp.jpg)
 
 然后 _**参考**_ 以下设置，修改后保存。
 
@@ -78,7 +78,7 @@ git config --global user.name "username"
 -   域名 1：`192.168.1.1`
 -   域名 2：`114.114.114.114`
 
-![s:911x1920 网络设置](/blog-md/code-server-on-termux/img/ip.jpg)
+![s:455.5x960 网络设置](/blog-md/code-server-on-termux/img/ip.jpg)
 
 ## 配置域名
 

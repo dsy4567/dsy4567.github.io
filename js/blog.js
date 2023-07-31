@@ -104,7 +104,7 @@ export async function main(/** @type {String} */ 路径) {
 						a = ce("a");
 					a.innerText =
 						// @ts-ignore
-						t1.join(".").replace(/.0/g, "") + " " + 元素.innerText;
+						t1.join(".").replace(/\.0/g, "") + " " + 元素.innerText;
 					a.href = "#" + 元素.id;
 					li.append(a);
 					ul.append(li);
