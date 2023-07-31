@@ -59,7 +59,9 @@ export async function main(/** @type {String} */ 路径) {
 				sect.append(span);
 				// 设置大小和懒加载
 				for (const img of sect.getElementsByTagName("img")) {
-					const m = img.alt.match(/^s:[0-9]+x[0-9]+/gi);
+					const m = img.alt.match(
+						/^s:[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?/gi
+					);
 					if (!m) continue;
 					img.alt = img.alt.replace(m[0], "");
 					img.loading = "lazy";
