@@ -1,13 +1,15 @@
 # 记一次在 Termux 上搭建 code-server 环境
 
-我经常来店里帮大人看店，但是店里的电脑装着 Windows7，许多开发工具不能跑，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连时访问速度在几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
+我来大人店里看店时，总会在空闲时间敲两行，但是店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连时访问速度在几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
 
 <!-- more -->
 
-## 准备工作
+## 要求
 
-- 一个域名（没有的话可以尝试折腾 hosts 文件）
-- 一部可以完美运行 Termux 的安卓手机
+- 会使用 Linux
+- 有一个域名（没有的话可以尝试折腾 hosts 文件）
+- 有一部可以完美运行 Termux 的安卓手机
+- 有一台安装了 ssh 工具（Git 已经内置）和浏览器的电脑
 
 ## 安装 Termux
 
@@ -27,24 +29,249 @@
 termux-change-repo
 ```
 
-![s:540x1194](/blog-md/code-server-on-termux/img/repo.jpg)![s:540x1194](/blog-md/code-server-on-termux/img/mirror.jpg)
+![s:540x1194 选择仓库](/blog-md/code-server-on-termux/img/repo.jpg)![s:540x1194 选择镜像](/blog-md/code-server-on-termux/img/mirror.jpg)
 
 确保 `Main repository` 被选中，然后按下回车，再使用上下键将光标移至清华镜像后按下空格和回车。
 
-### 安装软件
+### 安装和配置开发工具
 
 依次执行以下命令：
 
 ```bash
-pkg install tur-repo
-pkg install git nodejs nginx python3 openssl-tool wget openssh vim screen code-server -y
+#一股脑把需要的全装上
+pkg install git nodejs nginx python3 openssl-tool wget openssh vim screen -y
 pkg up
+
+#在这里查 code-server 的最新版本号，然后替换下面的版本号
+#https://github.com/termux-user-repository/dists/blob/master/dists/tur-packages/tur/binary-aarch64/Packages
+wget https://ghproxy.com/https://github.com/termux-user-repository/dists/releases/download/0.1/code-server_4.16.0_aarch64.deb -O code-server.deb
+dpkg -i ./code-server.deb
+#网快的也可以用这个
+pkg install tur-repo
+pkg install code-server -y
+
 #更换淘宝源
 npm config set registry https://registry.npmmirror.com
+#将邮箱和用户名分别替换为 GitHub 绑定的邮箱和 GitHub 用户名
+git config --global user.email "username@example.com"
+git config --global user.name "username"
 ```
 
-> 注意：
-> 1. 下载速度可能会很慢，建议施法或换某动运营商
-> 2. 安装时看见 `The default action is to keep your current version.` 这句话可直接按回车
+> 注意：安装时看见 `The default action is to keep your current version.` 这句话可直接按回车
+> ![s:1080x394 The default action is to keep your current version.](/blog-md/code-server-on-termux/img/confirm.jpg)
 
+## 为手机设置固定内网 IP
+
+打开 WLAN 设置，按住已连接的网络，点击 “修改网络”。
+
+![s:1080x688 修改网络](/blog-md/code-server-on-termux/img/wlan.jpg)
+
+点击“IP”，将“DHCP”改为“静态”。
+
+![s:1080x1434 网络设置](/blog-md/code-server-on-termux/img/dhcp.jpg)
+
+然后 _**参考**_ 以下设置，修改后保存。
+
+- IP 地址：`192.168.1.xx`
+- 网关：`192.168.1.1`
+- 网络前缀长度：`24`
+- 域名 1：`192.168.1.1`
+- 域名 2：`114.114.114.114`
+
+![s:911x1920 网络设置](/blog-md/code-server-on-termux/img/ip.jpg)
+
+
+## 配置域名
+
+为域名添加以下记录：
+
+| 类型 | 名称 | 值 |
+| - | -------- | --------- |
+| A | vscode   | \<手机内网IP\> |
+| A | *.vscode | \<手机内网IP\> |
+
+如果没有域名，可以在 hosts 文件里添加以下内容
+
+```conf
+#将 example.com 替换为你自己的域名
+手机内网IP vscode.example.com
+手机内网IP <需要转发的端口1>.vscode.example.com
+手机内网IP <需要转发的端口2>.vscode.example.com
+手机内网IP <需要转发的端口3>.vscode.example.com
+...
+```
+
+## 配置自签名证书
+
+执行以下命令：
+
+```bash
+cd ~
+mkdir ssl
+cd ssl
+vim ./csr.conf
+```
+
+按 <kbd>i</kbd> 进入编辑模式，粘贴以下内容：
+
+```conf
+[ req ]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+
+[ dn ]
+C = CN
+CN = foo
+O = bar
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+#将 example.com 替换为你自己的域名
+DNS.1 = vscode.example.com
+DNS.2 = *.vscode.example.com
+DNS.3 = localhost
+IP.1 = <手机内网IP>
+IP.2 = 127.0.0.1
+```
+
+按 <kbd>Esc</kbd>，输入 `:wq` 并按回车后执行命令 `vim ./cert.conf`，再按 <kbd>i</kbd> 进入编辑模式，粘贴以下内容：
+
+```conf
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+#将 example.com 替换为你自己的域名
+DNS.1 = vscode.example.com
+DNS.2 = *.vscode.example.com
+DNS.3 = localhost
+IP.1 = <手机内网IP>
+IP.2 = 127.0.0.1
+```
+
+按 <kbd>Esc</kbd>，输入 `:wq` 并按回车后，依次执行以下命令：
+
+```bash
+openssl req -x509 -sha256 -days 3560 -nodes -newkey rsa:2048 -subj "/CN=foo/C=CN/O=bar" -keyout rootCA.key -out rootCA.crt
+openssl genrsa -out server.key 2048
+openssl req -new -key server.key -out server.csr -config csr.conf
+openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 365 -sha256 -extfile cert.conf
+```
+
+## 配置 ssh 服务
+
+依次执行以下命令：
+
+```bash
+#设置密码，密码不会显示出来，输完后请自信按下回车
+passwd
+
+sshd
+#显示内网 IP 地址
+ifconfig
+```
+
+现在可以在同一局域网内另一台安装了 ssh 客户端的机器上执行以下命令，然后输入密码：
+
+```bash
+ssh -p 8022 手机内网IP
+```
+
+如果显示下面的文字，输入 `yes` 并按回车
+
+```text
+ED25519 key fingerprint is SHA256:balabala.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+```
+
+## 安装根证书
+
+以 Windows 系统为例，在同一局域网内另一台安装了 ssh 客户端的机器上执行以下命令，然后输入密码：
+
+```bash
+scp -P 8022 username@手机内网IP:~/ssl/rootCA.crt .
+```
+
+双击打开证书文件，点击“安装证书”，将证书添加到“受信任的根证书颁发机构”。
+
+![s:748x787 安装 CA 证书](/blog-md/code-server-on-termux/img/ca.png)
+
+## 配置 Nginx
+
+执行命令 `vim ~/../usr/etc/nginx/nginx.conf`，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，然后粘贴以下内容：
+
+```text
+worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    sendfile        on;
+    keepalive_timeout  65;
+    gzip  on;
+    #如果显示“could not build server_names_hash, you should increase server_names_hash_bucket_size”，可以将下面的数字改为更大的 32 的倍数
+    server_names_hash_bucket_size 64;
+    
+    #需要转发更多端口，可以复制粘贴以下内容，并修改端口号
+    server {
+        listen       7443 ssl;
+        #将 8080 改为需要转发的端口，将 example.com 替换为你自己的域名
+        server_name  8080.vscode.example.com;
+
+        ssl_certificate      /data/data/com.termux/files/home/ssl/server.crt;
+        ssl_certificate_key  /data/data/com.termux/files/home/ssl/server.key;
+
+        ssl_session_cache    shared:SSL:1m;
+        ssl_session_timeout  5m;
+
+        ssl_ciphers  HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers  on;
+
+        location / {
+            #将 8080 改为需要转发的端口
+            proxy_pass  http://127.0.0.1:8080;
+            proxy_set_header Host $proxy_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+    }
+
+}
+```
+
+按 <kbd>Esc</kbd>，输入 `:wq` 并按回车。
+
+## 编写启动脚本
+
+执行命令 `vim ./code-server.sh`，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，粘贴以下内容：
+
+```bash
+#!/data/data/com.termux/files/usr/bin/bash
+sshd
+nginx
+cat ~/.config/code-server/config.yaml
+#将 example.com 替换为你自己的域名
+code-server --host vscode.example.com --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/server.key --proxy-domain vscode.example.com:7443
+```
+
+按 <kbd>Esc</kbd>，输入 `:wq` 并按回车，然后依次执行以下命令：
+
+```bash
+chmod 777 ./code-server.sh
+./code-server.sh
+```
+
+> 退出按 <kbd>Ctrl</kbd> + <kbd>C</kbd> 并执行 `nginx -s quit`
+
+至此，完整的开发环境已经准备好。在同一局域网内另一台机器上打开浏览器，在地址栏输入 `vscode.example.com`（将 example.com 替换为你自己的域名）并输入密码，就可以愉快地敲代码了。
 
