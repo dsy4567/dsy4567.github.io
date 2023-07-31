@@ -270,15 +270,7 @@ sshd
 nginx -s quit
 nginx
 cat ~/.config/code-server/config.yaml
-#这里放上官网的警告
-#Note that Android and Linux are not 100% compatible,
-#so use these workarounds at your own risk. Extensions
-# that have native dependencies other than Node or that
-# directly interact with the OS might cause issues.
-#
-#大概意思是：别用可能直接调用操作系统接口/包含二进制可执行文件的
-#扩展，它们可能会出问题，因为 Android 和 Linux 不完全兼容，出
-#了问题你负责。
+#见下方注意事项
 export NODE_OPTIONS="--require /data/data/com.termux/files/home/android-as-linux.js"
 #将 example.com 替换为你自己的域名
 code-server --host vscode.example.com --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/server.key --proxy-domain vscode.example.com:7443
