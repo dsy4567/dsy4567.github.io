@@ -2,6 +2,8 @@
 
 > **Note**: 在 <https://dsy4567.cf/blog.html> 上阅读体验更佳
 
+[记一次在 Termux 上搭建 code-server 环境](./code-server-on-termux/index.md)
+
 [如何优化网站加载速度](./how-to-improve-performance/index.md)
 
 [使用 CloudFlare Workers 免费搭建 Virtual Judge 反代](./cf-vjmirror/index.md)

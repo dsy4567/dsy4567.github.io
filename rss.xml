@@ -7,6 +7,287 @@
     <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>
 
 <entry>
+    <title>记一次在 Termux 上搭建 code-server 环境</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=code-server-on-termux" />
+    <id>code-server-on-termux</id>
+    <published>2023-07-31T13:17:09.742Z</published>
+    <updated>2023-07-31T13:17:09.742Z</updated>
+    <summary>记一次在 Termux 上搭建 code-server 环境
+我来大人店里看店时，总会在空闲时间敲两行，但是店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是世界加钱可及的某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
+</summary>
+    <author>
+        <name>dsy4567</name>
+        <uri>https://dsy4567.github.io/</uri>
+    </author>
+    <category term="Default" />
+    <content type="html" xml:lang="zh-cn">
+        <![CDATA[
+<h1 id="记一次在-termux-上搭建-code-server-环境">记一次在 Termux 上搭建 code-server 环境</h1>
+<p>我来大人店里看店时，总会在空闲时间敲两行，但是店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。</p>
+<!-- more -->
+
+<h2 id="要求">要求</h2>
+<ul>
+<li>会使用 Linux</li>
+<li>有一个域名（没有的话可以尝试折腾 hosts 文件）</li>
+<li>有一部可以完美运行 Termux 的安卓手机</li>
+<li>有一台安装了 ssh 工具（Git 已经内置）和浏览器的电脑</li>
+</ul>
+<h2 id="安装-termux">安装 Termux</h2>
+<p>点击下面的链接，在 Assets 里下载合适的安装包。大多数安卓/哄蒙机应该选择文件名含 <code>arm64</code> 的安装包。</p>
+<p><a href="https://github.com/termux/termux-app/releases/latest">https://github.com/termux/termux-app/releases/latest</a></p>
+<blockquote>
+<p>附：对于已开启纯净模式的哄蒙系统，安装时可能需要断网。</p>
+</blockquote>
+<h2 id="安装开发工具">安装开发工具</h2>
+<h3 id="更换清华-termux-镜像（可选）">更换清华 Termux 镜像（可选）</h3>
+<p>启动 Termux，初始化完成后执行以下命令：</p>
+<pre><code class="language-bash">termux-change-repo
+</code></pre>
+<p><img src="/blog-md/code-server-on-termux/img/repo.jpg" alt="s:540x1194 选择仓库"><img src="/blog-md/code-server-on-termux/img/mirror.jpg" alt="s:540x1194 选择镜像"></p>
+<p>确保 <code>Main repository</code> 被选中，然后按下回车，再使用上下键将光标移至清华镜像后按下空格和回车。</p>
+<h3 id="安装和配置开发工具">安装和配置开发工具</h3>
+<p>依次执行以下命令：</p>
+<pre><code class="language-bash">#一股脑把需要的全装上
+pkg install git nodejs nginx python3 openssl-tool wget openssh vim screen -y
+pkg up
+
+#在这里查 code-server 的最新版本号，然后替换下面的版本号
+#https://github.com/termux-user-repository/dists/blob/master/dists/tur-packages/tur/binary-aarch64/Packages
+wget https://ghproxy.com/https://github.com/termux-user-repository/dists/releases/download/0.1/code-server_4.16.0_aarch64.deb -O code-server.deb
+dpkg -i ./code-server.deb
+#网快的也可以用这个
+pkg install tur-repo
+pkg install code-server -y
+
+#更换淘宝源
+npm config set registry https://registry.npmmirror.com
+#将邮箱和用户名分别替换为 GitHub 绑定的邮箱和 GitHub 用户名
+git config --global user.email &quot;username@example.com&quot;
+git config --global user.name &quot;username&quot;
+</code></pre>
+<blockquote>
+<p>注意：安装时看见 <code>The default action is to keep your current version.</code> 这句话可直接按回车
+<img src="/blog-md/code-server-on-termux/img/confirm.jpg" alt="s:1080x394 The default action is to keep your current version."></p>
+</blockquote>
+<h2 id="为手机设置固定内网-ip">为手机设置固定内网 IP</h2>
+<p>打开 WLAN 设置，按住已连接的网络，点击 “修改网络”。</p>
+<p><img src="/blog-md/code-server-on-termux/img/wlan.jpg" alt="s:1080x688 修改网络"></p>
+<p>点击“IP”，将“DHCP”改为“静态”。</p>
+<p><img src="/blog-md/code-server-on-termux/img/dhcp.jpg" alt="s:1080x1434 网络设置"></p>
+<p>然后 <em><strong>参考</strong></em> 以下设置，修改后保存。</p>
+<ul>
+<li>IP 地址：<code>192.168.1.xx</code></li>
+<li>网关：<code>192.168.1.1</code></li>
+<li>网络前缀长度：<code>24</code></li>
+<li>域名 1：<code>192.168.1.1</code></li>
+<li>域名 2：<code>114.114.114.114</code></li>
+</ul>
+<p><img src="/blog-md/code-server-on-termux/img/ip.jpg" alt="s:911x1920 网络设置"></p>
+<h2 id="配置域名">配置域名</h2>
+<p>为域名添加以下记录：</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>名称</th>
+<th>值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>A</td>
+<td>vscode</td>
+<td>&lt;手机内网 IP&gt;</td>
+</tr>
+<tr>
+<td>A</td>
+<td>*.vscode</td>
+<td>&lt;手机内网 IP&gt;</td>
+</tr>
+</tbody></table>
+<p>如果没有域名，可以在 hosts 文件里添加以下内容</p>
+<pre><code class="language-conf">#将 example.com 替换为你自己的域名
+手机内网IP vscode.example.com
+手机内网IP &lt;需要转发的端口1&gt;.vscode.example.com
+手机内网IP &lt;需要转发的端口2&gt;.vscode.example.com
+手机内网IP &lt;需要转发的端口3&gt;.vscode.example.com
+...
+</code></pre>
+<h2 id="配置自签名证书">配置自签名证书</h2>
+<p>执行以下命令：</p>
+<pre><code class="language-bash">cd ~
+mkdir ssl
+cd ssl
+vim ./csr.conf
+</code></pre>
+<p>按 <kbd>i</kbd> 进入编辑模式，粘贴以下内容：</p>
+<pre><code class="language-conf">[ req ]
+default_bits = 2048
+prompt = no
+default_md = sha256
+req_extensions = req_ext
+distinguished_name = dn
+
+[ dn ]
+C = CN
+CN = foo
+O = bar
+
+[ req_ext ]
+subjectAltName = @alt_names
+
+[ alt_names ]
+#将 example.com 替换为你自己的域名
+DNS.1 = vscode.example.com
+DNS.2 = *.vscode.example.com
+DNS.3 = localhost
+IP.1 = &lt;手机内网IP&gt;
+IP.2 = 127.0.0.1
+</code></pre>
+<p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车后执行命令 <code>vim ./cert.conf</code>，再按 <kbd>i</kbd> 进入编辑模式，粘贴以下内容：</p>
+<pre><code class="language-conf">authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+
+[alt_names]
+#将 example.com 替换为你自己的域名
+DNS.1 = vscode.example.com
+DNS.2 = *.vscode.example.com
+DNS.3 = localhost
+IP.1 = &lt;手机内网IP&gt;
+IP.2 = 127.0.0.1
+</code></pre>
+<p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车后，依次执行以下命令：</p>
+<pre><code class="language-bash">openssl req -x509 -sha256 -days 3560 -nodes -newkey rsa:2048 -subj &quot;/CN=foo/C=CN/O=bar&quot; -keyout rootCA.key -out rootCA.crt
+openssl genrsa -out server.key 2048
+openssl req -new -key server.key -out server.csr -config csr.conf
+openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 365 -sha256 -extfile cert.conf
+</code></pre>
+<h2 id="配置-ssh-服务">配置 ssh 服务</h2>
+<p>依次执行以下命令：</p>
+<pre><code class="language-bash">#设置密码，密码不会显示出来，输完后请自信按下回车
+passwd
+
+sshd
+#显示内网 IP 地址
+ifconfig
+</code></pre>
+<p>现在可以在同一局域网内另一台安装了 ssh 客户端的机器上执行以下命令，然后输入密码：</p>
+<pre><code class="language-bash">ssh -p 8022 手机内网IP
+</code></pre>
+<p>如果显示下面的文字，输入 <code>yes</code> 并按回车</p>
+<pre><code class="language-text">ED25519 key fingerprint is SHA256:balabala.
+This key is not known by any other names
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+</code></pre>
+<h2 id="安装根证书">安装根证书</h2>
+<p>以 Windows 系统为例，在同一局域网内另一台安装了 ssh 客户端的机器上执行以下命令，然后输入密码：</p>
+<pre><code class="language-bash">scp -P 8022 username@手机内网IP:~/ssl/rootCA.crt .
+</code></pre>
+<p>双击打开证书文件，点击“安装证书”，将证书添加到“受信任的根证书颁发机构”。</p>
+<p><img src="/blog-md/code-server-on-termux/img/ca.png" alt="s:748x787 安装 CA 证书"></p>
+<h2 id="配置-nginx">配置 Nginx</h2>
+<p>执行命令 <code>vim ~/../usr/etc/nginx/nginx.conf</code>，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，然后粘贴以下内容：</p>
+<pre><code class="language-text">worker_processes  1;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    sendfile        on;
+    keepalive_timeout  65;
+    gzip  on;
+    #如果显示“could not build server_names_hash, you should increase server_names_hash_bucket_size”，可以将下面的数字改为更大的 32 的倍数
+    server_names_hash_bucket_size 64;
+
+    #需要转发更多端口，可以复制粘贴以下内容，并修改端口号
+    server {
+        listen       7443 ssl;
+        #将 8080 改为需要转发的端口，将 example.com 替换为你自己的域名
+        server_name  8080.vscode.example.com;
+
+        ssl_certificate      /data/data/com.termux/files/home/ssl/server.crt;
+        ssl_certificate_key  /data/data/com.termux/files/home/ssl/server.key;
+
+        ssl_session_cache    shared:SSL:1m;
+        ssl_session_timeout  5m;
+
+        ssl_ciphers  HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers  on;
+
+        location / {
+            #将 8080 改为需要转发的端口
+            proxy_pass  http://127.0.0.1:8080;
+            proxy_set_header Host $proxy_host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        }
+    }
+
+}
+</code></pre>
+<p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车。</p>
+<h2 id="编写启动脚本">编写启动脚本</h2>
+<p>执行命令 <code>vim ~/android-as-linux.js</code>，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，粘贴以下内容：</p>
+<pre><code class="language-js">Object.defineProperty(process, &quot;platform&quot;, {
+    get() {
+        return &quot;linux&quot;;
+    },
+});
+</code></pre>
+<p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车，然后执行命令 <code>vim ./code-server.sh</code>，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，粘贴以下内容：</p>
+<pre><code class="language-bash">#!/data/data/com.termux/files/usr/bin/bash
+sshd
+nginx -s quit
+nginx
+cat ~/.config/code-server/config.yaml
+#这里放上官网的警告
+#Note that Android and Linux are not 100% compatible,
+#so use these workarounds at your own risk. Extensions
+# that have native dependencies other than Node or that
+# directly interact with the OS might cause issues.
+#
+#大概意思是：别用可能直接调用操作系统接口/包含二进制可执行文件的
+#扩展，它们可能会出问题，因为 Android 和 Linux 不完全兼容，出
+#了问题你负责。
+export NODE_OPTIONS=&quot;--require /data/data/com.termux/files/home/android-as-linux.js&quot;
+#将 example.com 替换为你自己的域名
+code-server --host vscode.example.com --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/server.key --proxy-domain vscode.example.com:7443
+</code></pre>
+<p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车，然后依次执行以下命令：</p>
+<pre><code class="language-bash">chmod 777 ./code-server.sh
+./code-server.sh
+</code></pre>
+<blockquote>
+<p>退出按 <kbd>Ctrl</kbd> + <kbd>C</kbd> 并执行 <code>nginx -s quit</code></p>
+</blockquote>
+<p>至此，完整的开发环境已经准备好。在同一局域网内另一台机器上打开浏览器，在地址栏输入 <code>vscode.example.com</code>（将 example.com 替换为你自己的域名）并输入密码，就可以愉快地敲代码了。</p>
+<p><img src="/blog-md/code-server-on-termux/img/code-server.png" alt="s:1680x1010 code-server"></p>
+<h2 id="注意事项">注意事项</h2>
+<h3 id="扩展">扩展</h3>
+<p>这里贴上官网的<a href="https://coder.com/docs/code-server/latest/termux#many-extensions-including-language-packs-fail-to-install">警告</a></p>
+<blockquote>
+<p>Note that Android and Linux are not 100% compatible, so use these workarounds at your own risk. Extensions that have native dependencies ther than Node or that directly interact with the OS might cause issues.</p>
+</blockquote>
+<p>这句话的意思是：上面强制让 code-server 认为它现在在 Linux 平台上跑的行为可能会出惹出一些问题：直接调用操作系统接口/包含二进制可执行文件的扩展可能无法正常运行，因为 Android 和 Linux 不完全兼容，出了问题你负责。</p>
+<p>还有，code-server 的扩展由 <a href="https://open-vsx.org/">Open VSX Registry</a> 提供，但是一些扩展在这并没有上架，这时可以在 <a href="https://marketplace.visualstudio.com/">Visual Studio Marketplace</a> 上面找到需要的扩展，然后点击右侧的“Download Extension”。下载后将扩展文件拽到右侧的资源管理器，再点击右键 &gt; 安装扩展 VSIX.</p>
+<p>顺便推荐一些我正在用的扩展：</p>
+<ul>
+<li><spoiler><del>厚着脸皮给自己打广告</del> 4399 on VSCode：在 VSCode 上玩 4399 小游戏</spoiler></li>
+<li>Code Spell Checker：检查代码里的拼写错误，并给出修改建议</li>
+<li>Comment Translate：翻译代码里的注释，支持替换需要翻译的文字</li>
+<li>ESLint：规范代码风格</li>
+<li>Gitmoji：快速在 Git 提交信息里插入 Emoji 表情</li>
+<li>Path Intellisense：快速补全路径</li>
+<li>Prettier：更漂亮的代码格式化工具</li>
+</ul>
+
+        ]]>
+    </content>
+</entry>
+<entry>
     <title>如何优化网站加载速度</title>
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=how-to-improve-performance" />
     <id>how-to-improve-performance</id>

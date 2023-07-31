@@ -1,19 +1,19 @@
 # 记一次在 Termux 上搭建 code-server 环境
 
-我来大人店里看店时，总会在空闲时间敲两行，但是店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连时访问速度在几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
+我来大人店里看店时，总会在空闲时间敲两行，但是店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
 
 <!-- more -->
 
 ## 要求
 
-- 会使用 Linux
-- 有一个域名（没有的话可以尝试折腾 hosts 文件）
-- 有一部可以完美运行 Termux 的安卓手机
-- 有一台安装了 ssh 工具（Git 已经内置）和浏览器的电脑
+-   会使用 Linux
+-   有一个域名（没有的话可以尝试折腾 hosts 文件）
+-   有一部可以完美运行 Termux 的安卓手机
+-   有一台安装了 ssh 工具（Git 已经内置）和浏览器的电脑
 
 ## 安装 Termux
 
-点击下面的链接，在 Assets 里下载合适的安装包。大多数安卓机应该选择文件名含 `arm64` 的安装包。
+点击下面的链接，在 Assets 里下载合适的安装包。大多数安卓/哄蒙机应该选择文件名含 `arm64` 的安装包。
 
 <https://github.com/termux/termux-app/releases/latest>
 
@@ -72,23 +72,22 @@ git config --global user.name "username"
 
 然后 _**参考**_ 以下设置，修改后保存。
 
-- IP 地址：`192.168.1.xx`
-- 网关：`192.168.1.1`
-- 网络前缀长度：`24`
-- 域名 1：`192.168.1.1`
-- 域名 2：`114.114.114.114`
+-   IP 地址：`192.168.1.xx`
+-   网关：`192.168.1.1`
+-   网络前缀长度：`24`
+-   域名 1：`192.168.1.1`
+-   域名 2：`114.114.114.114`
 
 ![s:911x1920 网络设置](/blog-md/code-server-on-termux/img/ip.jpg)
-
 
 ## 配置域名
 
 为域名添加以下记录：
 
-| 类型 | 名称 | 值 |
-| - | -------- | --------- |
-| A | vscode   | \<手机内网IP\> |
-| A | *.vscode | \<手机内网IP\> |
+| 类型 | 名称      | 值              |
+| ---- | --------- | --------------- |
+| A    | vscode    | \<手机内网 IP\> |
+| A    | \*.vscode | \<手机内网 IP\> |
 
 如果没有域名，可以在 hosts 文件里添加以下内容
 
@@ -221,7 +220,7 @@ http {
     gzip  on;
     #如果显示“could not build server_names_hash, you should increase server_names_hash_bucket_size”，可以将下面的数字改为更大的 32 的倍数
     server_names_hash_bucket_size 64;
-    
+
     #需要转发更多端口，可以复制粘贴以下内容，并修改端口号
     server {
         listen       7443 ssl;
@@ -253,13 +252,34 @@ http {
 
 ## 编写启动脚本
 
-执行命令 `vim ./code-server.sh`，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，粘贴以下内容：
+执行命令 `vim ~/android-as-linux.js`，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，粘贴以下内容：
+
+```js
+Object.defineProperty(process, "platform", {
+	get() {
+		return "linux";
+	},
+});
+```
+
+按 <kbd>Esc</kbd>，输入 `:wq` 并按回车，然后执行命令 `vim ./code-server.sh`，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，粘贴以下内容：
 
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
 sshd
+nginx -s quit
 nginx
 cat ~/.config/code-server/config.yaml
+#这里放上官网的警告
+#Note that Android and Linux are not 100% compatible,
+#so use these workarounds at your own risk. Extensions
+# that have native dependencies other than Node or that
+# directly interact with the OS might cause issues.
+#
+#大概意思是：别用可能直接调用操作系统接口/包含二进制可执行文件的
+#扩展，它们可能会出问题，因为 Android 和 Linux 不完全兼容，出
+#了问题你负责。
+export NODE_OPTIONS="--require /data/data/com.termux/files/home/android-as-linux.js"
 #将 example.com 替换为你自己的域名
 code-server --host vscode.example.com --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/server.key --proxy-domain vscode.example.com:7443
 ```
@@ -275,3 +295,26 @@ chmod 777 ./code-server.sh
 
 至此，完整的开发环境已经准备好。在同一局域网内另一台机器上打开浏览器，在地址栏输入 `vscode.example.com`（将 example.com 替换为你自己的域名）并输入密码，就可以愉快地敲代码了。
 
+![s:1680x1010 code-server](/blog-md/code-server-on-termux/img/code-server.png)
+
+## 注意事项
+
+### 扩展
+
+这里贴上官网的[警告](https://coder.com/docs/code-server/latest/termux#many-extensions-including-language-packs-fail-to-install)
+
+> Note that Android and Linux are not 100% compatible, so use these workarounds at your own risk. Extensions that have native dependencies ther than Node or that directly interact with the OS might cause issues.
+
+这句话的意思是：上面强制让 code-server 认为它现在在 Linux 平台上跑的行为可能会出惹出一些问题：直接调用操作系统接口/包含二进制可执行文件的扩展可能无法正常运行，因为 Android 和 Linux 不完全兼容，出了问题你负责。
+
+还有，code-server 的扩展由 [Open VSX Registry](https://open-vsx.org/) 提供，但是一些扩展在这并没有上架，这时可以在 [Visual Studio Marketplace](https://marketplace.visualstudio.com/) 上面找到需要的扩展，然后点击右侧的“Download Extension”。下载后将扩展文件拽到右侧的资源管理器，再点击右键 > 安装扩展 VSIX.
+
+顺便推荐一些我正在用的扩展：
+
+-   <spoiler><del>厚着脸皮给自己打广告</del> 4399 on VSCode：在 VSCode 上玩 4399 小游戏</spoiler>
+-   Code Spell Checker：检查代码里的拼写错误，并给出修改建议
+-   Comment Translate：翻译代码里的注释，支持替换需要翻译的文字
+-   ESLint：规范代码风格
+-   Gitmoji：快速在 Git 提交信息里插入 Emoji 表情
+-   Path Intellisense：快速补全路径
+-   Prettier：更漂亮的代码格式化工具
