@@ -129,6 +129,7 @@ function 添加点击事件和设置图标(
 				元素.host === location.host
 			) {
 				元素.classList.add("内链");
+				元素.classList.remove("外链");
 				元素.href = new URL(元素.href, location.href).href;
 			}
 			if (
@@ -136,6 +137,7 @@ function 添加点击事件和设置图标(
 				!元素.classList.contains("外链")
 			) {
 				元素.classList.add("外链");
+				元素.classList.remove("内链");
 				元素.target = "_blank";
 			} else if (
 				元素.host === location.host &&
