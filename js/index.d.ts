@@ -40,6 +40,7 @@ type 添加点击事件和设置图标选项 = {
 
 declare class Hljs {
 	highlightAll();
+	highlightElement(元素: Element);
 }
 declare class Recaptcha {
 	getResponse(): string;

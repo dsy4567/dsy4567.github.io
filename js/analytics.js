@@ -1,3 +1,5 @@
+/* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
+
 export default (() => {
 	if (location.hostname === "dev.dsy4567.cf") return;
 	let /** @type {HTMLScriptElement} */ s1 = document.createElement("script");

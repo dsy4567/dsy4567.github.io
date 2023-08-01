@@ -3,7 +3,7 @@
 // @ts-check
 "use strict";
 
-const /** @type {Record<string, string[] | undefined>} */ 加载清单 = {
+const /** @type {Record<string, string[]>} */ 加载清单 = {
 		"/": [],
 		"/blog": ["blog"],
 		"/friends": ["friends"],
@@ -13,11 +13,16 @@ let 路径 = 获取清理后的路径(true),
 	正在动态加载 = false,
 	/** @type {Record<string, string | undefined>} */ 图标 = {};
 
-async function 加载模块() {
+function 加载模块() {
 	路径 = 获取清理后的路径();
 	let 路径2 = 获取清理后的路径(true);
-	for (const s of 加载清单[路径] || [])
-		(await import(`/js/${s}.js`)).main(路径2);
+	for (const s of 加载清单[路径] || []) {
+		const i = import(`/js/${s}.js`),
+			f = async () => {
+				(await i).main(路径2);
+			};
+		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+	}
 	路径 = 路径2;
 }
 /** @param {{ href: string; popstate?: boolean }} 元素 */
@@ -55,7 +60,7 @@ function 动态加载(元素) {
 				let 右 = qs("main .右", true);
 				if (!右) return;
 				右.innerHTML = m[0];
-				await 加载模块();
+				加载模块();
 
 				if (
 					u.pathname
@@ -571,11 +576,10 @@ addEventListener("copy", () => {
 			}
 			scrollTop = document.documentElement.scrollTop;
 		});
-		加载模块();
 		完成加载();
 
 		let style = ce("style");
-		style.innerText = `a,
+		style.innerHTML = `a,
     button,
     div,
     section,
@@ -603,6 +607,8 @@ addEventListener("popstate", 事件 => {
 		popstate: true,
 	});
 });
+
+加载模块();
 
 _global["main.js"] = () => ({
 	loaded,

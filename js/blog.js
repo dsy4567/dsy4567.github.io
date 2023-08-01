@@ -6,6 +6,9 @@
 let /** @type {文章信息[]} */ 所有文章信息 = [],
 	路径 = 获取清理后的路径(true);
 
+添加脚本("/js/highlight.min.js");
+添加样式("/css/hl.min.css");
+
 export async function main(/** @type {String} */ 路径) {
 	// @ts-ignore
 	await import("/js/marked.min.js");
@@ -70,6 +73,12 @@ export async function main(/** @type {String} */ 路径) {
 						.split("x")
 						.map(s => +s);
 				}
+				// 高亮
+				添加脚本("/js/highlight.min.js").then(() =>
+					sect
+						.querySelectorAll("pre > code")
+						.forEach(元素 => hljs.highlightElement(元素))
+				);
 
 				document.title =
 					(qs("main > .右 > section > h1")?.innerText || "无标题") +
@@ -138,10 +147,6 @@ export async function main(/** @type {String} */ 路径) {
 						behavior: "smooth",
 					});
 
-				await 添加脚本("/js/highlight.min.js");
-				添加样式("/css/hl.min.css");
-				hljs.highlightAll();
-
 				当前文章信息.issue &&
 					fetch(
 						`https://api.github.com/repos/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}/comments`
@@ -203,9 +208,16 @@ ${(() => {
 							let sect = ce("section");
 							sect.id = "评论区";
 							sect.innerHTML = html;
+							// 高亮
+							添加脚本("/js/highlight.min.js").then(() =>
+								sect
+									.querySelectorAll("pre > code")
+									.forEach(元素 =>
+										hljs.highlightElement(元素)
+									)
+							);
 							右.append(sect);
 							_global["main.js"]().添加点击事件和设置图标();
-							hljs.highlightAll();
 						});
 			})
 			.catch(e => {
@@ -307,6 +319,11 @@ ${(() => {
 					右.scrollIntoView({
 						behavior: "smooth",
 					});
+
+				// 高亮
+				添加脚本("/js/highlight.min.js").then(() =>
+					hljs.highlightAll()
+				);
 			})
 			.catch(e => {
 				console.error(e);

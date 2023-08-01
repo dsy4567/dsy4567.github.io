@@ -4,7 +4,9 @@
 "use strict";
 
 let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
-	/** @type {Record<string, HTMLElement | null>} */ qs缓存 = {};
+	/** @type {Record<string, HTMLElement | null>} */ qs缓存 = {},
+	/** @type {Record<string, {已完成加载: boolean, 回调: ((事件?: any) => void)[]}>} */ 已添加的脚本 =
+		{};
 /**
  * document.getElementById
  * @param {string} s
@@ -74,13 +76,40 @@ function 添加样式(url) {
 }
 /**
  * @param {string} url
+ * @returns {Promise<any>}
  */
 async function 添加脚本(url) {
 	return new Promise(resolve => {
-		if (qs("script[src*='" + url + "']")) return resolve({});
+		if (已添加的脚本[url]) return 已添加的脚本[url].回调.push(resolve);
+
+		已添加的脚本[url] = {
+			已完成加载: false,
+			回调: [],
+		};
+		let a = 已添加的脚本[url];
+		// @ts-ignore
+		a.回调._push = a.回调.push;
+		a.回调.push = (..._) => {
+			if (a.已完成加载)
+				_.forEach(回调 => {
+					try {
+						回调();
+					} catch (e) {}
+				});
+			// @ts-ignore
+			else a.回调._push(..._);
+			return a.回调.length;
+		};
 		let s = ce("script");
 		s.onload = 事件 => {
-			resolve(事件);
+			a.已完成加载 = true;
+			let 回调 = a.回调.pop();
+			while (回调) {
+				try {
+					回调();
+				} catch (e) {}
+				回调 = a.回调.pop();
+			}
 		};
 		s.src = url;
 		document.head.append(s);
