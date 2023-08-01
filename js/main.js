@@ -138,6 +138,7 @@ function 添加点击事件和设置图标(
 			) {
 				元素.classList.add("外链");
 				元素.classList.remove("内链");
+				元素.classList.remove("动态加载");
 				元素.target = "_blank";
 			} else if (
 				元素.host === location.host &&
