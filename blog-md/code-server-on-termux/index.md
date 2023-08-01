@@ -162,6 +162,7 @@ openssl req -x509 -sha256 -days 3560 -nodes -newkey rsa:2048 -subj "/CN=foo/C=CN
 openssl genrsa -out server.key 2048
 openssl req -new -key server.key -out server.csr -config csr.conf
 openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 365 -sha256 -extfile cert.conf
+cd ~
 ```
 
 ## 配置 ssh 服务
@@ -262,7 +263,7 @@ Object.defineProperty(process, "platform", {
 });
 ```
 
-按 <kbd>Esc</kbd>，输入 `:wq` 并按回车，然后执行命令 `vim ./code-server.sh`，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，粘贴以下内容：
+按 <kbd>Esc</kbd>，输入 `:wq` 并按回车，然后执行命令 `vim ~/code-server.sh`，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，粘贴以下内容：
 
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
@@ -279,8 +280,8 @@ code-server --host vscode.example.com --port 8443 --cert ~/ssl/server.crt --cert
 按 <kbd>Esc</kbd>，输入 `:wq` 并按回车，然后依次执行以下命令：
 
 ```bash
-chmod 777 ./code-server.sh
-./code-server.sh
+chmod 777 ~/code-server.sh
+~/code-server.sh
 ```
 
 > 退出按 <kbd>Ctrl</kbd> + <kbd>C</kbd> 并执行 `nginx -s quit`
