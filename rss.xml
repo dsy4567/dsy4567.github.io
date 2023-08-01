@@ -11,9 +11,9 @@
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=code-server-on-termux" />
     <id>code-server-on-termux</id>
     <published>2023-07-31T13:17:09.742Z</published>
-    <updated>2023-07-31T13:17:09.742Z</updated>
+    <updated>2023-08-01T05:59:20.006Z</updated>
     <summary>记一次在 Termux 上搭建 code-server 环境
-我来大人店里看店时，总会在空闲时间敲两行，但是店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是世界加钱可及的某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
+店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是世界加钱可及的某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
 </summary>
     <author>
         <name>dsy4567</name>
@@ -23,7 +23,7 @@
     <content type="html" xml:lang="zh-cn">
         <![CDATA[
 <h1 id="记一次在-termux-上搭建-code-server-环境">记一次在 Termux 上搭建 code-server 环境</h1>
-<p>我来大人店里看店时，总会在空闲时间敲两行，但是店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。</p>
+<p>店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。</p>
 <!-- more -->
 
 <h2 id="要求">要求</h2>
@@ -67,14 +67,14 @@ git config --global user.email &quot;username@example.com&quot;
 git config --global user.name &quot;username&quot;
 </code></pre>
 <blockquote>
-<p>注意：安装时看见 <code>The default action is to keep your current version.</code> 这句话可直接按回车
-<img src="/blog-md/code-server-on-termux/img/confirm.jpg" alt="s:1080x394 The default action is to keep your current version."></p>
+<p>注意：安装时看见 <code>The default action is to keep your current version.</code> 这句话可直接按回车</p>
+<p><img src="/blog-md/code-server-on-termux/img/confirm.jpg" alt="s:1080x394 The default action is to keep your current version."></p>
 </blockquote>
 <h2 id="为手机设置固定内网-ip">为手机设置固定内网 IP</h2>
 <p>打开 WLAN 设置，按住已连接的网络，点击 “修改网络”。</p>
-<p><img src="/blog-md/code-server-on-termux/img/wlan.jpg" alt="s:1080x688 修改网络"></p>
+<p><img src="/blog-md/code-server-on-termux/img/wlan.jpg" alt="s:540x344 修改网络"></p>
 <p>点击“IP”，将“DHCP”改为“静态”。</p>
-<p><img src="/blog-md/code-server-on-termux/img/dhcp.jpg" alt="s:1080x1434 网络设置"></p>
+<p><img src="/blog-md/code-server-on-termux/img/dhcp.jpg" alt="s:540x717 网络设置"></p>
 <p>然后 <em><strong>参考</strong></em> 以下设置，修改后保存。</p>
 <ul>
 <li>IP 地址：<code>192.168.1.xx</code></li>
@@ -83,7 +83,7 @@ git config --global user.name &quot;username&quot;
 <li>域名 1：<code>192.168.1.1</code></li>
 <li>域名 2：<code>114.114.114.114</code></li>
 </ul>
-<p><img src="/blog-md/code-server-on-termux/img/ip.jpg" alt="s:911x1920 网络设置"></p>
+<p><img src="/blog-md/code-server-on-termux/img/ip.jpg" alt="s:455.5x960 网络设置"></p>
 <h2 id="配置域名">配置域名</h2>
 <p>为域名添加以下记录：</p>
 <table>
@@ -106,7 +106,7 @@ git config --global user.name &quot;username&quot;
 </tr>
 </tbody></table>
 <p>如果没有域名，可以在 hosts 文件里添加以下内容</p>
-<pre><code class="language-conf">#将 example.com 替换为你自己的域名
+<pre><code class="language-properties">#将 example.com 替换为你自己的域名
 手机内网IP vscode.example.com
 手机内网IP &lt;需要转发的端口1&gt;.vscode.example.com
 手机内网IP &lt;需要转发的端口2&gt;.vscode.example.com
@@ -121,22 +121,22 @@ cd ssl
 vim ./csr.conf
 </code></pre>
 <p>按 <kbd>i</kbd> 进入编辑模式，粘贴以下内容：</p>
-<pre><code class="language-conf">[ req ]
+<pre><code class="language-properties">[req]
 default_bits = 2048
 prompt = no
 default_md = sha256
 req_extensions = req_ext
 distinguished_name = dn
 
-[ dn ]
+[dn]
 C = CN
 CN = foo
 O = bar
 
-[ req_ext ]
+[req_ext]
 subjectAltName = @alt_names
 
-[ alt_names ]
+[alt_names]
 #将 example.com 替换为你自己的域名
 DNS.1 = vscode.example.com
 DNS.2 = *.vscode.example.com
@@ -145,7 +145,7 @@ IP.1 = &lt;手机内网IP&gt;
 IP.2 = 127.0.0.1
 </code></pre>
 <p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车后执行命令 <code>vim ./cert.conf</code>，再按 <kbd>i</kbd> 进入编辑模式，粘贴以下内容：</p>
-<pre><code class="language-conf">authorityKeyIdentifier=keyid,issuer
+<pre><code class="language-properties">authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
@@ -163,6 +163,7 @@ IP.2 = 127.0.0.1
 openssl genrsa -out server.key 2048
 openssl req -new -key server.key -out server.csr -config csr.conf
 openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 365 -sha256 -extfile cert.conf
+cd ~
 </code></pre>
 <h2 id="配置-ssh-服务">配置 ssh 服务</h2>
 <p>依次执行以下命令：</p>
@@ -189,43 +190,47 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])?
 <p><img src="/blog-md/code-server-on-termux/img/ca.png" alt="s:748x787 安装 CA 证书"></p>
 <h2 id="配置-nginx">配置 Nginx</h2>
 <p>执行命令 <code>vim ~/../usr/etc/nginx/nginx.conf</code>，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，然后粘贴以下内容：</p>
-<pre><code class="language-text">worker_processes  1;
+<pre><code class="language-nginx">worker_processes 1;
 
 events {
-    worker_connections  1024;
+    worker_connections 1024;
 }
 
 http {
-    sendfile        on;
-    keepalive_timeout  65;
-    gzip  on;
+    sendfile on;
+    keepalive_timeout 65;
+    gzip on;
     #如果显示“could not build server_names_hash, you should increase server_names_hash_bucket_size”，可以将下面的数字改为更大的 32 的倍数
     server_names_hash_bucket_size 64;
 
-    #需要转发更多端口，可以复制粘贴以下内容，并修改端口号
     server {
-        listen       7443 ssl;
-        #将 8080 改为需要转发的端口，将 example.com 替换为你自己的域名
-        server_name  8080.vscode.example.com;
+        listen 7443 ssl;
+        #将 example.com 替换为你自己的域名
+        server_name *.vscode.example.com;
 
-        ssl_certificate      /data/data/com.termux/files/home/ssl/server.crt;
-        ssl_certificate_key  /data/data/com.termux/files/home/ssl/server.key;
+        ssl_certificate /data/data/com.termux/files/home/ssl/server.crt;
+        ssl_certificate_key /data/data/com.termux/files/home/ssl/server.key;
 
-        ssl_session_cache    shared:SSL:1m;
-        ssl_session_timeout  5m;
+        ssl_session_cache shared:SSL:1m;
+        ssl_session_timeout 5m;
 
-        ssl_ciphers  HIGH:!aNULL:!MD5;
-        ssl_prefer_server_ciphers  on;
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
 
         location / {
-            #将 8080 改为需要转发的端口
-            proxy_pass  http://127.0.0.1:8080;
+            set $forward_port -1;
+            if ($host ~ ^([0-9]+)\. ) {
+                set $forward_port $1;
+            }
+            if ($forward_port = -1) {
+                return 400;
+            }
+            proxy_pass http://127.0.0.1:$forward_port;
             proxy_set_header Host $proxy_host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
     }
-
 }
 </code></pre>
 <p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车。</p>
@@ -237,28 +242,20 @@ http {
     },
 });
 </code></pre>
-<p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车，然后执行命令 <code>vim ./code-server.sh</code>，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，粘贴以下内容：</p>
+<p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车，然后执行命令 <code>vim ~/code-server.sh</code>，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，粘贴以下内容：</p>
 <pre><code class="language-bash">#!/data/data/com.termux/files/usr/bin/bash
 sshd
 nginx -s quit
 nginx
 cat ~/.config/code-server/config.yaml
-#这里放上官网的警告
-#Note that Android and Linux are not 100% compatible,
-#so use these workarounds at your own risk. Extensions
-# that have native dependencies other than Node or that
-# directly interact with the OS might cause issues.
-#
-#大概意思是：别用可能直接调用操作系统接口/包含二进制可执行文件的
-#扩展，它们可能会出问题，因为 Android 和 Linux 不完全兼容，出
-#了问题你负责。
+#见下方注意事项
 export NODE_OPTIONS=&quot;--require /data/data/com.termux/files/home/android-as-linux.js&quot;
 #将 example.com 替换为你自己的域名
 code-server --host vscode.example.com --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/server.key --proxy-domain vscode.example.com:7443
 </code></pre>
 <p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车，然后依次执行以下命令：</p>
-<pre><code class="language-bash">chmod 777 ./code-server.sh
-./code-server.sh
+<pre><code class="language-bash">chmod 777 ~/code-server.sh
+~/code-server.sh
 </code></pre>
 <blockquote>
 <p>退出按 <kbd>Ctrl</kbd> + <kbd>C</kbd> 并执行 <code>nginx -s quit</code></p>
@@ -805,51 +802,6 @@ J 组取消, S 组继续, 游寄结束
 <h2 id="2022-10-28">2022-10-28</h2>
 <p>J 组取消, S 组继续, 游寄结束</p>
 <p><a href="https://www.noi.cn/gs/xw/sx1/2022-10-28/775827.shtml?province=df"><img src="/blog-md/2022-ccf-csp-j-you-ji/img/cover.png" alt="棺方通知"></a></p>
-<blockquote>
-<p>本文可随意转载/修改, 无需注明出处</p>
-</blockquote>
-<p><nocopyright value="true"></nocopyright></p>
-
-        ]]>
-    </content>
-</entry>
-<entry>
-    <title>你好，世界！一级标题一级标题</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=hello-world" />
-    <id>hello-world</id>
-    <published>2023-01-12T16:00:00.000Z</published>
-    <updated>2023-01-12T16:00:00.000Z</updated>
-    <summary>你好，世界！
-一篇测试文章 👋🏻👋🏻👋🏻
-</summary>
-    <author>
-        <name>dsy4567</name>
-        <uri>https://dsy4567.github.io/</uri>
-    </author>
-    <category term="Default" />
-    <content type="html" xml:lang="zh-cn">
-        <![CDATA[
-<h1 id="你好，世界！">你好，世界！</h1>
-<p>一篇测试文章 👋🏻👋🏻👋🏻</p>
-<!-- more -->
-
-<h1 id="一级标题">一级标题</h1>
-<h2 id="二级标题">二级标题</h2>
-<h3 id="三级标题">三级标题</h3>
-<h2 id="二级标题-1">二级标题</h2>
-<h4 id="四级标题">四级标题</h4>
-<h1 id="一级标题-1">一级标题</h1>
-<blockquote>
-<p>114514</p>
-</blockquote>
-<p><strong>加粗</strong></p>
-<p><em>斜体</em></p>
-<p><del>删除线</del></p>
-<p>{% endreveal %}</p>
-<p>代码 <code>console.log(0x66ccff)</code> 将在控制台打印 <code>6737151</code></p>
-<pre><code class="language-javascript">import { foo } from &quot;bar&quot;;
-if (438 == 250) while (1) {}
-</code></pre>
 <blockquote>
 <p>本文可随意转载/修改, 无需注明出处</p>
 </blockquote>

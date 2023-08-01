@@ -1,6 +1,6 @@
 [
     {
-        "updated": "2023-07-31T13:17:09.742Z",
+        "updated": "2023-08-01T05:59:20.006Z",
         "date": "2023-07-31T13:17:09.742Z",
         "issue": 25,
         "tags": [
@@ -10,7 +10,7 @@
         ],
         "id": "code-server-on-termux",
         "title": "记一次在 Termux 上搭建 code-server 环境",
-        "desc": "# 记一次在 Termux 上搭建 code-server 环境\n\n我来大人店里看店时，总会在空闲时间敲两行，但是店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。\n\n"
+        "desc": "# 记一次在 Termux 上搭建 code-server 环境\n\n店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。\n\n"
     },
     {
         "updated": "2023-06-24T07:38:27.834Z",
@@ -108,16 +108,5 @@
         "id": "2022-ccf-csp-j-you-ji",
         "title": "(水文)2022 €€£ €$₽ J 组第二轮游寄",
         "desc": "# (水文)2022 <abbr title=\"CCF CSP(China Computer Federation Certified Software Professional, CCF 软件能力认证)的货币符号形式, 体现了 CCF 贪财的特点\">€€£ €\\$₽</abbr> J 组第二轮游寄\n\n## 2022-10-28\n\nJ 组取消, S 组继续, 游寄结束\n\n[![棺方通知](/blog-md/2022-ccf-csp-j-you-ji/img/cover.png)](https://www.noi.cn/gs/xw/sx1/2022-10-28/775827.shtml?province=df)\n\n> 本文可随意转载/修改, 无需注明出处\n\n<nocopyright value=\"true\"></nocopyright>\n"
-    },
-    {
-        "updated": "2023-01-12T16:00:00.000Z",
-        "date": "2023-01-12T16:00:00.000Z",
-        "issue": 3,
-        "tags": [
-            "水文"
-        ],
-        "id": "hello-world",
-        "title": "你好，世界！一级标题一级标题",
-        "desc": "# 你好，世界！\n\n一篇测试文章 👋🏻👋🏻👋🏻\n\n"
     }
 ]

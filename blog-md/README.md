@@ -20,8 +20,6 @@
 
 [(水文)2022 €€£ €$₽ J 组第二轮游寄](./2022-ccf-csp-j-you-ji/index.md)
 
-[你好，世界！一级标题一级标题](./hello-world/index.md)
-
 
 ## ⚖️ 许可证
 

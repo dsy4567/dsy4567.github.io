@@ -1,6 +1,6 @@
 # 记一次在 Termux 上搭建 code-server 环境
 
-我来大人店里看店时，总会在空闲时间敲两行，但是店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
+店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
 
 <!-- more -->
 
@@ -58,6 +58,7 @@ git config --global user.name "username"
 ```
 
 > 注意：安装时看见 `The default action is to keep your current version.` 这句话可直接按回车
+>
 > ![s:1080x394 The default action is to keep your current version.](/blog-md/code-server-on-termux/img/confirm.jpg)
 
 ## 为手机设置固定内网 IP
@@ -91,7 +92,7 @@ git config --global user.name "username"
 
 如果没有域名，可以在 hosts 文件里添加以下内容
 
-```conf
+```properties
 #将 example.com 替换为你自己的域名
 手机内网IP vscode.example.com
 手机内网IP <需要转发的端口1>.vscode.example.com
@@ -113,23 +114,23 @@ vim ./csr.conf
 
 按 <kbd>i</kbd> 进入编辑模式，粘贴以下内容：
 
-```conf
-[ req ]
+```properties
+[req]
 default_bits = 2048
 prompt = no
 default_md = sha256
 req_extensions = req_ext
 distinguished_name = dn
 
-[ dn ]
+[dn]
 C = CN
 CN = foo
 O = bar
 
-[ req_ext ]
+[req_ext]
 subjectAltName = @alt_names
 
-[ alt_names ]
+[alt_names]
 #将 example.com 替换为你自己的域名
 DNS.1 = vscode.example.com
 DNS.2 = *.vscode.example.com
@@ -140,7 +141,7 @@ IP.2 = 127.0.0.1
 
 按 <kbd>Esc</kbd>，输入 `:wq` 并按回车后执行命令 `vim ./cert.conf`，再按 <kbd>i</kbd> 进入编辑模式，粘贴以下内容：
 
-```conf
+```properties
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
@@ -208,44 +209,48 @@ scp -P 8022 username@手机内网IP:~/ssl/rootCA.crt .
 
 执行命令 `vim ~/../usr/etc/nginx/nginx.conf`，再按 <kbd>i</kbd> 进入编辑模式，删除已有内容，然后粘贴以下内容：
 
-```text
-worker_processes  1;
+```nginx
+worker_processes 1;
 
 events {
-    worker_connections  1024;
+    worker_connections 1024;
 }
 
 http {
-    sendfile        on;
-    keepalive_timeout  65;
-    gzip  on;
+    sendfile on;
+    keepalive_timeout 65;
+    gzip on;
     #如果显示“could not build server_names_hash, you should increase server_names_hash_bucket_size”，可以将下面的数字改为更大的 32 的倍数
     server_names_hash_bucket_size 64;
 
-    #需要转发更多端口，可以复制粘贴以下内容，并修改端口号
     server {
-        listen       7443 ssl;
-        #将 8080 改为需要转发的端口，将 example.com 替换为你自己的域名
-        server_name  8080.vscode.example.com;
+        listen 7443 ssl;
+        #将 example.com 替换为你自己的域名
+        server_name *.vscode.example.com;
 
-        ssl_certificate      /data/data/com.termux/files/home/ssl/server.crt;
-        ssl_certificate_key  /data/data/com.termux/files/home/ssl/server.key;
+        ssl_certificate /data/data/com.termux/files/home/ssl/server.crt;
+        ssl_certificate_key /data/data/com.termux/files/home/ssl/server.key;
 
-        ssl_session_cache    shared:SSL:1m;
-        ssl_session_timeout  5m;
+        ssl_session_cache shared:SSL:1m;
+        ssl_session_timeout 5m;
 
-        ssl_ciphers  HIGH:!aNULL:!MD5;
-        ssl_prefer_server_ciphers  on;
+        ssl_ciphers HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers on;
 
         location / {
-            #将 8080 改为需要转发的端口
-            proxy_pass  http://127.0.0.1:8080;
+            set $forward_port -1;
+            if ($host ~ ^([0-9]+)\. ) {
+                set $forward_port $1;
+            }
+            if ($forward_port = -1) {
+                return 400;
+            }
+            proxy_pass http://127.0.0.1:$forward_port;
             proxy_set_header Host $proxy_host;
             proxy_set_header X-Real-IP $remote_addr;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         }
     }
-
 }
 ```
 
