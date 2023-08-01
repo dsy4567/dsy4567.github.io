@@ -31,6 +31,8 @@ function 动态加载(元素) {
 		open(元素.href, "_self");
 		return 显示或隐藏进度条(false);
 	}
+	// @ts-ignore
+	if (!元素?.classList.contains("动态加载")) return;
 	正在动态加载 = true;
 	显示或隐藏进度条(true);
 	gd("robots", true)?.setAttribute("content", "");
