@@ -2,7 +2,7 @@
 
 <!-- more -->
 
-![s:432x466 你这是违法行为](/blog-md/gfw-nmsl/img/wf.png)
+![s:432x466 你这是违法行为](/blog-md/gfw-nmsl/img/wf.webp)
 
 ## 这墙可不兴翻呀(((
 
