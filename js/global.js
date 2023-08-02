@@ -64,13 +64,14 @@ function 显示或隐藏进度条(/** @type {boolean} */ 状态) {
  */
 function 添加样式(url) {
 	return new Promise(resolve => {
-		if (qs("link[href*='" + url + "']")) return resolve({});
+		if (qs("link[href*='" + url + "'][rel='stylesheet']")) return resolve({});
 		let l = ce("link");
 		l.onload = 事件 => {
 			resolve(事件);
 		};
 		l.href = url;
 		l.rel = "stylesheet";
+		l.crossOrigin = "anonymous";
 		document.head.append(l);
 	});
 }
@@ -112,6 +113,7 @@ async function 添加脚本(url) {
 			}
 		};
 		s.src = url;
+		s.crossOrigin = "anonymous";
 		document.head.append(s);
 	});
 }
@@ -153,10 +155,7 @@ function 尽快设置主题色() {
 			"--theme-color-transparent",
 			localStorage.getItem("透明色")
 		);
-		document.documentElement.style.setProperty(
-			"--text-color",
-			localStorage.getItem("字体色")
-		);
+		document.documentElement.style.setProperty("--text-color", localStorage.getItem("字体色"));
 	}
 }
 function 阻止搜索引擎收录() {
@@ -212,12 +211,7 @@ function rgb转hsl(r, g, b) {
 
 	return [h, s, l];
 }
-function 添加悬浮卡片(
-	/** @type {string} */ html,
-	x = 0,
-	y = 0,
-	失去焦点时隐藏 = true
-) {
+function 添加悬浮卡片(/** @type {string} */ html, x = 0, y = 0, 失去焦点时隐藏 = true) {
 	let div = ce("div");
 	div.className = "悬浮卡片";
 	div.innerHTML = html;

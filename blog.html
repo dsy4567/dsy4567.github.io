@@ -13,16 +13,10 @@
                     "
 		/>
 		<meta name="description" content="站长很懒, 不想写网站介绍" />
-		<meta
-			name="keywords"
-			content="dsy4567 博客 个人网站 编程 HTML CSS JS"
-		/>
+		<meta name="keywords" content="dsy4567 博客 个人网站 编程 HTML CSS JS" />
 		<meta id="主题色" name="theme-color" content="#ddd" />
 		<meta id="robots" name="robots" content="all" />
-		<meta
-			name="template"
-			content="https://github.com/dsy4567/dsy4567.github.io"
-		/>
+		<meta name="template" content="https://github.com/dsy4567/dsy4567.github.io" />
 		<title>博客 | dsy4567 的小站</title>
 		<base target="_self" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
@@ -34,41 +28,22 @@
 		/>
 
 		<link rel="dns-prefetch" href="https://api.github.com" />
+		<link rel="dns-prefetch" href="https://fonts.googleapis.cn" />
 		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
 
-		<link
-			rel="preload"
-			href="/js/ncm.js"
-			as="script"
-			crossorigin="anonymous"
-		/>
-		<link
-			rel="preload"
-			href="/js/blog.js"
-			as="script"
-			crossorigin="anonymous"
-		/>
-		<link
-			rel="preload"
-			href="/json/blog.json"
-			as="fetch"
-			crossorigin="anonymous"
-		/>
-		<link
-			rel="preload"
-			href="/json/icon.json"
-			as="fetch"
-			crossorigin="anonymous"
-		/>
-		<link
-			rel="preload"
-			href="/json/theme.json"
-			as="fetch"
-			crossorigin="anonymous"
-		/>
+		<link rel="preload" href="/js/analytics.js" as="script" crossorigin="anonymous" />
+		<link rel="preload" href="/js/blog.js" as="script" crossorigin="anonymous" />
+		<link rel="preload" href="/js/ncm.js" as="script" crossorigin="anonymous" />
+		<link rel="preload" href="/js/highlight.min.js" as="script" crossorigin="anonymous" />
+		<link rel="preload" href="/js/marked.min.js" as="script" crossorigin="anonymous" />
+		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="anonymous" />
+		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
 
 		<script src="/js/global.js"></script>
-		<script src="/js/main.js" type="module" async></script>
 		<link rel="stylesheet" href="/css/global.css" />
 	</head>
 	<body>
@@ -77,28 +52,13 @@
 			<button type="button" title="回到顶部" id="回到顶部">
 				<svg class="特小尺寸" data-icon="回到顶部"></svg>
 			</button>
-			<div
-				class="拥有更多选项"
-				type="button"
-				title="网抑云阴乐"
-				id="网抑云阴乐"
-			>
-				<img
-					aria-hidden="true"
-					class="特小尺寸"
-					id="网抑云阴乐封面"
-					alt="封面"
-				/>
-				<svg class="特小尺寸" data-icon="网抑云阴乐"></svg>
+			<div class="拥有更多选项" type="button" title="网抑云阴乐" id="网抑云阴乐">
+				<img class="特小尺寸" id="网抑云阴乐封面" alt="封面" />
+				<svg aria-hidden="true" class="特小尺寸" data-icon="网抑云阴乐"></svg>
 				<div class="更多选项" id="阴乐控件"></div>
 				<div id="歌词"></div>
 			</div>
-			<div
-				class="拥有更多选项"
-				type="button"
-				title="切换主题"
-				id="切换主题"
-			>
+			<div class="拥有更多选项" type="button" title="切换主题" id="切换主题">
 				<svg class="特小尺寸" data-icon="切换主题"></svg>
 				<div role="radiogroup" class="更多选项" id="所有主题"></div>
 			</div>
@@ -137,9 +97,7 @@
 						title="头像"
 					/>
 					<h2>dsy4567</h2>
-					<span id="关注粉丝码龄">
-						关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中
-					</span>
+					<span id="关注粉丝码龄"> 关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中 </span>
 					<br />
 					<span id="联系方式">
 						<a
@@ -149,11 +107,7 @@
 						>
 							<svg class="小尺寸" data-icon="电子邮箱"></svg>
 						</a>
-						<a
-							href="https://qwq.dsy4567.cf/api/getemail"
-							title="Telegram"
-							id="tg"
-						>
+						<a href="https://qwq.dsy4567.cf/api/getemail" title="Telegram" id="tg">
 							<svg class="小尺寸" data-icon="Telegram"></svg>
 						</a>
 						<a href="https://github.com/dsy4567" title="GitHub">
@@ -165,10 +119,7 @@
 						<a href="https://weibo.com/dsy4567" title="微博">
 							<svg class="小尺寸" data-icon="微博"></svg>
 						</a>
-						<a
-							href="https://www.luogu.com.cn/user/776713"
-							title="洛谷"
-						>
+						<a href="https://www.luogu.com.cn/user/776713" title="洛谷">
 							<svg class="小尺寸" data-icon="洛谷"></svg>
 						</a>
 						<a href="/rss.xml" title="RSS">
@@ -194,8 +145,7 @@
 					正在加载文章
 					<noscript
 						>在
-						<a
-							href="https://github.com/dsy4567/dsy4567.github.io/tree/main/blog-md"
+						<a href="https://github.com/dsy4567/dsy4567.github.io/tree/main/blog-md"
 							>GitHub</a
 						>
 						上阅读文章</noscript
@@ -209,18 +159,14 @@
 		<footer id="copyright">
 			© 2022-2023
 			<a href="https://github.com/dsy4567">dsy4567</a><br />
-			<a href="https://icp.gov.moe/?keyword=20230212" target="_blank"
-				>萌ICP备20230212号</a
-			>
+			<a href="https://icp.gov.moe/?keyword=20230212" target="_blank">萌ICP备20230212号</a>
 			|
 			<a href="https://beian.miit.gov.cn/" target="_blank"
 				>陕ICP备 备<span id="fuck">&#20320;&#22920;</span>的案</a
 			><br />
 			<!-- 修改代码时必须保留此链接和原作者信息, 可以添加修改后源代码的链接及作者信息 -->
 			Powered by
-			<a href="https://github.com/dsy4567/dsy4567.github.io"
-				>dsy4567/dsy4567.github.io</a
-			>
+			<a href="https://github.com/dsy4567/dsy4567.github.io">dsy4567/dsy4567.github.io</a>
 		</footer>
 		<noscript>
 			<div>请启用 JavaScript 以获得更好的浏览体验</div>

@@ -29,7 +29,7 @@
 	"prettier.arrowParens": "avoid",
 	"prettier.bracketSpacing": true,
 	"prettier.endOfLine": "lf",
-	"prettier.printWidth": 80,
+	"prettier.printWidth": 100,
 	"prettier.proseWrap": "preserve",
 	"prettier.quoteProps": "as-needed",
 	"prettier.semi": true,
