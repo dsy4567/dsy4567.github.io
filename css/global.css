@@ -518,6 +518,7 @@ hr {
 	}
 	main > .左 {
 		transform: translateY(48px) !important;
+		max-height: calc(100vh - 69px) !important;
 	}
 	main > .左,
 	main > .右 {
