@@ -518,7 +518,6 @@ hr {
 	}
 	main > .左 {
 		transform: translateY(48px) !important;
-		max-height: calc(100vh - 69px) !important;
 	}
 	main > .左,
 	main > .右 {
@@ -526,7 +525,7 @@ hr {
 		padding: 0;
 		position: unset;
 		width: 100% !important;
-		max-height: unset;
+		max-height: unset !important;
 	}
 	main > #分界线 {
 		display: none;
