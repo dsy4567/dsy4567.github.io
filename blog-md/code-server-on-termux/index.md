@@ -305,7 +305,7 @@ chmod 777 ~/code-server.sh
 
 这句话的意思是：上面强制让 code-server 认为它现在在 Linux 平台上跑的行为可能会出惹出一些问题：直接调用操作系统接口/包含二进制可执行文件的扩展可能无法正常运行，因为 Android 和 Linux 不完全兼容，出了问题你负责。
 
-还有，code-server 的扩展由 [Open VSX Registry](https://open-vsx.org/) 提供，但是一些扩展在这并没有上架，这时可以在 [Visual Studio Marketplace](https://marketplace.visualstudio.com/) 上面找到需要的扩展，然后点击右侧的“Download Extension”。下载后将扩展文件拽到右侧的资源管理器，再点击右键 > 安装扩展 VSIX.
+还有，code-server 的扩展由 [Open VSX Registry](https://open-vsx.org/) 提供，但是一些扩展在这并没有上架，这时可以在 [Visual Studio Marketplace](https://marketplace.visualstudio.com/) 上面找到需要的扩展，然后点击右侧的“Download Extension”。下载后将扩展文件拽到右侧的资源管理器，再点击右键 > 安装扩展 VSIX。
 
 顺便推荐一些我正在用的扩展：
 

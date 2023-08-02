@@ -45,16 +45,13 @@ function 动态加载(元素) {
 				history.pushState(
 					{
 						路径:
-							u.pathname
-								.replace(/(index|\.html)/g, "")
-								.replace(/\/\//g, "") + u.search,
+							u.pathname.replace(/(index|\.html)/g, "").replace(/\/\//g, "") +
+							u.search,
 					},
 					"",
 					元素.href
 				);
-			document.title = mt
-				? mt[0].replace(/<\/?title>/g, "")
-				: "dsy4567 的小站";
+			document.title = mt ? mt[0].replace(/<\/?title>/g, "") : "dsy4567 的小站";
 			dispatchEvent(URL发生变化事件);
 			try {
 				let 右 = qs("main .右", true);
@@ -62,11 +59,7 @@ function 动态加载(元素) {
 				右.innerHTML = m[0];
 				加载模块();
 
-				if (
-					u.pathname
-						.replace(/(index|\.html)/g, "")
-						.replace(/\/\//g, "") === "/"
-				) {
+				if (u.pathname.replace(/(index|\.html)/g, "").replace(/\/\//g, "") === "/") {
 					显示或隐藏进度条(false);
 					可以滚动到视图中 = true;
 					if (!location.hash)
@@ -93,9 +86,7 @@ function 完成加载() {
 		设置图标: false,
 	});
 }
-function 添加点击事件和设置图标(
-	/** @type {添加点击事件和设置图标选项} */ 选项 = {}
-) {
+function 添加点击事件和设置图标(/** @type {添加点击事件和设置图标选项} */ 选项 = {}) {
 	if (typeof 选项.设置图标 === "undefined" ? true : 选项.设置图标)
 		for (const 元素 of 选项.要设置图标的元素?.[0]
 			? 选项.要设置图标的元素
@@ -110,40 +101,24 @@ function 添加点击事件和设置图标(
 				  图标[元素.dataset.icon];
 			h && (元素.outerHTML = h);
 		}
-	if (
-		typeof 选项.添加链接点击事件 === "undefined"
-			? true
-			: 选项.添加链接点击事件
-	) {
-		const a = 选项.要添加链接点击事件的元素?.[0]
-			? 选项.要添加链接点击事件的元素
-			: ge("a");
+	if (typeof 选项.添加链接点击事件 === "undefined" ? true : 选项.添加链接点击事件) {
+		const a = 选项.要添加链接点击事件的元素?.[0] ? 选项.要添加链接点击事件的元素 : ge("a");
 		for (const 元素 of a) {
 			if (元素.pathname === location.pathname && 元素.hash) {
-				if (!元素.classList.contains("hash链接"))
-					元素.classList.add("hash链接");
+				if (!元素.classList.contains("hash链接")) 元素.classList.add("hash链接");
 				continue;
 			}
-			if (
-				!元素.classList.contains("内链") &&
-				元素.host === location.host
-			) {
+			if (!元素.classList.contains("内链") && 元素.host === location.host) {
 				元素.classList.add("内链");
 				元素.classList.remove("外链");
 				元素.href = new URL(元素.href, location.href).href;
 			}
-			if (
-				元素.host !== location.host &&
-				!元素.classList.contains("外链")
-			) {
+			if (元素.host !== location.host && !元素.classList.contains("外链")) {
 				元素.classList.add("外链");
 				元素.classList.remove("内链");
 				元素.classList.remove("动态加载");
 				元素.target = "_blank";
-			} else if (
-				元素.host === location.host &&
-				!元素.classList.contains("动态加载")
-			) {
+			} else if (元素.host === location.host && !元素.classList.contains("动态加载")) {
 				元素.classList.add("动态加载");
 				元素.addEventListener("click", 事件 => {
 					if (!元素.classList.contains("动态加载")) return;
@@ -151,23 +126,13 @@ function 添加点击事件和设置图标(
 					动态加载(元素);
 				});
 			}
-			if (
-				元素.querySelector("img, svg") &&
-				!元素.classList.contains("无滤镜")
-			)
+			if (元素.querySelector("img, svg") && !元素.classList.contains("无滤镜"))
 				元素.classList.add("无滤镜");
 		}
 	}
-	if (
-		typeof 选项.添加图片点击事件 === "undefined"
-			? true
-			: 选项.添加图片点击事件
-	) {
-		const img = 选项.要添加图片点击事件的元素?.[0]
-			? 选项.要添加图片点击事件的元素
-			: ge("img");
-		for (const 元素 of img)
-			元素.ondblclick = () => open(元素.src, "_blank");
+	if (typeof 选项.添加图片点击事件 === "undefined" ? true : 选项.添加图片点击事件) {
+		const img = 选项.要添加图片点击事件的元素?.[0] ? 选项.要添加图片点击事件的元素 : ge("img");
+		for (const 元素 of img) 元素.ondblclick = () => open(元素.src, "_blank");
 	}
 }
 // 网抑云阴乐歌单+控件
@@ -214,22 +179,14 @@ function 添加点击事件和设置图标(
 				btn.ariaChecked = role === "checkbox" ? "false" : null;
 				gd("阴乐控件", true)?.append(btn);
 			}
-			let f = () => {
-				svg(
-					`<svg class="特小尺寸" data-icon="上一首"></svg>`,
-					网抑云阴乐.上一首,
-					"上一首"
-				);
+			const f = () => {
+				svg(`<svg class="特小尺寸" data-icon="上一首"></svg>`, 网抑云阴乐.上一首, "上一首");
 				svg(
 					`<svg class="特小尺寸" data-icon="播放暂停"></svg>`,
 					网抑云阴乐.播放暂停,
 					"播放/暂停"
 				);
-				svg(
-					`<svg class="特小尺寸" data-icon="下一首"></svg>`,
-					网抑云阴乐.下一首,
-					"下一首"
-				);
+				svg(`<svg class="特小尺寸" data-icon="下一首"></svg>`, 网抑云阴乐.下一首, "下一首");
 				svg(
 					`<svg class="特小尺寸" data-icon="在网抑云阴乐中查看"></svg>`,
 					() => {
@@ -247,11 +204,7 @@ function 添加点击事件和设置图标(
 					"随机播放",
 					"checkbox"
 				);
-				svg(
-					`<svg class="特小尺寸" data-icon="音量"></svg>`,
-					网抑云阴乐.更改音量,
-					"音量"
-				);
+				svg(`<svg class="特小尺寸" data-icon="音量"></svg>`, 网抑云阴乐.更改音量, "音量");
 				gd("阴乐控件", true)?.insertAdjacentHTML(
 					"beforeend",
 					`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a><ol id="播放列表"></ol>`
@@ -299,38 +252,29 @@ fetch("/json/theme.json")
 						"--theme-color-transparent",
 						"--text-color",
 					].forEach(n => {
-						document.documentElement.style.setProperty(
-							n,
-							主题[t][n]
-						);
+						document.documentElement.style.setProperty(n, 主题[t][n]);
 					});
 					localStorage.setItem("theme", t);
 					localStorage.setItem(
 						"主题色",
 						// @ts-ignore
-						(gd("自定义主题色", true).value =
-							主题[t]["--theme-color"])
+						(gd("自定义主题色", true).value = 主题[t]["--theme-color"])
 					);
 					localStorage.setItem("主题色h", 主题[t]["--theme-color-h"]);
 					localStorage.setItem("主题色s", 主题[t]["--theme-color-s"]);
 					localStorage.setItem("主题色l", 主题[t]["--theme-color-l"]);
-					localStorage.setItem(
-						"透明色",
-						主题[t]["--theme-color-transparent"]
-					);
+					localStorage.setItem("透明色", 主题[t]["--theme-color-transparent"]);
 					localStorage.setItem("字体色", 主题[t]["--text-color"]);
 					提示("已切换主题: " + t);
 				}
 
 				gd("主题色")?.setAttribute("content", 主题[t]["--theme-color"]);
-				qsa("#所有主题 > button").forEach(
-					元素 => (元素.ariaChecked = "false")
-				);
+				qsa("#所有主题 > button").forEach(元素 => (元素.ariaChecked = "false"));
 				btn.ariaChecked = "true";
 			};
 			// @ts-ignore
 			if (t === localStorage.getItem("theme")) btn.onclick(false);
-			let f = () => gd("所有主题", true)?.append(btn);
+			const f = () => gd("所有主题", true)?.append(btn);
 			DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 		});
 
@@ -357,9 +301,7 @@ fetch("/json/theme.json")
 					b = parseInt("0x" + rgb.substring(5, 7));
 					hsl = rgb转hsl(r, g, b);
 					let 字体色 =
-						(r * 0.2126 + g * 0.7152 + b * 0.0722) / 255 >= 0.5
-							? "#222"
-							: "#ccc";
+						(r * 0.2126 + g * 0.7152 + b * 0.0722) / 255 >= 0.5 ? "#222" : "#ccc";
 					btn.ariaChecked = "true";
 					Object.entries({
 						"--theme-color": rgb,
@@ -369,10 +311,7 @@ fetch("/json/theme.json")
 						"--theme-color-transparent": "#8888",
 						"--text-color": 字体色,
 					}).forEach(a => {
-						document.documentElement.style.setProperty(
-							a[0],
-							"" + a[1]
-						);
+						document.documentElement.style.setProperty(a[0], "" + a[1]);
 					});
 					localStorage.setItem("theme", "自定义主题");
 					localStorage.setItem("主题色", rgb);
@@ -382,24 +321,16 @@ fetch("/json/theme.json")
 					localStorage.setItem("透明色", "#8888");
 					localStorage.setItem("字体色", 字体色);
 				}
-				gd("主题色")?.setAttribute(
-					"content",
-					localStorage.getItem("主题色") || ""
-				);
+				gd("主题色")?.setAttribute("content", localStorage.getItem("主题色") || "");
 
 				// @ts-ignore
 				提示用户 !== false && 提示("已切换自定义主题");
 			};
-			gd("主题色")?.setAttribute(
-				"content",
-				localStorage.getItem("主题色") || ""
-			);
-			qsa("#所有主题 > button").forEach(
-				元素 => (元素.ariaChecked = "false")
-			);
+			gd("主题色")?.setAttribute("content", localStorage.getItem("主题色") || "");
+			qsa("#所有主题 > button").forEach(元素 => (元素.ariaChecked = "false"));
 			btn.ariaChecked = "true";
 		};
-		let f = () => {
+		const f = () => {
 			gd("所有主题", true)?.append(btn);
 			添加点击事件和设置图标({
 				添加图片点击事件: false,
@@ -416,7 +347,7 @@ fetch("/json/theme.json")
 fetch("https://dsy4567.cf/api/hitokoto")
 	.then(res => res.json())
 	.then(j => {
-		let f = () => {
+		const f = () => {
 			let 一言 = gd("一言", true),
 				// @ts-ignore
 				/** @type {HTMLAnchorElement} */ 链接 = qs("#一言+a");
@@ -436,7 +367,7 @@ fetch("https://dsy4567.cf/api/hitokoto")
 fetch("/json/icon.json")
 	.then(res => res.json())
 	.then(j => {
-		let f = () => {
+		const f = () => {
 			图标 = j;
 			添加点击事件和设置图标({
 				添加图片点击事件: false,
@@ -450,15 +381,12 @@ fetch("/json/icon.json")
 fetch("https://api.github.com/users/dsy4567")
 	.then(res => res.json())
 	.then(个人信息 => {
-		let f = () => {
+		const f = () => {
 			const 关注粉丝码龄 = gd("关注粉丝码龄");
 			if (!关注粉丝码龄) return;
 			关注粉丝码龄.innerHTML = ` 关注: ${个人信息.following} | 粉丝: ${
 				个人信息.followers
-			} | 码龄: ${
-				new Date().getFullYear() -
-				new Date(个人信息.created_at).getFullYear()
-			}年 `;
+			} | 码龄: ${new Date().getFullYear() - new Date(个人信息.created_at).getFullYear()}年 `;
 		};
 		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 	})
@@ -468,7 +396,7 @@ addEventListener("copy", () => {
 	提示("复制成功");
 });
 (() => {
-	let f = async () => {
+	const f = async () => {
 		gd("回到顶部")?.addEventListener("click", () =>
 			document.body.scrollIntoView({ behavior: "smooth" })
 		);
@@ -500,9 +428,7 @@ addEventListener("copy", () => {
 					添加链接点击事件: true,
 					要添加链接点击事件的元素: div.getElementsByTagName("a"),
 				});
-				添加脚本(
-					"https://www.recaptcha.net/recaptcha/api.js?render=explicit"
-				).then(() => {
+				添加脚本("https://www.recaptcha.net/recaptcha/api.js?render=explicit").then(() => {
 					gd("close_recaptcha")?.addEventListener("click", () => {
 						div.remove();
 					});
@@ -522,8 +448,7 @@ addEventListener("copy", () => {
 								设置图标: false,
 								添加图片点击事件: false,
 								添加链接点击事件: true,
-								要添加链接点击事件的元素:
-									div.getElementsByTagName("a"),
+								要添加链接点击事件的元素: div.getElementsByTagName("a"),
 							});
 							gr.focus();
 						} catch (e) {
@@ -531,9 +456,7 @@ addEventListener("copy", () => {
 							gr.focus();
 							grecaptcha.render("g-recaptcha", {
 								sitekey: gr_sitekey,
-								theme: matchMedia(
-									"(prefers-color-scheme: dark)"
-								).matches
+								theme: matchMedia("(prefers-color-scheme: dark)").matches
 									? "dark"
 									: "light",
 							});
@@ -545,41 +468,27 @@ addEventListener("copy", () => {
 		let fuck = gd("fuck");
 		if (fuck)
 			fuck.innerText =
-				[
-					"\u4f60\u5988",
-					"\u5c3c\u739b",
-					"\u4f60\u5927\u7237",
-					"\u5bc4\u5427",
-				][随机数(3)] || "\u4f60\u5988";
+				["\u4f60\u5988", "\u5c3c\u739b", "\u4f60\u5927\u7237", "\u5bc4\u5427"][随机数(3)] ||
+				"\u4f60\u5988";
 		let scrollTop = 0,
-			导航栏 = gd("导航栏"),
-			左 = qs("main .左", true),
 			状态 = -1;
-		addEventListener("scroll", async () => {
-			if (!导航栏 || !左) return;
+		const f = () => {
 			if (document.documentElement.scrollTop === 0 && 状态 !== 0) {
-				导航栏.style.transform = "translateY(0px)";
-				导航栏.style.boxShadow = "none";
+				document.body.classList.add("顶部");
+				document.body.classList.remove("隐藏导航栏");
 				状态 = 0;
-			} else if (
-				document.documentElement.scrollTop > scrollTop &&
-				状态 !== 1
-			) {
-				导航栏.style.transform = "translateY(-48px)";
-				左.style.transform = "translateY(0px)";
-				导航栏.style.boxShadow = "none";
+			} else if (document.documentElement.scrollTop > scrollTop && 状态 !== 1) {
+				document.body.classList.remove("顶部");
+				document.body.classList.add("隐藏导航栏");
 				状态 = 1;
-			} else if (
-				document.documentElement.scrollTop < scrollTop &&
-				状态 !== 2
-			) {
-				导航栏.style.transform = "translateY(0px)";
-				左.style.transform = "translateY(48px)";
-				导航栏.style.boxShadow = "rgba(0, 0, 0, 0.24) 0px 0px 16px 0px";
+			} else if (document.documentElement.scrollTop < scrollTop && 状态 !== 2) {
+				document.body.classList.remove("顶部");
+				document.body.classList.remove("隐藏导航栏");
 				状态 = 2;
 			}
 			scrollTop = document.documentElement.scrollTop;
-		});
+		};
+		addEventListener("scroll", f);
 		完成加载();
 
 		let style = ce("style");
@@ -591,8 +500,8 @@ addEventListener("copy", () => {
     nav,
     li {
         transition: 0.3s border-radius, 0.3s backdrop-filter, 0.3s background-image,
-            0.3s transform, 0.3s box-shadow, 0.3s filter, 0.3s text-decoration,
-            0.3s background-color, 0.3s opacity;
+		0.3s transform, 0.3s box-shadow, 0.3s filter, 0.3s background-color,
+		0.3s opacity, 0.3s max-height;
     }`;
 		setTimeout(() => {
 			document.head.append(style);
@@ -604,8 +513,7 @@ addEventListener("copy", () => {
 	DOMContentLoaded ? f() : document.addEventListener("DOMContentLoaded", f);
 })();
 addEventListener("popstate", 事件 => {
-	if (获取清理后的路径(true) === 路径 || 事件.state?.路径 === 路径)
-		return 事件.preventDefault();
+	if (获取清理后的路径(true) === 路径 || 事件.state?.路径 === 路径) return 事件.preventDefault();
 	动态加载({
 		href: location.pathname,
 		popstate: true,

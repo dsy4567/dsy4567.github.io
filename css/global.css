@@ -204,8 +204,8 @@ img,
 nav,
 li {
 	transition: 0.3s border-radius, 0.3s backdrop-filter, 0.3s background-image,
-		0.3s transform, 0.3s box-shadow, 0.3s filter, 0.3s text-decoration,
-		0.3s background-color, 0.3s opacity;
+		0.3s transform, 0.3s box-shadow, 0.3s filter, 0.3s background-color,
+		0.3s opacity, 0.3s max-height;
 } */
 
 html {
@@ -351,7 +351,11 @@ main > .左 {
 	top: 0;
 	transform: translateY(48px);
 	width: calc(25% - 5px);
-	max-height: 100vh;
+	max-height: calc(100vh - 69px);
+}
+body.隐藏导航栏 > main > .左 {
+	transform: translateY(0);
+	max-height: calc(100vh - 21px);
 }
 main > .右 {
 	margin-top: 48px;
@@ -393,8 +397,7 @@ body.宽屏 > main > #分界线 {
 main > #分界线 > svg {
 	background: var(--bg-color);
 	border-radius: 50%;
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
-		rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px, rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
 	opacity: 0;
 	transition: 0.3s opacity, 0.3s transform;
 }
@@ -473,15 +476,13 @@ section {
 	background-color: var(--bg-color);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 	margin: 8px;
 	padding: 12px;
 	word-break: break-word;
 }
 section section {
 	background-color: var(--bg-color-dark);
-}
-section:hover {
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 }
 section h2 {
 	display: flex;
@@ -558,7 +559,7 @@ hr {
 #导航栏 {
 	background-color: var(--bg-color);
 	border-bottom: 1px solid #0000;
-	/* box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px; */
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 	color: var(--text-color);
 	display: flex;
 	align-items: center;
@@ -568,9 +569,16 @@ hr {
 	position: sticky;
 	top: 0;
 	transition: 0.3s background-color, 0.3s transform, 0.3s box-shadow;
+	transform: translateY(0);
 	width: 100%;
 	height: 48px;
 	z-index: 998;
+}
+body.顶部 #导航栏 {
+	box-shadow: none;
+}
+body.隐藏导航栏 #导航栏 {
+	transform: translateY(-48px);
 }
 #导航栏 > .左,
 #导航栏 > .右 {
@@ -623,8 +631,7 @@ div.侧边按钮 .stroke {
 }
 div.侧边按钮 > * {
 	background-color: #fff;
-	box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
-		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px, rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
 	border: 1px solid transparent;
 	border-bottom-left-radius: 50%;
 	border-bottom-right-radius: 50%;
@@ -656,13 +663,15 @@ div.侧边按钮 > #网抑云阴乐 {
 div.侧边按钮 > #切换主题 {
 	z-index: 0;
 }
+body.顶部 div.侧边按钮 > #回到顶部 {
+	opacity: 0;
+	pointer-events: none;
+}
 div.侧边按钮 > #切换主题:hover,
-div.侧边按钮 > #切换主题:focus,
 div.侧边按钮 > #切换主题:focus-within {
 	transform: translateX(calc(-32px * 4));
 }
 div.侧边按钮 > #网抑云阴乐:hover,
-div.侧边按钮 > #网抑云阴乐:focus,
 div.侧边按钮 > #网抑云阴乐:focus-within {
 	transform: translateX(calc(-32px * 7));
 }
@@ -738,7 +747,7 @@ div.侧边按钮 > #网抑云阴乐 #播放列表 > li.正在播放::before {
 	background-color: var(--theme-color);
 	display: block;
 	width: 5px;
-	height: 38px;
+	height: 3em;
 	position: absolute;
 	left: 0px;
 	content: "";
@@ -751,7 +760,6 @@ div.侧边按钮 > #网抑云阴乐 #播放列表 li * {
 }
 
 div.侧边按钮 > .拥有更多选项:hover > .更多选项,
-div.侧边按钮 > .拥有更多选项:focus > .更多选项,
 .更多选项:focus-within {
 	pointer-events: all !important;
 	opacity: 1 !important;
@@ -783,8 +791,7 @@ div.通知 {
 	background-color: var(--theme-color);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
-	box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
-		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px, rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
 	opacity: 0;
 	margin: 16px;
 	padding: 8px;
@@ -900,8 +907,7 @@ main > .分界线 {
 	background-color: var(--bg-color);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
-		rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px, rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
 	padding: 4px;
 	position: absolute;
 	z-index: 999;
