@@ -95,12 +95,15 @@ async function 添加脚本(url) {
 				_.forEach(回调 => {
 					try {
 						回调();
-					} catch (e) {}
+					} catch (e) {
+						console.error(e);
+					}
 				});
 			// @ts-ignore
 			else a.回调._push(..._);
 			return a.回调.length;
 		};
+		a.回调.push(resolve)
 		let s = ce("script");
 		s.onload = 事件 => {
 			a.已完成加载 = true;
@@ -108,7 +111,9 @@ async function 添加脚本(url) {
 			while (回调) {
 				try {
 					回调();
-				} catch (e) {}
+				} catch (e) {
+					console.error(e);
+				}
 				回调 = a.回调.pop();
 			}
 		};
