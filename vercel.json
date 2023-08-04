@@ -1,382 +1,414 @@
 {
-    "headers": [
-        {
-            "source": "/api/hitokoto",
-            "headers": [
-                {
-                    "key": "Access-Control-Allow-Origin",
-                    "value": "*"
-                }
-            ]
-        },
-        {
-            "source": "/(.*)",
-            "headers": [
-                {
-                    "key": "Strict-Transport-Security",
-                    "value": "max-age=78840000; includeSubDomains; preload"
-                }
-            ]
-        },
-        {
-            "source": "/js/highlight.min.js",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/js/lrc-parser.js",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/js/marked.min.js",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/icon.png",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/favicon.ico",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/avatar.jpg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/css.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/c%E8%89%B9.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/deepin.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/e5400.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/g41.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/git.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/html.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/javascript.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/m667.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/mem.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/msedge.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/python.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/tm.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/typescript.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/vim.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/vsc.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/w10.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/w11.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/wd.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/img/svg/wt.svg",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=259200, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/json/icon.json",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=3600, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/json/ncm.json",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=3600, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/json/theme.json",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=3600, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/css/font.css",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=3600, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=300, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/index.html",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=300, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/blog.html",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=300, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/friends.html",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=300, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/js/friends.js",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=300, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/js/global.js",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=300, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/js/main.js",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=300, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/js/ncm.js",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=300, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/json/blog.json",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=300, must-revalidate"
-                }
-            ]
-        },
-        {
-            "source": "/css/global.css",
-            "headers": [
-                {
-                    "key": "Cache-Control",
-                    "value": "public, max-age=300, must-revalidate"
-                }
-            ]
-        }
-    ]
+	"headers": [
+		{
+			"source": "/api/hitokoto",
+			"headers": [
+				{
+					"key": "Access-Control-Allow-Origin",
+					"value": "*"
+				}
+			]
+		},
+		{
+			"source": "/(.*)",
+			"headers": [
+				{
+					"key": "Strict-Transport-Security",
+					"value": "max-age=78840000; includeSubDomains; preload"
+				}
+			]
+		},
+
+		{
+			"source": "/css/hl.min.css",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=3600, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/js/highlight.min.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/js/lrc-parser.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/js/marked.min.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+
+		{
+			"source": "/icon.png",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/favicon.ico",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/avatar.jpg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/css.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/c%E8%89%B9.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/deepin.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/e5400.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/g41.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/git.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/html.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/javascript.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/m667.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/mem.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/msedge.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/python.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/tm.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/typescript.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/vim.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/vsc.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/w10.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/w11.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/wd.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/img/svg/wt.svg",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+
+		{
+			"source": "/json/icon.json",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=3600, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/json/ncm.json",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=3600, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/json/theme.json",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=3600, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/css/font.css",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=3600, must-revalidate"
+				}
+			]
+		},
+
+		{
+			"source": "/",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/index.html",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/blog.html",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/friends.html",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+
+		{
+			"source": "/js/analytics.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/js/blog.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/js/friends.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/js/global.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/js/main.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/js/ncm.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/json/blog.json",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/css/global.css",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		}
+	]
 }
