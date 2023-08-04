@@ -32,8 +32,14 @@
 		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 		<link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
 
-		<link rel="preload" href="/js/analytics.js" as="script" crossorigin="anonymous" />
-		<link rel="preload" href="/js/ncm.js" as="script" crossorigin="anonymous" />
+		<link
+			rel="modulepreload"
+			href="/js/analytics.js"
+			as="script"
+			crossorigin="use-credentials"
+		/>
+		<link rel="modulepreload" href="/js/main.js" as="script" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/ncm.js" as="script" crossorigin="use-credentials" />
 		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
 		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
 		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
@@ -95,7 +101,11 @@
 					<span id="关注粉丝码龄"> 关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中 </span>
 					<br />
 					<span id="联系方式">
-						<a href="https://qwq.dsy4567.cf/api/getemail" title="电子邮箱" id="电子邮箱">
+						<a
+							href="https://qwq.dsy4567.cf/api/getemail"
+							title="电子邮箱"
+							id="电子邮箱"
+						>
 							<svg class="小尺寸" data-icon="电子邮箱"></svg>
 						</a>
 						<a href="https://qwq.dsy4567.cf/api/getemail" title="Telegram" id="tg">
@@ -162,7 +172,8 @@
 								</details>
 							</li>
 							<li>
-								🕺 人格类型：<a href="https://www.16personalities.com/profiles/c55ee084cac53"
+								🕺 人格类型：<a
+									href="https://www.16personalities.com/profiles/c55ee084cac53"
 									>Turbulent Logician (INTP-T)</a
 								>
 							</li>
@@ -176,21 +187,41 @@
 						<ul>
 							<li>
 								<a href="https://www.python.org/">
-									<img src="/img/svg/python.svg" alt="Python" width="67" height="20" />
+									<img
+										src="/img/svg/python.svg"
+										alt="Python"
+										width="67"
+										height="20"
+									/>
 								</a>
 							</li>
 							<li>
 								<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML">
-									<img src="/img/svg/html.svg" alt="HTML" width="59" height="20" />
+									<img
+										src="/img/svg/html.svg"
+										alt="HTML"
+										width="59"
+										height="20"
+									/>
 								</a>
 								<a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS">
 									<img src="/img/svg/css.svg" alt="CSS" width="51" height="20" />
 								</a>
 								<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript">
-									<img src="/img/svg/javascript.svg" alt="JavaScript" width="85" height="20" />
+									<img
+										src="/img/svg/javascript.svg"
+										alt="JavaScript"
+										width="85"
+										height="20"
+									/>
 								</a>
 								<a href="https://www.typescriptlang.org/">
-									<img src="/img/svg/typescript.svg" alt="TypeScript" width="87" height="20" />
+									<img
+										src="/img/svg/typescript.svg"
+										alt="TypeScript"
+										width="87"
+										height="20"
+									/>
 								</a>
 							</li>
 							<li>
@@ -275,26 +306,55 @@
 									</li>
 									<li>
 										内存:
-										<img src="/img/svg/mem.svg" alt="2*2GB" width="47" height="20" />
+										<img
+											src="/img/svg/mem.svg"
+											alt="2*2GB"
+											width="47"
+											height="20"
+										/>
 									</li>
 								</ul>
 							</li>
 							<li>
 								操作系统:
-								<a href="https://www.microsoft.com/zh-cn/software-download/windows10">
-									<img src="/img/svg/w10.svg" alt="Windows 10" width="95" height="20" />
+								<a
+									href="https://www.microsoft.com/zh-cn/software-download/windows10"
+								>
+									<img
+										src="/img/svg/w10.svg"
+										alt="Windows 10"
+										width="95"
+										height="20"
+									/>
 								</a>
-								<a href="https://www.microsoft.com/zh-cn/software-download/windows11">
-									<img src="/img/svg/w11.svg" alt="Windows 11" width="95" height="20" />
+								<a
+									href="https://www.microsoft.com/zh-cn/software-download/windows11"
+								>
+									<img
+										src="/img/svg/w11.svg"
+										alt="Windows 11"
+										width="95"
+										height="20"
+									/>
 								</a>
 								<a href="https://deepin.org/">
-									<img src="/img/svg/deepin.svg" alt="deepin" width="65" height="20" />
+									<img
+										src="/img/svg/deepin.svg"
+										alt="deepin"
+										width="65"
+										height="20"
+									/>
 								</a>
 							</li>
 							<li>
 								编辑器:
 								<a href="https://code.visualstudio.com/download">
-									<img src="/img/svg/vsc.svg" alt="VSCode" width="131" height="20" />
+									<img
+										src="/img/svg/vsc.svg"
+										alt="VSCode"
+										width="131"
+										height="20"
+									/>
 								</a>
 								<a href="https://github.com/vim/vim">
 									<img src="/img/svg/vim.svg" alt="Vim" width="49" height="20" />
@@ -306,13 +366,30 @@
 									<img src="/img/svg/git.svg" alt="Git" width="43" height="20" />
 								</a>
 								<a href="https://www.microsoft.com/zh-cn/edge">
-									<img src="/img/svg/msedge.svg" alt="Microsoft Edge" width="109" height="20" />
+									<img
+										src="/img/svg/msedge.svg"
+										alt="Microsoft Edge"
+										width="109"
+										height="20"
+									/>
 								</a>
-								<a href="https://learn.microsoft.com/zh-cn/windows/terminal/install">
-									<img src="/img/svg/wt.svg" alt="Windows Terminal" width="129" height="20" />
+								<a
+									href="https://learn.microsoft.com/zh-cn/windows/terminal/install"
+								>
+									<img
+										src="/img/svg/wt.svg"
+										alt="Windows Terminal"
+										width="129"
+										height="20"
+									/>
 								</a>
 								<a href="https://www.tampermonkey.net/">
-									<img src="/img/svg/tm.svg" alt="Windows Terminal" width="115" height="20" />
+									<img
+										src="/img/svg/tm.svg"
+										alt="Windows Terminal"
+										width="115"
+										height="20"
+									/>
 								</a>
 							</li>
 						</ul>
@@ -338,7 +415,9 @@
 					<div class="组">
 						<section>
 							<h3>
-								<a href="https://github.com/dsy4567/4399-on-vscode">4399-on-vscode</a>
+								<a href="https://github.com/dsy4567/4399-on-vscode"
+									>4399-on-vscode</a
+								>
 							</h3>
 							<p>在 vscode 上玩 4399 小游戏, 帮助你劳逸结合, 提高开发效率</p>
 						</section>
@@ -367,7 +446,9 @@
 						</section>
 						<section>
 							<h3>
-								<a href="https://github.com/dsy4567/Fucking-Anti-Indulgence">Fucking-Anti-Indulgence</a>
+								<a href="https://github.com/dsy4567/Fucking-Anti-Indulgence"
+									>Fucking-Anti-Indulgence</a
+								>
 							</h3>
 							<p>
 								(🐌 缓更) 破解防沉迷的 Tampermonkey
@@ -376,7 +457,9 @@
 						</section>
 						<section>
 							<h3>
-								<a href="https://github.com/dsy4567/Fucking-Anti-Indulgence">Fucking-Anti-Indulgence</a>
+								<a href="https://github.com/dsy4567/Fucking-Anti-Indulgence"
+									>Fucking-Anti-Indulgence</a
+								>
 							</h3>
 							<p>写得非常烂的《“死妈的防沉迷”许可证》, 律师读完都有打我的冲动</p>
 						</section>

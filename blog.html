@@ -32,12 +32,23 @@
 		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 		<link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
 
-		<link rel="preload" href="/js/analytics.js" as="script" crossorigin="anonymous" />
-		<link rel="preload" href="/js/blog.js" as="script" crossorigin="anonymous" />
-		<link rel="preload" href="/js/ncm.js" as="script" crossorigin="anonymous" />
-		<link rel="preload" href="/js/highlight.min.js" as="script" crossorigin="anonymous" />
-		<link rel="preload" href="/js/marked.min.js" as="script" crossorigin="anonymous" />
-		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="anonymous" />
+		<link
+			rel="modulepreload"
+			href="/js/analytics.js"
+			as="script"
+			crossorigin="use-credentials"
+		/>
+		<link rel="modulepreload" href="/js/main.js" as="script" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/blog.js" as="script" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/ncm.js" as="script" crossorigin="use-credentials" />
+		<link rel="preload" href="/js/highlight.min.js" as="script" crossorigin="use-credentials" />
+		<link
+			rel="modulepreload"
+			href="/js/marked.min.js"
+			as="script"
+			crossorigin="use-credentials"
+		/>
+		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="use-credentials" />
 		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
 		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
 		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />

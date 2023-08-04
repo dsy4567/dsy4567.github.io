@@ -61,8 +61,9 @@ function 显示或隐藏进度条(/** @type {boolean} */ 状态) {
 }
 /**
  * @param {string} url
+ * @param {"anonymous" | "use-credentials" | null} crossOrigin
  */
-function 添加样式(url) {
+function 添加样式(url, crossOrigin = "use-credentials") {
 	return new Promise(resolve => {
 		if (qs("link[href*='" + url + "'][rel='stylesheet']")) return resolve({});
 		let l = ce("link");
@@ -71,15 +72,16 @@ function 添加样式(url) {
 		};
 		l.href = url;
 		l.rel = "stylesheet";
-		l.crossOrigin = "anonymous";
+		l.crossOrigin = crossOrigin;
 		document.head.append(l);
 	});
 }
 /**
  * @param {string} url
+ * @param {"anonymous" | "use-credentials" | null} crossOrigin
  * @returns {Promise<any>}
  */
-async function 添加脚本(url) {
+async function 添加脚本(url, crossOrigin = "use-credentials") {
 	return new Promise((resolve, reject) => {
 		if (已添加的脚本[url]) return 已添加的脚本[url].回调.push(resolve);
 
@@ -152,7 +154,7 @@ async function 添加脚本(url) {
 			delete 已添加的脚本[url];
 		};
 		s.src = url;
-		s.crossOrigin = "anonymous";
+		s.crossOrigin = crossOrigin;
 		document.head.append(s);
 	});
 }

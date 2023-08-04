@@ -392,13 +392,12 @@ addEventListener("copy", () => {
 		gd("分界线")?.addEventListener("click", () => {
 			document.body.classList.toggle("宽屏");
 		});
-		false &&
-			qsa("#电子邮箱, #tg").forEach(元素 => {
-				元素.addEventListener("click", 事件 => {
-					事件.preventDefault();
-					if (gd("recaptcha")) return;
-					let div = 添加悬浮卡片(
-						`
+		qsa("#电子邮箱, #tg").forEach(元素 => {
+			元素.addEventListener("click", 事件 => {
+				事件.preventDefault();
+				if (gd("recaptcha")) return;
+				let div = 添加悬浮卡片(
+					`
             <div id="g-recaptcha"></div><br />
             <button id="recaptcha">开始人机验证/提交</button>
             <button id="close_recaptcha">关闭</button>
@@ -406,60 +405,60 @@ addEventListener("copy", () => {
             要查看 dsy4567 的电子邮箱地址/TG 用户名，请通过 reCAPTCHA 人机验证。<br />
             继续查看电子邮箱地址即代表您同意不向 dsy4567<br />
             发送广告/要饭/雇童工/炒币等垃圾邮件。`,
-						// @ts-ignore
-						事件.pageX,
-						// @ts-ignore
-						事件.pageY,
-						false
-					);
-					添加点击事件和设置图标({
-						设置图标: false,
-						添加链接点击事件: true,
-						要添加链接点击事件的元素: div.getElementsByTagName("a"),
-					});
-					添加脚本("https://www.recaptcha.net/recaptcha/api.js?render=explicit")
-						.then(() => {
-							gd("close_recaptcha")?.addEventListener("click", () => {
-								div.remove();
-							});
-							// @ts-ignore
-							gd("recaptcha")?.addEventListener("click", async 事件 => {
-								const gr = gd("g-recaptcha");
-								if (!gr) return;
-								try {
-									const 回复 = grecaptcha.getResponse();
-									if (!回复) throw new Error();
-									gr.innerHTML = await (
-										await fetch(
-											"https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
-												回复
-										)
-									).text();
-									添加点击事件和设置图标({
-										设置图标: false,
-										添加链接点击事件: true,
-										要添加链接点击事件的元素: div.getElementsByTagName("a"),
-									});
-									gr.focus();
-								} catch (e) {
-									gr.tabIndex = 0;
-									gr.focus();
-									grecaptcha.render("g-recaptcha", {
-										sitekey: gr_sitekey,
-										theme: matchMedia("(prefers-color-scheme: dark)").matches
-											? "dark"
-											: "light",
-									});
-								}
-							});
-						})
-						.catch(() => {
-							console.error("无法加载 reCAPTCHA");
-							open("https://qwq.dsy4567.cf/api/getemail", "_blank");
+					// @ts-ignore
+					事件.pageX,
+					// @ts-ignore
+					事件.pageY,
+					false
+				);
+				添加点击事件和设置图标({
+					设置图标: false,
+					添加链接点击事件: true,
+					要添加链接点击事件的元素: div.getElementsByTagName("a"),
+				});
+				添加脚本("https://www.recaptcha.net/recaptcha/api.js?render=explicit", null)
+					.then(() => {
+						gd("close_recaptcha")?.addEventListener("click", () => {
 							div.remove();
 						});
-				});
+						// @ts-ignore
+						gd("recaptcha")?.addEventListener("click", async 事件 => {
+							const gr = gd("g-recaptcha");
+							if (!gr) return;
+							try {
+								const 回复 = grecaptcha.getResponse();
+								if (!回复) throw new Error();
+								gr.innerHTML = await (
+									await fetch(
+										"https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
+											回复
+									)
+								).text();
+								添加点击事件和设置图标({
+									设置图标: false,
+									添加链接点击事件: true,
+									要添加链接点击事件的元素: div.getElementsByTagName("a"),
+								});
+								gr.focus();
+							} catch (e) {
+								gr.tabIndex = 0;
+								gr.focus();
+								grecaptcha.render("g-recaptcha", {
+									sitekey: gr_sitekey,
+									theme: matchMedia("(prefers-color-scheme: dark)").matches
+										? "dark"
+										: "light",
+								});
+							}
+						});
+					})
+					.catch(() => {
+						console.error("无法加载 reCAPTCHA");
+						open("https://qwq.dsy4567.cf/api/getemail", "_blank");
+						div.remove();
+					});
 			});
+		});
 		let fuck = gd("fuck");
 		if (fuck)
 			fuck.innerText =
