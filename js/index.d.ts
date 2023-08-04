@@ -29,13 +29,7 @@ type 添加点击事件和设置图标选项 = {
 	设置图标?: boolean;
 	要设置图标的元素?: SVGSVGElement[] | HTMLCollectionOf<SVGSVGElement>;
 	添加链接点击事件?: boolean;
-	要添加链接点击事件的元素?:
-		| HTMLAnchorElement[]
-		| HTMLCollectionOf<HTMLAnchorElement>;
-	添加图片点击事件?: boolean;
-	要添加图片点击事件的元素?:
-		| HTMLImageElement[]
-		| HTMLCollectionOf<HTMLImageElement>;
+	要添加链接点击事件的元素?: HTMLAnchorElement[] | HTMLCollectionOf<HTMLAnchorElement>;
 };
 
 declare class Hljs {

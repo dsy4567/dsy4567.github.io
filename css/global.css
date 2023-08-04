@@ -70,8 +70,8 @@
 
 ::-webkit-scrollbar {
 	background-color: transparent;
-	width: 5px;
-	height: 5px;
+	width: 4px;
+	height: 4px;
 }
 ::-webkit-scrollbar-thumb {
 	background-color: #8888;
@@ -81,25 +81,25 @@
 	background-color: #888;
 }
 
-@media (prefers-color-scheme: light) {
+@media not (prefers-color-scheme: dark) {
 	html {
-		--theme-color: #ddd;
+		--theme-color: #eee;
 		--theme-color-h: 0;
 		--theme-color-s: 0;
-		--theme-color-l: 0.87;
-		--theme-color-transparent: #fff8;
+		--theme-color-l: 0.93;
+		--theme-color-transparent: #8888;
 		--text-color: #222;
 		color-scheme: light;
 	}
 }
 @media (prefers-color-scheme: dark) {
 	html {
-		--theme-color: #222;
-		--theme-color-h: 0;
-		--theme-color-s: 0;
-		--theme-color-l: 0.13;
+		--theme-color: #18171c;
+		--theme-color-h: 0.7;
+		--theme-color-s: 1;
+		--theme-color-l: 0.1;
 		--theme-color-transparent: #fff2;
-		--text-color: #ddd;
+		--text-color: #ccc;
 		color-scheme: dark;
 	}
 }
@@ -177,9 +177,6 @@
 	}
 	spoiler {
 		color: #fff !important;
-	}
-	p:has(spoiler) {
-		transform: rotateX(180deg) !important;
 	}
 	pre {
 		background-color: #fff !important;
@@ -368,7 +365,7 @@ main > .右 {
 
 .标签 > div > * {
 	background-color: var(--bg-color-dark-2);
-	border: 1px solid #0000;
+	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	line-height: 2.5;
 	margin: 2px;
@@ -418,7 +415,7 @@ body.宽屏 > main .右 {
 
 #copyright {
 	background-color: var(--bg-color);
-	border-top: 1px solid #0000;
+	border-top: 1px solid transparent;
 	border-top-left-radius: var(--border-radius);
 	border-top-right-radius: var(--border-radius);
 	padding-top: 16px;
@@ -459,9 +456,9 @@ code {
 	padding: 1px;
 }
 pre {
-	background-color: #ccc;
+	background-color: transparent;
 	color: #111;
-	border: 1px solid var(--theme-color-transparent);
+	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	overflow: auto;
 	padding: 4px;
@@ -471,6 +468,18 @@ pre > code {
 	border: none;
 	margin: 0;
 	padding: 0;
+}
+code.hljs:hover::before {
+	background-color: var(--bg-color-dark-2);
+	color: var(--text-color);
+	content: "双击复制代码";
+	border-radius: var(--border-radius);
+	padding: 4px;
+	position: absolute;
+	right: 5.5em;
+}
+code.hljs.已复制:hover::before {
+	content: "已复制";
 }
 section {
 	background-color: var(--bg-color);
@@ -558,7 +567,7 @@ hr {
 
 #导航栏 {
 	background-color: var(--bg-color);
-	border-bottom: 1px solid #0000;
+	border-bottom: 1px solid transparent;
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 	color: var(--text-color);
 	display: flex;
@@ -578,7 +587,7 @@ body.顶部 #导航栏 {
 	box-shadow: none;
 }
 body.隐藏导航栏 #导航栏 {
-	transform: translateY(-48px);
+	transform: translateY(-49px);
 }
 #导航栏 > .左,
 #导航栏 > .右 {
@@ -623,14 +632,14 @@ div.侧边按钮 {
 div#主侧边按钮 {
 	top: calc(75vh - 33px * 4);
 }
-div.侧边按钮 .fill {
+/* div.侧边按钮 .fill {
 	fill: #000;
 }
 div.侧边按钮 .stroke {
 	stroke: #000;
-}
+} */
 div.侧边按钮 > * {
-	background-color: #fff;
+	background-color: var(--bg-color-dark-2);
 	box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px, rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
 	border: 1px solid transparent;
 	border-bottom-left-radius: 50%;
@@ -676,7 +685,7 @@ div.侧边按钮 > #网抑云阴乐:focus-within {
 	transform: translateX(calc(-32px * 7));
 }
 div.侧边按钮 > .拥有更多选项 > .更多选项 {
-	background: #fff;
+	background: var(--bg-color-dark-2);
 	border: 1px solid transparent;
 	display: flex;
 	opacity: 0;
@@ -700,7 +709,7 @@ div.侧边按钮 > #网抑云阴乐 #歌词 {
 	pointer-events: none;
 	right: 48px;
 	text-align: end;
-	white-space: normal;
+	word-wrap: break-word;
 	width: calc(100vw - 64px);
 }
 
@@ -715,8 +724,8 @@ div.侧边按钮 > #网抑云阴乐 > #阴乐控件 {
 	width: calc(32px * 6);
 }
 div.侧边按钮 > #网抑云阴乐 #播放列表 {
-	background: #fff;
-	color: #000;
+	background: var(--bg-color-dark-2);
+	color: var(--text-color);
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
@@ -738,13 +747,15 @@ div.侧边按钮 > #网抑云阴乐 #播放列表 li {
 	display: table-caption;
 	user-select: none;
 	white-space: nowrap;
+	width: calc(100% + 8px);
 }
 div.侧边按钮 > #网抑云阴乐 #播放列表 > li.正在播放,
-div.侧边按钮 > #网抑云阴乐 #播放列表 > li:hover {
-	background-color: #ccc;
+div.侧边按钮 > #网抑云阴乐 #播放列表 > li:hover,
+div.侧边按钮 > #网抑云阴乐 #播放列表 > li:focus-visible {
+	background-color: var(--theme-color-transparent);
 }
 div.侧边按钮 > #网抑云阴乐 #播放列表 > li.正在播放::before {
-	background-color: var(--theme-color);
+	background-color: var(--link-color);
 	display: block;
 	width: 5px;
 	height: 3em;
@@ -765,7 +776,7 @@ div.侧边按钮 > .拥有更多选项:hover > .更多选项,
 	opacity: 1 !important;
 }
 div.侧边按钮 > .拥有更多选项 > .更多选项 > button {
-	background-color: #fff;
+	background-color: var(--bg-color-dark-2);
 	border: 1px solid #888;
 	border-radius: 50%;
 	display: flex;
@@ -841,9 +852,9 @@ main > .分界线 {
 	margin: 4px;
 }
 
-.hljs {
+/* .hljs {
 	background-color: transparent !important;
-}
+} */
 
 #技能 {
 	display: flex;

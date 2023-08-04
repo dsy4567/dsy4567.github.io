@@ -81,11 +81,6 @@ function 动态加载(元素) {
 			显示或隐藏进度条(false);
 		});
 }
-function 完成加载() {
-	添加点击事件和设置图标({
-		设置图标: false,
-	});
-}
 function 添加点击事件和设置图标(/** @type {添加点击事件和设置图标选项} */ 选项 = {}) {
 	if (typeof 选项.设置图标 === "undefined" ? true : 选项.设置图标)
 		for (const 元素 of 选项.要设置图标的元素?.[0]
@@ -129,10 +124,6 @@ function 添加点击事件和设置图标(/** @type {添加点击事件和设�
 			if (元素.querySelector("img, svg") && !元素.classList.contains("无滤镜"))
 				元素.classList.add("无滤镜");
 		}
-	}
-	if (typeof 选项.添加图片点击事件 === "undefined" ? true : 选项.添加图片点击事件) {
-		const img = 选项.要添加图片点击事件的元素?.[0] ? 选项.要添加图片点击事件的元素 : ge("img");
-		for (const 元素 of img) 元素.ondblclick = () => open(元素.src, "_blank");
 	}
 }
 // 网抑云阴乐歌单+控件
@@ -209,6 +200,7 @@ function 添加点击事件和设置图标(/** @type {添加点击事件和设�
 					"beforeend",
 					`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a><ol id="播放列表"></ol>`
 				);
+				// @ts-ignore
 				let 元素 = [];
 				网抑云阴乐.歌单.forEach(音乐信息 => {
 					let li = ce("li");
@@ -333,7 +325,6 @@ fetch("/json/theme.json")
 		const f = () => {
 			gd("所有主题", true)?.append(btn);
 			添加点击事件和设置图标({
-				添加图片点击事件: false,
 				添加链接点击事件: false,
 				设置图标: true,
 				要设置图标的元素: btn.getElementsByTagName("svg"),
@@ -355,7 +346,6 @@ fetch("https://dsy4567.cf/api/hitokoto")
 			一言.innerText = j.hitokoto;
 			链接.href = "https://hitokoto.cn/?uuid=" + j.uuid;
 			添加点击事件和设置图标({
-				添加图片点击事件: false,
 				添加链接点击事件: true,
 				设置图标: false,
 				要添加链接点击事件的元素: [链接],
@@ -370,7 +360,6 @@ fetch("/json/icon.json")
 		const f = () => {
 			图标 = j;
 			添加点击事件和设置图标({
-				添加图片点击事件: false,
 				添加链接点击事件: false,
 				设置图标: true,
 			});
@@ -424,45 +413,50 @@ addEventListener("copy", () => {
 				);
 				添加点击事件和设置图标({
 					设置图标: false,
-					添加图片点击事件: false,
 					添加链接点击事件: true,
 					要添加链接点击事件的元素: div.getElementsByTagName("a"),
 				});
-				添加脚本("https://www.recaptcha.net/recaptcha/api.js?render=explicit").then(() => {
-					gd("close_recaptcha")?.addEventListener("click", () => {
+				添加脚本("https://www.recaptcha.net/recaptcha/api.js?render=explicit")
+					.then(() => {
+						gd("close_recaptcha")?.addEventListener("click", () => {
+							div.remove();
+						});
+						// @ts-ignore
+						gd("recaptcha")?.addEventListener("click", async 事件 => {
+							const gr = gd("g-recaptcha");
+							if (!gr) return;
+							try {
+								const 回复 = grecaptcha.getResponse();
+								if (!回复) throw new Error();
+								gr.innerHTML = await (
+									await fetch(
+										"https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
+											回复
+									)
+								).text();
+								添加点击事件和设置图标({
+									设置图标: false,
+									添加链接点击事件: true,
+									要添加链接点击事件的元素: div.getElementsByTagName("a"),
+								});
+								gr.focus();
+							} catch (e) {
+								gr.tabIndex = 0;
+								gr.focus();
+								grecaptcha.render("g-recaptcha", {
+									sitekey: gr_sitekey,
+									theme: matchMedia("(prefers-color-scheme: dark)").matches
+										? "dark"
+										: "light",
+								});
+							}
+						});
+					})
+					.catch(() => {
+						console.error("无法加载 reCAPTCHA");
+						open("https://qwq.dsy4567.cf/api/getemail", "_blank");
 						div.remove();
 					});
-					gd("recaptcha")?.addEventListener("click", async 事件 => {
-						const gr = gd("g-recaptcha");
-						if (!gr) return;
-						try {
-							const 回复 = grecaptcha.getResponse();
-							if (!回复) throw new Error();
-							gr.innerHTML = await (
-								await fetch(
-									"https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
-										回复
-								)
-							).text();
-							添加点击事件和设置图标({
-								设置图标: false,
-								添加图片点击事件: false,
-								添加链接点击事件: true,
-								要添加链接点击事件的元素: div.getElementsByTagName("a"),
-							});
-							gr.focus();
-						} catch (e) {
-							gr.tabIndex = 0;
-							gr.focus();
-							grecaptcha.render("g-recaptcha", {
-								sitekey: gr_sitekey,
-								theme: matchMedia("(prefers-color-scheme: dark)").matches
-									? "dark"
-									: "light",
-							});
-						}
-					});
-				});
 			});
 		});
 		let fuck = gd("fuck");
@@ -489,7 +483,39 @@ addEventListener("copy", () => {
 			scrollTop = document.documentElement.scrollTop;
 		};
 		addEventListener("scroll", f);
-		完成加载();
+		addEventListener("dblclick", 事件 => {
+			const /** @type {HTMLImageElement | undefined} */ t1 =
+					// @ts-ignore
+					事件.target?.tagName === "IMG"
+						? 事件.target
+						: // @ts-ignore
+						事件.target?.parentElement.tagName === "IMG"
+						? // @ts-ignore
+						  事件?.target.parentElement
+						: undefined;
+			if (t1) return open(t1.src, "_blank");
+
+			const /** @type {HTMLImageElement | undefined} */ t2 =
+					// @ts-ignore
+					事件.target?.classList.contains("hljs")
+						? 事件.target
+						: // @ts-ignore
+						事件.target?.parentElement.classList.contains("hljs")
+						? // @ts-ignore
+						  事件?.target.parentElement
+						: undefined;
+			if (t2) {
+				t2.classList.add("已复制");
+				setTimeout(() => {
+					t2?.classList.remove("已复制");
+				}, 3000);
+				navigator.clipboard.writeText(t2.innerText);
+				事件.preventDefault();
+			}
+		});
+		添加点击事件和设置图标({
+			设置图标: false,
+		});
 
 		let style = ce("style");
 		style.innerHTML = `a,
@@ -530,6 +556,5 @@ _global["main.js"] = () => ({
 	正在动态加载,
 	加载模块,
 	动态加载,
-	完成加载,
 	添加点击事件和设置图标,
 });

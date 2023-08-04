@@ -5,7 +5,7 @@
 
 let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
 	/** @type {Record<string, HTMLElement | null>} */ qs缓存 = {},
-	/** @type {Record<string, {已完成加载: boolean, 回调: ((事件?: any) => void)[]}>} */ 已添加的脚本 =
+	/** @type {Record<string, {已完成加载: boolean, 回调: ((事件?: any) => void)[], 失败回调: ((错误?: any) => void)[]}>} */ 已添加的脚本 =
 		{};
 /**
  * document.getElementById
@@ -80,14 +80,17 @@ function 添加样式(url) {
  * @returns {Promise<any>}
  */
 async function 添加脚本(url) {
-	return new Promise(resolve => {
+	return new Promise((resolve, reject) => {
 		if (已添加的脚本[url]) return 已添加的脚本[url].回调.push(resolve);
 
 		已添加的脚本[url] = {
 			已完成加载: false,
 			回调: [],
+			失败回调: [],
 		};
+
 		let a = 已添加的脚本[url];
+
 		// @ts-ignore
 		a.回调._push = a.回调.push;
 		a.回调.push = (..._) => {
@@ -103,7 +106,25 @@ async function 添加脚本(url) {
 			else a.回调._push(..._);
 			return a.回调.length;
 		};
-		a.回调.push(resolve)
+		a.回调.push(resolve);
+
+		// @ts-ignore
+		a.失败回调._push = a.失败回调.push;
+		a.失败回调.push = (..._) => {
+			if (a.已完成加载)
+				_.forEach(失败回调 => {
+					try {
+						失败回调();
+					} catch (e) {
+						console.error(e);
+					}
+				});
+			// @ts-ignore
+			else a.失败回调._push(..._);
+			return a.失败回调.length;
+		};
+		a.失败回调.push(reject);
+
 		let s = ce("script");
 		s.onload = 事件 => {
 			a.已完成加载 = true;
@@ -116,6 +137,19 @@ async function 添加脚本(url) {
 				}
 				回调 = a.回调.pop();
 			}
+		};
+		s.onerror = 事件 => {
+			let 失败回调 = a.失败回调.pop();
+			while (失败回调) {
+				try {
+					失败回调();
+				} catch (e) {
+					console.error(e);
+				}
+				失败回调 = a.失败回调.pop();
+			}
+			s.remove();
+			delete 已添加的脚本[url];
 		};
 		s.src = url;
 		s.crossOrigin = "anonymous";
