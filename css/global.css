@@ -478,7 +478,7 @@ code.hljs::before {
 	position: absolute;
 }
 code.hljs.已复制:hover::before {
-	content: "已复制";
+	content: attr(data-lang) " | 已复制";
 }
 section {
 	background-color: var(--bg-color);
