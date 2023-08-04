@@ -470,16 +470,12 @@ pre > code {
 	padding: 0;
 }
 code.hljs::before {
-	content: "双击复制代码";
+	content: attr(data-lang) " | 双击复制代码";
 	border-radius: var(--border-radius);
 	font-size: 0.5em;
 	margin: -12px;
-	opacity: 0;
 	pointer-events: none;
 	position: absolute;
-}
-code.hljs:hover::before {
-	opacity: 0.5;
 }
 code.hljs.已复制:hover::before {
 	content: "已复制";

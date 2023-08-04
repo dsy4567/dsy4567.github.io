@@ -72,7 +72,11 @@ export async function main(/** @type {String} */ 路径) {
 				}
 				// 高亮
 				添加脚本("/js/highlight.min.js").then(() =>
-					sect.querySelectorAll("pre > code").forEach(元素 => hljs.highlightElement(元素))
+					sect.querySelectorAll("pre > code").forEach(元素 => {
+						hljs.highlightElement(元素);
+						const s = 元素.classList[0]?.split("-")[1];
+						元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
+					})
 				);
 
 				document.title =
@@ -192,11 +196,17 @@ ${(() => {
 							let sect = ce("section");
 							sect.id = "评论区";
 							sect.innerHTML = html;
+
 							// 高亮
 							添加脚本("/js/highlight.min.js").then(() =>
-								sect
-									.querySelectorAll("pre > code")
-									.forEach(元素 => hljs.highlightElement(元素))
+								sect.querySelectorAll("pre > code").forEach(元素 => {
+									hljs.highlightElement(元素);
+									const s = 元素.classList[0]?.split("-")[1];
+									元素.setAttribute(
+										"data-lang",
+										hljs.getLanguage(s)?.name || "未知"
+									);
+								})
 							);
 							右.append(sect);
 							_global["main.js"]().添加点击事件和设置图标();
@@ -309,6 +319,10 @@ ${(() => {
 
 				// 高亮
 				添加脚本("/js/highlight.min.js").then(() => hljs.highlightAll());
+				document.querySelectorAll("pre > code").forEach(元素 => {
+					const s = 元素.classList[0]?.split("-")[1];
+					元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
+				});
 			})
 			.catch(e => {
 				console.error(e);
