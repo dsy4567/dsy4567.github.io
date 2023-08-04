@@ -469,14 +469,17 @@ pre > code {
 	margin: 0;
 	padding: 0;
 }
-code.hljs:hover::before {
-	background-color: var(--bg-color-dark-2);
-	color: var(--text-color);
+code.hljs::before {
 	content: "双击复制代码";
 	border-radius: var(--border-radius);
-	padding: 4px;
+	font-size: 0.5em;
+	margin: -12px;
+	opacity: 0;
+	pointer-events: none;
 	position: absolute;
-	right: 5.5em;
+}
+code.hljs:hover::before {
+	opacity: 0.5;
 }
 code.hljs.已复制:hover::before {
 	content: "已复制";
