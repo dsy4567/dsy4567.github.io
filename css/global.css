@@ -96,7 +96,7 @@
 	html {
 		--theme-color: #18171c;
 		--theme-color-h: 0.7;
-		--theme-color-s: 1;
+		--theme-color-s: 0.1;
 		--theme-color-l: 0.1;
 		--theme-color-transparent: #fff2;
 		--text-color: #ccc;
