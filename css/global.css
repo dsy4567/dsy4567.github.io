@@ -474,6 +474,7 @@ code.hljs::before {
 	border-radius: var(--border-radius);
 	font-size: 0.5em;
 	margin: -12px;
+	opacity: 0.5;
 	pointer-events: none;
 	position: absolute;
 }
