@@ -392,6 +392,7 @@ addEventListener("copy", () => {
 		gd("分界线")?.addEventListener("click", () => {
 			document.body.classList.toggle("宽屏");
 		});
+		qsa("link[disabled]").forEach(元素 => 元素.removeAttribute("disabled"));
 		qsa("#电子邮箱, #tg").forEach(元素 => {
 			元素.addEventListener("click", 事件 => {
 				事件.preventDefault();
@@ -536,7 +537,7 @@ addEventListener("copy", () => {
 		import("./analytics.js");
 	};
 
-	DOMContentLoaded ? f() : document.addEventListener("DOMContentLoaded", f);
+	DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 })();
 addEventListener("popstate", 事件 => {
 	if (获取清理后的路径(true) === 路径 || 事件.state?.路径 === 路径) return 事件.preventDefault();
