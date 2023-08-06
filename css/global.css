@@ -588,6 +588,7 @@ body.顶部 #导航栏 {
 }
 body.隐藏导航栏 #导航栏 {
 	transform: translateY(-49px);
+	box-shadow: none;
 }
 #导航栏 > .左,
 #导航栏 > .右 {
