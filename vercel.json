@@ -413,8 +413,8 @@
 	],
 	"rewrites": [
 		{
-			"source": "/doh",
-			"destination": "https://1.1.1.1/dns-query"
+			"source": "/dns-query",
+			"destination": "https://dns.google/dns-query"
 		}
 	]
 }
