@@ -415,6 +415,10 @@
 		{
 			"source": "/dns-query",
 			"destination": "https://dns.google/dns-query"
+		},
+		{
+			"source": "/dns-query-cn",
+			"destination": "https://doh.pub/dns-query"
 		}
 	]
 }
