@@ -4,7 +4,8 @@ async function f(req) {
         'https://1.1.1.1/dns-query' + u.search,
         {
             method: req.method,
-            body: req.body
+            body: req.body,
+            headers: req.headers
         }
     )
 }
