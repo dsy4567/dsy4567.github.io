@@ -33,7 +33,10 @@ export async function main(/** @type {String} */ 路径) {
 				break;
 			}
 		fetch(当前文章信息.url ? 当前文章信息.url : `/blog-md/${id}/index.md`)
-			.then(res => res.text())
+			.then(res => {
+				if (!res.ok) throw new Error("状态码异常");
+				return res.text();
+			})
 			.then(async t => {
 				const 右 = qs("main .右", true);
 				if (!右) return;
@@ -45,7 +48,7 @@ export async function main(/** @type {String} */ 路径) {
 					html +
 					(html.includes('<nocopyright value="true"></nocopyright>')
 						? ""
-						: '<hr /><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br />');
+						: '<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，本作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br />');
 
 				span.innerHTML = `发表于: ${new Date(
 					当前文章信息.date
@@ -80,9 +83,11 @@ export async function main(/** @type {String} */ 路径) {
 				);
 
 				document.title =
-					(qs("main > .右 > section > h1")?.innerText || "无标题") +
-					" | " +
-					document.title;
+					(sect.querySelector("h1")?.innerText || "无标题") + " | " + document.title;
+				qs("meta[name='description']")?.setAttribute(
+					"content",
+					sect.querySelector("p")?.innerText || "此文章无法提供描述"
+				);
 
 				let ul = ce("ul"),
 					目录 = ce("section");
@@ -222,7 +227,10 @@ ${(() => {
 			});
 	} else if (获取清理后的路径() === "/blog")
 		fetch("/json/blog.json")
-			.then(res => res.json())
+			.then(res => {
+				if (!res.ok) throw new Error("状态码异常");
+				return res.json();
+			})
 			.then((/** @type {Array<文章信息>} */ j) => {
 				const 右 = qs("main .右", true);
 				if (!右) return;

@@ -12,8 +12,10 @@
                         object-src none
                     "
 		/>
-		<meta name="description" content="站长很懒, 不想写网站介绍" />
-		<meta name="keywords" content="dsy4567 博客 个人网站 编程 HTML CSS JS" />
+		<meta
+			name="description"
+			content="dsy4567 的博客 - 记录 dsy4567 的折腾经验、技术分享、编程笔记"
+		/>
 		<meta id="主题色" name="theme-color" content="#ddd" />
 		<meta id="robots" name="robots" content="all" />
 		<meta name="template" content="https://github.com/dsy4567/dsy4567.github.io" />
@@ -27,18 +29,29 @@
 			href="https://dsy4567.github.io/rss.xml"
 		/>
 
-		<link rel="dns-prefetch" href="https://api.github.com" />
 		<link rel="dns-prefetch" href="https://fonts.googleapis.cn" />
 		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 		<link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
 
 		<link rel="modulepreload" href="/js/analytics.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/main.js" crossorigin="use-credentials" />
 		<link rel="modulepreload" href="/js/blog.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/main.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/marked.min.js" crossorigin="use-credentials" />
 		<link rel="modulepreload" href="/js/ncm.js" crossorigin="use-credentials" />
 		<link rel="preload" href="/js/highlight.min.js" as="script" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/marked.min.js" crossorigin="use-credentials" />
 		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="use-credentials" />
+		<link
+			rel="preload"
+			href="https://dsy4567.cf/api/hitokoto"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="https://api.github.com/users/dsy4567"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
 		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
 		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
 		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
@@ -123,7 +136,7 @@
 						<a href="https://www.luogu.com.cn/user/776713" title="洛谷">
 							<svg class="小尺寸" data-icon="洛谷"></svg>
 						</a>
-						<a href="/rss.xml" title="RSS">
+						<a href="https://dsy4567.github.io/rss.xml" title="RSS" id="rss">
 							<svg class="小尺寸" data-icon="RSS"></svg>
 						</a>
 					</span>

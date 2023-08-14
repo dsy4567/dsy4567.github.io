@@ -393,8 +393,8 @@ addEventListener("copy", () => {
 			document.body.classList.toggle("宽屏");
 		});
 		qsa("link[disabled]").forEach(元素 => 元素.removeAttribute("disabled"));
-		qsa("#电子邮箱, #tg").forEach(元素 => {
-			元素.addEventListener("click", 事件 => {
+		[gd("电子邮箱"), gd("tg")].forEach(元素 => {
+			元素?.addEventListener("click", 事件 => {
 				事件.preventDefault();
 				if (gd("recaptcha")) return;
 				let div = 添加悬浮卡片(
@@ -460,6 +460,14 @@ addEventListener("copy", () => {
 					});
 			});
 		});
+		gd("rss")?.addEventListener("click", 事件 => {
+			// @ts-ignore
+			const url = gd("rss")?.href;
+			if (!url) return;
+			navigator.clipboard.writeText(url);
+			提示("已复制 RSS 订阅链接");
+			事件.preventDefault();
+		});
 		let fuck = gd("fuck");
 		if (fuck)
 			fuck.innerText =
@@ -485,6 +493,7 @@ addEventListener("copy", () => {
 		};
 		addEventListener("scroll", f);
 		addEventListener("dblclick", 事件 => {
+			// 双击打开图片
 			const /** @type {HTMLImageElement | undefined} */ t1 =
 					// @ts-ignore
 					事件.target?.tagName === "IMG"
@@ -496,6 +505,7 @@ addEventListener("copy", () => {
 						: undefined;
 			if (t1) return open(t1.src, "_blank");
 
+			// 复制代码
 			const /** @type {HTMLImageElement | undefined} */ t2 =
 					// @ts-ignore
 					事件.target?.classList.contains("hljs")

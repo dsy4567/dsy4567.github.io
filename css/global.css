@@ -156,7 +156,7 @@
 	section,
 	img,
 	video {
-		border: 1px solid #000 !important;
+		border: none !important;
 	}
 	section {
 		box-shadow: none !important;
@@ -186,7 +186,7 @@
 	main > .左,
 	main > #分界线,
 	footer,
-	nav > .右 > *,
+	#导航栏,
 	#主侧边按钮,
 	#评论区 {
 		display: none !important;

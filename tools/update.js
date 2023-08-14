@@ -11,29 +11,29 @@ let articles = [];
 
 let f = fs.readdirSync("./blog-md/");
 f.forEach(file => {
-    if (file && fs.statSync("./blog-md/" + file).isDirectory()) {
-        const md = fs
-            .readFileSync("./blog-md/" + file + "/index.md")
-            .toString()
-            .replaceAll("\r", "");
+	if (file && fs.statSync("./blog-md/" + file).isDirectory()) {
+		const md = fs
+			.readFileSync("./blog-md/" + file + "/index.md")
+			.toString()
+			.replaceAll("\r", "");
 
-        const $ = cheerio.load(marked.marked(md));
-        let j = jsonfile.readFileSync("./blog-md/" + file + "/article.json");
-        j.id = file;
-        j.title = $("h1").text();
-        j.desc = md.split("<!-- more -->")[0];
-        j.updated = j.updated || new Date();
-        j.date = j.date || new Date();
-        j.issue = j.issue || null;
-        articles.push(j);
-    }
+		const $ = cheerio.load(marked.marked(md));
+		let j = jsonfile.readFileSync("./blog-md/" + file + "/article.json");
+		j.id = file;
+		j.title = $("h1").text();
+		j.desc = md.split("<!-- more -->")[0];
+		j.updated = j.updated || new Date();
+		j.date = j.date || new Date();
+		j.issue = j.issue || null;
+		articles.push(j);
+	}
 });
 
 articles.sort((a, b) => +new Date(b.date) - +new Date(a.date));
 jsonfile.writeFileSync("./json/blog.json", articles, { spaces: 4 });
 
 let rss = `<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+<feed xmlns="https://www.w3.org/2005/Atom">
     <title>博客 | dsy4567 的小站</title>
     <link rel="alternate" type="text/html" href="https://${hostname}/blog.html" />
     <link rel="self" type="application/atom+xml" href="https://${hostname}/rss.xml" />
@@ -41,7 +41,7 @@ let rss = `<?xml version="1.0" encoding="UTF-8"?>
     <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>
 `;
 let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
     <loc>https://${hostname}/</loc>
     <lastmod>2023-06-22T05:02:50.783Z</lastmod>
@@ -65,12 +65,10 @@ let readme = `## 📚 文章列表
 `;
 
 articles.forEach(a => {
-    rss += `
+	rss += `
 <entry>
     <title>${a.title}</title>
-    <link rel="alternate" type="text/html" href="https://${hostname}/blog.html?id=${
-        a.id
-    }" />
+    <link rel="alternate" type="text/html" href="https://${hostname}/blog.html?id=${a.id}" />
     <id>${a.id}</id>
     <published>${a.date}</published>
     <updated>${a.updated}</updated>
@@ -83,20 +81,20 @@ articles.forEach(a => {
     <content type="html" xml:lang="zh-cn">
         <![CDATA[
 ${marked.marked(
-    fs
-        .readFileSync("./blog-md/" + a.id + "/index.md")
-        .toString()
-        .replaceAll("\r", "")
+	fs
+		.readFileSync("./blog-md/" + a.id + "/index.md")
+		.toString()
+		.replaceAll("\r", "")
 )}
         ]]>
     </content>
 </entry>`;
-    sitemap += `
+	sitemap += `
 <url>
     <loc>https://${hostname}/blog.html?id=${a.id}</loc>
     <lastmod>${a.updated}</lastmod>
 </url>`;
-    readme += `[${a.title}](./${a.id}/index.md)\n\n`;
+	readme += `[${a.title}](./${a.id}/index.md)\n\n`;
 });
 
 rss += "</feed>";
@@ -112,11 +110,11 @@ fs.writeFileSync("./sitemap.xml", sitemap);
 fs.writeFileSync("./blog-md/README.md", readme);
 
 axios
-    .get("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=8219428260", {
-        responseType: "json",
-    })
-    .then(res => {
-        let j = res.data;
-        delete j.privileges;
-        jsonfile.writeFileSync("./json/ncm.json", j);
-    });
+	.get("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=8219428260", {
+		responseType: "json",
+	})
+	.then(res => {
+		let j = res.data;
+		delete j.privileges;
+		jsonfile.writeFileSync("./json/ncm.json", j);
+	});
