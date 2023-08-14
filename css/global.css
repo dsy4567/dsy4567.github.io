@@ -922,7 +922,7 @@ main > .分界线 {
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px, rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
 	padding: 4px;
 	position: absolute;
-	z-index: 999;
+	z-index: 997;
 }
 
 #友链 > div > section > span {
