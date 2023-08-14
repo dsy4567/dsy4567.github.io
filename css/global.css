@@ -316,7 +316,7 @@ spoiler:hover {
 	cursor: not-allowed;
 }
 *:focus-visible {
-	outline: 2px solid var(--link-color);
+	outline: 2px dashed var(--link-color);
 }
 .标记 {
 	animation-duration: 3s;

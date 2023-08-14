@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+<feed xmlns="https://www.w3.org/2005/Atom">
     <title>博客 | dsy4567 的小站</title>
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html" />
     <link rel="self" type="application/atom+xml" href="https://dsy4567.github.io/rss.xml" />
@@ -11,7 +11,7 @@
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=code-server-on-termux" />
     <id>code-server-on-termux</id>
     <published>2023-07-31T13:17:09.742Z</published>
-    <updated>2023-08-01T05:59:20.006Z</updated>
+    <updated>2023-08-14T03:48:45.787Z</updated>
     <summary>记一次在 Termux 上搭建 code-server 环境
 店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是世界加钱可及的某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
 </summary>
@@ -54,7 +54,7 @@ pkg up
 
 #在这里查 code-server 的最新版本号，然后替换下面的版本号
 #https://github.com/search?q=repo%3Atermux-user-repository%2Fdists%20dists%2Ftur-packages%2Ftur%2Fbinary-aarch64%2FPackages%20code-server&amp;type=code
-wget https://ghproxy.com/https://github.com/termux-user-repository/dists/releases/download/0.1/code-server_4.16.0_aarch64.deb -O code-server.deb
+wget https://ghproxy.com/https://github.com/termux-user-repository/dists/releases/download/0.1/code-server_4.16.1_aarch64.deb -O code-server.deb
 dpkg -i ./code-server.deb
 #网快的也可以用这个
 pkg install tur-repo
