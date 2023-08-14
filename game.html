@@ -12,269 +12,269 @@
 		<title>防沉迷和答辩</title>
 		<style>
 			@media (prefers-color-scheme: light) {
-			    :root {
-			        --theme-color1: white;
-			        --theme-color2: black;
-			    }
+				:root {
+					--theme-color1: white;
+					--theme-color2: black;
+				}
 			}
 
 			@media (prefers-color-scheme: dark) {
-			    :root {
-			        --theme-color1: rgb(36, 36, 36);
-			        --theme-color2: white;
-			    }
+				:root {
+					--theme-color1: rgb(36, 36, 36);
+					--theme-color2: white;
+				}
 			}
 			@keyframes 答辩 {
-			    from {
-			        transform: translateY(0);
-			    }
-			    to {
-			        transform: translateY(-100vh);
-			    }
+				from {
+					transform: translateY(0);
+				}
+				to {
+					transform: translateY(-100vh);
+				}
 			}
 
 			.答辩 {
-			    animation: 答辩;
-			    animation-duration: 1s;
-			    animation-iteration-count: 1;
-			    animation-timing-function: linear;
-			    animation-fill-mode: forwards;
+				animation: 答辩;
+				animation-duration: 1s;
+				animation-iteration-count: 1;
+				animation-timing-function: linear;
+				animation-fill-mode: forwards;
 			}
 
 			html {
-			    touch-action: none;
-			    overflow: hidden;
-			    user-select: none;
-			    -webkit-user-drag: none;
-			    background-color: var(--theme-color1);
-			    color: var(--theme-color2);
-			    color-scheme: light dark;
+				touch-action: none;
+				overflow: hidden;
+				user-select: none;
+				-webkit-user-drag: none;
+				background-color: var(--theme-color1);
+				color: var(--theme-color2);
+				color-scheme: light dark;
 			}
 			::-webkit-scrollbar {
-			    display: none;
+				display: none;
 			}
 			#简介 {
-			    opacity: 0;
+				opacity: 0;
 			}
 			.游戏 {
-			    width: 100%;
-			    height: 100vh;
+				width: 100%;
+				height: 100vh;
 			}
 			.答辩,
 			.手指 {
-			    pointer-events: none;
-			    z-index: 8888888;
-			    position: fixed;
+				pointer-events: none;
+				z-index: 8888888;
+				position: absolute;
 			}
 			.答辩 {
-			    bottom: 1vh;
-			    font-size: 50px;
+				bottom: 1vh;
+				font-size: 50px;
 			}
 			.手指 {
-			    bottom: 0;
-			    font-size: 100px;
+				bottom: 0;
+				font-size: 100px;
 			}
 
 			#工具 {
-			    position: absolute;
-			    bottom: 0;
-			    z-index: 8888889;
+				position: absolute;
+				bottom: 0;
+				z-index: 8888889;
 			}
 
 			#答辩速度,
 			#弹窗速度,
 			#累计答辩,
 			#累计弹窗 {
-			    margin-left: 4px;
-			    margin-right: 4px;
+				margin-left: 4px;
+				margin-right: 4px;
 			}
 		</style>
 		<style>
 			/* 从四位数小游戏那里偷来的代码 */
 			.mysdkDialog * {
-			    margin: 0;
-			    padding: 0;
+				margin: 0;
+				padding: 0;
 			}
 
 			ul {
-			    list-style: none;
+				list-style: none;
 			}
 
 			.fl {
-			    float: left;
+				float: left;
 			}
 
 			.fr {
-			    float: right;
+				float: right;
 			}
 
 			.mysdkDialog {
-			    position: absolute;
-			    left: 50%;
-			    top: 210px;
-			    margin: -210px 0 0 -309px;
-			    width: 618px;
-			    z-index: 8;
+				position: absolute;
+				left: 50%;
+				top: 210px;
+				margin: -210px 0 0 -309px;
+				width: 618px;
+				z-index: 8;
 			}
 
 			.mysdkDialog .myfcmdialog {
-			    color: black;
-			    position: absolute;
-			    left: 0;
-			    top: 0;
-			    width: 620px;
-			    padding-bottom: 30px;
-			    font-family: "microsoft yahei";
-			    font-size: 14px;
-			    background: #fff;
-			    border-radius: 8px;
+				color: black;
+				position: absolute;
+				left: 0;
+				top: 0;
+				width: 620px;
+				padding-bottom: 30px;
+				font-family: "microsoft yahei";
+				font-size: 14px;
+				background: #fff;
+				border-radius: 8px;
 			}
 
 			.mysdkDialog .myfcmdialog .close-btn {
-			    position: absolute;
-			    right: 0;
-			    top: 0;
-			    width: 40px;
-			    height: 40px;
-			    background-color: red;
-			    line-height: 40px;
-			    cursor: pointer;
-			    display: none;
+				position: absolute;
+				right: 0;
+				top: 0;
+				width: 40px;
+				height: 40px;
+				background-color: red;
+				line-height: 40px;
+				cursor: pointer;
+				display: none;
 			}
 
 			.mysdkDialog .myfcmdialog .title {
-			    line-height: 30px;
-			    text-align: center;
-			    font-size: 22px;
-			    font-weight: 700;
-			    padding: 25px 0 0;
-			    margin: 0 40px;
-			    color: #454545;
-			    border: 0;
-			    height: auto;
-			    float: none;
-			    width: auto;
-			    text-indent: 0;
+				line-height: 30px;
+				text-align: center;
+				font-size: 22px;
+				font-weight: 700;
+				padding: 25px 0 0;
+				margin: 0 40px;
+				color: #454545;
+				border: 0;
+				height: auto;
+				float: none;
+				width: auto;
+				text-indent: 0;
 			}
 
 			.mysdkDialog .myfcmdialog .stitle {
-			    text-align: left;
-			    line-height: 1.6;
-			    margin: 15px 40px 0;
-			    font-size: 16px;
+				text-align: left;
+				line-height: 1.6;
+				margin: 15px 40px 0;
+				font-size: 16px;
 			}
 
 			.mysdkDialog .myfcmdialog .stitle span {
-			    color: #ffa92d;
+				color: #ffa92d;
 			}
 
 			.mysdkDialog .myfcmdialog .mod-tip {
-			    margin: 20px 40px 0;
-			    background: #f0f0f0;
-			    padding: 12px 15px;
-			    border-radius: 4px;
-			    color: #333;
-			    text-align: left;
+				margin: 20px 40px 0;
+				background: #f0f0f0;
+				padding: 12px 15px;
+				border-radius: 4px;
+				color: #333;
+				text-align: left;
 			}
 
 			.mysdkDialog .myfcmdialog .tip-title {
-			    font-size: 16px;
-			    font-weight: 400;
+				font-size: 16px;
+				font-weight: 400;
 			}
 
 			.mysdkDialog .myfcmdialog .tip-info {
-			    margin-top: 5px;
-			    line-height: 26px;
-			    font-size: 14px;
+				margin-top: 5px;
+				line-height: 26px;
+				font-size: 14px;
 			}
 
 			.mysdkDialog .myfcmdialog .tip-info li {
-			    font-size: 16px;
-			    line-height: 26px;
+				font-size: 16px;
+				line-height: 26px;
 			}
 
 			.mysdkDialog .myfcmdialog .tip-info .link {
-			    color: #faa61b;
-			    text-decoration: underline;
-			    margin: 0 4px;
-			    cursor: pointer;
+				color: #faa61b;
+				text-decoration: underline;
+				margin: 0 4px;
+				cursor: pointer;
 			}
 
 			.mysdkDialog .myfcmdialog .mod-btn {
-			    text-align: center;
-			    font-size: 0;
-			    line-height: 0;
-			    margin: 25px 40px 0;
+				text-align: center;
+				font-size: 0;
+				line-height: 0;
+				margin: 25px 40px 0;
 			}
 
 			.mysdkDialog .myfcmdialog .mod-btn .btn-fcmprimary {
-			    display: inline-block;
-			    width: 140px;
-			    height: 38px;
-			    line-height: 38px;
-			    border: 1px solid #69bb01;
-			    color: #69bb01;
-			    font-size: 14px;
-			    margin: 0 15px;
-			    border-radius: 5px;
-			    cursor: pointer;
+				display: inline-block;
+				width: 140px;
+				height: 38px;
+				line-height: 38px;
+				border: 1px solid #69bb01;
+				color: #69bb01;
+				font-size: 14px;
+				margin: 0 15px;
+				border-radius: 5px;
+				cursor: pointer;
 			}
 
 			.mysdkDialog .myfcmdialog .mod-btn .fr,
 			.mysdkDialog .myfcmdialog .mod-btn .fl {
-			    width: 250px;
-			    margin: 0;
+				width: 250px;
+				margin: 0;
 			}
 
 			.mysdkDialog .myfcmdialog .mod-btn .btn-fcmprimary:hover {
-			    -webkit-filter: brightness(1);
-			    filter: brightness(1);
+				-webkit-filter: brightness(1);
+				filter: brightness(1);
 			}
 
 			.mysdkDialog .myfcmdialog .mod-btn .btn-identity {
-			    background-color: #69bb01;
-			    color: #f8ffef;
+				background-color: #69bb01;
+				color: #f8ffef;
 			}
 
 			.fcmIframe {
-			    position: absolute;
-			    left: 50%;
-			    top: 270px;
-			    margin: 0 0 0 -309px;
-			    width: 618px;
-			    height: 354px;
-			    z-index: 7;
-			    border: 0 none;
-			    background-color: #000;
+				position: absolute;
+				left: 50%;
+				top: 270px;
+				margin: 0 0 0 -309px;
+				width: 618px;
+				height: 354px;
+				z-index: 7;
+				border: 0 none;
+				background-color: #000;
 			}
 
 			.countDown {
-			    background: #eee;
-			    border-radius: 3px;
-			    padding: 10px;
-			    text-align: center;
-			    margin: 20px 40px 0;
-			    font-size: 16px;
-			    color: #666;
+				background: #eee;
+				border-radius: 3px;
+				padding: 10px;
+				text-align: center;
+				margin: 20px 40px 0;
+				font-size: 16px;
+				color: #666;
 			}
 
 			.countDown .txt1 {
-			    font-size: 16px;
-			    height: 28px;
-			    line-height: 28px;
-			    color: #717171;
+				font-size: 16px;
+				height: 28px;
+				line-height: 28px;
+				color: #717171;
 			}
 
 			.countDown .txt2 {
-			    height: 40px;
-			    line-height: 40px;
-			    font-size: 26px;
-			    font-weight: bold;
-			    color: #54ba3d;
+				height: 40px;
+				line-height: 40px;
+				font-size: 26px;
+				font-weight: bold;
+				color: #54ba3d;
 			}
 
 			.stitle span {
-			    color: black !important;
+				color: black !important;
 			}
 		</style>
 	</head>
@@ -310,10 +310,8 @@
 					<div class="mod-tip 攻击对象">
 						<h3 class="tip-title">温馨提示：</h3>
 						<ul class="tip-info">
-							1.如果身份信息有误，请点击<span class="link"
-								>》》申请修改《《</span
-							><br />2.如果您身份信息已经变动，可点击<span
-								class="link"
+							1.如果身份信息有误，请点击<span class="link">》》申请修改《《</span
+							><br />2.如果您身份信息已经变动，可点击<span class="link"
 								>》》刷新身份《《</span
 							>
 						</ul>
@@ -328,13 +326,8 @@
 			<!-- <div class="答辩" aria-hidden="true">💩</div> -->
 		</div>
 		<div id="工具">
-			<button ontouchend="添加防沉迷弹窗()" onclick="添加防沉迷弹窗()">
-				添加防沉迷弹窗
-			</button>
-			<button
-				ontouchend="setInterval(发射,500)"
-				onclick="setInterval(发射,500)"
-			>
+			<button ontouchend="添加防沉迷弹窗()" onclick="添加防沉迷弹窗()">添加防沉迷弹窗</button>
+			<button ontouchend="setInterval(发射,500)" onclick="setInterval(发射,500)">
 				自动发射
 			</button>
 			<button
@@ -352,19 +345,17 @@
 			<form
 				onsubmit="+飙速.value > 0 && setInterval(发射, 1000 / Number(飙速.value));return false;"
 			>
-				<input
-					min="1"
-					type="number"
-					placeholder="速度"
-					id="飙速"
-				/><input type="submit" value="飙速" />
+				<input min="1" type="number" placeholder="速度" id="飙速" /><input
+					type="submit"
+					value="飙速"
+				/>
 			</form>
 			<p aria-live="off">
-				速度：<span id="答辩速度"></span>坨答辩/秒<span
-					id="弹窗速度"
+				速度：<span id="答辩速度"></span>坨答辩/秒<span id="弹窗速度"></span
+				>个防沉迷弹窗/秒<br />累计发射<span id="累计答辩"></span>坨答辩，干掉<span
+					id="累计弹窗"
 				></span
-				>个防沉迷弹窗/秒<br />累计发射<span id="累计答辩"></span
-				>坨答辩，干掉<span id="累计弹窗"></span>个防沉迷弹窗
+				>个防沉迷弹窗
 			</p>
 			<p>
 				由 <a href="https://github.com/dsy4567">dsy4567</a> 用😡制作，<a
@@ -375,6 +366,7 @@
 		</div>
 		<script>
 			function 发出警告(t) {
+				警告.ariaLabel = "";
 				警告.ariaLabel = t;
 			}
 			function 添加防沉迷弹窗() {
@@ -455,9 +447,7 @@
 					let 攻击对象, 攻击对象2;
 					if ((攻击对象 = document.querySelector(".攻击对象"))) {
 						攻击对象.remove();
-					} else if (
-						(攻击对象2 = document.querySelector(".攻击对象2"))
-					) {
+					} else if ((攻击对象2 = document.querySelector(".攻击对象2"))) {
 						攻击对象2.remove();
 					} else {
 						弹窗速度++;
@@ -481,14 +471,10 @@
 			addEventListener("contextmenu", e => e.preventDefault());
 			addEventListener("keyup", 发射);
 			setInterval(() => {
-				答辩速度元素.innerText !== 答辩速度 &&
-					(答辩速度元素.innerText = 答辩速度);
-				弹窗速度元素.innerText !== 弹窗速度 &&
-					(弹窗速度元素.innerText = 弹窗速度);
-				累计答辩元素.innerText !== 累计答辩 &&
-					(累计答辩元素.innerText = 累计答辩);
-				累计弹窗元素.innerText !== 累计弹窗 &&
-					(累计弹窗元素.innerText = 累计弹窗);
+				答辩速度元素.innerText !== 答辩速度 && (答辩速度元素.innerText = 答辩速度);
+				弹窗速度元素.innerText !== 弹窗速度 && (弹窗速度元素.innerText = 弹窗速度);
+				累计答辩元素.innerText !== 累计答辩 && (累计答辩元素.innerText = 累计答辩);
+				累计弹窗元素.innerText !== 累计弹窗 && (累计弹窗元素.innerText = 累计弹窗);
 				答辩速度 = 弹窗速度 = 0;
 			}, 1000);
 		</script>
