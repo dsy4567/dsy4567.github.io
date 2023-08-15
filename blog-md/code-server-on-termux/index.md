@@ -103,6 +103,8 @@ git config --global user.name "username"
 
 ## 配置自签名证书
 
+> 注意：必须妥善保管证书文件，泄露给他人有安全风险。
+
 执行以下命令：
 
 ```bash
