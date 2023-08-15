@@ -460,14 +460,14 @@ addEventListener("copy", () => {
 					});
 			});
 		});
-		gd("rss")?.addEventListener("click", 事件 => {
-			// @ts-ignore
-			const url = gd("rss")?.href;
-			if (!url) return;
-			navigator.clipboard.writeText(url);
-			提示("已复制 RSS 订阅链接");
-			事件.preventDefault();
-		});
+		// gd("rss")?.addEventListener("click", 事件 => {
+		// 	// @ts-ignore
+		// 	const url = gd("rss")?.href;
+		// 	if (!url) return;
+		// 	navigator.clipboard.writeText(url);
+		// 	提示("已复制 RSS 订阅链接");
+		// 	事件.preventDefault();
+		// });
 		let fuck = gd("fuck");
 		if (fuck)
 			fuck.innerText =
