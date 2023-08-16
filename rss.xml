@@ -11,7 +11,7 @@
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=code-server-on-termux" />
     <id>code-server-on-termux</id>
     <published>2023-07-31T13:17:09.742Z</published>
-    <updated>2023-08-15T10:43:49.977Z</updated>
+    <updated>22023-08-16T06:35:59.974Z</updated>
     <summary>记一次在 Termux 上搭建 code-server 环境
 店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是世界加钱可及的某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
 </summary>
@@ -254,7 +254,7 @@ cat ~/.config/code-server/config.yaml
 #见下方注意事项
 export NODE_OPTIONS=&quot;--require /data/data/com.termux/files/home/android-as-linux.js&quot;
 #将 example.com 替换为你自己的域名
-code-server --host vscode.example.com --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/server.key --proxy-domain vscode.example.com:7443
+code-server --host 0.0.0.0 --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/server.key --proxy-domain vscode.example.com:7443
 </code></pre>
 <p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车，然后依次执行以下命令：</p>
 <pre><code class="language-bash">chmod 777 ~/code-server.sh
