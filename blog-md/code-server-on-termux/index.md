@@ -281,7 +281,7 @@ cat ~/.config/code-server/config.yaml
 #见下方注意事项
 export NODE_OPTIONS="--require /data/data/com.termux/files/home/android-as-linux.js"
 #将 example.com 替换为你自己的域名
-code-server --host vscode.example.com --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/server.key --proxy-domain vscode.example.com:7443
+code-server --host 0.0.0.0 --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/server.key --proxy-domain vscode.example.com:7443
 ```
 
 按 <kbd>Esc</kbd>，输入 `:wq` 并按回车，然后依次执行以下命令：
