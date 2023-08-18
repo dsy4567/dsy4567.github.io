@@ -16,7 +16,7 @@ export default (() => {
 
 	const /** @type {HTMLScriptElement} */ s2 = document.createElement("script");
 	s2.defer = true;
-	s2.setAttribute("data-cf-beacon", '{"token": "463cee97f1c44518a2f6b993668d5671"}');
+	s2.setAttribute("data-cf-beacon", '{"token": "9ef701d58e594dcc960850227e0f2436"}');
 	s2.src = "https://static.cloudflareinsights.com/beacon.min.js";
 
 	if (location.hostname !== "dsy4567.cf") return;
