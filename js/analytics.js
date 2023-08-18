@@ -14,9 +14,14 @@ export default (() => {
 	gtag("js", new Date());
 	gtag("config", ga_id);
 
-	if (location.hostname !== "dsy4567.cf") return;
 	const /** @type {HTMLScriptElement} */ s2 = document.createElement("script");
-	s2.src = "/_vercel/insights/script.js";
-	s2.async = s2.defer = true;
+	s2.defer = true;
+	s2.setAttribute("data-cf-beacon", '{"token": "463cee97f1c44518a2f6b993668d5671"}');
+	s2.src = "https://static.cloudflareinsights.com/beacon.min.js";
+
+	if (location.hostname !== "dsy4567.cf") return;
+	const /** @type {HTMLScriptElement} */ s3 = document.createElement("script");
+	s3.src = "/_vercel/insights/script.js";
+	s3.async = s2.defer = true;
 	document.body.append(s2);
 })();
