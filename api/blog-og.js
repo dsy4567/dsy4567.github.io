@@ -1,5 +1,6 @@
 async function f(req) {
-	return new Response(req.headers.get("Sec-Fetch-Dest"));
+	console.log(req.headers.get("Sec-Fetch-Dest"));
+	return new Response();
 }
 export const config = {
 	runtime: "edge",
