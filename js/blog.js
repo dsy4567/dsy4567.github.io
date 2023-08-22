@@ -24,6 +24,7 @@ export async function main(/** @type {String} */ 路径) {
 				id: "",
 				title: "",
 				desc: "",
+				cover: "",
 				url: "",
 				hidden: false,
 			};
@@ -88,6 +89,19 @@ export async function main(/** @type {String} */ 路径) {
 					"content",
 					sect.querySelector("p")?.innerText || "此文章无法提供描述"
 				);
+				qs('meta[property="og:description"]')?.setAttribute(
+					"content",
+					sect.querySelector("p")?.innerText || "此文章无法提供描述"
+				);
+				qs('meta[property="og:title"]')?.setAttribute(
+					"content",
+					(sect.querySelector("h1")?.innerText || "无标题") + " | " + document.title
+				);
+				qs('meta[property="og:url"]')?.setAttribute(
+					"content",
+					"https://dsy4567.github.io/blog.html?id=" + 当前文章信息.id
+				);
+				qs('meta[property="og:image"]')?.setAttribute("content", 当前文章信息.cover);
 
 				let ul = ce("ul"),
 					目录 = ce("section");

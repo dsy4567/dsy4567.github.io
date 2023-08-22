@@ -22,6 +22,8 @@ type 文章信息 = {
 	id: string;
 	title: string;
 	desc: string;
+	desc_text?: string;
+	cover: string;
 	url?: string;
 	hidden?: boolean;
 };

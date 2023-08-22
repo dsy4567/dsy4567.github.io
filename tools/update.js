@@ -22,8 +22,21 @@ f.forEach(file => {
 		j.id = file;
 		j.title = $("h1").text();
 		j.desc = md.split("<!-- more -->")[0];
+		const $2 = cheerio.load(marked.marked(j.desc));
+		$2("h1").remove();
+		j.desc_text =
+			($2
+				.text()
+				.replaceAll("\n", " ")
+				.replaceAll(/(^[ ]|[ ]$)/g, "") || "此文章无法提供描述") + "...";
 		j.updated = j.updated || new Date();
 		j.date = j.date || new Date();
+		j.cover =
+			j.cover ||
+			new URL(
+				$("img").attr("src") || "https://dsy4567.github.io/img/bg.jpg",
+				"https://dsy4567.github.io/"
+			);
 		j.issue = j.issue || null;
 		articles.push(j);
 	}
