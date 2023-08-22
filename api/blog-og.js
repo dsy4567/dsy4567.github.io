@@ -18,7 +18,7 @@ async function f(/** @type {Request} */ req) {
 		`<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta property="og:url" content="https://dsy4567.cf/blog.html?id=${当前文章信息.id}" />
+<meta property="og:url" content="https://dsy4567.cf/b/${当前文章信息.id}" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="${html2Escape(
 			当前文章信息.title || "无标题"
