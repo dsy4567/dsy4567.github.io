@@ -15,7 +15,9 @@ async function f(/** @type {Request} */ req) {
 		}
 	if (!当前文章信息) return new Response("", { status: 404 });
 	return new Response(
-		`
+		`<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
 <meta property="og:url" content="https://dsy4567.github.io/blog.html?id=${当前文章信息.id}" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="${html2Escape(
@@ -26,7 +28,10 @@ async function f(/** @type {Request} */ req) {
 		)}" />
 <meta property="og:image" content="${
 			当前文章信息.cover || "https://dsy4567.github.io/img/bg.jpg"
-		}" />`,
+		}" />
+</head>
+<body>
+</html>`,
 		{
 			headers: { "content-type": "text/html;charset=utf-8" },
 		}
