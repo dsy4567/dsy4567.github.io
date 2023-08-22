@@ -11,8 +11,8 @@
         ],
         "id": "vercel-dev-sidecar-fq",
         "title": "用 Vercel + DevSidecar 实现科学上网",
-        "desc": "# 用 Vercel + DevSidecar 实现科学上网\n\n",
-        "desc_text": "此文章无法提供描述...",
+        "desc": "# 用 Vercel + DevSidecar 实现科学上网\n\n由于本人翻墙时几乎只需要浏览网页，因此解除了封印的 DevSidecar（以下简称 DS）成为了我的首选翻墙工具。而且我听说 Vercel 对大陆线路做了优化，决定在 Vercel 上搭梯子。\n\n",
+        "desc_text": "由于本人翻墙时几乎只需要浏览网页，因此解除了封印的 DevSidecar（以下简称 DS）成为了我的首选翻墙工具。而且我听说 Vercel 对大陆线路做了优化，决定在 Vercel 上搭梯子。...",
         "cover": "https://dsy4567.github.io/blog-md/vercel-dev-sidecar-fq/img/wf.webp"
     },
     {

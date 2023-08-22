@@ -18,7 +18,7 @@ async function f(/** @type {Request} */ req) {
 		`<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta property="og:url" content="https://dsy4567.github.io/blog.html?id=${当前文章信息.id}" />
+<meta property="og:url" content="https://dsy4567.cf/blog.html?id=${当前文章信息.id}" />
 <meta property="og:type" content="article" />
 <meta property="og:title" content="${html2Escape(
 			当前文章信息.title || "无标题"
@@ -26,9 +26,8 @@ async function f(/** @type {Request} */ req) {
 <meta property="og:description" content="${html2Escape(
 			当前文章信息.desc_text || "记录 dsy4567 的折腾经验、技术分享、编程笔记"
 		)}" />
-<meta property="og:image" content="${
-			当前文章信息.cover || "https://dsy4567.github.io/img/bg.jpg"
-		}" />
+<meta property="og:image" content="${当前文章信息.cover || "https://dsy4567.cf/img/bg.jpg"}" />
+<meta http-equiv="refresh" content="0; url=/blog.html?id=${当前文章信息.id}">
 </head>
 <body>
 </html>`,

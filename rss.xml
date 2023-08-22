@@ -13,6 +13,7 @@
     <published>2023-08-22T13:10:35.171Z</published>
     <updated>2023-08-22T13:10:35.171Z</updated>
     <summary>用 Vercel + DevSidecar 实现科学上网
+由于本人翻墙时几乎只需要浏览网页，因此解除了封印的 DevSidecar（以下简称 DS）成为了我的首选翻墙工具。而且我听说 Vercel 对大陆线路做了优化，决定在 Vercel 上搭梯子。
 </summary>
     <author>
         <name>dsy4567</name>
@@ -22,8 +23,10 @@
     <content type="html" xml:lang="zh-cn">
         <![CDATA[
 <h1 id="用-vercel--devsidecar-实现科学上网">用 Vercel + DevSidecar 实现科学上网</h1>
+<p>由于本人翻墙时几乎只需要浏览网页，因此解除了封印的 DevSidecar（以下简称 DS）成为了我的首选翻墙工具。而且我听说 Vercel 对大陆线路做了优化，决定在 Vercel 上搭梯子。</p>
 <!-- more -->
 
+<p>搭 nm 的梯子（</p>
 <p><img src="/blog-md/vercel-dev-sidecar-fq/img/wf.webp" alt="s:432x466 你这是违法行为"></p>
 <h2 id="相关法律法规">相关法律法规</h2>
 <h3 id="中华人民共和国计算机信息网络国际联网管理暂行规定节选">中华人民共和国计算机信息网络国际联网管理暂行规定(节选)</h3>

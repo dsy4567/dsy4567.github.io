@@ -1,6 +1,10 @@
 # 用 Vercel + DevSidecar 实现科学上网
 
+由于本人翻墙时几乎只需要浏览网页，因此解除了封印的 DevSidecar（以下简称 DS）成为了我的首选翻墙工具。而且我听说 Vercel 对大陆线路做了优化，决定在 Vercel 上搭梯子。
+
 <!-- more -->
+
+搭 nm 的梯子（
 
 ![s:432x466 你这是违法行为](/blog-md/vercel-dev-sidecar-fq/img/wf.webp)
 
