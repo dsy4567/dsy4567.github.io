@@ -4,7 +4,9 @@ function html2Escape(/** @type {string} */ sHtml) {
 	});
 }
 async function f(/** @type {Request} */ req) {
-	const /** @type {文章信息[]} */ 所有文章信息 = await (await fetch("/json/blog.json")).json();
+	const /** @type {文章信息[]} */ 所有文章信息 = await (
+			await fetch("https://dsy4567.cf/json/blog.json")
+		).json();
 	let /** @type {文章信息} */ 当前文章信息;
 	for (const 文章信息 of 所有文章信息)
 		if (文章信息.id === new URL(req.url).searchParams.get("id")) {
