@@ -161,7 +161,7 @@ export async function main(/** @type {String} */ 路径) {
 </section>
 ${(() => {
 	let h = "";
-	for (const 评论 of j || [])
+	for (const 评论 of (j || []))
 		h += `
 <section class="评论">
 	<div class="用户信息">
