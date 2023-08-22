@@ -7,6 +7,55 @@
     <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>
 
 <entry>
+    <title>用 Vercel + DevSidecar 实现科学上网</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=vercel-dev-sidecar-fq" />
+    <id>vercel-dev-sidecar-fq</id>
+    <published>2023-08-22T13:10:35.171Z</published>
+    <updated>2023-08-22T13:10:35.171Z</updated>
+    <summary>用 Vercel + DevSidecar 实现科学上网
+</summary>
+    <author>
+        <name>dsy4567</name>
+        <uri>https://dsy4567.github.io/</uri>
+    </author>
+    <category term="Default" />
+    <content type="html" xml:lang="zh-cn">
+        <![CDATA[
+<h1 id="用-vercel--devsidecar-实现科学上网">用 Vercel + DevSidecar 实现科学上网</h1>
+<!-- more -->
+
+<p><img src="/blog-md/vercel-dev-sidecar-fq/img/wf.webp" alt="s:432x466 你这是违法行为"></p>
+<h2 id="相关法律法规">相关法律法规</h2>
+<h3 id="中华人民共和国计算机信息网络国际联网管理暂行规定节选">中华人民共和国计算机信息网络国际联网管理暂行规定(节选)</h3>
+<blockquote>
+<p><a href="https://www.gov.cn/zhengce/2020-12/26/content_5574802.htm">https://www.gov.cn/zhengce/2020-12/26/content_5574802.htm</a></p>
+</blockquote>
+<p>&emsp;&emsp;<strong>第六条</strong>　计算机信息网络直接进行国际联网，必须使用邮电部国家公用电信网提供的国际出入口信道。</p>
+<p>任何单位和个人不得自行建立或者使用其他信道进行国际联网。</p>
+<p>&emsp;&emsp;<strong>第十条</strong>　个人、法人和其他组织(以下统称用户)使用的计算机或者计算机信息网络，需要进行国际联网的，必须通过接入网络进行国际联网。</p>
+<p>前款规定的计算机或者计算机信息网络，需要接入网络的，应当征得接入单位的同意，并办理登记手续。</p>
+<p>&emsp;&emsp;<strong>第十四条</strong>　违反本规定第六条、第八条和第十条的规定的，由公安机关责令停止联网，给予警告，可以并处 15000 元以下的罚款；有违法所得的，没收违法所得。</p>
+<h3 id="计算机信息网络国际联网安全保护管理办法节选">计算机信息网络国际联网安全保护管理办法(节选)</h3>
+<blockquote>
+<p><a href="http://www.gov.cn/zhengce/2020-12/26/content_5574873.htm">http://www.gov.cn/zhengce/2020-12/26/content_5574873.htm</a></p>
+</blockquote>
+<p>&emsp;&emsp;<strong>第四条</strong>　任何单位和个人不得利用国际联网危害国家安全、泄露国家秘密，不得侵犯国家的、社会的、集体的利益和公民的合法权益，不得从事违法犯罪活动。</p>
+<p>&emsp;&emsp;<strong>第五条</strong>　任何单位和个人不得利用国际联网制作、复制、查阅和传播下列信息：</p>
+<p>&emsp;&emsp;（一）煽动抗拒、破坏宪法和法律、行政法规实施的；</p>
+<p>&emsp;&emsp;（二）煽动颠覆国家政权，推翻社会主义制度的；</p>
+<p>&emsp;&emsp;（三）煽动分裂国家、破坏国家统一的；</p>
+<p>&emsp;&emsp;（四）煽动民族仇恨、民族歧视，破坏民族团结的；</p>
+<p>&emsp;&emsp;（五）捏造或者歪曲事实，散布谣言，扰乱社会秩序的；</p>
+<p>&emsp;&emsp;（六）宣扬封建迷信、淫秽、色情、赌博、暴力、凶杀、恐怖，教唆犯罪的；</p>
+<p>&emsp;&emsp;（七）公然侮辱他人或者捏造事实诽谤他人的；</p>
+<p>&emsp;&emsp;（八）损害国家机关信誉的；</p>
+<p>&emsp;&emsp;（九）其他违反宪法和法律、行政法规的。</p>
+<p><nocopyright value="true"></nocopyright></p>
+
+        ]]>
+    </content>
+</entry>
+<entry>
     <title>记一次在 Termux 上搭建 code-server 环境</title>
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=code-server-on-termux" />
     <id>code-server-on-termux</id>
@@ -439,69 +488,6 @@ code-server --host 0.0.0.0 --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/
 <hr>
 <p>最后，尽情享受吧~</p>
 <p>Demo：<a href="https://vjmirror.workers.dsy4567.cf/">https://vjmirror.workers.dsy4567.cf/</a></p>
-
-        ]]>
-    </content>
-</entry>
-<entry>
-    <title>用套 Vercel 的 CloudFlare Workers + DevSidecar 实现科学上网</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html?id=gfw-nmsl" />
-    <id>gfw-nmsl</id>
-    <published>2023-03-27T05:12:02.585Z</published>
-    <updated>2023-06-10T14:12:02.359Z</updated>
-    <summary>用套 Vercel 的 CloudFlare Workers + DevSidecar 实现科学上网
-</summary>
-    <author>
-        <name>dsy4567</name>
-        <uri>https://dsy4567.github.io/</uri>
-    </author>
-    <category term="Default" />
-    <content type="html" xml:lang="zh-cn">
-        <![CDATA[
-<h1 id="用套-vercel-的-cloudflare-workers--devsidecar-实现科学上网">用套 Vercel 的 CloudFlare Workers + DevSidecar 实现科学上网</h1>
-<!-- more -->
-
-<p><img src="/blog-md/gfw-nmsl/img/wf.webp" alt="s:432x466 你这是违法行为"></p>
-<h2 id="这墙可不兴翻呀">这墙可不兴翻呀(((</h2>
-<h2 id="翻墙的危害">翻墙的危害</h2>
-<ul>
-<li>翻墙有可能会被叫去喝茶(真实案例很多, 可以百度)</li>
-<li>墙外充斥着各种爱情动作片, zzmg 等非法的东西, 不兴看</li>
-<li>辨别是非能力不强的人容易被墙外的错误言论带偏</li>
-<li>还有很多</li>
-</ul>
-<p>所以, 老老实实呆在墙里刷头条逛 B 站不香吗(((</p>
-<h2 id="相关法律法规">相关法律法规</h2>
-<h3 id="中华人民共和国计算机信息网络国际联网管理暂行规定节选">中华人民共和国计算机信息网络国际联网管理暂行规定(节选)</h3>
-<blockquote>
-<p><a href="https://www.gov.cn/zhengce/2020-12/26/content_5574802.htm">https://www.gov.cn/zhengce/2020-12/26/content_5574802.htm</a></p>
-</blockquote>
-<p>&emsp;&emsp;<strong>第六条</strong>　计算机信息网络直接进行国际联网，必须使用邮电部国家公用电信网提供的国际出入口信道。</p>
-<p>任何单位和个人不得自行建立或者使用其他信道进行国际联网。</p>
-<p>&emsp;&emsp;<strong>第八条</strong>　接入网络必须通过互联网络进行国际联网。</p>
-<p>接入单位拟从事国际联网经营活动的，应当向有权受理从事国际联网经营活动申请的互联单位主管部门或者主管单位申请领取国际联网经营许可证；未取得国际联网经营许可证的，不得从事国际联网经营业务。</p>
-<p>接入单位拟从事非经营活动的，应当报经有权受理从事非经营活动申请的互联单位主管部门或者主管单位审批；未经批准的，不得接入互联网络进行国际联网。</p>
-<p>申请领取国际联网经营许可证或者办理审批手续时，应当提供其计算机信息网络的性质、应用范围和主机地址等资料。</p>
-<p>国际联网经营许可证的格式，由领导小组统一制定。</p>
-<p>&emsp;&emsp;<strong>第十条</strong>　个人、法人和其他组织(以下统称用户)使用的计算机或者计算机信息网络，需要进行国际联网的，必须通过接入网络进行国际联网。</p>
-<p>前款规定的计算机或者计算机信息网络，需要接入网络的，应当征得接入单位的同意，并办理登记手续。</p>
-<p>&emsp;&emsp;<strong>第十四条</strong>　违反本规定第六条、第八条和第十条的规定的，由公安机关责令停止联网，给予警告，可以并处 15000 元以下的罚款；有违法所得的，没收违法所得。</p>
-<h3 id="计算机信息网络国际联网安全保护管理办法节选">计算机信息网络国际联网安全保护管理办法(节选)</h3>
-<blockquote>
-<p><a href="http://www.gov.cn/zhengce/2020-12/26/content_5574873.htm">http://www.gov.cn/zhengce/2020-12/26/content_5574873.htm</a></p>
-</blockquote>
-<p>&emsp;&emsp;<strong>第四条</strong>　任何单位和个人不得利用国际联网危害国家安全、泄露国家秘密，不得侵犯国家的、社会的、集体的利益和公民的合法权益，不得从事违法犯罪活动。</p>
-<p>&emsp;&emsp;<strong>第五条</strong>　任何单位和个人不得利用国际联网制作、复制、查阅和传播下列信息：</p>
-<p>&emsp;&emsp;（一）煽动抗拒、破坏宪法和法律、行政法规实施的；</p>
-<p>&emsp;&emsp;（二）煽动颠覆国家政权，推翻社会主义制度的；</p>
-<p>&emsp;&emsp;（三）煽动分裂国家、破坏国家统一的；</p>
-<p>&emsp;&emsp;（四）煽动民族仇恨、民族歧视，破坏民族团结的；</p>
-<p>&emsp;&emsp;（五）捏造或者歪曲事实，散布谣言，扰乱社会秩序的；</p>
-<p>&emsp;&emsp;（六）宣扬封建迷信、淫秽、色情、赌博、暴力、凶杀、恐怖，教唆犯罪的；</p>
-<p>&emsp;&emsp;（七）公然侮辱他人或者捏造事实诽谤他人的；</p>
-<p>&emsp;&emsp;（八）损害国家机关信誉的；</p>
-<p>&emsp;&emsp;（九）其他违反宪法和法律、行政法规的。</p>
-<p><nocopyright value="true"></nocopyright></p>
 
         ]]>
     </content>

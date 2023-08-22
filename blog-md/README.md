@@ -2,13 +2,13 @@
 
 > **Note**: 在 <https://dsy4567.cf/blog.html> 上阅读体验更佳
 
+[用 Vercel + DevSidecar 实现科学上网](./vercel-dev-sidecar-fq/index.md)
+
 [记一次在 Termux 上搭建 code-server 环境](./code-server-on-termux/index.md)
 
 [如何优化网站加载速度](./how-to-improve-performance/index.md)
 
 [使用 CloudFlare Workers 免费搭建 Virtual Judge 反代](./cf-vjmirror/index.md)
-
-[用套 Vercel 的 CloudFlare Workers + DevSidecar 实现科学上网](./gfw-nmsl/index.md)
 
 [使用 Cloudflare Workers 获取别人的 IP 地址](./cf-workers-ip/index.md)
 

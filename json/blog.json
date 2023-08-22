@@ -1,5 +1,19 @@
 [
     {
+        "updated": "2023-08-22T13:10:35.171Z",
+        "date": "2023-08-22T13:10:35.171Z",
+        "issue": 15,
+        "url": "https://dsy4567.cf/blog-qwq/vercel-dev-sidecar-fq/index.md",
+        "tags": [
+            "技术",
+            "科学上网",
+            "Vercel"
+        ],
+        "id": "vercel-dev-sidecar-fq",
+        "title": "用 Vercel + DevSidecar 实现科学上网",
+        "desc": "# 用 Vercel + DevSidecar 实现科学上网\n\n"
+    },
+    {
         "updated": "2023-08-16T06:35:59.974Z",
         "date": "2023-07-31T13:17:09.742Z",
         "issue": 25,
@@ -34,21 +48,6 @@
         "id": "cf-vjmirror",
         "title": "使用 CloudFlare Workers 免费搭建 Virtual Judge 反代",
         "desc": "# 使用 CloudFlare Workers 免费搭建 Virtual Judge 反代\n\n最近闲的没事干，受 [如何科学地制作一个镜像反代站点](https://blog.immccn123.xyz/archives/362) 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。\n\n"
-    },
-    {
-        "updated": "2023-06-10T14:12:02.359Z",
-        "date": "2023-03-27T05:12:02.585Z",
-        "issue": 15,
-        "url": "https://qwq.dsy4567.cf/blog-md/gfw-nmsl/index.md",
-        "tags": [
-            "技术",
-            "科学上网",
-            "CloudFlare",
-            "Vercel"
-        ],
-        "id": "gfw-nmsl",
-        "title": "用套 Vercel 的 CloudFlare Workers + DevSidecar 实现科学上网",
-        "desc": "# 用套 Vercel 的 CloudFlare Workers + DevSidecar 实现科学上网\n\n"
     },
     {
         "updated": "2023-02-13T09:55:45.491Z",

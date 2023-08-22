@@ -419,6 +419,10 @@
 		{
 			"source": "/dns-query-cn",
 			"destination": "https://doh.pub/dns-query"
+		},
+		{
+			"source": "/blog-qwq/:m*",
+			"destination": "https://qwq.dsy4567.cf/blog-md/:m"
 		}
 	]
 }
