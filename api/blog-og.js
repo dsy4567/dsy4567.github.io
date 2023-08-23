@@ -29,12 +29,6 @@ async function f(/** @type {Request} */ req) {
 <meta property="og:image" content="${当前文章信息.cover || "https://dsy4567.cf/img/bg.jpg"}" />
 <script>location.href = "/blog.html?id=${当前文章信息.id}"</script>
 </head>
-<<<<<<< HEAD
-=======
-<body>
-https://dsy4567.cf/blog.html?id=${当前文章信息.id}
-</body>
->>>>>>> 6b759d0b583221579b9e8b972111cf589c3e78da
 </html>`,
 		{
 			headers: { "content-type": "text/html;charset=utf-8" },
