@@ -413,16 +413,17 @@
 	],
 	"redirects": [
 		{
-		"source": "/b/:m*",
-		"has": [
-			{
-				"type": "header",
-				"key": "sec-fetch-dest",
-				"value": "document"
-			}
-		],
-		"destination": "/blog.html?id=:m",
-		"permanent": true
+			"source": "/b/:m*",
+			"has": [
+				{
+					"type": "header",
+					"key": "sec-fetch-dest",
+					"value": "document"
+				}
+			],
+			"destination": "/blog.html?id=:m",
+			"permanent": true
+		}
 	},
 	"rewrites": [
 		{
