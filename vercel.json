@@ -411,6 +411,20 @@
 			]
 		}
 	],
+	"redirects": [
+		{
+			"source": "/b/:m*",
+			"has": [
+				{
+					"type": "header",
+					"key": "sec-fetch-dest",
+					"value": "document"
+				}
+			],
+			"destination": "/blog.html?id=:m",
+			"permanent": true
+		}
+	],
 	"rewrites": [
 		{
 			"source": "/dns-query",
@@ -426,7 +440,7 @@
 		},
 		{
 			"source": "/b/:m*",
-			"destination": "https://dsy4567.cf/api/blog-og?id=:m"
+			"destination": "/api/blog-og?id=:m"
 		}
 	]
 }

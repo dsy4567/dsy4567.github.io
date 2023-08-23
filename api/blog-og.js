@@ -27,8 +27,14 @@ async function f(/** @type {Request} */ req) {
 			当前文章信息.desc_text || "记录 dsy4567 的折腾经验、技术分享、编程笔记"
 		)}" />
 <meta property="og:image" content="${当前文章信息.cover || "https://dsy4567.cf/img/bg.jpg"}" />
-<meta http-equiv="refresh" content="0; url=/blog.html?id=${当前文章信息.id}">
+<script>location.href = "/blog.html?id=${当前文章信息.id}"</script>
 </head>
+<<<<<<< HEAD
+=======
+<body>
+https://dsy4567.cf/blog.html?id=${当前文章信息.id}
+</body>
+>>>>>>> 6b759d0b583221579b9e8b972111cf589c3e78da
 </html>`,
 		{
 			headers: { "content-type": "text/html;charset=utf-8" },
