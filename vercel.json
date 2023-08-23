@@ -421,7 +421,8 @@
 				"value": "document"
 			}
 		],
-		"destination": "/blog.html?id=:m"
+		"destination": "/blog.html?id=:m",
+		"permanent": true
 	},
 	"rewrites": [
 		{
