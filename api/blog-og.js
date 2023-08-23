@@ -29,7 +29,6 @@ async function f(/** @type {Request} */ req) {
 <meta property="og:image" content="${当前文章信息.cover || "https://dsy4567.cf/img/bg.jpg"}" />
 <meta http-equiv="refresh" content="0; url=/blog.html?id=${当前文章信息.id}">
 </head>
-<body>
 </html>`,
 		{
 			headers: { "content-type": "text/html;charset=utf-8" },
