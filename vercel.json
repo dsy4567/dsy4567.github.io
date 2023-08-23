@@ -424,7 +424,7 @@
 			"destination": "/blog.html?id=:m",
 			"permanent": true
 		}
-	},
+	],
 	"rewrites": [
 		{
 			"source": "/dns-query",
