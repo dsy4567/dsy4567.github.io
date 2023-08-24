@@ -23,6 +23,7 @@ export async function main(/** @type {String} */ 路径) {
 
 	if (当前文章信息)
 		try {
+			if (!location.pathname.endsWith("/")) location.href = `/blog/${当前文章信息.id}/`;
 			const 右 = qs("main .右", true);
 			if (!右) return;
 
