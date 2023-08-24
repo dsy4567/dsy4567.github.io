@@ -440,10 +440,6 @@
 			"destination": "https://doh.pub/dns-query"
 		},
 		{
-			"source": "/blog-qwq/:m*",
-			"destination": "https://qwq.dsy4567.cf/blog-md/:m"
-		},
-		{
 			"source": "/b/:m*",
 			"destination": "/api/blog-og?id=:m"
 		}
