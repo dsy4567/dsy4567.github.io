@@ -202,14 +202,24 @@ function 尽快设置主题色() {
 function 阻止搜索引擎收录() {
 	gd("robots", true)?.setAttribute("content", "noindex");
 }
-let /** @type {Record<string, string>} */ 清理后的路径缓存 = {};
+let /** @type {Record<string, string>} */ 清理后的路径缓存 = {},
+	/** @type {Record<string, string>} */ 清理后的路径缓存_包含search = {};
 function 获取清理后的路径(包含search = false) {
-	let l = 清理后的路径缓存[location.pathname];
+	let l = 包含search
+		? 清理后的路径缓存_包含search[location.pathname]
+		: 清理后的路径缓存[location.pathname];
 	return l
-		? l + (包含search ? location.search : "")
-		: (清理后的路径缓存[location.pathname] = location.pathname
-				.replace(/(index|\.html)/g, "")
-				.replace(/\/\//g, "")) + (包含search ? location.search : "");
+		? l
+		: 包含search
+		? (清理后的路径缓存_包含search[location.pathname] =
+				location.pathname.replace(/(index|\.html)/g, "").replace(/\/\//g, "") +
+				location.search)
+		: (清理后的路径缓存[location.pathname] =
+				"/" +
+				location.pathname
+					.replace(/(index|\.html)/g, "")
+					.replace(/\/\//g, "")
+					.split("/")[1]);
 }
 function 随机数(/** @type {number} */ 最大) {
 	let r = Math.floor(Math.random() * (最大 + 1));

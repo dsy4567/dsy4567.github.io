@@ -8,11 +8,11 @@
 
 优化前：
 
-[![s:969x835 优化前](/blog-md/how-to-improve-performance/img/before.webp)](https://pagespeed.web.dev/analysis/https-dsy4567-cf/gf94qbiu4z)
+[![s:969x835 优化前](/blog/how-to-improve-performance/img/before.webp)](https://pagespeed.web.dev/analysis/https-dsy4567-cf/gf94qbiu4z)
 
 优化后：
 
-[![s:964x831 优化后](/blog-md/how-to-improve-performance/img/after.webp)](https://pagespeed.web.dev/analysis/https-dsy4567-cf/jyhkiaf907)
+[![s:964x831 优化后](/blog/how-to-improve-performance/img/after.webp)](https://pagespeed.web.dev/analysis/https-dsy4567-cf/jyhkiaf907)
 
 ## 为什么优化网站加载速度很重要
 
@@ -22,7 +22,7 @@
 
 ### 多用 `getElement(s)ByXxx`，少用 `querySelector(All)`
 
-![s:428x362 用一段代码比较 getElement(s)ByXxx 和 querySelector(All) 的性能](/blog-md/how-to-improve-performance/img/compare-gebxxx-qs.webp)
+![s:428x362 用一段代码比较 getElement(s)ByXxx 和 querySelector(All) 的性能](/blog/how-to-improve-performance/img/compare-gebxxx-qs.webp)
 
 由图可知，二者的速度差距挺大的。虽然 `querySelector(All)` 用起来又舒服又方便，但它是真的慢。平时写代码的时候，我们应该权衡方便和性能，最好只在 `getElement(s)ByXxx` 满足不了要求时才用 `querySelector(All)`。
 
@@ -33,32 +33,17 @@
 ```html
 <!DOCTYPE html>
 <html lang="zh-CN">
-    <head>
-        <!-- ... -->
+	<head>
+		<!-- ... -->
 
-        <link rel="dns-prefetch" href="https://api.github.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="dns-prefetch" href="https://api.github.com" />
+		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
 
-        <link
-            rel="preload"
-            href="/js/ncm.js"
-            as="script"
-            crossorigin="anonymous"
-        />
-        <link
-            rel="preload"
-            href="/json/icon.json"
-            as="fetch"
-            crossorigin="anonymous"
-        />
-        <link
-            rel="preload"
-            href="/json/theme.json"
-            as="fetch"
-            crossorigin="anonymous"
-        />
-    </head>
-    <!-- ... -->
+		<link rel="preload" href="/js/ncm.js" as="script" crossorigin="anonymous" />
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+	</head>
+	<!-- ... -->
 </html>
 ```
 

@@ -7,8 +7,16 @@ const jsonfile = require("jsonfile");
 const marked = require("marked");
 const hostname = "dsy4567.github.io";
 
+function html2Escape(/** @type {string} */ sHtml) {
+	return sHtml.replace(/[<>&"]/g, function (c) {
+		return { "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" }[c];
+	});
+}
+
+const template = fs.readFileSync("./blog.html").toString();
+
 let articles = [],
-	htmls = {};
+	htmls = [];
 let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
@@ -41,17 +49,18 @@ let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 
 `;
 
-let f = fs.readdirSync("./blog-md/");
-f.forEach(file => {
-	if (file && fs.statSync("./blog-md/" + file).isDirectory()) {
+let f = fs.readdirSync("./blog/");
+f.forEach((file, i) => {
+	if (file && fs.statSync("./blog/" + file).isDirectory()) {
+		console.log(file);
 		const md = fs
-				.readFileSync("./blog-md/" + file + "/index.md")
-				.toString()
-				.replaceAll("\r", ""),
-			parsedHtml = marked.marked(md);
+			.readFileSync("./blog/" + file + "/index.md")
+			.toString()
+			.replaceAll("\r", "");
+		let parsedHtml = (htmls[i] = marked.marked(md));
 
 		const $ = cheerio.load(parsedHtml);
-		let j = jsonfile.readFileSync("./blog-md/" + file + "/article.json");
+		let j = jsonfile.readFileSync("./blog/" + file + "/article.json");
 		j.id = file;
 		j.title = $("h1").text();
 		j.desc = md.split("<!-- more -->")[0];
@@ -71,7 +80,66 @@ f.forEach(file => {
 				"https://dsy4567.github.io/"
 			);
 		j.issue = j.issue || null;
-		htmls[j.id] = parsedHtml;
+		$("img").each((i, el) => {
+			const img = $(el);
+			const alt = img.attr("alt") || "";
+			let m = alt.match(/^s:[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?/gi);
+			if (!m) return;
+			img.attr("alt", alt.replace(m[0] + " ", ""));
+			m = m[0]
+				.replace(/s:/g, "")
+				.split("x")
+				.map(s => +s);
+			img.attr("width", m[0]);
+			img.attr("height", m[1]);
+		});
+		$("img").attr("loading", "lazy");
+		parsedHtml = $("body").html();
+
+		let html = template;
+		// prettier-ignore
+		html = html.replace(/<!-- BEGIN META -->.+<!-- END META -->/s, `<!-- BEGIN META -->
+		<meta name="description" content="${html2Escape(j.desc_text || "dsy4567 的博客 - 记录 dsy4567 的折腾经验、技术分享、编程笔记")}" />
+		<title>${html2Escape(j.title || "无标题")} | 博客 | dsy4567 的小站</title>
+		<!-- END META -->`);
+
+		// prettier-ignore
+		html = html.replace(/<!-- BEGIN OG -->.+<!-- END OG -->/s, `<!-- BEGIN OG -->
+		<meta property="og:url" content="https://dsy4567.cf/blog/${j.id}/" />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="${html2Escape(j.title || "无标题")} | 博客 | dsy4567 的小站" />
+		<meta property="og:description" content="${html2Escape(j.desc_text || "记录 dsy4567 的折腾经验、技术分享、编程笔记")}" />
+		<meta property="og:image" content="${j.cover || "https://dsy4567.cf/img/bg.jpg"}" />
+		<!-- END OG -->`);
+
+		html = html.replace(
+			/<!-- BEGIN MAIN -->.+<!-- END MAIN -->/s,
+			`<!-- BEGIN MAIN -->
+${
+	j.url
+		? `
+				<section id="正在加载文章提示">
+					正在加载文章
+						<noscript>在<a href="https://github.com/dsy4567/dsy4567.github.io/tree/main/blog">GitHub</a>上阅读文章</noscript>`
+		: "				<section>" +
+		  parsedHtml +
+		  (parsedHtml.includes('<nocopyright value="true"></nocopyright>')
+				? ""
+				: '<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，本作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br />') +
+		  `<span class="淡化">发表于: ${new Date(j.date).toLocaleString(
+				"zh-CN"
+		  )}, 更新于: ${new Date(j.updated).toLocaleString("zh-CN")}</br>标签: ${(() => {
+				let html = "";
+				for (const tag of j.tags) html += `<a href="/blog.html?tag=${tag}">${tag}</a> `;
+				return html;
+		  })()}</span>`
+}
+				</section>
+				<script id="当前文章信息" type="application/json">${JSON.stringify(j)}</script>
+				<!-- END MAIN -->`
+		);
+		fs.writeFileSync(`./blog/${j.id}/index.html`, html);
+
 		articles.push(j);
 	}
 });
@@ -79,11 +147,12 @@ f.forEach(file => {
 articles.sort((a, b) => +new Date(b.date) - +new Date(a.date));
 jsonfile.writeFileSync("./json/blog.json", articles, { spaces: 4 });
 
-articles.forEach(a => {
+console.log("rss, sitemap, readme");
+articles.forEach((a, i) => {
 	rss += `
 <entry>
     <title>${a.title}</title>
-    <link rel="alternate" type="text/html" href="https://${hostname}/blog.html?id=${a.id}" />
+    <link rel="alternate" type="text/html" href="https://${hostname}/blog/${a.id}/" />
     <id>${a.id}</id>
     <published>${a.date}</published>
     <updated>${a.updated}</updated>
@@ -95,13 +164,13 @@ articles.forEach(a => {
     <category term="Default" />
     <content type="html" xml:lang="zh-cn">
         <![CDATA[
-${htmls[a.id]}
+${htmls[i]}
         ]]>
     </content>
 </entry>`;
 	sitemap += `
 <url>
-    <loc>https://${hostname}/blog.html?id=${a.id}</loc>
+    <loc>https://${hostname}/blog/${a.id}/</loc>
     <lastmod>${a.updated}</lastmod>
 </url>`;
 	readme += `[${a.title}](./${a.id}/index.md)\n\n`;
@@ -117,8 +186,9 @@ readme += `
 
 fs.writeFileSync("./rss.xml", rss);
 fs.writeFileSync("./sitemap.xml", sitemap);
-fs.writeFileSync("./blog-md/README.md", readme);
+fs.writeFileSync("./blog/README.md", readme);
 
+console.log("ncm");
 axios
 	.get("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=8219428260", {
 		responseType: "json",

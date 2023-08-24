@@ -421,7 +421,12 @@
 					"value": "document"
 				}
 			],
-			"destination": "/blog.html?id=:m",
+			"destination": "/blog/:m/",
+			"permanent": false
+		},
+		{
+			"source": "/blog-md/:m*",
+			"destination": "/blog/:m",
 			"permanent": true
 		}
 	],

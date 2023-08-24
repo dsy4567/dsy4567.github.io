@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<!-- Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="
+                        upgrade-insecure-requests;
+                        script-src 'self' *.googletagmanager.com www.recaptcha.net www.gstatic.cn www.gstatic.com static.cloudflareinsights.com;
+                        object-src none
+                    "
+		/>
+		<meta id="主题色" name="theme-color" content="#ddd" />
+		<meta id="robots" name="robots" content="all" />
+		<meta name="template" content="https://github.com/dsy4567/dsy4567.github.io" />
+		<!-- BEGIN META -->
+		<meta name="description" content=" 转自 https://fucksc.cf/penalties/  前言 本文旨在让各位选手/监考老师/特派员在历次处罚中引以为戒, 请各位读者理性看待以下事件, 不要对当事人/CCF做出不恰当的行为..." />
+		<title>(转) CCF NOI 历年处罚公告 | 博客 | dsy4567 的小站</title>
+		<!-- END META -->
+		<base target="_self" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link
+			rel="alternate"
+			type="application/atom+xml"
+			title="博客 | dsy4567 的小站"
+			href="https://dsy4567.github.io/rss.xml"
+		/>
+
+		<link rel="dns-prefetch" href="https://fonts.googleapis.cn" />
+		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
+
+		<link rel="modulepreload" href="/js/analytics.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/blog.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/main.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/marked.min.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/ncm.js" crossorigin="use-credentials" />
+		<link rel="preload" href="/js/highlight.min.js" as="script" crossorigin="use-credentials" />
+		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="use-credentials" />
+		<link
+			rel="preload"
+			href="https://dsy4567.cf/api/hitokoto"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="https://api.github.com/users/dsy4567"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
+
+		<script src="/js/global.js"></script>
+		<link rel="stylesheet" href="/css/global.css" />
+
+		<!-- BEGIN OG -->
+		<meta property="og:url" content="https://dsy4567.cf/b/ccf-noi-lncfgg" />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="(转) CCF NOI 历年处罚公告 | 博客 | dsy4567 的小站" />
+		<meta property="og:description" content=" 转自 https://fucksc.cf/penalties/  前言 本文旨在让各位选手/监考老师/特派员在历次处罚中引以为戒, 请各位读者理性看待以下事件, 不要对当事人/CCF做出不恰当的行为..." />
+		<meta property="og:image" content="https://dsy4567.github.io/img/bg.jpg" />
+		<!-- END OG -->
+	</head>
+	<body>
+		<a href="#main" class="隐藏链接">转到正文</a>
+		<div id="主侧边按钮" class="侧边按钮">
+			<button type="button" title="回到顶部" id="回到顶部">
+				<svg class="特小尺寸" data-icon="回到顶部"></svg>
+			</button>
+			<div class="拥有更多选项" type="button" title="网抑云阴乐" id="网抑云阴乐">
+				<img class="特小尺寸" id="网抑云阴乐封面" alt="封面" />
+				<svg aria-hidden="true" class="特小尺寸" data-icon="网抑云阴乐"></svg>
+				<div class="更多选项" id="阴乐控件"></div>
+				<div id="歌词"></div>
+			</div>
+			<div class="拥有更多选项" type="button" title="切换主题" id="切换主题">
+				<svg class="特小尺寸" data-icon="切换主题"></svg>
+				<div role="radiogroup" class="更多选项" id="所有主题"></div>
+			</div>
+		</div>
+
+		<nav id="导航栏">
+			<div class="左">
+				<a class="标题" href="/">dsy4567 的小站</a>
+			</div>
+			<div class="右">
+				<a href="/">
+					<svg class="特小尺寸" data-icon="首页"></svg>
+					<span>首页</span>
+				</a>
+				<a href="/blog.html">
+					<svg class="特小尺寸" data-icon="博客"></svg>
+					<span>博客</span>
+				</a>
+				<a href="/friends.html">
+					<svg class="特小尺寸" data-icon="友情链接"></svg>
+					<span>友链</span>
+				</a>
+			</div>
+		</nav>
+
+		<div class="进度条外面"><div class="进度条"></div></div>
+
+		<main id="main">
+			<div class="左">
+				<section id="我">
+					<img
+						aria-label="头像(一个蘑菇头揍防沉迷弹窗)"
+						class="头像 大尺寸"
+						src="/img/avatar.jpg"
+						alt="头像(一个蘑菇头揍防沉迷弹窗)"
+						title="头像"
+					/>
+					<h2>dsy4567</h2>
+					<span id="关注粉丝码龄"> 关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中 </span>
+					<br />
+					<span id="联系方式">
+						<a
+							href="https://qwq.dsy4567.cf/api/getemail"
+							title="电子邮箱"
+							id="电子邮箱"
+						>
+							<svg class="小尺寸" data-icon="电子邮箱"></svg>
+						</a>
+						<a href="https://qwq.dsy4567.cf/api/getemail" title="Telegram" id="tg">
+							<svg class="小尺寸" data-icon="Telegram"></svg>
+						</a>
+						<a href="https://github.com/dsy4567" title="GitHub">
+							<svg class="小尺寸" data-icon="GitHub"></svg>
+						</a>
+						<a href="https://x.com/dsy4567" title="X">
+							<svg class="小尺寸" data-icon="X"></svg>
+						</a>
+						<a href="https://weibo.com/dsy4567" title="微博">
+							<svg class="小尺寸" data-icon="微博"></svg>
+						</a>
+						<a href="https://www.luogu.com.cn/user/776713" title="洛谷">
+							<svg class="小尺寸" data-icon="洛谷"></svg>
+						</a>
+						<a href="/rss.xml" title="RSS" id="rss">
+							<svg class="小尺寸" data-icon="RSS"></svg>
+						</a>
+					</span>
+				</section>
+				<section class="一言">
+					<h2>
+						<svg class="小尺寸" data-icon="一言"></svg>
+						<span>一言</span>
+					</h2>
+					<p id="一言">加载中</p>
+					<a href="#">查看详细信息</a>
+				</section>
+			</div>
+			<div aria-hidden="true" id="分界线">
+				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
+			</div>
+			<article class="右">
+				<!-- BEGIN MAIN -->
+				<section><h1 id="转-ccf-noi-历年处罚公告">(转) CCF NOI 历年处罚公告</h1>
+<blockquote>
+<p>转自 <a href="https://fucksc.cf/penalties/">https://fucksc.cf/penalties/</a></p>
+</blockquote>
+<h2 id="前言">前言</h2>
+<p>本文旨在让各位选手/监考老师/特派员在历次处罚中引以为戒, 请各位读者理性看待以下事件, 不要对当事人/CCF做出不恰当的行为</p>
+<!-- more -->
+
+<h2 id="2023">2023</h2>
+<blockquote>
+<p>PR welcome!</p>
+</blockquote>
+<h2 id="2022">2022</h2>
+<p>关于对成都树德中学指导教师刘强的处罚公告 <a href="https://www.noi.cn/xw/2022-09-16/774011.shtml">https://www.noi.cn/xw/2022-09-16/774011.shtml</a></p>
+<h2 id="2021">2021</h2>
+<p>关于个别选手在NOIP 2021中使用暴戾语言的处罚公告 <a href="https://www.noi.cn/xw/2021-12-03/750909.shtml">https://www.noi.cn/xw/2021-12-03/750909.shtml</a></p>
+<p>CCF关于竞赛及能力认证作弊处罚办法的公告 <a href="https://www.noi.cn/xw/2021-11-30/750857.shtml">https://www.noi.cn/xw/2021-11-30/750857.shtml</a></p>
+<p>CCF关于对CSP-J/S 2021第二轮认证违规处罚的公告 <a href="https://www.noi.cn/xw/2021-11-05/749732.shtml">https://www.noi.cn/xw/2021-11-05/749732.shtml</a></p>
+<p>关于在NOI教师培训中程序雷同的处罚公告 <a href="https://www.noi.cn/xw/2021-05-24/729110.shtml">https://www.noi.cn/xw/2021-05-24/729110.shtml</a></p>
+<h2 id="2020">2020</h2>
+<p>关于对NOIP2020省组织单位工作失误处罚的公告 <a href="https://www.noi.cn/xw/2020-12-15/718386.shtml">https://www.noi.cn/xw/2020-12-15/718386.shtml</a></p>
+<p>CCF关于对CSP-J/S2020第二轮认证违规处罚的公告 <a href="https://www.noi.cn/xw/2020-12-10/718309.shtml">https://www.noi.cn/xw/2020-12-10/718309.shtml</a></p>
+<p>关于对侵犯CCF知识产权进行处罚结果的通告 <a href="https://www.noi.cn/xw/2020-10-28/715723.shtml">https://www.noi.cn/xw/2020-10-28/715723.shtml</a></p>
+<p>CCF关于对干扰认证秩序者的处罚公告 <a href="https://www.noi.cn/xw/2020-10-12/715677.shtml">https://www.noi.cn/xw/2020-10-12/715677.shtml</a></p>
+<h2 id="2019">2019</h2>
+<p>CCF关于对CSP-J/S2019第二轮认证违规处罚的公告 <a href="https://www.noi.cn/xw/2019-12-09/715513.shtml">https://www.noi.cn/xw/2019-12-09/715513.shtml</a></p>
+<p>关于NOI黑龙江特派员王宇华违规处罚的公告 <a href="https://www.noi.cn/xw/2019-11-18/715498.shtml">https://www.noi.cn/xw/2019-11-18/715498.shtml</a></p>
+<h2 id="2018">2018</h2>
+<p>CCF关于对NOIP2018复赛违规处罚的公告 <a href="https://www.noi.cn/xw/2018-12-10/715288.shtml">https://www.noi.cn/xw/2018-12-10/715288.shtml</a></p>
+<p>CCF关于公布NOIP2018初赛违规事件的处罚公告 <a href="https://www.noi.cn/xw/2018-11-01/715273.shtml">https://www.noi.cn/xw/2018-11-01/715273.shtml</a></p>
+<h2 id="2017">2017</h2>
+<p>CCF关于NOIP2017复赛违规省份的处罚公告 <a href="https://www.noi.cn/xw/2017-11-30/715177.shtml">https://www.noi.cn/xw/2017-11-30/715177.shtml</a></p>
+<p>CCF关于公布NOIP2017初赛违规事件的处罚公告 <a href="https://www.noi.cn/xw/2017-11-10/715172.shtml">https://www.noi.cn/xw/2017-11-10/715172.shtml</a></p>
+<p>CCF关于实施NOI省选中处罚名额的说明 <a href="https://www.noi.cn/xw/2017-04-07/715144.shtml">https://www.noi.cn/xw/2017-04-07/715144.shtml</a></p>
+<h2 id="2016">2016</h2>
+<p>CCF 关于NOIP2016违规事件的处罚公告 <a href="https://www.noi.cn/xw/2016-12-16/715131.shtml">https://www.noi.cn/xw/2016-12-16/715131.shtml</a></p>
+<h2 id="2015">2015</h2>
+<p>CCF关于NOIP2015复赛违规省份的处罚公告 <a href="https://www.noi.cn/xw/2015-11-27/715099.shtml">https://www.noi.cn/xw/2015-11-27/715099.shtml</a></p>
+<p>CCF关于河北武邑中学在NOIP2015初赛中违规的处罚通知 <a href="https://www.noi.cn/xw/2015-11-11/715095.shtml">https://www.noi.cn/xw/2015-11-11/715095.shtml</a></p>
+<p>CCF关于公布NOIP2015初赛违规事件处罚的通告 <a href="https://www.noi.cn/xw/2015-11-04/715094.shtml">https://www.noi.cn/xw/2015-11-04/715094.shtml</a></p>
+<h2 id="2014">2014</h2>
+<blockquote>
+<p>PR welcome!</p>
+</blockquote>
+<h2 id="2013">2013</h2>
+<p>CCF关于对NOIP2013初赛违规事件相关学校和选手处罚决定的通告 <a href="https://www.noi.cn/xw/2013-11-26/715014.shtml">https://www.noi.cn/xw/2013-11-26/715014.shtml</a></p>
+<p>CCF对NOIP作弊选手处罚结果的公告 <a href="https://www.noi.cn/xw/2013-01-11/714963.shtml">https://www.noi.cn/xw/2013-01-11/714963.shtml</a></p>
+<h2 id="2012">2012</h2>
+<p>CCF关于对NOIP作弊选手处罚决定的通告 <a href="https://www.noi.cn/xw/2012-12-12/714962.shtml">https://www.noi.cn/xw/2012-12-12/714962.shtml</a></p>
+<h2 id="2011">2011</h2>
+<p>CCF关于对NOI违约选手处罚决定的通告 <a href="https://www.noi.cn/xw/2011-11-18/714897.shtml">https://www.noi.cn/xw/2011-11-18/714897.shtml</a></p>
+<h2 id="相关资源">相关资源</h2>
+<p>做干净的奥赛 <a href="https://www.noi.cn/xw/2009-08-31/714736.shtml">https://www.noi.cn/xw/2009-08-31/714736.shtml</a></p>
+<p>全国青少年信息学奥林匹克竞赛条例 <a href="https://www.noi.cn/gynoi/tlgd/2008-12-25/710424.shtml#:~:text=%E8%B5%9B%E5%9C%BA%E8%A7%84%E5%AE%9A%EF%BC%9B-,8)%20%E5%85%B6%E4%BB%96%E5%8F%AF%E8%83%BD%E5%BD%B1%E5%93%8D%E5%85%AC%E5%B9%B3%E7%AB%9E%E8%B5%9B%E7%9A%84%E5%85%B6%E4%BB%96%E8%A1%8C%E4%B8%BA%E3%80%82,-10.%20%E5%85%B6%E4%BB%96%E4%BA%BA%E5%91%98">https://www.noi.cn/gynoi/tlgd/2008-12-25/710424.shtml#:~:text=赛场规定；-,8)%20其他可能影响公平竞赛的其他行为。,-10.%20其他人员</a></p>
+<h2 id="其他信息">其他信息</h2>
+<p>本文可随意转载/修改, 无需注明出处</p>
+<p><nocopyright value="true"></nocopyright></p>
+<span class="淡化">发表于: 2023/1/16 17:41:54, 更新于: 2023/1/16 17:41:54</br>标签: <a href="/blog.html?tag=水文">水文</a> </span>
+				</section>
+				<script id="当前文章信息" type="application/json">{"updated":"2023-01-16T09:41:54.000Z","date":"2023-01-16T09:41:54.000Z","issue":6,"tags":["水文"],"id":"ccf-noi-lncfgg","title":"(转) CCF NOI 历年处罚公告","desc":"\n# (转) CCF NOI 历年处罚公告\n\n> 转自 <https://fucksc.cf/penalties/>\n\n## 前言\n\n本文旨在让各位选手/监考老师/特派员在历次处罚中引以为戒, 请各位读者理性看待以下事件, 不要对当事人/CCF做出不恰当的行为\n\n","desc_text":" 转自 https://fucksc.cf/penalties/  前言 本文旨在让各位选手/监考老师/特派员在历次处罚中引以为戒, 请各位读者理性看待以下事件, 不要对当事人/CCF做出不恰当的行为...","cover":"https://dsy4567.github.io/img/bg.jpg"}</script>
+				<!-- END MAIN -->
+			</article>
+		</main>
+
+		<footer id="copyright">
+			© 2022-2023
+			<a href="https://github.com/dsy4567">dsy4567</a><br />
+			<a href="https://icp.gov.moe/?keyword=20230212" target="_blank">萌ICP备20230212号</a>
+			|
+			<a href="https://beian.miit.gov.cn/" target="_blank"
+				>陕ICP备 备<span id="fuck">&#20320;&#22920;</span>的案</a
+			><br />
+			<!-- 修改代码时必须保留此链接和原作者信息, 可以添加修改后源代码的链接及作者信息 -->
+			Powered by
+			<a href="https://github.com/dsy4567/dsy4567.github.io">dsy4567/dsy4567.github.io</a>
+		</footer>
+		<noscript>
+			<div>请启用 JavaScript 以获得更好的浏览体验</div>
+		</noscript>
+		<link disabled rel="stylesheet" href="/css/font.css" />
+		<script src="/js/main.js" type="module" async></script>
+	</body>
+</html>

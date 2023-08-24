@@ -29,7 +29,7 @@
 termux-change-repo
 ```
 
-![s:540x1194 选择仓库](/blog-md/code-server-on-termux/img/repo.webp)![s:540x1194 选择镜像](/blog-md/code-server-on-termux/img/mirror.webp)
+![s:540x1194 选择仓库](/blog/code-server-on-termux/img/repo.webp)![s:540x1194 选择镜像](/blog/code-server-on-termux/img/mirror.webp)
 
 确保 `Main repository` 被选中，然后按下回车，再使用上下键将光标移至清华镜像后按下空格和回车。
 
@@ -59,17 +59,17 @@ git config --global user.name "username"
 
 > 注意：安装时看见 `The default action is to keep your current version.` 这句话可直接按回车
 >
-> ![s:1080x394 The default action is to keep your current version.](/blog-md/code-server-on-termux/img/confirm.webp)
+> ![s:1080x394 The default action is to keep your current version.](/blog/code-server-on-termux/img/confirm.webp)
 
 ## 为手机设置固定内网 IP
 
 打开 WLAN 设置，按住已连接的网络，点击 “修改网络”。
 
-![s:540x344 修改网络](/blog-md/code-server-on-termux/img/wlan.webp)
+![s:540x344 修改网络](/blog/code-server-on-termux/img/wlan.webp)
 
 点击“IP”，将“DHCP”改为“静态”。
 
-![s:540x717 网络设置](/blog-md/code-server-on-termux/img/dhcp.webp)
+![s:540x717 网络设置](/blog/code-server-on-termux/img/dhcp.webp)
 
 然后 _**参考**_ 以下设置，修改后保存。
 
@@ -79,7 +79,7 @@ git config --global user.name "username"
 -   域名 1：`192.168.1.1`
 -   域名 2：`114.114.114.114`
 
-![s:455.5x960 网络设置](/blog-md/code-server-on-termux/img/ip.webp)
+![s:455.5x960 网络设置](/blog/code-server-on-termux/img/ip.webp)
 
 ## 配置域名
 
@@ -205,7 +205,7 @@ scp -P 8022 username@手机内网IP:~/ssl/rootCA.crt .
 
 双击打开证书文件，点击“安装证书”，将证书添加到“受信任的根证书颁发机构”。
 
-![s:748x787 安装 CA 证书](/blog-md/code-server-on-termux/img/ca.webp)
+![s:748x787 安装 CA 证书](/blog/code-server-on-termux/img/ca.webp)
 
 ## 配置 Nginx
 
@@ -295,7 +295,7 @@ chmod 777 ~/code-server.sh
 
 至此，完整的开发环境已经准备好。在同一局域网内另一台机器上打开浏览器，在地址栏输入 `vscode.example.com`（将 example.com 替换为你自己的域名）并输入密码，就可以愉快地敲代码了。
 
-![s:1680x1010 code-server](/blog-md/code-server-on-termux/img/code-server.webp)
+![s:1680x1010 code-server](/blog/code-server-on-termux/img/code-server.webp)
 
 ## 注意事项
 

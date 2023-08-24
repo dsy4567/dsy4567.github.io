@@ -18,45 +18,45 @@
 
 登录 [Cloudflare Dashboard](https://dash.cloudflare.com/)，点击右边的 Workers，再点右边的创建服务。
 
-![s:1680x878 Workers 面板](https://dsy4567.cf/blog-md/cf-workers-ip/img/workers.webp)
+![s:1680x878 Workers 面板](https://dsy4567.cf/blog/cf-workers-ip/img/workers.webp)
 
 服务名称随便，点击创建服务。
 
-![s:935x821 创建服务](https://dsy4567.cf/blog-md/cf-workers-ip/img/%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1.webp)
+![s:935x821 创建服务](https://dsy4567.cf/blog/cf-workers-ip/img/%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1.webp)
 
 绑定自定义域。
 
 触发器 > 自定义域，在这里输入 Worker 要绑的域名。
 
-![s:1294x722 自定义域](https://dsy4567.cf/blog-md/cf-workers-ip/img/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F.webp)
+![s:1294x722 自定义域](https://dsy4567.cf/blog/cf-workers-ip/img/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F.webp)
 
 点击快速编辑。
 
-![s:1304x393 管理面板](https://dsy4567.cf/blog-md/cf-workers-ip/img/%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF.webp)
+![s:1304x393 管理面板](https://dsy4567.cf/blog/cf-workers-ip/img/%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF.webp)
 
 粘贴以下代码，然后保存并部署：
 
 ```js
 export default {
-    async fetch(request, env, ctx) {
-        let u = new URL(request.url);
-        const originHost = "vjudge.net",
-            mirrorHost = u.hostname;
-        u.hostname = originHost;
+	async fetch(request, env, ctx) {
+		let u = new URL(request.url);
+		const originHost = "vjudge.net",
+			mirrorHost = u.hostname;
+		u.hostname = originHost;
 
-        Object.defineProperty(request, "url", {
-            value: u,
-            writable: true,
-        });
-        let resp = await fetch(u, request);
+		Object.defineProperty(request, "url", {
+			value: u,
+			writable: true,
+		});
+		let resp = await fetch(u, request);
 
-        if (resp.headers.get("content-type").includes("text/")) {
-            let body = await resp.text();
-            body.replace(new RegExp(originHost, "g"), mirrorHost);
-            return new Response(body, resp);
-        }
-        return resp;
-    },
+		if (resp.headers.get("content-type").includes("text/")) {
+			let body = await resp.text();
+			body.replace(new RegExp(originHost, "g"), mirrorHost);
+			return new Response(body, resp);
+		}
+		return resp;
+	},
 };
 ```
 
@@ -70,7 +70,7 @@ export default {
 
 再打开 <https://你绑定的域名>，登录后打开开发者工具 > 应用 > cookie > `https://你绑定的域名`，将两个 `JSESSIONID` 复制粘贴过去，然后刷新镜像站，就可以完成登录。
 
-![s:997x285 开发者工具](/blog-md/cf-vjmirror/img/devtools.webp)
+![s:997x285 开发者工具](/blog/cf-vjmirror/img/devtools.webp)
 
 ---
 

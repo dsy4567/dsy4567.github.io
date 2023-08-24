@@ -4,7 +4,7 @@
         "date": "2023-08-22T13:10:35.171Z",
         "issue": 15,
         "url": "https://dsy4567.cf/blog-qwq/vercel-dev-sidecar-fq/index.md",
-        "cover": "https://qwq.dsy4567.cf/blog-md/vercel-dev-sidecar-fq/image/ds.png",
+        "cover": "https://qwq.dsy4567.cf/blog/vercel-dev-sidecar-fq/image/ds.png",
         "tags": [
             "技术",
             "科学上网",
@@ -28,7 +28,7 @@
         "title": "记一次在 Termux 上搭建 code-server 环境",
         "desc": "# 记一次在 Termux 上搭建 code-server 环境\n\n店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。\n\n",
         "desc_text": "店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是世界加钱可及的某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。...",
-        "cover": "https://dsy4567.github.io/blog-md/code-server-on-termux/img/repo.webp"
+        "cover": "https://dsy4567.github.io/blog/code-server-on-termux/img/repo.webp"
     },
     {
         "updated": "2023-06-24T07:38:27.834Z",
@@ -41,7 +41,7 @@
         "title": "如何优化网站加载速度",
         "desc": "# 如何优化网站加载速度\n\n中考完了之后，闲的没事的我拿 LightHouse 测了一下自己的网站，发现分数有点低。为了拿到四个圆圈圈~~以满足我的虚荣心~~，我决定花些力气来优化网站性能。\n\n",
         "desc_text": "中考完了之后，闲的没事的我拿 LightHouse 测了一下自己的网站，发现分数有点低。为了拿到四个圆圈圈以满足我的虚荣心，我决定花些力气来优化网站性能。...",
-        "cover": "https://dsy4567.github.io/blog-md/how-to-improve-performance/img/before.webp"
+        "cover": "https://dsy4567.github.io/blog/how-to-improve-performance/img/before.webp"
     },
     {
         "updated": "2023-05-21T03:19:53.502Z",
@@ -55,7 +55,7 @@
         "title": "使用 CloudFlare Workers 免费搭建 Virtual Judge 反代",
         "desc": "# 使用 CloudFlare Workers 免费搭建 Virtual Judge 反代\n\n最近闲的没事干，受 [如何科学地制作一个镜像反代站点](https://blog.immccn123.xyz/archives/362) 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。\n\n",
         "desc_text": "最近闲的没事干，受 如何科学地制作一个镜像反代站点 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。...",
-        "cover": "https://dsy4567.cf/blog-md/cf-workers-ip/img/workers.webp"
+        "cover": "https://dsy4567.cf/blog/cf-workers-ip/img/workers.webp"
     },
     {
         "updated": "2023-02-13T09:55:45.491Z",
@@ -69,7 +69,7 @@
         "title": "使用 Cloudflare Workers 获取别人的 IP 地址",
         "desc": "# 使用 Cloudflare Workers 获取别人的 IP 地址\n\n本文将教你怎么顺着网线找到别人（\n\n",
         "desc_text": "本文将教你怎么顺着网线找到别人（...",
-        "cover": "https://dsy4567.github.io/blog-md/cf-workers-ip/img/workers.webp"
+        "cover": "https://dsy4567.github.io/blog/cf-workers-ip/img/workers.webp"
     },
     {
         "updated": "2023-02-04T08:56:05.388Z",
@@ -122,8 +122,8 @@
         ],
         "id": "2022-ccf-csp-j-you-ji",
         "title": "(水文)2022 €€£ €$₽ J 组第二轮游寄",
-        "desc": "# (水文)2022 <abbr title=\"CCF CSP(China Computer Federation Certified Software Professional, CCF 软件能力认证)的货币符号形式, 体现了 CCF 贪财的特点\">€€£ €\\$₽</abbr> J 组第二轮游寄\n\n## 2022-10-28\n\nJ 组取消, S 组继续, 游寄结束\n\n[![s:874x370 棺方通知](/blog-md/2022-ccf-csp-j-you-ji/img/cover.webp)](https://www.noi.cn/gs/xw/sx1/2022-10-28/775827.shtml?province=df)\n\n> 本文可随意转载/修改, 无需注明出处\n\n<nocopyright value=\"true\"></nocopyright>\n",
+        "desc": "# (水文)2022 <abbr title=\"CCF CSP(China Computer Federation Certified Software Professional, CCF 软件能力认证)的货币符号形式, 体现了 CCF 贪财的特点\">€€£ €\\$₽</abbr> J 组第二轮游寄\n\n## 2022-10-28\n\nJ 组取消, S 组继续, 游寄结束\n\n[![s:874x370 棺方通知](/blog/2022-ccf-csp-j-you-ji/img/cover.webp)](https://www.noi.cn/gs/xw/sx1/2022-10-28/775827.shtml?province=df)\n\n> 本文可随意转载/修改, 无需注明出处\n\n<nocopyright value=\"true\"></nocopyright>\n",
         "desc_text": "2022-10-28 J 组取消, S 组继续, 游寄结束   本文可随意转载/修改, 无需注明出处  ...",
-        "cover": "https://dsy4567.github.io/blog-md/2022-ccf-csp-j-you-ji/img/cover.webp"
+        "cover": "https://dsy4567.github.io/blog/2022-ccf-csp-j-you-ji/img/cover.webp"
     }
 ]

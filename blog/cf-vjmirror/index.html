@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<!-- Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="
+                        upgrade-insecure-requests;
+                        script-src 'self' *.googletagmanager.com www.recaptcha.net www.gstatic.cn www.gstatic.com static.cloudflareinsights.com;
+                        object-src none
+                    "
+		/>
+		<meta id="主题色" name="theme-color" content="#ddd" />
+		<meta id="robots" name="robots" content="all" />
+		<meta name="template" content="https://github.com/dsy4567/dsy4567.github.io" />
+		<!-- BEGIN META -->
+		<meta name="description" content="最近闲的没事干，受 如何科学地制作一个镜像反代站点 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。..." />
+		<title>使用 CloudFlare Workers 免费搭建 Virtual Judge 反代 | 博客 | dsy4567 的小站</title>
+		<!-- END META -->
+		<base target="_self" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link
+			rel="alternate"
+			type="application/atom+xml"
+			title="博客 | dsy4567 的小站"
+			href="https://dsy4567.github.io/rss.xml"
+		/>
+
+		<link rel="dns-prefetch" href="https://fonts.googleapis.cn" />
+		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
+
+		<link rel="modulepreload" href="/js/analytics.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/blog.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/main.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/marked.min.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/ncm.js" crossorigin="use-credentials" />
+		<link rel="preload" href="/js/highlight.min.js" as="script" crossorigin="use-credentials" />
+		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="use-credentials" />
+		<link
+			rel="preload"
+			href="https://dsy4567.cf/api/hitokoto"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="https://api.github.com/users/dsy4567"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
+
+		<script src="/js/global.js"></script>
+		<link rel="stylesheet" href="/css/global.css" />
+
+		<!-- BEGIN OG -->
+		<meta property="og:url" content="https://dsy4567.cf/b/cf-vjmirror" />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="使用 CloudFlare Workers 免费搭建 Virtual Judge 反代 | 博客 | dsy4567 的小站" />
+		<meta property="og:description" content="最近闲的没事干，受 如何科学地制作一个镜像反代站点 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。..." />
+		<meta property="og:image" content="https://dsy4567.cf/blog/cf-workers-ip/img/workers.webp" />
+		<!-- END OG -->
+	</head>
+	<body>
+		<a href="#main" class="隐藏链接">转到正文</a>
+		<div id="主侧边按钮" class="侧边按钮">
+			<button type="button" title="回到顶部" id="回到顶部">
+				<svg class="特小尺寸" data-icon="回到顶部"></svg>
+			</button>
+			<div class="拥有更多选项" type="button" title="网抑云阴乐" id="网抑云阴乐">
+				<img class="特小尺寸" id="网抑云阴乐封面" alt="封面" />
+				<svg aria-hidden="true" class="特小尺寸" data-icon="网抑云阴乐"></svg>
+				<div class="更多选项" id="阴乐控件"></div>
+				<div id="歌词"></div>
+			</div>
+			<div class="拥有更多选项" type="button" title="切换主题" id="切换主题">
+				<svg class="特小尺寸" data-icon="切换主题"></svg>
+				<div role="radiogroup" class="更多选项" id="所有主题"></div>
+			</div>
+		</div>
+
+		<nav id="导航栏">
+			<div class="左">
+				<a class="标题" href="/">dsy4567 的小站</a>
+			</div>
+			<div class="右">
+				<a href="/">
+					<svg class="特小尺寸" data-icon="首页"></svg>
+					<span>首页</span>
+				</a>
+				<a href="/blog.html">
+					<svg class="特小尺寸" data-icon="博客"></svg>
+					<span>博客</span>
+				</a>
+				<a href="/friends.html">
+					<svg class="特小尺寸" data-icon="友情链接"></svg>
+					<span>友链</span>
+				</a>
+			</div>
+		</nav>
+
+		<div class="进度条外面"><div class="进度条"></div></div>
+
+		<main id="main">
+			<div class="左">
+				<section id="我">
+					<img
+						aria-label="头像(一个蘑菇头揍防沉迷弹窗)"
+						class="头像 大尺寸"
+						src="/img/avatar.jpg"
+						alt="头像(一个蘑菇头揍防沉迷弹窗)"
+						title="头像"
+					/>
+					<h2>dsy4567</h2>
+					<span id="关注粉丝码龄"> 关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中 </span>
+					<br />
+					<span id="联系方式">
+						<a
+							href="https://qwq.dsy4567.cf/api/getemail"
+							title="电子邮箱"
+							id="电子邮箱"
+						>
+							<svg class="小尺寸" data-icon="电子邮箱"></svg>
+						</a>
+						<a href="https://qwq.dsy4567.cf/api/getemail" title="Telegram" id="tg">
+							<svg class="小尺寸" data-icon="Telegram"></svg>
+						</a>
+						<a href="https://github.com/dsy4567" title="GitHub">
+							<svg class="小尺寸" data-icon="GitHub"></svg>
+						</a>
+						<a href="https://x.com/dsy4567" title="X">
+							<svg class="小尺寸" data-icon="X"></svg>
+						</a>
+						<a href="https://weibo.com/dsy4567" title="微博">
+							<svg class="小尺寸" data-icon="微博"></svg>
+						</a>
+						<a href="https://www.luogu.com.cn/user/776713" title="洛谷">
+							<svg class="小尺寸" data-icon="洛谷"></svg>
+						</a>
+						<a href="/rss.xml" title="RSS" id="rss">
+							<svg class="小尺寸" data-icon="RSS"></svg>
+						</a>
+					</span>
+				</section>
+				<section class="一言">
+					<h2>
+						<svg class="小尺寸" data-icon="一言"></svg>
+						<span>一言</span>
+					</h2>
+					<p id="一言">加载中</p>
+					<a href="#">查看详细信息</a>
+				</section>
+			</div>
+			<div aria-hidden="true" id="分界线">
+				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
+			</div>
+			<article class="右">
+				<!-- BEGIN MAIN -->
+				<section><h1 id="使用-cloudflare-workers-免费搭建-virtual-judge-反代">使用 CloudFlare Workers 免费搭建 Virtual Judge 反代</h1>
+<p>最近闲的没事干，受 <a href="https://blog.immccn123.xyz/archives/362">如何科学地制作一个镜像反代站点</a> 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。</p>
+<!-- more -->
+
+<blockquote>
+<p>千万不要反代<spoiler>反 D、色情、赌博等</spoiler>违规网站，小心你家水表坏了。</p>
+</blockquote>
+<h2 id="注册-cf">注册 CF</h2>
+<p>这个就不用我浪费口水了，传送门 -&gt; <a href="https://dash.cloudflare.com/">https://dash.cloudflare.com/</a></p>
+<h2 id="创建-cf-worker">创建 CF Worker</h2>
+<blockquote>
+<p>这一步需要先把域名绑到 CF 里面，因为 <code>*.workers.dev</code> 有墙。</p>
+</blockquote>
+<blockquote>
+<p>可以到 Freenom 那里搞一个免费域名.</p>
+</blockquote>
+<p>登录 <a href="https://dash.cloudflare.com/">Cloudflare Dashboard</a>，点击右边的 Workers，再点右边的创建服务。</p>
+<p><img src="https://dsy4567.cf/blog/cf-workers-ip/img/workers.webp" alt="Workers 面板" width="1680" height="878" loading="lazy"></p>
+<p>服务名称随便，点击创建服务。</p>
+<p><img src="https://dsy4567.cf/blog/cf-workers-ip/img/%E5%88%9B%E5%BB%BA%E6%9C%8D%E5%8A%A1.webp" alt="创建服务" width="935" height="821" loading="lazy"></p>
+<p>绑定自定义域。</p>
+<p>触发器 &gt; 自定义域，在这里输入 Worker 要绑的域名。</p>
+<p><img src="https://dsy4567.cf/blog/cf-workers-ip/img/%E8%87%AA%E5%AE%9A%E4%B9%89%E5%9F%9F.webp" alt="自定义域" width="1294" height="722" loading="lazy"></p>
+<p>点击快速编辑。</p>
+<p><img src="https://dsy4567.cf/blog/cf-workers-ip/img/%E7%AE%A1%E7%90%86%E9%9D%A2%E6%9D%BF.webp" alt="管理面板" width="1304" height="393" loading="lazy"></p>
+<p>粘贴以下代码，然后保存并部署：</p>
+<pre><code class="language-js">export default {
+    async fetch(request, env, ctx) {
+        let u = new URL(request.url);
+        const originHost = "vjudge.net",
+            mirrorHost = u.hostname;
+        u.hostname = originHost;
+
+        Object.defineProperty(request, "url", {
+            value: u,
+            writable: true,
+        });
+        let resp = await fetch(u, request);
+
+        if (resp.headers.get("content-type").includes("text/")) {
+            let body = await resp.text();
+            body.replace(new RegExp(originHost, "g"), mirrorHost);
+            return new Response(body, resp);
+        }
+        return resp;
+    },
+};
+</code></pre>
+<p>接下来，访问你绑定的域名。</p>
+<h2 id="登录镜像站">登录镜像站</h2>
+<p>由于 CF Workers 不让改 <code>set-cookie</code> 请求头，你需要花很大力气登录 <code>vjudge.net</code>，然后把 cookies 复制到镜像站里。</p>
+<p>打开 <a href="https://vjudge.net">https://vjudge.net</a>，登录后打开开发者工具 &gt; 应用 &gt; cookie &gt; <code>https://vjudge.net</code>。</p>
+<p>再打开 <a href="https://%E4%BD%A0%E7%BB%91%E5%AE%9A%E7%9A%84%E5%9F%9F%E5%90%8D">https://你绑定的域名</a>，登录后打开开发者工具 &gt; 应用 &gt; cookie &gt; <code>https://你绑定的域名</code>，将两个 <code>JSESSIONID</code> 复制粘贴过去，然后刷新镜像站，就可以完成登录。</p>
+<p><img src="/blog/cf-vjmirror/img/devtools.webp" alt="开发者工具" width="997" height="285" loading="lazy"></p>
+<hr>
+<p>最后，尽情享受吧~</p>
+<p>Demo：<a href="https://vjmirror.workers.dsy4567.cf/">https://vjmirror.workers.dsy4567.cf/</a></p>
+<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，本作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br /><span class="淡化">发表于: 2023/5/20 22:57:26, 更新于: 2023/5/21 11:19:53</br>标签: <a href="/blog.html?tag=技术">技术</a> <a href="/blog.html?tag=CloudFlare">CloudFlare</a> </span>
+				</section>
+				<script id="当前文章信息" type="application/json">{"updated":"2023-05-21T03:19:53.502Z","date":"2023-05-20T14:57:26.700Z","issue":16,"tags":["技术","CloudFlare"],"id":"cf-vjmirror","title":"使用 CloudFlare Workers 免费搭建 Virtual Judge 反代","desc":"# 使用 CloudFlare Workers 免费搭建 Virtual Judge 反代\n\n最近闲的没事干，受 [如何科学地制作一个镜像反代站点](https://blog.immccn123.xyz/archives/362) 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。\n\n","desc_text":"最近闲的没事干，受 如何科学地制作一个镜像反代站点 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。...","cover":"https://dsy4567.cf/blog/cf-workers-ip/img/workers.webp"}</script>
+				<!-- END MAIN -->
+			</article>
+		</main>
+
+		<footer id="copyright">
+			© 2022-2023
+			<a href="https://github.com/dsy4567">dsy4567</a><br />
+			<a href="https://icp.gov.moe/?keyword=20230212" target="_blank">萌ICP备20230212号</a>
+			|
+			<a href="https://beian.miit.gov.cn/" target="_blank"
+				>陕ICP备 备<span id="fuck">&#20320;&#22920;</span>的案</a
+			><br />
+			<!-- 修改代码时必须保留此链接和原作者信息, 可以添加修改后源代码的链接及作者信息 -->
+			Powered by
+			<a href="https://github.com/dsy4567/dsy4567.github.io">dsy4567/dsy4567.github.io</a>
+		</footer>
+		<noscript>
+			<div>请启用 JavaScript 以获得更好的浏览体验</div>
+		</noscript>
+		<link disabled rel="stylesheet" href="/css/font.css" />
+		<script src="/js/main.js" type="module" async></script>
+	</body>
+</html>

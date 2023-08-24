@@ -6,7 +6,7 @@
 
 搭 nm 的梯子（
 
-![s:432x466 你这是违法行为](/blog-md/vercel-dev-sidecar-fq/img/wf.webp)
+![s:432x466 你这是违法行为](/blog/vercel-dev-sidecar-fq/img/wf.webp)
 
 ## 相关法律法规
 
