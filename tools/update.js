@@ -127,7 +127,7 @@ ${
 				? ""
 				: '<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，本作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br />') +
 		  `<span class="淡化">发表于: ${new Date(j.date).toLocaleString(
-				"zh-CN"
+				"zh-CN",
 			  	{ timeZone: "Asia/Shanghai" }
 		  )}, 更新于: ${new Date(j.updated).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai" })}</br>标签: ${(() => {
 				let html = "";
