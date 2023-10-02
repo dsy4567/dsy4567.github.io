@@ -39,140 +39,9 @@
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/code-server-on-termux/" />
     <id>code-server-on-termux</id>
     <published>2023-07-31T13:17:09.742Z</published>
-    <updated>2023-08-16T06:35:59.974Z</updated>
+    <updated>2023-10-02T04:12:07.650Z</updated>
     <summary>记一次在 Termux 上搭建 code-server 环境
 店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是世界加钱可及的某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
-</summary>
-    <author>
-        <name>dsy4567</name>
-        <uri>https://dsy4567.github.io/</uri>
-    </author>
-    <category term="Default" />
-    <content type="html" xml:lang="zh-cn">
-        <![CDATA[
-undefined
-        ]]>
-    </content>
-</entry>
-<entry>
-    <title>如何优化网站加载速度</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/how-to-improve-performance/" />
-    <id>how-to-improve-performance</id>
-    <published>2023-06-24T07:38:27.834Z</published>
-    <updated>2023-06-24T07:38:27.834Z</updated>
-    <summary>如何优化网站加载速度
-中考完了之后，闲的没事的我拿 LightHouse 测了一下自己的网站，发现分数有点低。为了拿到四个圆圈圈以满足我的虚荣心，我决定花些力气来优化网站性能。
-</summary>
-    <author>
-        <name>dsy4567</name>
-        <uri>https://dsy4567.github.io/</uri>
-    </author>
-    <category term="Default" />
-    <content type="html" xml:lang="zh-cn">
-        <![CDATA[
-<h1 id="p1932-题解">P1932 题解</h1>
-<!-- more -->
-
-<h2 id="原题">原题</h2>
-<blockquote>
-<p><a href="https://www.luogu.com.cn/problem/P1932">https://www.luogu.com.cn/problem/P1932</a></p>
-</blockquote>
-<pre><code class="language-plaintext">A+B  A-B  A*B  A/B A%B Problem
-
-# 题目背景
-
-这个题目很新颖吧！！！
-
-# 题目描述
-
-求A、B的和差积商余！
-
-由于数据有修改，减法运算结果可能带负号！
-
-# 输入格式
-
-两个数两行
-
-A
-B
-
-# 输出格式
-
-五个数
-
-和
-差
-积
-商
-余
-
-# 样例 #1
-
-样例输入 #1
-
-1
-1
-
-样例输出 #1
-
-2
-0
-1
-1
-0
-
-# 提示
-
-length(A),length(B)&lt;=10^4
-
-A,B&gt;0
-每个点3s。
-</code></pre>
-<hr>
-<h2 id="代码">代码</h2>
-<pre><code class="language-python">a,b=int(input()),int(input())
-print(a+b)
-print(a-b)
-print(a*b)
-print(a//b)
-print(a%b)
-</code></pre>
-<p>Python <abbr title="永远单身">YYDS!</abbr></p>
-<blockquote>
-<p><a href="https://www.luogu.com.cn/record/107080406">https://www.luogu.com.cn/record/107080406</a></p>
-</blockquote>
-
-        ]]>
-    </content>
-</entry>
-<entry>
-    <title>使用 CloudFlare Workers 免费搭建 Virtual Judge 反代</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/cf-vjmirror/" />
-    <id>cf-vjmirror</id>
-    <published>2023-05-20T14:57:26.700Z</published>
-    <updated>2023-05-21T03:19:53.502Z</updated>
-    <summary>使用 CloudFlare Workers 免费搭建 Virtual Judge 反代
-最近闲的没事干，受 如何科学地制作一个镜像反代站点 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。
-</summary>
-    <author>
-        <name>dsy4567</name>
-        <uri>https://dsy4567.github.io/</uri>
-    </author>
-    <category term="Default" />
-    <content type="html" xml:lang="zh-cn">
-        <![CDATA[
-undefined
-        ]]>
-    </content>
-</entry>
-<entry>
-    <title>使用 Cloudflare Workers 获取别人的 IP 地址</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/cf-workers-ip/" />
-    <id>cf-workers-ip</id>
-    <published>2023-02-13T09:55:45.491Z</published>
-    <updated>2023-02-13T09:55:45.491Z</updated>
-    <summary>使用 Cloudflare Workers 获取别人的 IP 地址
-本文将教你怎么顺着网线找到别人（
 </summary>
     <author>
         <name>dsy4567</name>
@@ -243,12 +112,13 @@ undefined
     </content>
 </entry>
 <entry>
-    <title>P1932 题解</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/P1932/" />
-    <id>P1932</id>
-    <published>2023-02-04T08:56:05.388Z</published>
-    <updated>2023-02-04T08:56:05.388Z</updated>
-    <summary>P1932 题解
+    <title>如何优化网站加载速度</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/how-to-improve-performance/" />
+    <id>how-to-improve-performance</id>
+    <published>2023-06-24T07:38:27.834Z</published>
+    <updated>2023-06-24T07:38:27.834Z</updated>
+    <summary>如何优化网站加载速度
+中考完了之后，闲的没事的我拿 LightHouse 测了一下自己的网站，发现分数有点低。为了拿到四个圆圈圈以满足我的虚荣心，我决定花些力气来优化网站性能。
 </summary>
     <author>
         <name>dsy4567</name>
@@ -319,12 +189,13 @@ undefined
     </content>
 </entry>
 <entry>
-    <title>镜像站列表</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/mirrors/" />
-    <id>mirrors</id>
-    <published>2023-02-04T04:59:21.580Z</published>
-    <updated>2023-02-07T17:37:32.065Z</updated>
-    <summary>镜像站列表
+    <title>使用 CloudFlare Workers 免费搭建 Virtual Judge 反代</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/cf-vjmirror/" />
+    <id>cf-vjmirror</id>
+    <published>2023-05-20T14:57:26.700Z</published>
+    <updated>2023-05-21T03:19:53.502Z</updated>
+    <summary>使用 CloudFlare Workers 免费搭建 Virtual Judge 反代
+最近闲的没事干，受 如何科学地制作一个镜像反代站点 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。
 </summary>
     <author>
         <name>dsy4567</name>
@@ -380,17 +251,13 @@ undefined
     </content>
 </entry>
 <entry>
-    <title>(转) CCF NOI 历年处罚公告</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/ccf-noi-lncfgg/" />
-    <id>ccf-noi-lncfgg</id>
-    <published>2023-01-16T09:41:54.000Z</published>
-    <updated>2023-01-16T09:41:54.000Z</updated>
-    <summary>(转) CCF NOI 历年处罚公告
-
-转自 https://fucksc.cf/penalties/
-
-前言
-本文旨在让各位选手/监考老师/特派员在历次处罚中引以为戒, 请各位读者理性看待以下事件, 不要对当事人/CCF做出不恰当的行为
+    <title>使用 Cloudflare Workers 获取别人的 IP 地址</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/cf-workers-ip/" />
+    <id>cf-workers-ip</id>
+    <published>2023-02-13T09:55:45.491Z</published>
+    <updated>2023-02-13T09:55:45.491Z</updated>
+    <summary>使用 Cloudflare Workers 获取别人的 IP 地址
+本文将教你怎么顺着网线找到别人（
 </summary>
     <author>
         <name>dsy4567</name>
@@ -426,15 +293,15 @@ undefined
 <h3 id="安装和配置开发工具">安装和配置开发工具</h3>
 <p>依次执行以下命令：</p>
 <pre><code class="language-bash">#一股脑把需要的全装上
-pkg install git nodejs nginx python3 openssl-tool wget openssh vim screen -y
+pkg install git nodejs-lts nginx python3 openssl-tool wget openssh vim screen -y
 pkg up
 
 #在这里查 code-server 的最新版本号，然后替换下面的版本号
 #https://github.com/search?q=repo%3Atermux-user-repository%2Fdists%20dists%2Ftur-packages%2Ftur%2Fbinary-aarch64%2FPackages%20code-server&amp;type=code
-wget https://ghproxy.com/https://github.com/termux-user-repository/dists/releases/download/0.1/code-server_4.16.1_aarch64.deb -O code-server.deb
-dpkg -i ./code-server.deb
+wget https://ghproxy.com/https://github.com/termux-user-repository/dists/releases/download/0.1/code-server_4.17.1_aarch64.deb -O code-server.deb
+apt-get --fix-broken install ./code-server.deb -y
 #网快的也可以用这个
-pkg install tur-repo
+pkg install tur-repo -y
 pkg install code-server -y
 
 #更换淘宝源
@@ -665,19 +532,12 @@ code-server --host 0.0.0.0 --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/
     </content>
 </entry>
 <entry>
-    <title>(水文)2022 €€£ €$₽ J 组第二轮游寄</title>
-    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/2022-ccf-csp-j-you-ji/" />
-    <id>2022-ccf-csp-j-you-ji</id>
-    <published>2023-01-12T16:00:00.000Z</published>
-    <updated>2023-01-12T16:00:00.000Z</updated>
-    <summary>(水文)2022 €€£ €$₽ J 组第二轮游寄
-2022-10-28
-J 组取消, S 组继续, 游寄结束
-
-
-本文可随意转载/修改, 无需注明出处
-
-
+    <title>P1932 题解</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/P1932/" />
+    <id>P1932</id>
+    <published>2023-02-04T08:56:05.388Z</published>
+    <updated>2023-02-04T08:56:05.388Z</updated>
+    <summary>P1932 题解
 </summary>
     <author>
         <name>dsy4567</name>
@@ -729,6 +589,96 @@ J 组取消, S 组继续, 游寄结束
 <li>压缩资源（这个我不想搞）</li>
 <li>少用小站长提供的接口，说不定哪一天就变慢或者崩掉了，建议自行搭建</li>
 <li>少用费资源的 CSS 方法（比如 <code>blur()</code>）</li>
+</ul>
+
+        ]]>
+    </content>
+</entry>
+<entry>
+    <title>镜像站列表</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/mirrors/" />
+    <id>mirrors</id>
+    <published>2023-02-04T04:59:21.580Z</published>
+    <updated>2023-02-07T17:37:32.065Z</updated>
+    <summary>镜像站列表
+</summary>
+    <author>
+        <name>dsy4567</name>
+        <uri>https://dsy4567.github.io/</uri>
+    </author>
+    <category term="Default" />
+    <content type="html" xml:lang="zh-cn">
+        <![CDATA[
+undefined
+        ]]>
+    </content>
+</entry>
+<entry>
+    <title>(转) CCF NOI 历年处罚公告</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/ccf-noi-lncfgg/" />
+    <id>ccf-noi-lncfgg</id>
+    <published>2023-01-16T09:41:54.000Z</published>
+    <updated>2023-01-16T09:41:54.000Z</updated>
+    <summary>(转) CCF NOI 历年处罚公告
+
+转自 https://fucksc.cf/penalties/
+
+前言
+本文旨在让各位选手/监考老师/特派员在历次处罚中引以为戒, 请各位读者理性看待以下事件, 不要对当事人/CCF做出不恰当的行为
+</summary>
+    <author>
+        <name>dsy4567</name>
+        <uri>https://dsy4567.github.io/</uri>
+    </author>
+    <category term="Default" />
+    <content type="html" xml:lang="zh-cn">
+        <![CDATA[
+undefined
+        ]]>
+    </content>
+</entry>
+<entry>
+    <title>(水文)2022 €€£ €$₽ J 组第二轮游寄</title>
+    <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/2022-ccf-csp-j-you-ji/" />
+    <id>2022-ccf-csp-j-you-ji</id>
+    <published>2023-01-12T16:00:00.000Z</published>
+    <updated>2023-01-12T16:00:00.000Z</updated>
+    <summary>(水文)2022 €€£ €$₽ J 组第二轮游寄
+2022-10-28
+J 组取消, S 组继续, 游寄结束
+
+
+本文可随意转载/修改, 无需注明出处
+
+
+</summary>
+    <author>
+        <name>dsy4567</name>
+        <uri>https://dsy4567.github.io/</uri>
+    </author>
+    <category term="Default" />
+    <content type="html" xml:lang="zh-cn">
+        <![CDATA[
+<h1 id="镜像站列表">镜像站列表</h1>
+<!-- more -->
+
+<h2 id="dsy4567-的小站">dsy4567 的小站</h2>
+<p>主站: <a href="https://dsy4567.cf">https://dsy4567.cf</a> (Vercel)</p>
+<p>镜像站:</p>
+<ul>
+<li><a href="https://dsy4567.github.io">https://dsy4567.github.io</a> (GitHub Pages)</li>
+<li><a href="https://home.mirrors.dsy4567.cf">https://home.mirrors.dsy4567.cf</a> (Cloudflare Pages)</li>
+<li><a href="https://home-netlify.mirrors.dsy4567.cf">https://home-netlify.mirrors.dsy4567.cf</a> (Netlify)</li>
+<li><a href="https://home-vercel.mirrors.dsy4567.cf">https://home-vercel.mirrors.dsy4567.cf</a> (Vercel)</li>
+</ul>
+<h2 id="防沉迷终结者">防沉迷终结者</h2>
+<p>主站: <a href="https://fcmsb250.github.io">https://fcmsb250.github.io</a> (GitHub Pages)</p>
+<p>镜像站:</p>
+<ul>
+<li><a href="https://fcm.dsy4567.cf">https://fcm.dsy4567.cf</a> (Cloudflare Pages)</li>
+<li><a href="https://fcm.mirrors.dsy4567.cf">https://fcm.mirrors.dsy4567.cf</a> (Cloudflare Pages)</li>
+<li><a href="https://fcm-netlify.mirrors.dsy4567.cf">https://fcm-netlify.mirrors.dsy4567.cf</a> (Netlify)</li>
+<li><a href="https://fcm-vercel.mirrors.dsy4567.cf">https://fcm-vercel.mirrors.dsy4567.cf</a> (Vercel)</li>
 </ul>
 
         ]]>
