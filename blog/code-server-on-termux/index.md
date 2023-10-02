@@ -39,15 +39,15 @@ termux-change-repo
 
 ```bash
 #一股脑把需要的全装上
-pkg install git nodejs nginx python3 openssl-tool wget openssh vim screen -y
+pkg install git nodejs-lts nginx python3 openssl-tool wget openssh vim screen -y
 pkg up
 
 #在这里查 code-server 的最新版本号，然后替换下面的版本号
 #https://github.com/search?q=repo%3Atermux-user-repository%2Fdists%20dists%2Ftur-packages%2Ftur%2Fbinary-aarch64%2FPackages%20code-server&type=code
-wget https://ghproxy.com/https://github.com/termux-user-repository/dists/releases/download/0.1/code-server_4.16.1_aarch64.deb -O code-server.deb
-dpkg -i ./code-server.deb
+wget https://ghproxy.com/https://github.com/termux-user-repository/dists/releases/download/0.1/code-server_4.17.1_aarch64.deb -O code-server.deb
+apt-get --fix-broken install ./code-server.deb -y
 #网快的也可以用这个
-pkg install tur-repo
+pkg install tur-repo -y
 pkg install code-server -y
 
 #更换淘宝源
