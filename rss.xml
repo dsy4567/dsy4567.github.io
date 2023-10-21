@@ -11,7 +11,7 @@
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/fuck-seewo-keyboard-hook/" />
     <id>fuck-seewo-keyboard-hook</id>
     <published>2023-10-21T13:28:24.271Z</published>
-    <updated>2023-10-21T13:28:24.271Z</updated>
+    <updated>2023-10-21T14:13:04.116Z</updated>
     <summary>（更新中）记一次解除希沃管家锁屏的键盘按键屏蔽，并绕过锁屏
 
 注意：本文所述方法是笔者脑子一热想出来的新破解思路，可行性尚未在校验证。
@@ -81,10 +81,12 @@ EXPORT bool UnHookKeyBoard() {
 <p>以下操作亦会大大增加网管提着大刀来找你的概率，请三思而后行。</p>
 </blockquote>
 <ul>
-<li>将以下程序加入火绒的 访问控制 &gt; 程序执行控制：</li>
+<li>将以下程序加入火绒的 访问控制 &gt; 程序执行控制：<ul>
 <li><code>C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\screenCapture\screenCapture.exe</code> - 截屏录屏</li>
 <li><code>C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\media_capture\media_capture.exe</code> - 摄像头</li>
 <li><code>C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\rtcRemoteDesktop\rtcRemoteDesktop.exe</code> - 远程控制</li>
+</ul>
+</li>
 <li>将<a href="https://help.seewo.com/hugo/ANlS310tQJ">这里面</a>提到的域名写到 hosts 文件里，解析到无法访问的 IP。</li>
 </ul>
 <h2 id="踩坑">踩坑</h2>

@@ -74,12 +74,11 @@ i686-w64-mingw32-gcc ./KeyBoardHookFfi.c -o ./KeyBoardHookFfi.dll -shared -fPIC
 
 > 以下操作亦会大大增加网管提着大刀来找你的概率，请三思而后行。
 
-- 将以下程序加入火绒的 访问控制 > 程序执行控制：
- - `C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\screenCapture\screenCapture.exe` - 截屏录屏
- - `C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\media_capture\media_capture.exe` - 摄像头
- - `C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\rtcRemoteDesktop\rtcRemoteDesktop.exe` - 远程控制
-- 将[这里面](https://help.seewo.com/hugo/ANlS310tQJ)提到的域名写到 hosts 文件里，解析到无法访问的 IP。
-
+-   将以下程序加入火绒的 访问控制 > 程序执行控制：
+    -   `C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\screenCapture\screenCapture.exe` - 截屏录屏
+    -   `C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\media_capture\media_capture.exe` - 摄像头
+    -   `C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\rtcRemoteDesktop\rtcRemoteDesktop.exe` - 远程控制
+-   将[这里面](https://help.seewo.com/hugo/ANlS310tQJ)提到的域名写到 hosts 文件里，解析到无法访问的 IP。
 
 ## 踩坑
 
@@ -90,6 +89,6 @@ i686-w64-mingw32-gcc ./KeyBoardHookFfi.c -o ./KeyBoardHookFfi.dll -shared -fPIC
 
 ## 附件&笔者的希沃管家信息
 
-- 希沃管家版本号：v1.4.0.3393
-- 用来调包的 dll：[KeyBoardHookFfi.dll](https://qwq.dsy4567.cf/files-2/KeyBoardHookFfi.dll)
-- 调包前的 dll 备份：[KeyBoardHookFfi-backed-up.dll](https://qwq.dsy4567.cf/files-2/KeyBoardHookFfi-backed-up.dll)
+-   希沃管家版本号：v1.4.0.3393
+-   用来调包的 dll：[KeyBoardHookFfi.dll](https://qwq.dsy4567.cf/files-2/KeyBoardHookFfi.dll)
+-   调包前的 dll 备份：[KeyBoardHookFfi-backed-up.dll](https://qwq.dsy4567.cf/files-2/KeyBoardHookFfi-backed-up.dll)
