@@ -4,9 +4,9 @@
 
 ## 写在前面
 
-众所周知，越来越多的学校买了希沃一体机和集控，而其中某些学校设置的锁屏严重影响了学生课间劳逸结合。在同学们的强烈要求下，我开始走上了研究解锁方法这条不归路。
+众所周知，越来越多的学校买了希沃一体机和集控，而其中某些学校设置的锁屏严重影响了学生课间劳逸结合（？。在同学们的强烈要求下，我开始走上了研究解锁方法这条不归路。
 
-起初，我使用火绒的 访问控制 > 程序执行控制 阻止希沃管家主程序运行，但这样一体机会失去一部分实用的功能（好像也无所谓），且会大大增加网管提着大刀来找你的概率（笔者学校这方面管得似乎不严）。直到发现希沃管家利用键盘钩子屏蔽按键后，笔者脑子一热，想出来下面的新点子。
+起初，我使用火绒的 访问控制 > 程序执行控制 阻止希沃管家主程序运行，但这样一体机会失去一部分实用的功能（好像也无所谓），且会大大增加网管提着大刀来找你的概率（笔者学校这方面管得似乎不严）。直到发现希沃管家利用键盘钩子（hook）屏蔽按键后，笔者脑子一热，想出来下面的新点子。
 
 <!-- more -->
 
@@ -58,7 +58,7 @@ i686-w64-mingw32-gcc ./KeyBoardHookFfi.c -o ./KeyBoardHookFfi.dll -shared -fPIC
 
 ## 调包
 
-找到 `C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoServiceAssistant\resources\assets\dlls\KeyBoardHookFfi.dll` 这个文件后，备份并使用“文件粉碎机”或在 WinRE 下删除此文件，然后将上面的 dll 文件复制粘贴到 dll 所在文件夹（是先 **删除** 再 **复制粘贴**）。如果提示“你需要提供管理员权限才能复制到此文件夹”，直接点击“继续”即可。
+找到 `C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoServiceAssistant\resources\assets\dlls\KeyBoardHookFfi.dll` 这个文件后，备份并使用“文件粉碎机”或在 WinRE 下删除此文件，然后将上面的 dll 文件复制粘贴到 dll 所在文件夹（是先 **删除** 再 **复制粘贴**，而不是直接替换）。如果提示“你需要提供管理员权限才能复制到此文件夹”，直接点击“继续”即可。
 
 ![dlls 文件夹](/blog/fuck-seewo-keyboard-hook/img/dlls-dictionary.webp)
 
