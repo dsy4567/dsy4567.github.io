@@ -16,8 +16,8 @@
 
 使用 Dependency Walker 查看入口函数名，以及解包 `app.asar` 并查看 `main.js` 后得知，这个 dll 文件拥有两个返回值类型为 `bool` 的入口函数：`SetKeyboardHook` 和 `UnHookKeyBoard`。在得知以上信息后，就可以尝试编写用来掉包的 dll 文件。
 
-![使用 DevTools 格式化 main.js，并找到键盘钩子相关代码](/blog/fuck-seewo-keyboard-hook/img/devtools.webp)
-![使用 Dependency Walker 打开 KeyBoardHookFfi.dll](/blog/fuck-seewo-keyboard-hook/img/dw.webp)
+![s:1005x717 使用 DevTools 格式化 main.js，并找到键盘钩子相关代码](/blog/fuck-seewo-keyboard-hook/img/devtools.webp)
+![s:1246x724 使用 Dependency Walker 打开 KeyBoardHookFfi.dll](/blog/fuck-seewo-keyboard-hook/img/dw.webp)
 
 ## 安装 mingw，写代码
 
@@ -60,7 +60,7 @@ i686-w64-mingw32-gcc ./KeyBoardHookFfi.c -o ./KeyBoardHookFfi.dll -shared -fPIC
 
 找到 `C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoServiceAssistant\resources\assets\dlls\KeyBoardHookFfi.dll` 这个文件后，备份并使用“文件粉碎机”或在 WinRE 下删除此文件，然后将上面的 dll 文件复制粘贴到 dll 所在文件夹（是先 **删除** 再 **复制粘贴**，而不是直接替换）。如果提示“你需要提供管理员权限才能复制到此文件夹”，直接点击“继续”即可。
 
-![dlls 文件夹](/blog/fuck-seewo-keyboard-hook/img/dlls-dictionary.webp)
+![s:1125x618 dlls 文件夹](/blog/fuck-seewo-keyboard-hook/img/dlls-dictionary.webp)
 
 使用任务管理器杀死希沃管家进程，并重新启动管家，也可以重启电脑/注销并重新登录。
 

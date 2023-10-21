@@ -174,8 +174,8 @@
 <h2 id="前期分析">前期分析</h2>
 <p>在对希沃管家主程序一顿翻腾后，<code>C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoServiceAssistant\resources\assets\dlls\KeyBoardHookFfi.dll</code> 这个文件引起了我的怀疑。从文件名可知，它应该与键盘钩子有关，可以用来屏蔽 win 等按键。</p>
 <p>使用 Dependency Walker 查看入口函数名，以及解包 <code>app.asar</code> 并查看 <code>main.js</code> 后得知，这个 dll 文件拥有两个返回值类型为 <code>bool</code> 的入口函数：<code>SetKeyboardHook</code> 和 <code>UnHookKeyBoard</code>。在得知以上信息后，就可以尝试编写用来掉包的 dll 文件。</p>
-<p><img src="/blog/fuck-seewo-keyboard-hook/img/devtools.webp" alt="使用 DevTools 格式化 main.js，并找到键盘钩子相关代码" loading="lazy">
-<img src="/blog/fuck-seewo-keyboard-hook/img/dw.webp" alt="使用 Dependency Walker 打开 KeyBoardHookFfi.dll" loading="lazy"></p>
+<p><img src="/blog/fuck-seewo-keyboard-hook/img/devtools.webp" alt="使用 DevTools 格式化 main.js，并找到键盘钩子相关代码" width="1005" height="717" loading="lazy">
+<img src="/blog/fuck-seewo-keyboard-hook/img/dw.webp" alt="使用 Dependency Walker 打开 KeyBoardHookFfi.dll" width="1246" height="724" loading="lazy"></p>
 <h2 id="安装-mingw，写代码">安装 mingw，写代码</h2>
 <blockquote>
 <p>如无特别说明，本节所有操作均在 GitHub Codespaces 上进行，谁叫笔者用的电脑垃圾呢。</p>
@@ -206,7 +206,7 @@ EXPORT bool UnHookKeyBoard() {
 </code></pre>
 <h2 id="调包">调包</h2>
 <p>找到 <code>C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoServiceAssistant\resources\assets\dlls\KeyBoardHookFfi.dll</code> 这个文件后，备份并使用“文件粉碎机”或在 WinRE 下删除此文件，然后将上面的 dll 文件复制粘贴到 dll 所在文件夹（是先 <strong>删除</strong> 再 <strong>复制粘贴</strong>，而不是直接替换）。如果提示“你需要提供管理员权限才能复制到此文件夹”，直接点击“继续”即可。</p>
-<p><img src="/blog/fuck-seewo-keyboard-hook/img/dlls-dictionary.webp" alt="dlls 文件夹" loading="lazy"></p>
+<p><img src="/blog/fuck-seewo-keyboard-hook/img/dlls-dictionary.webp" alt="dlls 文件夹" width="1125" height="618" loading="lazy"></p>
 <p>使用任务管理器杀死希沃管家进程，并重新启动管家，也可以重启电脑/注销并重新登录。</p>
 <p>如果希沃管家启动时报错，请参照下方<a href="#%E8%B8%A9%E5%9D%91">踩坑</a>部分解决问题。如果无法解决，请参考上述步骤删除已经调包的 dll 文件，并还原。</p>
 <h2 id="解除窗口置顶">解除窗口置顶</h2>
