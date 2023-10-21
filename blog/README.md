@@ -2,6 +2,8 @@
 
 > **Note**: 在 <https://dsy4567.cf/blog.html> 上阅读体验更佳
 
+[（更新中）记一次解除希沃管家锁屏的键盘按键屏蔽，并绕过锁屏](./fuck-seewo-keyboard-hook/index.md)
+
 [用 Vercel + DevSidecar 实现科学上网](./vercel-dev-sidecar-fq/index.md)
 
 [记一次在 Termux 上搭建 code-server 环境](./code-server-on-termux/index.md)

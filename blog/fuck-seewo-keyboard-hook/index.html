@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<!-- Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="
+                        upgrade-insecure-requests;
+                        script-src 'self' *.googletagmanager.com www.recaptcha.net www.gstatic.cn www.gstatic.com static.cloudflareinsights.com;
+                        object-src none
+                    "
+		/>
+		<meta id="主题色" name="theme-color" content="#ddd" />
+		<meta id="robots" name="robots" content="all" />
+		<meta name="template" content="https://github.com/dsy4567/dsy4567.github.io" />
+		<!-- BEGIN META -->
+		<meta name="description" content=" 注意：本文所述方法是笔者脑子一热想出来的新破解思路，可行性尚未在校验证。  写在前面 众所周知，越来越多的学校买了希沃一体机和集控，而其中某些学校设置的锁屏严重影响了学生课间劳逸结合。在同学们的强烈要求下，我开始走上了研究解锁方法这条不归路。 起初，我使用火绒的 访问控制 &gt; 程序执行控制 阻止希沃管家主程序运行，但这样一体机会失去一部分实用的功能（好像也无所谓），且会大大增加网管提着大刀来找你的概率（笔者学校这方面管得似乎不严）。直到发现希沃管家利用键盘钩子屏蔽按键后，笔者脑子一热，想出来下面的新点子。..." />
+		<title>（更新中）记一次解除希沃管家锁屏的键盘按键屏蔽，并绕过锁屏 | 博客 | dsy4567 的小站</title>
+		<!-- END META -->
+		<base target="_self" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link
+			rel="alternate"
+			type="application/atom+xml"
+			title="博客 | dsy4567 的小站"
+			href="https://dsy4567.github.io/rss.xml"
+		/>
+
+		<link rel="dns-prefetch" href="https://fonts.googleapis.cn" />
+		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
+
+		<link rel="modulepreload" href="/js/analytics.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/blog.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/main.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/marked.min.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/ncm.js" crossorigin="use-credentials" />
+		<link rel="preload" href="/js/highlight.min.js" as="script" crossorigin="use-credentials" />
+		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="use-credentials" />
+		<link
+			rel="preload"
+			href="https://dsy4567.cf/api/hitokoto"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="https://api.github.com/users/dsy4567"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
+
+		<script src="/js/global.js"></script>
+		<link rel="stylesheet" href="/css/global.css" />
+
+		<!-- BEGIN OG -->
+		<meta property="og:url" content="https://dsy4567.cf/blog/fuck-seewo-keyboard-hook/" />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="（更新中）记一次解除希沃管家锁屏的键盘按键屏蔽，并绕过锁屏 | 博客 | dsy4567 的小站" />
+		<meta property="og:description" content=" 注意：本文所述方法是笔者脑子一热想出来的新破解思路，可行性尚未在校验证。  写在前面 众所周知，越来越多的学校买了希沃一体机和集控，而其中某些学校设置的锁屏严重影响了学生课间劳逸结合。在同学们的强烈要求下，我开始走上了研究解锁方法这条不归路。 起初，我使用火绒的 访问控制 &gt; 程序执行控制 阻止希沃管家主程序运行，但这样一体机会失去一部分实用的功能（好像也无所谓），且会大大增加网管提着大刀来找你的概率（笔者学校这方面管得似乎不严）。直到发现希沃管家利用键盘钩子屏蔽按键后，笔者脑子一热，想出来下面的新点子。..." />
+		<meta property="og:image" content="https://dsy4567.github.io/blog/fuck-seewo-keyboard-hook/img/devtools.webp" />
+		<!-- END OG -->
+	</head>
+	<body>
+		<a href="#main" class="隐藏链接">转到正文</a>
+		<div id="主侧边按钮" class="侧边按钮">
+			<button type="button" title="回到顶部" id="回到顶部">
+				<svg class="特小尺寸" data-icon="回到顶部"></svg>
+			</button>
+			<div class="拥有更多选项" type="button" title="网抑云阴乐" id="网抑云阴乐">
+				<img class="特小尺寸" id="网抑云阴乐封面" alt="封面" />
+				<svg aria-hidden="true" class="特小尺寸" data-icon="网抑云阴乐"></svg>
+				<div class="更多选项" id="阴乐控件"></div>
+				<div id="歌词"></div>
+			</div>
+			<div class="拥有更多选项" type="button" title="切换主题" id="切换主题">
+				<svg class="特小尺寸" data-icon="切换主题"></svg>
+				<div role="radiogroup" class="更多选项" id="所有主题"></div>
+			</div>
+		</div>
+
+		<nav id="导航栏">
+			<div class="左">
+				<a class="标题" href="/">dsy4567 的小站</a>
+			</div>
+			<div class="右">
+				<a href="/">
+					<svg class="特小尺寸" data-icon="首页"></svg>
+					<span>首页</span>
+				</a>
+				<a href="/blog.html">
+					<svg class="特小尺寸" data-icon="博客"></svg>
+					<span>博客</span>
+				</a>
+				<a href="/friends.html">
+					<svg class="特小尺寸" data-icon="友情链接"></svg>
+					<span>友链</span>
+				</a>
+			</div>
+		</nav>
+
+		<div class="进度条外面"><div class="进度条"></div></div>
+
+		<main id="main">
+			<div class="左">
+				<section id="我">
+					<img
+						aria-label="自画像"
+						class="头像 大尺寸"
+						src="/img/avatar.jpg"
+						alt="自画像"
+						title="头像"
+					/>
+					<h2>dsy4567</h2>
+					<span id="关注粉丝码龄"> 关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中 </span>
+					<br />
+					<span id="联系方式">
+						<a
+							href="https://qwq.dsy4567.cf/api/getemail"
+							title="电子邮箱"
+							id="电子邮箱"
+						>
+							<svg class="小尺寸" data-icon="电子邮箱"></svg>
+						</a>
+						<a href="https://qwq.dsy4567.cf/api/getemail" title="Telegram" id="tg">
+							<svg class="小尺寸" data-icon="Telegram"></svg>
+						</a>
+						<a href="https://github.com/dsy4567" title="GitHub">
+							<svg class="小尺寸" data-icon="GitHub"></svg>
+						</a>
+						<a href="https://x.com/dsy4567" title="X">
+							<svg class="小尺寸" data-icon="X"></svg>
+						</a>
+						<a href="https://weibo.com/dsy4567" title="微博">
+							<svg class="小尺寸" data-icon="微博"></svg>
+						</a>
+						<a href="https://www.luogu.com.cn/user/776713" title="洛谷">
+							<svg class="小尺寸" data-icon="洛谷"></svg>
+						</a>
+						<a href="/rss.xml" title="RSS" id="rss">
+							<svg class="小尺寸" data-icon="RSS"></svg>
+						</a>
+					</span>
+				</section>
+				<section class="一言">
+					<h2>
+						<svg class="小尺寸" data-icon="一言"></svg>
+						<span>一言</span>
+					</h2>
+					<p id="一言">加载中</p>
+					<a href="#">查看详细信息</a>
+				</section>
+			</div>
+			<div aria-hidden="true" id="分界线">
+				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
+			</div>
+			<article class="右">
+				<!-- BEGIN MAIN -->
+				<section><h1 id="（更新中）记一次解除希沃管家锁屏的键盘按键屏蔽，并绕过锁屏">（更新中）记一次解除希沃管家锁屏的键盘按键屏蔽，并绕过锁屏</h1>
+<blockquote>
+<p>注意：本文所述方法是笔者脑子一热想出来的新破解思路，可行性尚未在校验证。</p>
+</blockquote>
+<h2 id="写在前面">写在前面</h2>
+<p>众所周知，越来越多的学校买了希沃一体机和集控，而其中某些学校设置的锁屏严重影响了学生课间劳逸结合。在同学们的强烈要求下，我开始走上了研究解锁方法这条不归路。</p>
+<p>起初，我使用火绒的 访问控制 &gt; 程序执行控制 阻止希沃管家主程序运行，但这样一体机会失去一部分实用的功能（好像也无所谓），且会大大增加网管提着大刀来找你的概率（笔者学校这方面管得似乎不严）。直到发现希沃管家利用键盘钩子屏蔽按键后，笔者脑子一热，想出来下面的新点子。</p>
+<!-- more -->
+
+<h2 id="前期分析">前期分析</h2>
+<p>在对希沃管家主程序一顿翻腾后，<code>C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoServiceAssistant\resources\assets\dlls\KeyBoardHookFfi.dll</code> 这个文件引起了我的怀疑。从文件名可知，它应该与键盘钩子有关，可以用来屏蔽 win 等按键。</p>
+<p>使用 Dependency Walker 查看入口函数名，以及解包 <code>app.asar</code> 并查看 <code>main.js</code> 后得知，这个 dll 文件拥有两个返回值类型为 <code>bool</code> 的入口函数：<code>SetKeyboardHook</code> 和 <code>UnHookKeyBoard</code>。在得知以上信息后，就可以尝试编写用来掉包的 dll 文件。</p>
+<p><img src="/blog/fuck-seewo-keyboard-hook/img/devtools.webp" alt="使用 DevTools 格式化 main.js，并找到键盘钩子相关代码" loading="lazy">
+<img src="/blog/fuck-seewo-keyboard-hook/img/dw.webp" alt="使用 Dependency Walker 打开 KeyBoardHookFfi.dll" loading="lazy"></p>
+<h2 id="安装-mingw，写代码">安装 mingw，写代码</h2>
+<blockquote>
+<p>如无特别说明，本节所有操作均在 GitHub Codespaces 上进行，谁叫笔者用的电脑垃圾呢。</p>
+</blockquote>
+<p>在终端执行以下命令，安装 mingw。</p>
+<pre><code class="language-bash">sudo apt install g++-mingw-w64-i686 -y
+</code></pre>
+<p>新建一个 <code>KeyBoardHookFfi.c</code> 文件，粘贴以下代码。</p>
+<pre><code class="language-cpp">// 代码修改自 https://github.com/node-ffi/node-ffi/blob/master/example/factorial/factorial.c
+#include &lt;stdbool.h&gt;
+
+#if defined(WIN32) || defined(_WIN32)
+#define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
+#endif
+
+// 两个什么都不干的函数
+EXPORT bool SetKeyboardHook() {
+  return true;
+}
+EXPORT bool UnHookKeyBoard() {
+  return true;
+}
+</code></pre>
+<p>编译 dll 文件，然后右键下载。</p>
+<pre><code class="language-bash">i686-w64-mingw32-gcc ./KeyBoardHookFfi.c -o ./KeyBoardHookFfi.dll -shared -fPIC
+</code></pre>
+<h2 id="调包">调包</h2>
+<p>找到 <code>C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoServiceAssistant\resources\assets\dlls\KeyBoardHookFfi.dll</code> 这个文件后，备份并使用“文件粉碎机”或在 WinRE 下删除此文件，然后将上面的 dll 文件复制粘贴到 dll 所在文件夹（是先 <strong>删除</strong> 再 <strong>复制粘贴</strong>）。如果提示“你需要提供管理员权限才能复制到此文件夹”，直接点击“继续”即可。</p>
+<p><img src="/blog/fuck-seewo-keyboard-hook/img/dlls-dictionary.webp" alt="dlls 文件夹" loading="lazy"></p>
+<p>使用任务管理器杀死希沃管家进程，并重新启动管家，也可以重启电脑/注销并重新登录。</p>
+<p>如果希沃管家启动时报错，请参照下方<a href="#%E8%B8%A9%E5%9D%91">踩坑</a>部分解决问题。如果无法解决，请参考上述步骤删除已经调包的 dll 文件，并还原。</p>
+<h2 id="解除窗口置顶">解除窗口置顶</h2>
+<p>咕~</p>
+<h2 id="更多骚操作">更多骚操作</h2>
+<blockquote>
+<p>以下操作亦会大大增加网管提着大刀来找你的概率，请三思而后行。</p>
+</blockquote>
+<ul>
+<li>将以下程序加入火绒的 访问控制 &gt; 程序执行控制：</li>
+<li><code>C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\screenCapture\screenCapture.exe</code> - 截屏录屏</li>
+<li><code>C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\media_capture\media_capture.exe</code> - 摄像头</li>
+<li><code>C:\Program Files (x86)\Seewo\SeewoService\SeewoService_x.x.x.xxxx\SeewoCore\toolbox\rtcRemoteDesktop\rtcRemoteDesktop.exe</code> - 远程控制</li>
+<li>将<a href="https://help.seewo.com/hugo/ANlS310tQJ">这里面</a>提到的域名写到 hosts 文件里，解析到无法访问的 IP。</li>
+</ul>
+<h2 id="踩坑">踩坑</h2>
+<p>希沃管家启动时报错：<code>Uncaught Exception: Dynamic Linking Error: Win32 error 126/193</code>：</p>
+<ul>
+<li>原因 1: 入口函数名拼写有误；</li>
+<li>原因 2: dll 文件应为 32 位，而不是 64 位。</li>
+</ul>
+<h2 id="附件笔者的希沃管家信息">附件&amp;笔者的希沃管家信息</h2>
+<ul>
+<li>希沃管家版本号：v1.4.0.3393</li>
+<li>用来调包的 dll：<a href="https://qwq.dsy4567.cf/files-2/KeyBoardHookFfi.dll">KeyBoardHookFfi.dll</a></li>
+<li>调包前的 dll 备份：<a href="https://qwq.dsy4567.cf/files-2/KeyBoardHookFfi-backed-up.dll">KeyBoardHookFfi-backed-up.dll</a></li>
+</ul>
+<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，本作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br /><span class="淡化">发表于: 2023/10/21 21:28:24, 更新于: 2023/10/21 21:28:24</br>标签: <a href="/blog.html?tag=技术">技术</a> <a href="/blog.html?tag=希沃">希沃</a> </span>
+				</section>
+				<script id="当前文章信息" type="application/json">{"updated":"2023-10-21T13:28:24.271Z","date":"2023-10-21T13:28:24.271Z","issue":26,"tags":["技术","希沃"],"id":"fuck-seewo-keyboard-hook","title":"（更新中）记一次解除希沃管家锁屏的键盘按键屏蔽，并绕过锁屏","desc":"# （更新中）记一次解除希沃管家锁屏的键盘按键屏蔽，并绕过锁屏\n\n> 注意：本文所述方法是笔者脑子一热想出来的新破解思路，可行性尚未在校验证。\n\n## 写在前面\n\n众所周知，越来越多的学校买了希沃一体机和集控，而其中某些学校设置的锁屏严重影响了学生课间劳逸结合。在同学们的强烈要求下，我开始走上了研究解锁方法这条不归路。\n\n起初，我使用火绒的 访问控制 > 程序执行控制 阻止希沃管家主程序运行，但这样一体机会失去一部分实用的功能（好像也无所谓），且会大大增加网管提着大刀来找你的概率（笔者学校这方面管得似乎不严）。直到发现希沃管家利用键盘钩子屏蔽按键后，笔者脑子一热，想出来下面的新点子。\n\n","desc_text":" 注意：本文所述方法是笔者脑子一热想出来的新破解思路，可行性尚未在校验证。  写在前面 众所周知，越来越多的学校买了希沃一体机和集控，而其中某些学校设置的锁屏严重影响了学生课间劳逸结合。在同学们的强烈要求下，我开始走上了研究解锁方法这条不归路。 起初，我使用火绒的 访问控制 > 程序执行控制 阻止希沃管家主程序运行，但这样一体机会失去一部分实用的功能（好像也无所谓），且会大大增加网管提着大刀来找你的概率（笔者学校这方面管得似乎不严）。直到发现希沃管家利用键盘钩子屏蔽按键后，笔者脑子一热，想出来下面的新点子。...","cover":"https://dsy4567.github.io/blog/fuck-seewo-keyboard-hook/img/devtools.webp"}</script>
+				<!-- END MAIN -->
+			</article>
+		</main>
+
+		<footer id="copyright">
+			© 2022-2023
+			<a href="https://github.com/dsy4567">dsy4567</a><br />
+			<a href="https://icp.gov.moe/?keyword=20230212" target="_blank">萌ICP备20230212号</a>
+			|
+			<a href="https://beian.miit.gov.cn/" target="_blank"
+				>陕ICP备 备<span id="fuck">&#20320;&#22920;</span>的案</a
+			><br />
+			<!-- 修改代码时必须保留此链接和原作者信息, 可以添加修改后源代码的链接及作者信息 -->
+			Powered by
+			<a href="https://github.com/dsy4567/dsy4567.github.io">dsy4567/dsy4567.github.io</a>
+		</footer>
+		<noscript>
+			<div>请启用 JavaScript 以获得更好的浏览体验</div>
+		</noscript>
+		<link disabled rel="stylesheet" href="/css/font.css" />
+		<script src="/js/main.js" type="module" async></script>
+	</body>
+</html>
