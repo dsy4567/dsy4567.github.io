@@ -228,8 +228,7 @@ html {
 	scroll-behavior: smooth;
 }
 body {
-/* 	background-color: var(--theme-color); */
-	background-image: linear-gradient(to bottom right, var(--bg-color-dark) 0%, var(--bg-color-dark-2) 100%);
+	background-color: var(--theme-color);
 	color: var(--text-color);
 	display: flex;
 	flex-direction: column;
