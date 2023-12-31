@@ -335,7 +335,7 @@ fetch("/json/theme.json")
 		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 	})
 	.catch(e => console.error(e));
-fetch("https://dsy4567.cf/api/hitokoto")
+fetch("https://dsy4567.fucksc.cf/api/hitokoto")
 	.then(res => res.json())
 	.then(j => {
 		const f = () => {
@@ -402,7 +402,7 @@ addEventListener("copy", () => {
             <div id="g-recaptcha"></div><br />
             <button id="recaptcha">开始人机验证/提交</button>
             <button id="close_recaptcha">关闭</button>
-            <a href="https://qwq.dsy4567.cf/api/getemail">在新标签页验证</a><br/>
+            <a href="https://qwq.dsy4567.fucksc.cf/api/getemail">在新标签页验证</a><br/>
             要查看 dsy4567 的电子邮箱地址/TG 用户名，请通过 reCAPTCHA 人机验证。<br />
             继续查看电子邮箱地址即代表您同意不向 dsy4567<br />
             发送广告/要饭/雇童工/炒币等垃圾邮件。`,
@@ -431,7 +431,7 @@ addEventListener("copy", () => {
 								if (!回复) throw new Error();
 								gr.innerHTML = await (
 									await fetch(
-										"https://qwq.dsy4567.cf/api/getemail?g-recaptcha-response=" +
+										"https://qwq.dsy4567.fucksc.cf/api/getemail?g-recaptcha-response=" +
 											回复
 									)
 								).text();
@@ -455,7 +455,7 @@ addEventListener("copy", () => {
 					})
 					.catch(() => {
 						console.error("无法加载 reCAPTCHA");
-						open("https://qwq.dsy4567.cf/api/getemail", "_blank");
+						open("https://qwq.dsy4567.fucksc.cf/api/getemail", "_blank");
 						div.remove();
 					});
 			});

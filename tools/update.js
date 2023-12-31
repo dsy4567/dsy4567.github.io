@@ -44,7 +44,7 @@ let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 `,
 	readme = `## 📚 文章列表
 
-> **Note**: 在 <https://dsy4567.cf/blog.html> 上阅读体验更佳
+> **Note**: 在 <https://dsy4567.eu.org/blog.html> 上阅读体验更佳
 
 `;
 
@@ -105,11 +105,11 @@ f.forEach((file, i) => {
 
 		// prettier-ignore
 		html = html.replace(/<!-- BEGIN OG -->.+<!-- END OG -->/s, `<!-- BEGIN OG -->
-		<meta property="og:url" content="https://dsy4567.cf/blog/${j.id}/" />
+		<meta property="og:url" content="https://dsy4567.eu.org/blog/${j.id}/" />
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="${html2Escape(j.title || "无标题")} | 博客 | dsy4567 的小站" />
 		<meta property="og:description" content="${html2Escape(j.desc_text || "记录 dsy4567 的折腾经验、技术分享、编程笔记")}" />
-		<meta property="og:image" content="${j.cover || "https://dsy4567.cf/img/bg.jpg"}" />
+		<meta property="og:image" content="${j.cover || "https://dsy4567.eu.org/img/bg.jpg"}" />
 		<!-- END OG -->`);
 
 		html = html.replace(
@@ -199,7 +199,7 @@ fs.writeFileSync("./blog/README.md", readme);
 
 console.log("ncm");
 axios
-	.get("https://ncm.vercel.dsy4567.cf/playlist/track/all?id=8219428260", {
+	.get("https://ncm.vercel.dsy4567.fucksc.cf/playlist/track/all?id=8219428260", {
 		responseType: "json",
 	})
 	.then(res => {

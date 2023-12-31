@@ -1,25 +1,10 @@
 [
     {
-        "updated": "2023-10-21T14:13:04.116Z",
-        "date": "2023-10-21T13:28:24.271Z",
-        "issue": 26,
-        "tags": [
-            "技术",
-            "希沃"
-        ],
-        "hidden": true,
-        "id": "fuck-seewo-keyboard-hook",
-        "title": "（更新中）记一次解除希沃管家锁屏的键盘按键屏蔽，并绕过锁屏",
-        "desc": "# （更新中）记一次解除希沃管家锁屏的键盘按键屏蔽，并绕过锁屏\n\n> 注意：本文所述方法是笔者脑子一热想出来的新破解思路，可行性尚未在校验证。\n\n## 写在前面\n\n众所周知，越来越多的学校买了希沃一体机和集控，而其中某些学校设置的锁屏严重影响了学生课间劳逸结合（？。在同学们的强烈要求下，我开始走上了研究解锁方法这条不归路。\n\n起初，我使用火绒的 访问控制 > 程序执行控制 阻止希沃管家主程序运行，但这样一体机会失去一部分实用的功能（好像也无所谓），且会大大增加网管提着大刀来找你的概率（笔者学校这方面管得似乎不严）。直到发现希沃管家利用键盘钩子（hook）屏蔽按键后，笔者脑子一热，想出来下面的新点子。\n\n",
-        "desc_text": " 注意：本文所述方法是笔者脑子一热想出来的新破解思路，可行性尚未在校验证。  写在前面 众所周知，越来越多的学校买了希沃一体机和集控，而其中某些学校设置的锁屏严重影响了学生课间劳逸结合（？。在同学们的强烈要求下，我开始走上了研究解锁方法这条不归路。 起初，我使用火绒的 访问控制 > 程序执行控制 阻止希沃管家主程序运行，但这样一体机会失去一部分实用的功能（好像也无所谓），且会大大增加网管提着大刀来找你的概率（笔者学校这方面管得似乎不严）。直到发现希沃管家利用键盘钩子（hook）屏蔽按键后，笔者脑子一热，想出来下面的新点子。...",
-        "cover": "https://dsy4567.github.io/blog/fuck-seewo-keyboard-hook/img/devtools.webp"
-    },
-    {
         "updated": "2023-08-22T13:10:35.171Z",
         "date": "2023-08-22T13:10:35.171Z",
         "issue": 15,
-        "url": "https://qwq.dsy4567.cf/blog/vercel-dev-sidecar-fq/index.md",
-        "cover": "https://qwq.dsy4567.cf/blog/vercel-dev-sidecar-fq/image/ds.png",
+        "url": "https://qwq.dsy4567.fucksc.cf/blog/vercel-dev-sidecar-fq/index.md",
+        "cover": "https://qwq.dsy4567.fucksc.cf/blog/vercel-dev-sidecar-fq/image/ds.png",
         "tags": [
             "技术",
             "科学上网",
@@ -70,7 +55,7 @@
         "title": "使用 CloudFlare Workers 免费搭建 Virtual Judge 反代",
         "desc": "# 使用 CloudFlare Workers 免费搭建 Virtual Judge 反代\n\n最近闲的没事干，受 [如何科学地制作一个镜像反代站点](https://blog.immccn123.xyz/archives/362) 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。\n\n",
         "desc_text": "最近闲的没事干，受 如何科学地制作一个镜像反代站点 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。...",
-        "cover": "https://dsy4567.cf/blog/cf-workers-ip/img/workers.webp"
+        "cover": "https://dsy4567.eu.org/blog/cf-workers-ip/img/workers.webp"
     },
     {
         "updated": "2023-02-13T09:55:45.491Z",
@@ -97,20 +82,6 @@
         "id": "P1932",
         "title": "P1932 题解",
         "desc": "# P1932 题解\n\n",
-        "desc_text": "此文章无法提供描述...",
-        "cover": "https://dsy4567.github.io/img/bg.jpg"
-    },
-    {
-        "updated": "2023-02-07T17:37:32.065Z",
-        "date": "2023-02-04T04:59:21.580Z",
-        "issue": 8,
-        "hidden": true,
-        "tags": [
-            "水文"
-        ],
-        "id": "mirrors",
-        "title": "镜像站列表",
-        "desc": "# 镜像站列表\n\n",
         "desc_text": "此文章无法提供描述...",
         "cover": "https://dsy4567.github.io/img/bg.jpg"
     },
