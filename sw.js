@@ -3,11 +3,11 @@
 "use strict";
 
 // const 要缓存的资源 = [
-//     "https://ncm.vercel.dsy4567.fucksc.cf/playlist/track/all?id=",
-//     "https://ncm.vercel.dsy4567.fucksc.cf/mv/detail?mvid=",
-//     "https://ncm.vercel.dsy4567.fucksc.cf/lyric?id=",
+//     "https://ncm.vercel.dsy4567.eu.org/playlist/track/all?id=",
+//     "https://ncm.vercel.dsy4567.eu.org/mv/detail?mvid=",
+//     "https://ncm.vercel.dsy4567.eu.org/lyric?id=",
 //     "https://api.github.com/users/dsy4567",
-//     "https://dsy4567.fucksc.cf/api/hitokoto",
+//     "https://dsy4567.eu.org/api/hitokoto",
 //     "https://camo.githubusercontent.com/",
 //     "/css/hl.min.css",
 //     "/img/avatar.jpg",

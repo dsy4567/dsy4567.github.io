@@ -199,7 +199,7 @@ fs.writeFileSync("./blog/README.md", readme);
 
 console.log("ncm");
 axios
-	.get("https://ncm.vercel.dsy4567.fucksc.cf/playlist/track/all?id=8219428260", {
+	.get("https://ncm.vercel.dsy4567.eu.org/playlist/track/all?id=9123680760", {
 		responseType: "json",
 	})
 	.then(res => {
