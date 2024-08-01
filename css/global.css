@@ -224,7 +224,7 @@ html {
 	--bg-color-light: 0;
 	--link-color: var(--text-color);
 	--border-radius: 8px;
-	--hostname: "dsy4567.eu.org";
+	--hostname: "dsy4567.icu";
 	scroll-behavior: smooth;
 }
 body {
@@ -939,4 +939,14 @@ main > .分界线 {
 	border-radius: 50%;
 	width: 16px;
 	height: 16px;
+}
+
+.横幅 {
+	background-color: var(--bg-color-dark-2);
+	font-size: larger;
+	padding: 2px;
+	position: fixed;
+	bottom: 0;
+	text-align: center;
+	width: 100%;
 }

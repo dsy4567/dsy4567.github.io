@@ -13,7 +13,7 @@ let 网抑云阴乐 = {
 	重试timeout: -1,
 	已初始化: false,
 	立即播放: false,
-	设置: { 音量: 50 / 100, 随机播放: false, 域名: "ncm.vercel.dsy4567.eu.org" },
+	设置: { 音量: 50 / 100, 随机播放: false, 域名: "ncm.vercel.dsy4567.icu" },
 	/** @type {歌单[]} */ 歌单: [],
 	/** @type {Record<number, number>} */ 歌单索引: {},
 	正在播放: {

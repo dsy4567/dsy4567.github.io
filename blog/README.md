@@ -1,6 +1,6 @@
 ## 📚 文章列表
 
-> **Note**: 在 <https://dsy4567.eu.org/blog.html> 上阅读体验更佳
+> **Note**: 在 <https://dsy4567.icu/blog.html> 上阅读体验更佳
 
 [用 Vercel + DevSidecar 实现科学上网](./vercel-dev-sidecar-fq/index.md)
 

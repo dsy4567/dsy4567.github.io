@@ -293,17 +293,4 @@ document.addEventListener("DOMContentLoaded", async () => {
 	DOMContentLoaded = true;
 });
 
-"serviceWorker" in navigator &&
-	//     location.hostname !== "dsy4567.github.io" &&
-	//     navigator.serviceWorker.register("/sw.js");
-	navigator.serviceWorker.getRegistrations().then(registrations => {
-		registrations.forEach(sw => sw.unregister());
-	});
-
-caches.keys().then(t => {
-	return Promise.all(
-		t.map(n => {
-			return caches.delete(n);
-		})
-	);
-});
+"serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
