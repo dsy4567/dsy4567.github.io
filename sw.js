@@ -2,74 +2,81 @@
 
 "use strict";
 
-// const 要缓存的资源 = [
-//     "https://ncm.vercel.dsy4567.eu.org/playlist/track/all?id=",
-//     "https://ncm.vercel.dsy4567.eu.org/mv/detail?mvid=",
-//     "https://ncm.vercel.dsy4567.eu.org/lyric?id=",
-//     "https://api.github.com/users/dsy4567",
-//     "https://dsy4567.eu.org/api/hitokoto",
-//     "https://camo.githubusercontent.com/",
-//     "/css/hl.min.css",
-//     "/img/avatar.jpg",
-//     "/js/highlight.min.js",
-//     "/js/lrc-parser.js",
-//     "/js/marked.min.js",
-// ];
-// const 要临时缓存的资源 = [
-//     "/index.html",
-//     "/blog.html",
-//     "/friends.html",
-//     "//",
-//     "/css/",
-//     "/js/",
-//     "/json/",
-// ];
-// let /** @type {Record<string, Cache>} */ 缓存 = {},
-//     /** @type {Cache} */ 临时缓存;
+const 可回退子域名 = {
+		qwq: ["qwq.dsy4567.icu", "qwq.dsy4567.eu.org", "ipv6-qwq.dsy4567.icu"],
+		"ncm.vercel": [
+			"ncm.vercel.dsy4567.icu",
+			"ncm.vercel.dsy4567.eu.org",
+			"ipv6-ncm-vercel.dsy4567.icu",
+		],
+		"": [
+			"dsy4567.icu",
+			"dsy4567.eu.org",
+			"dsy4567.github.io",
+			"ipv6.dsy4567.icu",
+			"dev.dsy4567.icu",
+		],
+	},
+	本站域名 = ["dsy4567.icu", "dsy4567.eu.org", "dsy4567.github.io", "dev.dsy4567.icu"];
 
-// for (let i = 0; i < 要缓存的资源.length; i++)
-//     要缓存的资源[i] = new URL(要缓存的资源[i], location.href);
-// for (let i = 0; i < 要临时缓存的资源.length; i++)
-//     要临时缓存的资源[i] = new URL(要临时缓存的资源[i], location.href);
+/**
+ * @returns {Promise<Response>}
+ */
+async function 回退(请求) {
+	return new Promise(async (resolve, reject) => {
+		try {
+			return resolve(
+				await fetch(请求.url, {
+					headers: 请求.headers,
+				}).then(响应 => {
+					if (!响应.ok) throw Error("非 2xx 响应");
+					return 响应;
+				})
+			);
+		} catch (e) {
+			console.error(e);
+		}
 
-// const 更新缓存 = async (
-//     /** @type {URL} */ 请求,
-//     /** @type {Response} */ 响应
-// ) => {
-//     if (!缓存[请求.hostname])
-//         缓存[请求.hostname] = await caches.open(请求.hostname);
-//     return await 缓存[请求.hostname].put(请求, 响应);
-// };
-// const 更新临时缓存 = async (
-//     /** @type {URL} */ 请求,
-//     /** @type {Response} */ 响应
-// ) => {
-//     if (!临时缓存) 临时缓存 = await caches.open("temp");
-//     return await 临时缓存.put(请求, 响应);
-// };
-// const 读取缓存 = async (/** @type {URL} */ 请求) => {
-//     if (!缓存[请求.hostname])
-//         缓存[请求.hostname] = await caches.open(请求.hostname);
-//     return await 缓存[请求.hostname].match(请求);
-// };
-// const 读取临时缓存 = async (/** @type {URL} */ 请求) => {
-//     if (!临时缓存) 临时缓存 = await caches.open("temp");
-//     return await 临时缓存.match(请求, { ignoreSearch: true });
-// };
+		let 所有错误 = [],
+			重试次数 = 0;
+		while (1) {
+			let u = new URL(请求.url),
+				将要回退的域名 = "";
+			for (const 子域名 of Object.keys(可回退子域名)) {
+				if (
+					!!子域名
+						? u.hostname.startsWith(子域名)
+						: 可回退子域名[子域名].includes(u.hostname)
+				) {
+					将要回退的域名 = u.hostname = 可回退子域名[子域名][重试次数];
+					break;
+				}
+			}
+			if (!将要回退的域名) {
+				console.error("回退失败", 请求, 所有错误);
+				return reject();
+			}
+			try {
+				let 响应 = await fetch(u, {
+					headers: 请求.headers,
+				});
+				if (!响应.ok) throw Error("非 2xx 响应");
+				return resolve(响应);
+			} catch (e) {
+				所有错误.push(e);
+				重试次数++;
+			}
+		}
+	});
+}
+
+// 开发环境
+if (location.hostname === "dev.dsy4567.icu") {
+}
 
 self.addEventListener("activate", 事件 => {
 	console.log("SW 已激活");
 	事件.waitUntil(clients.claim());
-	// 事件.waitUntil(caches.delete("temp"));
-	事件.waitUntil(
-		caches.keys().then(t => {
-			return Promise.all(
-				t.map(n => {
-					return caches.delete(n);
-				})
-			);
-		})
-	);
 });
 
 self.addEventListener("install", 事件 => {
@@ -77,69 +84,33 @@ self.addEventListener("install", 事件 => {
 	self.skipWaiting();
 });
 
-self.addEventListener("fetch", 事件 => {
-	return; // NOTE: 破代码改完了再删掉这行
+self.addEventListener("fetch", async 事件 => {
+	try {
+		let 属于本站域名 = false,
+			/** @type {Request} */ 请求 = 事件.request,
+			u = new URL(请求.url);
+		if (请求.method !== "GET" || 请求.destination === "document") return;
+		if (本站域名.includes(u.hostname)) 属于本站域名 = true;
+		else
+			for (let i = 0; i < 本站域名.length; i++) {
+				if (u.hostname.endsWith("." + 本站域名[i])) {
+					属于本站域名 = true;
+					break;
+				}
+			}
 
-	let u = new URL(事件.request.url),
-		从缓存读取 = false,
-		从临时缓存读取 = false;
-	for (let i = 0; i < 要缓存的资源.length; i++) {
-		let u2 = 要缓存的资源[i];
-		if (u.host + u.pathname === u2.host + u2.pathname) {
-			从缓存读取 = true;
-			break;
+		if (属于本站域名) {
+			// let 响应 = fetch(请求.url, {
+			// 	headers: 请求.headers,
+			// })
+			// 	.then(响应 => {
+			// //		if (!响应.ok) throw Error("非 2xx 响应");
+			// 		return 响应;
+			// 	})
+			// 	.catch(e => 回退(请求, e));
+			事件.respondWith(回退(请求));
 		}
+	} catch (e) {
+		console.error(e);
 	}
-	if (u.hostname === location.hostname) {
-		u.search = "";
-		if (!从缓存读取)
-			if (u.pathname === "/") 从临时缓存读取 = true;
-			else
-				for (let i = 0; i < 要临时缓存的资源.length; i++) {
-					let u2 = 要临时缓存的资源[i];
-					if (u.pathname.startsWith(u2.pathname)) {
-						从临时缓存读取 = true;
-						break;
-					}
-				}
-	}
-
-	if (!从缓存读取 && !从临时缓存读取) return;
-
-	事件.respondWith(
-		(async () =>
-			new Promise(async (resolve, reject) => {
-				let resolved = false;
-
-				let 来自缓存的响应, 来自临时缓存的响应;
-				if (从缓存读取) 来自缓存的响应 = await 读取缓存(u);
-				else if (从临时缓存读取) 来自临时缓存的响应 = await 读取临时缓存(u);
-				if (来自缓存的响应 || 来自临时缓存的响应) {
-					resolve(来自缓存的响应 || 来自临时缓存的响应);
-					resolved = true;
-				}
-
-				try {
-					const 来自网络的请求 = await fetch(u);
-					从缓存读取 && 更新缓存(u, 来自网络的请求.clone());
-					从临时缓存读取 && 更新临时缓存(u, 来自网络的请求.clone());
-					!resolved && resolve(来自网络的请求);
-				} catch (e) {
-					!resolved &&
-						resolve(
-							new Response(
-								new Blob(["无法获取资源\n" + e], {
-									type: "text/plain;charset=utf8",
-								}),
-								{
-									status: 408,
-									headers: {
-										"Content-Type": "text/plain;charset=utf8",
-									},
-								}
-							)
-						);
-				}
-			}))()
-	);
 });
