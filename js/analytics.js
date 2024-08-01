@@ -3,7 +3,7 @@
 export default (() => {
 	if (location.hostname !== "dsy4567.icu" && location.hostname !== "dsy4567.github.io") return;
 	const /** @type {HTMLScriptElement} */ s1 = document.createElement("script"),
-		ga_id = location.hostname === "dsy4567.icu" ? "G-060YCRMSSH" : "G-N7WR0PVV4J";
+		ga_id = location.hostname === "dsy4567.icu" ? "G-9E9HPL4Y86" : "G-N7WR0PVV4J";
 	s1.async = s1.defer = true;
 	s1.src = "https://www.googletagmanager.com/gtag/js?id=" + ga_id;
 	document.body.append(s1);
