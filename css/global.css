@@ -435,6 +435,7 @@ body.宽屏 > main .右 {
 	display: flex;
 	max-width: 100%;
 	overflow: auto;
+	padding: 16px;
 }
 .组 > section {
 	max-width: 256px;

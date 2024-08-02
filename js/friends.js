@@ -4,7 +4,7 @@
 
 export async function main(/** @type {String} */ 路径) {
 	显示或隐藏进度条(false);
-	qsa("#友链 > div > section")?.forEach(元素 => {
+	qsa("#友链 ~ section")?.forEach(元素 => {
 		let a = 元素.querySelector("a"),
 			img = 元素.querySelector("img");
 		img.src =
