@@ -307,8 +307,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 	DOMContentLoaded = true;
 });
 
-"serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
-
 (() => {
 	const 网页访问者不为爬虫 = !navigator.userAgent.match(/bot|spider/gi);
 	let U = new URL(location.href);
@@ -360,3 +358,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 	};
 	DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 })();
+
+try {
+	"serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
+} catch (e) {
+	console.error(e);
+}
