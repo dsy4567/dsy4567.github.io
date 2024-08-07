@@ -275,6 +275,20 @@ function 添加悬浮卡片(/** @type {string} */ html, x = 0, y = 0, 失去焦�
 	失去焦点时隐藏 && div.addEventListener("focusout", () => div.remove());
 	return div;
 }
+function 添加横幅(/** @type {string} */ html) {
+	let div = ce("div");
+	div.className = "横幅";
+	div.innerHTML = `<span>${html}</span>`;
+	div.role = "alert";
+	document.body.append(div);
+	setTimeout(() => {
+		div.style.animationName = "隐藏";
+		setTimeout(() => {
+			div.remove();
+		}, 500);
+	}, 10000);
+	return div;
+}
 
 let URL发生变化事件 = new CustomEvent("URL发生变化"),
 	可以滚动到视图中 = false;
@@ -294,3 +308,55 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 "serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
+
+(() => {
+	const 网页访问者不为爬虫 = !navigator.userAgent.match(/bot|spider/gi);
+	let U = new URL(location.href);
+	const 删除url参数 = () => {
+		U.searchParams.delete("from-hostname");
+		U.searchParams.delete("from-non-icu-tld");
+		U.searchParams.delete("no-redirect");
+	};
+	const f = () => {
+		if (!location.hostname.endsWith("dsy4567.icu"))
+			if (
+				网页访问者不为爬虫 &&
+				(JSON.parse(U.searchParams.get("no-redirect") || "false") ||
+					JSON.parse(localStorage.getItem("no-redirect") || "false"))
+			) {
+				localStorage.setItem("no-redirect", "true");
+				let 横幅 = 添加横幅(
+						'本站已迁移至新域名 dsy4567.icu，您可以<a href="#">访问新域名</a>'
+					),
+					a = 横幅.querySelector("a");
+				删除url参数();
+				if (a?.href && a?.hostname) {
+					a.href = U.href;
+					a.hostname = "dsy4567.icu";
+				}
+			} else {
+				if (网页访问者不为爬虫) {
+					U.searchParams.set("from-non-icu-tld", "true");
+					U.searchParams.set("from-hostname", location.hostname);
+				} else 删除url参数();
+
+				U.hostname = "dsy4567.icu";
+				location.href = U.href;
+			}
+
+		let 原域名 = U.searchParams.get("from-hostname");
+		if (网页访问者不为爬虫 && JSON.parse(U.searchParams.get("from-non-icu-tld") || "false")) {
+			let 横幅 = 添加横幅('本站已迁移至新域名，您也可以<a href="#">访问原域名</a>'),
+				a = 横幅.querySelector("a");
+			删除url参数();
+			U.searchParams.set("no-redirect", "true");
+			if (原域名 && a?.href && a?.hostname) {
+				a.href = U.href;
+				a.hostname = 原域名;
+			}
+		}
+		删除url参数();
+		history.replaceState(history.state, "", U.href);
+	};
+	DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+})();

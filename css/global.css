@@ -943,6 +943,10 @@ main > .分界线 {
 }
 
 .横幅 {
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+	animation-iteration-count: 1;
+	/* animation-name: 隐藏; */
 	background-color: var(--bg-color-dark-2);
 	font-size: larger;
 	padding: 2px;
@@ -950,4 +954,5 @@ main > .分界线 {
 	bottom: 0;
 	text-align: center;
 	width: 100%;
+	z-index: 996;
 }
