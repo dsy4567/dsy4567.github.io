@@ -42,10 +42,17 @@ let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <updated>2023-01-22T12:48:59.719Z</updated>
     <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>
 `,
-	readme = `## 📚 文章列表
-
-> **Note**: 在 <https://dsy4567.icu/blog.html> 上阅读体验更佳
-
+	blog_index_html = `<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<!-- for noscript -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script>
+			location.pathname = "/blog.html";
+		</script>
+	</head>
+	<body>
 `;
 
 let f = fs.readdirSync("./blog/");
@@ -97,6 +104,7 @@ f.forEach((file, i) => {
 		parsedHtml = $("body").html();
 
 		let html = template;
+		html = html.replace(/<!-- BEGIN NOSCRIPT -->.+<!-- END NOSCRIPT -->/s, "");
 		// prettier-ignore
 		html = html.replace(/<!-- BEGIN META -->.+<!-- END META -->/s, `<!-- BEGIN META -->
 		<meta name="description" content="${html2Escape(j.desc_text || "dsy4567 的博客 - 记录 dsy4567 的折腾经验、技术分享、编程笔记")}" />
@@ -182,28 +190,38 @@ ${h}
     <loc>https://${hostname}/blog/${a.id}/</loc>
     <lastmod>${a.updated}</lastmod>
 </url>`;
-	readme += `[${a.title}](./${a.id}/index.md)\n\n`;
+	blog_index_html += `<p><a href="./${a.id}/">${a.title}</a></p>`;
 });
 
 rss += "</feed>";
 sitemap += "</urlset>";
-readme += `
-## ⚖️ 许可证
+blog_index_html += `
 
-[知识共享署名-相同方式共享 4.0 国际许可协议](./LICENSE.txt)
+<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，以上作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名</a>进行许可。
+
+</body>
+</html>
+
 `;
 
 fs.writeFileSync("./rss.xml", rss);
 fs.writeFileSync("./sitemap.xml", sitemap);
-fs.writeFileSync("./blog/README.md", readme);
+fs.writeFileSync("./blog/index.html", blog_index_html);
 
 console.log("ncm");
-axios
-	.get("https://ncm.vercel.dsy4567.icu/playlist/track/all?id=9123680760", {
-		responseType: "json",
-	})
+// axios
+// 	.get("https://ncm.vercel.dsy4567.icu/playlist/track/all?id=9123680760", {
+// 		responseType: "json",
+// 	})
+// 	.then(res => {
+// 		let j = res.data;
+// 		delete j.privileges;
+// 		jsonfile.writeFileSync("./json/ncm.json", j);
+// 	});
+require("NeteaseCloudMusicApi")
+	.playlist_track_all({ id: 9123680760 })
 	.then(res => {
-		let j = res.data;
+		let j = res.body;
 		delete j.privileges;
 		jsonfile.writeFileSync("./json/ncm.json", j);
 	});

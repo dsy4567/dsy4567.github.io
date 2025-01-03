@@ -388,7 +388,7 @@ main > #分界线 {
 	align-items: center;
 }
 body.宽屏 > main > #分界线 {
-	opacity: 0;
+	/* opacity: 0; */
 	margin-left: -40px;
 }
 main > #分界线 > svg {

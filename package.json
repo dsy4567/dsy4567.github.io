@@ -6,7 +6,8 @@
     "example": "example"
   },
   "scripts": {
-    "upd": "node ./tools/update.js"
+    "upd": "node ./tools/update.js",
+    "server": "./tools/server.sh"
   },
   "repository": {
     "type": "git",
@@ -19,6 +20,7 @@
   },
   "homepage": "https://github.com/dsy4567/dsy4567.github.io#readme",
   "dependencies": {
+    "NeteaseCloudMusicApi": "^4.25.0",
     "axios": "^1.7.2",
     "cheerio": "1.0.0-rc.12",
     "jsonfile": "^6.1.0",
