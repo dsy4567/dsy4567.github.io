@@ -35,7 +35,7 @@ let 网抑云阴乐 = {
 			((网抑云阴乐.设置.音量 * 100 + 25) % 125) / 100;
 	},
 	async 获取音乐地址(/** @type {number} */ id) {
-		let 数据 = (await (await fetch(`https://${网抑云阴乐.设置.域名}/song/url?id=${id}`)).json())
+		let 数据 = (await (await fetch(`https://${网抑云阴乐.设置.域名}/song/url?id=${id}&realIP=116.25.146.177`)).json())
 			?.data[0];
 		// vip 歌曲尝试获取 mv
 		if (数据?.fee === 0 || 数据?.fee === 8) return 数据?.url?.replace("http://", "https://");
