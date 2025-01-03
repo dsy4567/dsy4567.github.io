@@ -829,7 +829,7 @@ section#我 > img {
 }
 
 section#我 > img:hover {
-	transform: rotateZ(360deg);
+	transform: rotateY(180deg);
 }
 main > .右 > section:nth-child(1),
 main > .分界线 {
