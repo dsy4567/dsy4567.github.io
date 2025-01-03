@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<!-- Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="
+                        upgrade-insecure-requests;
+                        script-src 'self' *.googletagmanager.com www.recaptcha.net www.gstatic.cn www.gstatic.com static.cloudflareinsights.com;
+                        object-src none
+                    "
+		/>
+		<meta id="主题色" name="theme-color" content="#ddd" />
+		<meta id="robots" name="robots" content="all" />
+		<meta name="template" content="https://github.com/dsy4567/dsy4567.github.io" />
+		<!-- BEGIN META -->
+		<meta name="description" content="2024 年已经过去，在这一年里，我有多半时间都是在和浏览器打交道。逛完别人的博客后，我也学到并想尝试一下这个别样的总结方法。..." />
+		<title>2024 年总结——我在地址栏输入 A-Z，浏览器会补全哪些域名？ | 博客 | dsy4567 的小站</title>
+		<!-- END META -->
+		
+		<base target="_self" />
+		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+		<link
+			rel="alternate"
+			type="application/atom+xml"
+			title="博客 | dsy4567 的小站"
+			href="https://dsy4567.github.io/rss.xml"
+		/>
+
+		<link rel="dns-prefetch" href="https://fonts.googleapis.cn" />
+		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+		<link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
+
+		<link rel="modulepreload" href="/js/analytics.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/blog.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/main.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/marked.min.js" crossorigin="use-credentials" />
+		<link rel="modulepreload" href="/js/ncm.js" crossorigin="use-credentials" />
+		<link rel="preload" href="/js/highlight.min.js" as="script" crossorigin="use-credentials" />
+		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="use-credentials" />
+		<link
+			rel="preload"
+			href="https://dsy4567.icu/api/hitokoto"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link
+			rel="preload"
+			href="https://api.github.com/users/dsy4567"
+			as="fetch"
+			crossorigin="anonymous"
+		/>
+		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
+
+		<script src="/js/global.js"></script>
+		<link rel="stylesheet" href="/css/global.css" />
+
+		<!-- BEGIN OG -->
+		<meta property="og:url" content="https://dsy4567.icu/blog/2024-browser-history/" />
+		<meta property="og:type" content="article" />
+		<meta property="og:title" content="2024 年总结——我在地址栏输入 A-Z，浏览器会补全哪些域名？ | 博客 | dsy4567 的小站" />
+		<meta property="og:description" content="2024 年已经过去，在这一年里，我有多半时间都是在和浏览器打交道。逛完别人的博客后，我也学到并想尝试一下这个别样的总结方法。..." />
+		<meta property="og:image" content="https://dsy4567.github.io/img/bg.jpg" />
+		<!-- END OG -->
+	</head>
+	<body>
+		<a href="#main" class="隐藏链接">转到正文</a>
+		<div id="主侧边按钮" class="侧边按钮">
+			<button type="button" title="回到顶部" id="回到顶部">
+				<svg class="特小尺寸" data-icon="回到顶部"></svg>
+			</button>
+			<div class="拥有更多选项" type="button" title="网抑云阴乐" id="网抑云阴乐">
+				<img class="特小尺寸" id="网抑云阴乐封面" alt="封面" />
+				<svg aria-hidden="true" class="特小尺寸" data-icon="网抑云阴乐"></svg>
+				<div class="更多选项" id="阴乐控件"></div>
+				<div id="歌词"></div>
+			</div>
+			<div class="拥有更多选项" type="button" title="切换主题" id="切换主题">
+				<svg class="特小尺寸" data-icon="切换主题"></svg>
+				<div role="radiogroup" class="更多选项" id="所有主题"></div>
+			</div>
+		</div>
+
+		<nav id="导航栏">
+			<div class="左">
+				<a class="标题" href="/">dsy4567 的小站</a>
+			</div>
+			<div class="右">
+				<a href="/">
+					<svg class="特小尺寸" data-icon="首页"></svg>
+					<span>首页</span>
+				</a>
+				<a href="/blog.html">
+					<svg class="特小尺寸" data-icon="博客"></svg>
+					<span>博客</span>
+				</a>
+				<a href="/friends.html">
+					<svg class="特小尺寸" data-icon="友情链接"></svg>
+					<span>友链</span>
+				</a>
+			</div>
+		</nav>
+
+		<div class="进度条外面"><div class="进度条"></div></div>
+
+		<main id="main">
+			<div class="左">
+				<section id="我">
+					<img
+						aria-label="自画像"
+						class="头像 大尺寸"
+						src="/img/avatar.jpg"
+						alt="自画像"
+						title="头像"
+					/>
+					<h2>dsy4567</h2>
+					<span id="关注粉丝码龄"> 关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中 </span>
+					<br />
+					<span id="联系方式">
+						<a
+							href="https://qwq.dsy4567.icu/api/getemail"
+							title="电子邮箱"
+							id="电子邮箱"
+						>
+							<svg class="小尺寸" data-icon="电子邮箱"></svg>
+						</a>
+						<a href="https://qwq.dsy4567.icu/api/getemail" title="Telegram" id="tg">
+							<svg class="小尺寸" data-icon="Telegram"></svg>
+						</a>
+						<a href="https://github.com/dsy4567" title="GitHub">
+							<svg class="小尺寸" data-icon="GitHub"></svg>
+						</a>
+						<a href="https://x.com/dsy4567" title="X">
+							<svg class="小尺寸" data-icon="X"></svg>
+						</a>
+						<a href="https://weibo.com/dsy4567" title="微博">
+							<svg class="小尺寸" data-icon="微博"></svg>
+						</a>
+						<a href="https://www.luogu.com.cn/user/776713" title="洛谷">
+							<svg class="小尺寸" data-icon="洛谷"></svg>
+						</a>
+						<a href="/rss.xml" title="RSS" id="rss">
+							<svg class="小尺寸" data-icon="RSS"></svg>
+						</a>
+					</span>
+				</section>
+				<section class="一言">
+					<h2>
+						<svg class="小尺寸" data-icon="一言"></svg>
+						<span>一言</span>
+					</h2>
+					<p id="一言">加载中</p>
+					<a href="#">查看详细信息</a>
+				</section>
+			</div>
+			<div aria-hidden="true" id="分界线">
+				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
+			</div>
+			<article class="右">
+				<!-- BEGIN MAIN -->
+				<section><h1 id="2024-年总结我在地址栏输入-a-z，浏览器会补全哪些域名？">2024 年总结——我在地址栏输入 A-Z，浏览器会补全哪些域名？</h1>
+<p>2024 年已经过去，在这一年里，我有多半时间都是在和浏览器打交道。逛完别人的博客后，我也学到并想尝试一下这个别样的总结方法。</p>
+<!-- more -->
+
+<h2 id="a">A</h2>
+<ul>
+<li>archlinux.org：2024 年 7 月尝逝安装 Arch Linux，结果第一次就装废了，因急着干活遂换回 Deepin。</li>
+</ul>
+<h2 id="b">B</h2>
+<ul>
+<li>bilibili.com：2022年底/2023年初开号，2024年中旬开始重度使用并抛弃某音，至今已陪伴我 200+ 天。</li>
+<li>bing.com：必应搜索，不咋用（强制跳转 cn.bing.com）。</li>
+<li>bbs.deepin.org：Deepin 的论坛，偶尔会去逛，随缘解答问题。</li>
+<li>board.yang-qwq-top：某人的留言板，活跃用户似乎仅有我和站长。</li>
+</ul>
+<h2 id="c">C</h2>
+<ul>
+<li>cn.bing.com：必应搜索，同上。</li>
+<li>chatgpt.com：ChatGPT 2024 年官宣不登录即可使用。<spoiler>但我梯子不干净（悲</spoiler></li>
+</ul>
+<h2 id="d">D</h2>
+<ul>
+<li>dsy4567.icu：本站，没什么好说的（</li>
+<li>developer.mozilla.org：Web 开发少不了的网站，有最丰富的文档和相对完善的翻译。</li>
+<li>dash.cloudflare.com：Cloudflare 仪表盘在绑好域名和 GitHub 仓库后就没咋用过，网站访问统计等信息主要看邮件。</li>
+<li>deepin.org：我正在用的操作系统，减轻新手痛苦，节约老手时间。</li>
+</ul>
+<h2 id="e">E</h2>
+<p>无（</p>
+<h2 id="f">f</h2>
+<ul>
+<li>feixiaoqiu.com：原神抽卡分析。</li>
+</ul>
+<h2 id="g">G</h2>
+<ul>
+<li>greasyfork.org：油叉，有超多的用户脚本，可用来大幅提高上网冲浪体验，我也在上面发过脚本。</li>
+<li>github.com：全球最大的开源社区<spoiler>和同性交友网站（jiushi</spoiler>。</li>
+</ul>
+<h2 id="h">H</h2>
+<ul>
+<li>hellogithub.com：定期发布一些精选的 GitHub 项目。</li>
+</ul>
+<h2 id="j">J</h2>
+<ul>
+<li>juejin.cn：掘金上有大量优秀博文，是一个提升自我的好地方。</li>
+<li>jyshare.com：菜鸟工具，里面的正则表达式测试工具经常用。</li>
+</ul>
+<h2 id="k">K</h2>
+<ul>
+<li>kugou.com：除了一次要分析接口就没用过，2023 年初抛弃酷狗转网易云。</li>
+</ul>
+<h2 id="l">L</h2>
+<ul>
+<li>localhost：这个……也算吧（</li>
+</ul>
+<h2 id="m">M</h2>
+<ul>
+<li>music.163.com：2023 年初抛弃酷狗转网易云，年底开始高强度使用，至今已听 5000+ 首歌</li>
+<li>miyoushe.com：水社，2023 年底入原，2024 年 7 月先后入绝和铁。</li>
+</ul>
+<h2 id="n">N</h2>
+<ul>
+<li>ncm.vercel.dsy4567.icu：自建网易云音乐 API，用于测试自己写的第三方网易云客户端。<spoiler>2023 年 10 月因为这个号被冻了，<del>网易云你***</del></spoiler></li>
+<li>note.ms：公共笔记，我以前经常会备份和恢复 /ad 里的内容，有时候也会在这个网站玩一整晚。</li>
+</ul>
+<h2 id="o">O</h2>
+<ul>
+<li>outlook.live.com：挂后台收邮件。</li>
+</ul>
+<h2 id="p">P</h2>
+<ul>
+<li>paimon.moe：主要用来抽卡分析和养成规划。</li>
+</ul>
+<h2 id="q">Q</h2>
+<ul>
+<li>qwq.dsy4567.icu：杂物间/在别处发帖时的图床。</li>
+</ul>
+<h2 id="r">R</h2>
+<ul>
+<li>runoob.com：菜鸟教程，我会的 JavaScript、C++ 等编程语言前期都是在上面学的。</li>
+<li>ruanyifeng.com：阮一峰的网络日志，里面的科技爱好者周刊我几乎每周都看。</li>
+</ul>
+<h2 id="s">S</h2>
+<ul>
+<li>store.steampowered.com：只加心愿单，没钱买游戏。</li>
+<li>sr.mihoyo.com/cloud/：云崩铁，启动！</li>
+</ul>
+<h2 id="t">T</h2>
+<ul>
+<li>tldr.inbrowser.app：可以速查许多命令的常见用法。</li>
+<li>translate.google.com：谷歌翻译，个人认为使用体验中规中矩。</li>
+</ul>
+<h2 id="u">U</h2>
+<ul>
+<li>u.sb：烧饼博客，主要看上这简短的域名。</li>
+</ul>
+<h2 id="v">V</h2>
+<ul>
+<li>v2ex.com：又一个能让我逛半天的地方。</li>
+<li>vscode.dev：在线 VSCode 编辑器，嫌两个 Chromium 吃内存时会用。</li>
+</ul>
+<h2 id="w">W</h2>
+<ul>
+<li>web.telegram.org：纸飞机，加了杂七杂八的群，也和同好之友私聊过。</li>
+</ul>
+<h2 id="x">X</h2>
+<ul>
+<li>x.com：原推特，用来看外面<del>丰富多彩（？）</del>的世界。</li>
+</ul>
+<h2 id="y">Y</h2>
+<ul>
+<li>ys.mihoyo.com/cloud/：仅用于获取抽卡记录链接，键鼠实在操作不来（</li>
+<li>ypm.dsy4567.icu：自建 YesPlayMusic，万恶的网易云严打第三方客户端后就不用了（悲</li>
+</ul>
+<h2 id="z">Z</h2>
+<ul>
+<li>zhihu.com：一个问答网站，还是一个能让我逛半天的地方。</li>
+</ul>
+<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，本作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。<br /><span class="淡化">发表于: 2025/1/2 20:37:17, 更新于: 2025/1/2 20:37:17</br>标签: <a href="/blog.html?tag=水文">水文</a> </span>
+				</section>
+				<script id="当前文章信息" type="application/json">{"updated":"2025-01-02T12:37:17.008Z","date":"2025-01-02T12:37:17.008Z","issue":26,"tags":["水文"],"id":"2024-browser-history","title":"2024 年总结——我在地址栏输入 A-Z，浏览器会补全哪些域名？","desc":"# 2024 年总结——我在地址栏输入 A-Z，浏览器会补全哪些域名？\n\n2024 年已经过去，在这一年里，我有多半时间都是在和浏览器打交道。逛完别人的博客后，我也学到并想尝试一下这个别样的总结方法。\n\n","desc_text":"2024 年已经过去，在这一年里，我有多半时间都是在和浏览器打交道。逛完别人的博客后，我也学到并想尝试一下这个别样的总结方法。...","cover":"https://dsy4567.github.io/img/bg.jpg"}</script>
+				<!-- END MAIN -->
+			</article>
+		</main>
+
+		<footer id="copyright">
+			© 2022-2023
+			<a href="https://github.com/dsy4567">dsy4567</a><br />
+			<a href="https://icp.gov.moe/?keyword=20230212" target="_blank">萌ICP备20230212号</a>
+			|
+			<a href="https://beian.miit.gov.cn/" target="_blank"
+				>陕ICP备 备<span id="fuck">&#20320;&#22920;</span>的案</a
+			><br />
+			<!-- 修改代码时必须保留此链接和原作者信息, 可以添加修改后源代码的链接及作者信息 -->
+			Powered by
+			<a href="https://github.com/dsy4567/dsy4567.github.io">dsy4567/dsy4567.github.io</a>
+		</footer>
+		<noscript>
+			<div>请启用 JavaScript 以获得更好的浏览体验</div>
+		</noscript>
+		<link disabled rel="stylesheet" href="/css/font.css" />
+		<script src="/js/main.js" type="module" async></script>
+	</body>
+</html>
