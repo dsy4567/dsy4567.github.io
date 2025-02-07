@@ -56,21 +56,6 @@
 	</head>
 	<body>
 		<a href="#main" class="隐藏链接">转到正文</a>
-		<div id="主侧边按钮" class="侧边按钮">
-			<button type="button" title="回到顶部" id="回到顶部">
-				<svg class="特小尺寸" data-icon="回到顶部"></svg>
-			</button>
-			<div class="拥有更多选项" type="button" title="网抑云阴乐" id="网抑云阴乐">
-				<img class="特小尺寸" id="网抑云阴乐封面" alt="封面" />
-				<svg aria-hidden="true" class="特小尺寸" data-icon="网抑云阴乐"></svg>
-				<div class="更多选项" id="阴乐控件"></div>
-				<div id="歌词"></div>
-			</div>
-			<div class="拥有更多选项" type="button" title="切换主题" id="切换主题">
-				<svg class="特小尺寸" data-icon="切换主题"></svg>
-				<div role="radiogroup" class="更多选项" id="所有主题"></div>
-			</div>
-		</div>
 
 		<nav id="导航栏">
 			<div class="左">
@@ -92,9 +77,25 @@
 			</div>
 		</nav>
 
+		<div id="主侧边按钮" class="侧边按钮">
+			<button type="button" title="回到顶部" id="回到顶部">
+				<svg class="特小尺寸" data-icon="回到顶部"></svg>
+			</button>
+			<div class="拥有更多选项" type="button" title="网抑云阴乐" id="网抑云阴乐">
+				<img class="特小尺寸" id="网抑云阴乐封面" alt="封面" />
+				<svg aria-hidden="true" class="特小尺寸" data-icon="网抑云阴乐"></svg>
+				<div class="更多选项" id="阴乐控件"></div>
+				<div id="歌词"></div>
+			</div>
+			<div class="拥有更多选项" type="button" title="切换主题" id="切换主题">
+				<svg class="特小尺寸" data-icon="切换主题"></svg>
+				<div role="radiogroup" class="更多选项" id="所有主题"></div>
+			</div>
+		</div>
+
 		<div class="进度条外面"><div class="进度条"></div></div>
 
-		<main id="main">
+		<main>
 			<div class="左">
 				<section id="我">
 					<img
@@ -105,7 +106,7 @@
 						title="头像"
 					/>
 					<h2>dsy4567</h2>
-					<span id="关注粉丝码龄"> 关注: 加载中 | 粉丝: 加载中 | 码龄: 加载中 </span>
+					<span id="关注被关注码龄"> 关注: 加载中 | 被关注: 加载中 | 码龄: 加载中 </span>
 					<br />
 					<span id="联系方式">
 						<a
@@ -147,7 +148,7 @@
 			<div aria-hidden="true" id="分界线">
 				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
 			</div>
-			<article class="右">
+			<article class="右" id="main">
 				<!-- BEGIN MAIN -->
 
 				<section id="友链">

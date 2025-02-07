@@ -371,9 +371,9 @@ fetch("https://api.github.com/users/dsy4567")
 	.then(res => res.json())
 	.then(个人信息 => {
 		const f = () => {
-			const 关注粉丝码龄 = gd("关注粉丝码龄");
-			if (!关注粉丝码龄) return;
-			关注粉丝码龄.innerHTML = ` 关注: ${个人信息.following} | 粉丝: ${
+			const 关注被关注码龄 = gd("关注被关注码龄");
+			if (!关注被关注码龄) return;
+			关注被关注码龄.innerHTML = ` 关注: ${个人信息.following} | 被关注: ${
 				个人信息.followers
 			} | 码龄: ${new Date().getFullYear() - new Date(个人信息.created_at).getFullYear()}年 `;
 		};
