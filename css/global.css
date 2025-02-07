@@ -209,7 +209,7 @@ html {
 	--bg-color: hsl(
 		calc(var(--theme-color-h) * 360),
 		calc(var(--theme-color-s) * 100%),
-		calc(var(--theme-color-l) * 100% - 3%)
+		calc(var(--theme-color-l) * 100% + 4%)
 	);
 	--bg-color-dark: hsl(
 		calc(var(--theme-color-h) * 360),
@@ -219,7 +219,7 @@ html {
 	--bg-color-dark-2: hsl(
 		calc(var(--theme-color-h) * 360),
 		calc(var(--theme-color-s) * 100%),
-		calc(var(--theme-color-l) * 100% + 3%)
+		calc(var(--theme-color-l) * 100% + 2%)
 	);
 	--bg-color-light: 0;
 	--link-color: var(--text-color);
@@ -492,7 +492,7 @@ section {
 	word-break: break-word;
 }
 section section {
-	background-color: var(--bg-color-dark);
+	background-color: var(--bg-color-dark-2);
 }
 section h2 {
 	display: flex;

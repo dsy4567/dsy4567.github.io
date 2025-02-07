@@ -16,26 +16,26 @@
 		"--text-color": "#222"
 	},
 	"粉色": {
-		"--theme-color": "#ffc8ff",
+		"--theme-color": "#f0bef0",
 		"--theme-color-h": 0.83,
-		"--theme-color-s": 1.0,
-		"--theme-color-l": 0.89,
+		"--theme-color-s": 0.63,
+		"--theme-color-l": 0.84,
 		"--theme-color-transparent": "#fff2",
 		"--text-color": "#222"
 	},
-	"橙黄色": {
-		"--theme-color": "#ffc880",
-		"--theme-color-h": 0.1,
-		"--theme-color-s": 1.0,
-		"--theme-color-l": 0.65,
+	"橙色": {
+		"--theme-color": "#f0c882",
+		"--theme-color-h": 0.11,
+		"--theme-color-s": 0.79,
+		"--theme-color-l": 0.73,
 		"--theme-color-transparent": "#fff2",
 		"--text-color": "#222"
 	},
 	"绿色": {
-		"--theme-color": "#77ffbb",
-		"--theme-color-h": 0.45,
-		"--theme-color-s": 0.8,
-		"--theme-color-l": 0.5,
+		"--theme-color": "#96dcb4",
+		"--theme-color-h": 0.4,
+		"--theme-color-s": 0.5,
+		"--theme-color-l": 0.73,
 		"--theme-color-transparent": "#fff2",
 		"--text-color": "#222"
 	},
@@ -56,11 +56,11 @@
 		"--text-color": "#222"
 	},
 	"紫色": {
-		"--theme-color": "#4d2673",
-		"--theme-color-h": 0.75,
-		"--theme-color-s": 0.5,
-		"--theme-color-l": 0.3,
+		"--theme-color": "#c8aadc",
+		"--theme-color-h": 0.77,
+		"--theme-color-s": 0.42,
+		"--theme-color-l": 0.76,
 		"--theme-color-transparent": "#fff2",
-		"--text-color": "#ccc"
+		"--text-color": "#222"
 	}
 }
