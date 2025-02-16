@@ -37,7 +37,7 @@ export async function main(/** @type {String} */ 路径) {
 					html +
 					(html.includes('<nocopyright value="true"></nocopyright>')
 						? ""
-						: '<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，本作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">CC BY-NC-SA 4.0</a>进行许可。<br />');
+						: '<hr />如无特别说明，本作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">CC BY-NC-SA 4.0</a>进行许可。<br />');
 
 				span.innerHTML = `发表于: ${new Date(
 					当前文章信息.date
