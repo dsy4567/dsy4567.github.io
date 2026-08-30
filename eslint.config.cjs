@@ -9,7 +9,7 @@ module.exports = defineConfig([
 	},
 
 	// ========== 基础推荐规则（全员生效）==========
-	js.configs.recommended,
+	// js.configs.recommended,
 
 	// ========== Web 前端代码（ES Module + 浏览器环境）==========
 	{
