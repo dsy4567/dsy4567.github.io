@@ -1,33 +1,33 @@
 {
-  "name": "dsy4567.github.io",
-  "version": "1.0.0",
-  "description": "90%自己造轮子的个人网站, 0% Vue/React/Bootstrap",
-  "directories": {
-    "example": "example"
-  },
-  "scripts": {
-    "upd": "node ./tools/update.js",
-    "server": "./tools/server.sh"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dsy4567/dsy4567.github.io.git"
-  },
-  "author": "dsy4567",
-  "license": "SEE LICENSE IN LICENSE.md",
-  "bugs": {
-    "url": "https://github.com/dsy4567/dsy4567.github.io/issues"
-  },
-  "homepage": "https://github.com/dsy4567/dsy4567.github.io#readme",
-  "dependencies": {
-    "NeteaseCloudMusicApi": "^4.25.0",
-    "axios": "^1.7.2",
-    "cheerio": "1.0.0-rc.12",
-    "jsonfile": "^6.1.0",
-    "marked": "^4.3.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.14.13",
-    "eslint": "^10.9.1"
-  }
+	"name": "dsy4567.github.io",
+	"version": "1.0.0",
+	"description": "90%自己造轮子的个人网站, 0% Vue/React/Bootstrap",
+	"directories": {
+		"example": "example"
+	},
+	"scripts": {
+		"build": "node ./tools/build-blog.js",
+		"server": "./tools/server.sh"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/dsy4567/dsy4567.github.io.git"
+	},
+	"author": "dsy4567",
+	"license": "SEE LICENSE IN LICENSE.md",
+	"bugs": {
+		"url": "https://github.com/dsy4567/dsy4567.github.io/issues"
+	},
+	"homepage": "https://github.com/dsy4567/dsy4567.github.io#readme",
+	"dependencies": {
+		"NeteaseCloudMusicApi": "^4.25.0",
+		"axios": "^1.7.2",
+		"cheerio": "1.0.0-rc.12",
+		"jsonfile": "^6.1.0",
+		"marked": "^4.3.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.14.13",
+		"eslint": "^10.9.1"
+	}
 }
