@@ -1,6 +1,6 @@
-# dsy4567 的小站
+> Warning: 除了避坑指南，此文件其他部分未经授权不得修改。
 
-一个 90% 自己造轮子做的个人网站
+## 项目描述
 
 ## 📁 目录结构
 
@@ -25,6 +25,7 @@
 ├── package.json                # npm 包信息与脚本
 ├── pnpm-lock.yaml              # pnpm 依赖锁定文件
 ├── vercel.json                 # Vercel 配置
+├── todo.txt                    # 待办事项 (不入库)
 ├── _vercel/                    # Vercel 自动生成的资源
 ├── api/                        # Vercel Serverless 函数
 ├── blog/                       # 博客文章
@@ -38,37 +39,28 @@
 
 > Note: 未提及的文件不是网站的一部分, 它们曾因为无处安放而存储于此
 
-## 🔨 功能和特色
+## 编码规范
 
--   对 IE /老旧 Chrome 有着高达 -114514% 的兼容性(最低兼容到 360 只因速浏览器)
--   网抑云阴乐
--   博客(前端渲染+评论)
--   8 种主题 + 自定义主题
--   RSS 订阅
--   一丢丢无障碍适配
+## Agents 行为约束
 
-## 👖 第三方库/接口
+### Git 提交规范
 
--   [ByteDance IconPark](https://github.com/bytedance/IconPark)
--   <https://api.github.com>
--   [highlight.js](https://github.com/highlightjs/highlight.js/)
--   [Marked](https://github.com/markedjs/marked)
--   [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
--   [自托管一言接口](https://github.com/dsy4567/hitokoto-api)
+- 完成用户的编码任务后，第一步主动编写 git 提交信息，第二步询问用户是否需要直接提交，提交信息格式参考如下：
 
-## ⚖️ 许可证
+    ```text
+    <符合 gitmoji 规范的 emoji 字符> <简要描述>
 
-MIT & CC BY-NC-SA 4.0
+    - <对更改的详细说明>
+    - ...
+    ```
 
-欢迎在遵守许可证的前提下使用/贡献代码 🎉
+    - emoji 和简要描述间隔一个空格
+    - 如果更改非常简单，允许不编写详细说明
+    - 如果选择编写详细说明，注意包含空行和 markdown 无序列表
+    - 使用简体中文
 
-> 修改代码时必须保留页脚最后一行的仓库链接和原作者信息, 以及代码顶部的版权信息,
-> 可以添加修改后代码的仓库链接及作者信息
->
-> ```html
-> Powered by <a href="https://github.com/dsy4567/dsy4567.github.io">dsy4567/dsy4567.github.io</a>
-> ```
->
-> ```js
-> /* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
-> ```
+## 避坑指南
+
+> Note: 允许随时编辑`AGENTS.md`文件的此部分，以完善避坑指南。
+
+（待补充）
