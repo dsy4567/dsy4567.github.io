@@ -27,7 +27,9 @@
 		"marked": "^4.3.0"
 	},
 	"devDependencies": {
+		"@eslint/js": "^10.0.1",
 		"@types/node": "^20.14.13",
-		"eslint": "^10.9.1"
+		"eslint": "^10.9.1",
+		"globals": "^17.11.0"
 	}
 }
