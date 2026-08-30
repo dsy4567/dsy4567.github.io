@@ -307,22 +307,38 @@ document.addEventListener("DOMContentLoaded", async () => {
 	DOMContentLoaded = true;
 });
 
-(() => {
-	const 网页访问者不为爬虫 = !navigator.userAgent.match(/bot|spider/gi);
-	let U = new URL(location.href);
-	const 删除url参数 = () => {
-		U.searchParams.delete("from-hostname");
-		U.searchParams.delete("from-non-icu-tld");
-		U.searchParams.delete("no-redirect");
-	};
-	const f = () => {
-		if (!location.hostname.endsWith("dsy4567.icu"))
+// 域名迁移：非 .icu 域名自动跳转到新域名 dsy4567.icu
+// 流程：
+//   1. 爬虫 / 本地环境 / 已在新域名 → 不做任何处理
+//   2. 用户选择过「不跳转」（URL 参数或 localStorage 的 no-redirect）→ 仅弹横幅提示新域名
+//   3. 其余情况 → 自动跳转并在 URL 携带来源参数，供新域名页面弹「回原域名」横幅
+try {
+	(() => {
+		const 网页访问者不为爬虫 = !navigator.userAgent.match(/bot|spider/gi);
+		// 所有改写先在 URL 副本上进行，最后统一生效
+		let U = new URL(location.href);
+		// 删除迁移流程专用的 URL 参数：
+		// from-hostname（来源域名）、from-non-icu-tld（来自非 .icu 域名）、no-redirect（用户选择不跳转）
+		const 删除url参数 = () => {
+			U.searchParams.delete("from-hostname");
+			U.searchParams.delete("from-non-icu-tld");
+			U.searchParams.delete("no-redirect");
+		};
+		const 本地域名 = ["dev.dsy4567.icu", "localhost", "127.0.0.1"];
+		const f = () => {
+			// 已在 dsy4567.icu（含子域名）或黑名单域名上则无需处理
+			if (location.hostname.endsWith("dsy4567.icu") || 本地域名.includes(location.hostname))
+				return;
+
+			// 情况 A：用户已选择「不跳转」→ 仅弹横幅提示，不强制跳转
 			if (
 				网页访问者不为爬虫 &&
 				(JSON.parse(U.searchParams.get("no-redirect") || "false") ||
 					JSON.parse(localStorage.getItem("no-redirect") || "false"))
 			) {
+				// 持久化选择，之后即使 URL 不带 no-redirect 也不再自动跳转
 				localStorage.setItem("no-redirect", "true");
+				// 弹横幅，并把横幅内链接指向新域名的同路径页面
 				let 横幅 = 添加横幅(
 						'本站已迁移至新域名 dsy4567.icu，您可以<a href="#">访问新域名</a>'
 					),
@@ -333,7 +349,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 					a.hostname = "dsy4567.icu";
 				}
 			} else {
+				// 情况 B：默认自动跳转到新域名
 				if (网页访问者不为爬虫) {
+					// 在 URL 上记录来源信息，供新域名页面弹「回原域名」横幅使用
 					U.searchParams.set("from-non-icu-tld", "true");
 					U.searchParams.set("from-hostname", location.hostname);
 				} else 删除url参数();
@@ -342,22 +360,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 				location.href = U.href;
 			}
 
-		let 原域名 = U.searchParams.get("from-hostname");
-		if (网页访问者不为爬虫 && JSON.parse(U.searchParams.get("from-non-icu-tld") || "false")) {
-			let 横幅 = 添加横幅('本站已迁移至新域名，您也可以<a href="#">访问原域名</a>'),
-				a = 横幅.querySelector("a");
-			删除url参数();
-			U.searchParams.set("no-redirect", "true");
-			if (原域名 && a?.href && a?.hostname) {
-				a.href = U.href;
-				a.hostname = 原域名;
+			// 情况 C：刚从旧域名跳来（URL 带 from-hostname）→ 在新域名上弹「回原域名」横幅
+			let 原域名 = U.searchParams.get("from-hostname");
+			if (
+				网页访问者不为爬虫 &&
+				JSON.parse(U.searchParams.get("from-non-icu-tld") || "false")
+			) {
+				let 横幅 = 添加横幅('本站已迁移至新域名，您也可以<a href="#">访问原域名</a>'),
+					a = 横幅.querySelector("a");
+				删除url参数();
+				// 给回跳链接带上 no-redirect=true，用户点回原域名后不会再被自动跳回，避免两个域名互相重定向
+				U.searchParams.set("no-redirect", "true");
+				if (原域名 && a?.href && a?.hostname) {
+					a.href = U.href;
+					a.hostname = 原域名;
+				}
 			}
-		}
-		删除url参数();
-		history.replaceState(history.state, "", U.href);
-	};
-	DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
-})();
+			// 清理辅助参数并同步到地址栏（replaceState 不会新增历史记录）
+			删除url参数();
+			history.replaceState(history.state, "", U.href);
+		};
+		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+	})();
+} catch (e) {
+	console.error(e);
+}
 
 try {
 	// "serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
