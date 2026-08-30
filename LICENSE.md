@@ -1,1 +1,1 @@
-dsy4567.github.io（本项目）的所有源代码以 [MIT](./LICENSE.MIT.txt) 许可证发布；所有图像、文字等资源以 [CC BY-NC-SA 4.0](./LICENSE.CC-BY-SA-4.0.txt) 发布。
+如无特别声明，dsy4567.github.io（本项目）的所有源代码以 [MIT](./LICENSE.MIT.txt) 许可证发布；其余资源（图像、文字等）以 [CC BY-NC-SA 4.0](./LICENSE.CC-BY-NC-SA-4.0.txt) 许可证发布。
