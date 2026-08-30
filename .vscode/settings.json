@@ -21,8 +21,6 @@
 	"[typescript]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
-	"commentTranslate.source": "Bing",
-	"commentTranslate.targetLanguage": "zh-CN",
 	"files.exclude": {
 		"out": false
 	},
