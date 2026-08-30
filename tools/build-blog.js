@@ -395,7 +395,7 @@ async function fetchNeteasePlaylist() {
 			});
 
 		if (!body) {
-			console.log("Skipping NCM file write due to API failure.");
+			console.warn("Skipping NCM file write due to API failure.");
 			return;
 		}
 
