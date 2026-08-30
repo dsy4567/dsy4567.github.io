@@ -6,7 +6,8 @@
 		"example": "example"
 	},
 	"scripts": {
-		"build": "node ./tools/build-blog.js",
+		"build": "node ./tools/handle-npm-build.js",
+		"build2": "node ./tools/build-blog.js",
 		"server": "./tools/server.sh"
 	},
 	"repository": {

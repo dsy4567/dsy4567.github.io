@@ -4,6 +4,7 @@
 const cheerio = require("cheerio");
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 const jsonfile = require("jsonfile");
 const { marked } = require("marked");
 
@@ -28,6 +29,9 @@ const CONFIG = {
 	blogIndexPath: "./blog/index.html",
 	ncmPlaylistId: 9123680760,
 	ncmOutputPath: "./json/ncm.json",
+	fileStatesPath: "./tools/file-states.json",
+	// 需追踪内容 hash 与「内容修改时间」的静态页面（相对项目根目录）
+	staticTrackedFiles: ["index.html", "blog.html", "friends.html"],
 	defaultCover: "https://dsy4567.github.io/img/bg.jpg",
 	timezone: "Asia/Shanghai",
 };
@@ -55,6 +59,18 @@ const CONFIG = {
  * @typedef {object} 构建结果
  * @property {文章元数据} meta - 补全后的文章元数据
  * @property {string} processedHtml - 处理后的文章 HTML
+ */
+
+/**
+ * 文件状态记录项（file-states.json 单条结构）
+ * @typedef {object} 文件状态
+ * @property {string} hash - 内容去空白后计算的 SHA-256 十六进制
+ * @property {string} updated - 内容修改时间（ISO 8601 + Z 后缀，UTC）
+ */
+
+/**
+ * 文件状态表（file-states.json 顶层结构：路径 → 状态）
+ * @typedef {Record<string, 文件状态>} 文件状态表
  */
 
 /**
@@ -160,6 +176,104 @@ function replaceTemplateBlock(template, blockName, content) {
 		regex,
 		`<!-- BEGIN ${blockName} -->\n${content}\n\t\t<!-- END ${blockName} -->`
 	);
+}
+
+/**
+ * 计算文件内容 hash：移除所有空白字符后取 SHA-256 十六进制
+ * @param {string} content - 文件原文
+ * @returns {string} SHA-256 十六进制（小写）
+ */
+function computeFileHash(content) {
+	const stripped = content.replace(/\s/g, "");
+	return crypto.createHash("sha256").update(stripped, "utf8").digest("hex");
+}
+
+/**
+ * 读取 file-states.json；文件不存在或解析失败时返回空状态表
+ * @returns {文件状态表}
+ */
+function readFileStates() {
+	try {
+		const data = jsonfile.readFileSync(CONFIG.fileStatesPath);
+		return data && typeof data === "object" ? data : {};
+	} catch (_err) {
+		return {};
+	}
+}
+
+/**
+ * 写回 file-states.json：键按路径排序，保证输出稳定以减少 git diff 噪声
+ * @param {文件状态表} states - 文件状态表
+ * @returns {void}
+ */
+function writeFileStates(states) {
+	const sorted = Object.keys(states)
+		.sort()
+		.reduce((/** @type {文件状态表} */ acc, key) => {
+			acc[key] = states[key];
+			return acc;
+		}, {});
+	jsonfile.writeFileSync(CONFIG.fileStatesPath, sorted, { spaces: 4 });
+}
+
+// ==================== 文件状态同步器 ====================
+
+/**
+ * 同步文件状态：遍历博客源文件与静态页面，按 hash 变化更新 updated，
+ * 并把博客文章的 updated 同步写回 article.json
+ * @returns {文件状态表} 更新后的状态表
+ */
+function syncFileStates() {
+	const states = readFileStates();
+	const now = new Date().toISOString();
+
+	// 1. 博客源文件：blog/<id>/index.md
+	const blogEntries = fs.readdirSync(CONFIG.blogDir);
+	for (const entry of blogEntries) {
+		const mdPath = path.join(CONFIG.blogDir, entry, "index.md");
+		const metaPath = path.join(CONFIG.blogDir, entry, "article.json");
+		if (!fs.existsSync(mdPath) || !fs.existsSync(metaPath)) continue;
+
+		const content = fs.readFileSync(mdPath, "utf-8");
+		const hash = computeFileHash(content);
+		const relPath = `blog/${entry}/index.md`;
+
+		const prev = states[relPath];
+		let updated;
+		if (!prev) {
+			// 首次追踪：用 article.json 的 date 作为初始 updated
+			const initialMeta = jsonfile.readFileSync(metaPath);
+			updated = new Date(initialMeta.date || new Date()).toISOString();
+		} else if (prev.hash !== hash) updated = now;
+		else updated = prev.updated;
+
+		states[relPath] = { hash, updated };
+
+		// 同步写回 article.json 的 updated：用文本替换以保留原格式
+		// （缩进、键顺序、数组单行写法等），避免不必要 diff
+		const metaRaw = fs.readFileSync(metaPath, "utf-8");
+		const updatedRegex = /(\s*"updated"\s*:\s*)"[^"]*"/;
+		if (updatedRegex.test(metaRaw)) {
+			const newMetaRaw = metaRaw.replace(updatedRegex, `$1"${updated}"`);
+			if (newMetaRaw !== metaRaw) fs.writeFileSync(metaPath, newMetaRaw);
+		}
+	}
+
+	// 2. 静态页面：index.html / blog.html / friends.html
+	for (const file of CONFIG.staticTrackedFiles) {
+		const filePath = path.join(projectRoot, file);
+		if (!fs.existsSync(filePath)) continue;
+		const content = fs.readFileSync(filePath, "utf-8");
+		const hash = computeFileHash(content);
+		const prev = states[file];
+		let updated;
+		if (!prev || prev.hash !== hash) updated = now;
+		else updated = prev.updated;
+		states[file] = { hash, updated };
+	}
+
+	writeFileStates(states);
+	return states;
 }
 
 // ==================== 文章处理器 ====================
@@ -286,9 +400,11 @@ class ArticleBuilder {
 class SiteGenerator {
 	/**
 	 * @param {文章元数据[]} articles - 文章元数据列表（构造时按更新时间倒序排序）
+	 * @param {文件状态表} [fileStates] - 文件状态表（用于 sitemap 静态页面 lastmod）
 	 */
-	constructor(articles) {
+	constructor(articles, fileStates) {
 		this.articles = articles.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+		this.fileStates = fileStates || {};
 	}
 
 	/**
@@ -296,12 +412,16 @@ class SiteGenerator {
 	 * @returns {void}
 	 */
 	generateRss() {
+		// feed 顶层 updated：取所有文章中最新的 updated（无文章时用当前时间）
+		const feedUpdated = this.articles.length
+			? new Date(Math.max(...this.articles.map(a => +new Date(a.updated)))).toISOString()
+			: new Date().toISOString();
 		let xml =
 			`<?xml version="1.0" encoding="UTF-8"?>\n<feed xmlns="https://www.w3.org/2005/Atom">\n` +
 			`    <title>博客 | dsy4567 的小站</title>\n` +
 			`    <link rel="alternate" type="text/html" href="https://${getDomain("infra")}/blog.html" />\n` +
 			`    <link rel="self" type="application/atom+xml" href="https://${getDomain("infra")}/rss.xml" />\n` +
-			`    <updated>${new Date()}</updated>\n` +
+			`    <updated>${feedUpdated}</updated>\n` +
 			`    <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>\n`;
 
 		for (const a of this.articles) {
@@ -332,22 +452,24 @@ class SiteGenerator {
 	 */
 	generateSitemap() {
 		let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+		// 已追踪的静态页面用 file-states 中的 updated；未追踪的（如 game.html）回退到 mtime
+		const trackedLastmod = (/** @type {string} */ file) =>
+			this.fileStates[file]?.updated || new Date().toISOString();
 		const staticPages = [
-			{
-				loc: `https://${getDomain("public")}/`,
-				lastmod: new Date(fs.statSync(path.join(projectRoot, "index.html")).mtime),
-			},
+			{ loc: `https://${getDomain("public")}/`, lastmod: trackedLastmod("index.html") },
 			{
 				loc: `https://${getDomain("public")}/blog.html`,
-				lastmod: new Date(fs.statSync(path.join(projectRoot, "blog.html")).mtime),
+				lastmod: trackedLastmod("blog.html"),
 			},
 			{
 				loc: `https://${getDomain("public")}/friends.html`,
-				lastmod: new Date(fs.statSync(path.join(projectRoot, "friends.html")).mtime),
+				lastmod: trackedLastmod("friends.html"),
 			},
 			{
 				loc: `https://${getDomain("public")}/game.html`,
-				lastmod: new Date(fs.statSync(path.join(projectRoot, "game.html")).mtime),
+				lastmod: new Date(
+					fs.statSync(path.join(projectRoot, "game.html")).mtime
+				).toISOString(),
 			},
 		];
 		for (const p of staticPages)
@@ -420,6 +542,9 @@ async function fetchNeteasePlaylist() {
  * @returns {Promise<void>}
  */
 async function main() {
+	console.log("Syncing file states...");
+	const fileStates = syncFileStates();
+
 	const template = loadTemplate();
 	const builder = new ArticleBuilder(template);
 
@@ -437,7 +562,7 @@ async function main() {
 	}
 
 	console.log("Generating aggregate files...");
-	const generator = new SiteGenerator(articles);
+	const generator = new SiteGenerator(articles, fileStates);
 	generator.generateJson();
 	generator.generateRss();
 	generator.generateSitemap();
