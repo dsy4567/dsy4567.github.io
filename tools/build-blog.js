@@ -156,7 +156,7 @@ function replaceTemplateBlock(template, blockName, content) {
 	const regex = new RegExp(`<!-- BEGIN ${blockName} -->.+<!-- END ${blockName} -->`, "s");
 	return template.replace(
 		regex,
-		`<!-- BEGIN ${blockName} -->\n${content}\n<!-- END ${blockName} -->`
+		`<!-- BEGIN ${blockName} -->\n${content}\n\t\t<!-- END ${blockName} -->`
 	);
 }
 
@@ -235,7 +235,7 @@ class ArticleBuilder {
 		html = replaceTemplateBlock(
 			html,
 			"META",
-			`<meta name="description" content="${metaDesc}" />\n\t\t` +
+			`\t\t<meta name="description" content="${metaDesc}" />\n\t\t` +
 				`<title>${metaTitle}</title>\n\t\t` +
 				`<link rel="canonical" href="https://${getDomain("public")}/blog/${meta.id}/" />`
 		);
@@ -244,7 +244,7 @@ class ArticleBuilder {
 		html = replaceTemplateBlock(
 			html,
 			"OG",
-			`<meta property="og:url" content="https://${getDomain("public")}/blog/${meta.id}/" />\n\t\t` +
+			`\t\t<meta property="og:url" content="https://${getDomain("public")}/blog/${meta.id}/" />\n\t\t` +
 				`<meta property="og:type" content="article" />\n\t\t` +
 				`<meta property="og:title" content="${metaTitle}" />\n\t\t` +
 				`<meta property="og:description" content="${escapeHtml(meta.desc_text || "记录 dsy4567 的折腾经验、技术分享、编程笔记")}" />\n\t\t` +
@@ -261,8 +261,8 @@ class ArticleBuilder {
 			.join(" ");
 
 		const mainContent = meta.url
-			? `<section id="正在加载文章提示">\n\t\t\t\t\t正在加载文章\n\t\t\t\t\t\t<noscript>在<a href="https://github.com/dsy4567/dsy4567.github.io/tree/main/blog">GitHub</a>上阅读文章</noscript>\n\t\t\t\t</section>`
-			: `<section>\n${processedHtml}\n${licenseHtml}\n\t\t\t\t\t<span class="淡化">发表于: ${formatDate(meta.date)}, 更新于: ${formatDate(meta.updated)}</br>标签: ${tagsHtml}</span>\n\t\t\t\t</section>`;
+			? `\t\t\t\t<section id="正在加载文章提示">\n\t\t\t\t\t正在加载文章\n\t\t\t\t\t\t<noscript>在<a href="https://github.com/dsy4567/dsy4567.github.io/tree/main/blog">GitHub</a>上阅读文章</noscript>\n\t\t\t\t</section>`
+			: `\t\t\t\t<section>\n${processedHtml}${licenseHtml}\n<span class="淡化">发表于: ${formatDate(meta.date)}, 更新于: ${formatDate(meta.updated)}</br>标签: ${tagsHtml}</span>\n\t\t\t\t</section>`;
 
 		html = replaceTemplateBlock(
 			html,
@@ -345,12 +345,12 @@ class SiteGenerator {
 				lastmod: "2023-08-23T15:11:58.607Z",
 			},
 		];
-		for (const p of staticPages) 
+		for (const p of staticPages)
 			xml += `    <url>\n        <loc>${p.loc}</loc>\n        <lastmod>${p.lastmod}</lastmod>\n    </url>\n`;
-		
-		for (const a of this.articles) 
+
+		for (const a of this.articles)
 			xml += `    <url>\n        <loc>https://${getDomain("public")}/blog/${a.id}/</loc>\n        <lastmod>${a.updated}</lastmod>\n    </url>\n`;
-		
+
 		xml += "</urlset>";
 		fs.writeFileSync(CONFIG.sitemapPath, xml);
 	}
@@ -361,9 +361,8 @@ class SiteGenerator {
 	 */
 	generateBlogIndex() {
 		let html = `<!DOCTYPE html>\n<html lang="zh-CN">\n\t<head>\n\t\t<meta charset="UTF-8" />\n\t\t<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n\t\t<script>location.pathname = "/blog.html";</script>\n\t</head>\n\t<body>\n`;
-		for (const a of this.articles) 
-			html += `\t\t<p><a href="./${a.id}/">${a.title}</a></p>\n`;
-		
+		for (const a of this.articles) html += `\t\t<p><a href="./${a.id}/">${a.title}</a></p>\n`;
+
 		html += `\n\t\t<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，以上作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名</a>进行许可。\n\t</body>\n</html>\n`;
 		fs.writeFileSync(CONFIG.blogIndexPath, html);
 	}
