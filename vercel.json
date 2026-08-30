@@ -1,4 +1,5 @@
 {
+	"$schema": "https://openapi.vercel.sh/vercel.json",
 	"headers": [
 		{
 			"source": "/api/hitokoto",
@@ -447,5 +448,9 @@
 			"source": "/b/:m*",
 			"destination": "/api/blog-og?id=:m"
 		}
-	]
+	],
+	"framework": null,
+	"buildCommand": null,
+	"installCommand": null,
+	"outputDirectory": "."
 }
