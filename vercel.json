@@ -30,7 +30,7 @@
 			]
 		},
 		{
-			"source": "/js/highlight.min.js",
+			"source": "/js/lib/highlight.min.js",
 			"headers": [
 				{
 					"key": "Cache-Control",
@@ -39,7 +39,7 @@
 			]
 		},
 		{
-			"source": "/js/lrc-parser.js",
+			"source": "/js/lib/lrc-parser.js",
 			"headers": [
 				{
 					"key": "Cache-Control",
@@ -48,7 +48,7 @@
 			]
 		},
 		{
-			"source": "/js/marked.min.js",
+			"source": "/js/lib/marked.min.js",
 			"headers": [
 				{
 					"key": "Cache-Control",

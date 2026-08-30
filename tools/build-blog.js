@@ -7,6 +7,8 @@ const path = require("path");
 const jsonfile = require("jsonfile");
 const { marked } = require("marked");
 
+const projectRoot = path.resolve(__dirname, "../");
+
 // ==================== 配置 ====================
 
 /**
@@ -299,7 +301,7 @@ class SiteGenerator {
 			`    <title>博客 | dsy4567 的小站</title>\n` +
 			`    <link rel="alternate" type="text/html" href="https://${getDomain("infra")}/blog.html" />\n` +
 			`    <link rel="self" type="application/atom+xml" href="https://${getDomain("infra")}/rss.xml" />\n` +
-			`    <updated>2023-01-22T12:48:59.719Z</updated>\n` +
+			`    <updated>${new Date()}</updated>\n` +
 			`    <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>\n`;
 
 		for (const a of this.articles) {
@@ -331,18 +333,21 @@ class SiteGenerator {
 	generateSitemap() {
 		let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">\n`;
 		const staticPages = [
-			{ loc: `https://${getDomain("public")}/`, lastmod: "2023-08-23T15:11:58.607Z" },
+			{
+				loc: `https://${getDomain("public")}/`,
+				lastmod: new Date(fs.statSync(path.join(projectRoot, "index.html")).mtime),
+			},
 			{
 				loc: `https://${getDomain("public")}/blog.html`,
-				lastmod: "2023-08-23T15:11:58.607Z",
+				lastmod: new Date(fs.statSync(path.join(projectRoot, "blog.html")).mtime),
 			},
 			{
 				loc: `https://${getDomain("public")}/friends.html`,
-				lastmod: "2023-08-23T15:11:58.607Z",
+				lastmod: new Date(fs.statSync(path.join(projectRoot, "friends.html")).mtime),
 			},
 			{
 				loc: `https://${getDomain("public")}/game.html`,
-				lastmod: "2023-08-23T15:11:58.607Z",
+				lastmod: new Date(fs.statSync(path.join(projectRoot, "game.html")).mtime),
 			},
 		];
 		for (const p of staticPages)

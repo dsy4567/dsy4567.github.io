@@ -6,17 +6,17 @@
 let /** @type {文章信息[]} */ 所有文章信息 = [],
 	路径 = 获取清理后的路径(true);
 
-添加脚本("/js/highlight.min.js");
+添加脚本("/js/lib/highlight.min.js");
 添加样式("/css/hl.min.css");
 
 export async function main(/** @type {String} */ 路径) {
 	// @ts-ignore
-	await import("/js/marked.min.js");
+	await import("/js/lib/marked.min.js");
 	const u = new URL(location.href),
 		id = u.searchParams.get("id"),
 		/** @type {文章信息 | null} */ 当前文章信息 = gd("当前文章信息")
 			? // @ts-ignore
-			  JSON.parse(gd("当前文章信息")?.text)
+				JSON.parse(gd("当前文章信息")?.text)
 			: null;
 	gd("当前文章信息")?.remove();
 	if (id) location.href = `/blog/${id}/`;
@@ -121,7 +121,7 @@ export async function main(/** @type {String} */ 路径) {
 			qs("main > .左", true)?.append(目录);
 
 			// 高亮
-			添加脚本("/js/highlight.min.js").then(() =>
+			添加脚本("/js/lib/highlight.min.js").then(() =>
 				右.querySelectorAll("pre > code").forEach(元素 => {
 					hljs.highlightElement(元素);
 					const s = 元素.classList[0]?.split("-")[1];
@@ -209,7 +209,7 @@ ${(() => {
 						sect.innerHTML = html;
 
 						// 高亮
-						添加脚本("/js/highlight.min.js").then(() =>
+						添加脚本("/js/lib/highlight.min.js").then(() =>
 							sect.querySelectorAll("pre > code").forEach(元素 => {
 								hljs.highlightElement(元素);
 								const s = 元素.classList[0]?.split("-")[1];
@@ -328,7 +328,7 @@ ${(() => {
 					});
 
 				// 高亮
-				添加脚本("/js/highlight.min.js").then(() => hljs.highlightAll());
+				添加脚本("/js/lib/highlight.min.js").then(() => hljs.highlightAll());
 				document.querySelectorAll("pre > code").forEach(元素 => {
 					const s = 元素.classList[0]?.split("-")[1];
 					元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");

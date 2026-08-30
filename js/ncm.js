@@ -219,7 +219,7 @@ let 网抑云阴乐 = {
 							网抑云阴乐.正在播放.所有歌词 = [];
 							return;
 						}
-						await 添加脚本("/js/lrc-parser.js");
+						await 添加脚本("/js/lib/lrc-parser.js");
 						let 所有歌词 = lrcParser(待解析歌词 + "[999:59.59]\n").scripts;
 						所有歌词.forEach(歌词 => {
 							let c = new VTTCue(歌词.start, 歌词.end, 歌词.text);
