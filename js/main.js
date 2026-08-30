@@ -1,4 +1,10 @@
-/* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
+/**
+ * @fileoverview 核心脚本，负责加载其他模块、图标渲染、处理页面事件等任务
+ * @author dsy4567
+ * @license
+ * Copyright (c) 2026 dsy4567
+ * SPDX-License-Identifier: MIT
+ */
 
 // @ts-check
 "use strict";
@@ -13,6 +19,7 @@ let 路径 = 获取清理后的路径(true),
 	正在动态加载 = false,
 	/** @type {Record<string, string | undefined>} */ 图标 = {};
 
+//#region 加载模块、动态加载、添加点击事件和设置图标
 function 加载模块() {
 	路径 = 获取清理后的路径();
 	let 路径2 = 获取清理后的路径(true);
@@ -81,7 +88,8 @@ function 动态加载(元素) {
 			显示或隐藏进度条(false);
 		});
 }
-function 添加点击事件和设置图标(/** @type {添加点击事件和设置图标选项} */ 选项 = {}) {
+/** 在新增元素时调用，以确保图标正常显示、点击事件正常触发 @param {添加点击事件和设置图标选项} 选项 */
+function 添加点击事件和设置图标(选项 = {}) {
 	if (typeof 选项.设置图标 === "undefined" ? true : 选项.设置图标)
 		for (const 元素 of 选项.要设置图标的元素?.[0]
 			? 选项.要设置图标的元素
@@ -91,9 +99,9 @@ function 添加点击事件和设置图标(/** @type {添加点击事件和设�
 			let c = 元素.getAttribute("class");
 			let h = c
 				? // @ts-ignore
-				  图标[元素.dataset.icon]?.replace(/特?小尺寸/, c)
+					图标[元素.dataset.icon]?.replace(/特?小尺寸/, c)
 				: // @ts-ignore
-				  图标[元素.dataset.icon];
+					图标[元素.dataset.icon];
 			h && (元素.outerHTML = h);
 		}
 	if (typeof 选项.添加链接点击事件 === "undefined" ? true : 选项.添加链接点击事件) {
@@ -126,7 +134,9 @@ function 添加点击事件和设置图标(/** @type {添加点击事件和设�
 		}
 	}
 }
-// 网抑云阴乐歌单+控件
+//#endregion
+
+//#region 网抑云阴乐歌单+控件
 !navigator.userAgent.match(/bot|spider/gi) &&
 	fetch("/json/ncm.json")
 		.then(res => res.json())
@@ -222,7 +232,9 @@ function 添加点击事件和设置图标(/** @type {添加点击事件和设�
 			DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 		})
 		.catch(e => console.error(e));
-// 主题
+//#endregion
+
+//#region 主题
 fetch("/json/theme.json")
 	.then(res => res.json())
 	.then(主题 => {
@@ -335,6 +347,9 @@ fetch("/json/theme.json")
 		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 	})
 	.catch(e => console.error(e));
+//#endregion
+
+//#region 一言
 fetch("https://dsy4567.icu/api/hitokoto")
 	.then(res => res.json())
 	.then(j => {
@@ -354,6 +369,9 @@ fetch("https://dsy4567.icu/api/hitokoto")
 		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 	})
 	.catch(e => console.error(e));
+//#endregion
+
+//#region 图标
 fetch("/json/icon.json")
 	.then(res => res.json())
 	.then(j => {
@@ -367,6 +385,9 @@ fetch("/json/icon.json")
 		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 	})
 	.catch(e => console.error(e));
+//#endregion
+
+//#region 关注被关注码龄
 fetch("https://api.github.com/users/dsy4567")
 	.then(res => res.json())
 	.then(个人信息 => {
@@ -380,12 +401,11 @@ fetch("https://api.github.com/users/dsy4567")
 		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 	})
 	.catch(e => console.error(e));
+//#endregion
 
-addEventListener("copy", () => {
-	提示("复制成功");
-});
 (() => {
 	const f = async () => {
+		//#region 核心元素、事件、字体css等
 		gd("回到顶部")?.addEventListener("click", () =>
 			document.body.scrollIntoView({ behavior: "smooth" })
 		);
@@ -393,6 +413,9 @@ addEventListener("copy", () => {
 			document.body.classList.toggle("宽屏");
 		});
 		qsa("link[disabled]").forEach(元素 => 元素.removeAttribute("disabled"));
+		//#endregion
+
+		//#region reCAPTCHA 获取邮箱/tg
 		[gd("电子邮箱"), gd("tg")].forEach(元素 => {
 			元素?.addEventListener("click", 事件 => {
 				事件.preventDefault();
@@ -460,19 +483,17 @@ addEventListener("copy", () => {
 					});
 			});
 		});
-		// gd("rss")?.addEventListener("click", 事件 => {
-		// 	// @ts-ignore
-		// 	const url = gd("rss")?.href;
-		// 	if (!url) return;
-		// 	navigator.clipboard.writeText(url);
-		// 	提示("已复制 RSS 订阅链接");
-		// 	事件.preventDefault();
-		// });
+		//#endregion
+
+		//#region 备案
 		let fuck = gd("fuck");
 		if (fuck)
 			fuck.innerText =
 				["\u4f60\u5988", "\u5c3c\u739b", "\u4f60\u5927\u7237", "\u5bc4\u5427"][随机数(3)] ||
 				"\u4f60\u5988";
+		//#endregion
+
+		//#region 导航栏
 		let scrollTop = 0,
 			状态 = -1;
 		const f = () => {
@@ -492,6 +513,9 @@ addEventListener("copy", () => {
 			scrollTop = document.documentElement.scrollTop;
 		};
 		addEventListener("scroll", f);
+		//#endregion
+
+		//#region 双击打开图片/复制代码
 		addEventListener("dblclick", 事件 => {
 			// 双击打开图片
 			const /** @type {HTMLImageElement | undefined} */ t1 =
@@ -499,10 +523,10 @@ addEventListener("copy", () => {
 					事件.target?.tagName === "IMG"
 						? 事件.target
 						: // @ts-ignore
-						事件.target?.parentElement.tagName === "IMG"
-						? // @ts-ignore
-						  事件?.target.parentElement
-						: undefined;
+							事件.target?.parentElement.tagName === "IMG"
+							? // @ts-ignore
+								事件?.target.parentElement
+							: undefined;
 			if (t1) return open(t1.src, "_blank");
 
 			// 复制代码
@@ -511,10 +535,10 @@ addEventListener("copy", () => {
 					事件.target?.classList.contains("hljs")
 						? 事件.target
 						: // @ts-ignore
-						事件.target?.parentElement.classList.contains("hljs")
-						? // @ts-ignore
-						  事件?.target.parentElement
-						: undefined;
+							事件.target?.parentElement.classList.contains("hljs")
+							? // @ts-ignore
+								事件?.target.parentElement
+							: undefined;
 			if (t2) {
 				t2.classList.add("已复制");
 				setTimeout(() => {
@@ -524,6 +548,9 @@ addEventListener("copy", () => {
 				事件.preventDefault();
 			}
 		});
+		//#endregion
+
+		//#region 初始化图标、事件，延后启用动画
 		添加点击事件和设置图标({
 			设置图标: false,
 		});
@@ -543,13 +570,21 @@ addEventListener("copy", () => {
 		setTimeout(() => {
 			document.head.append(style);
 		}, 500);
+		//#endregion
 
+		//#region 引入统计脚本
 		import("./analytics.js");
+		//#endregion
 	};
 
 	DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 })();
+
+addEventListener("copy", () => {
+	提示("复制成功");
+});
 addEventListener("popstate", 事件 => {
+	// hash 变化执行默认行为
 	if (获取清理后的路径(true) === 路径 || 事件.state?.路径 === 路径) return 事件.preventDefault();
 	动态加载({
 		href: location.pathname,

@@ -1,4 +1,13 @@
-/* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
+/**
+ * @fileoverview 适用于所有页面的统计脚本，包含 Google、Cloudflare、Vercel（废弃）统计服务
+ * @author dsy4567
+ * @license
+ * Copyright (c) 2026 dsy4567
+ * SPDX-License-Identifier: MIT
+ */
+
+// @ts-check
+"use strict";
 
 export default (() => {
 	if (location.hostname !== "dsy4567.icu" && location.hostname !== "dsy4567.github.io") return;

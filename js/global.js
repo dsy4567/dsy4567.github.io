@@ -1,8 +1,15 @@
-/* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
+/**
+ * @fileoverview 适用于所有页面的全局脚本，包含一些通用的函数和变量，还负责域名迁移、SW管理等任务
+ * @author dsy4567
+ * @license
+ * Copyright (c) 2026 dsy4567
+ * SPDX-License-Identifier: MIT
+ */
 
 // @ts-check
 "use strict";
 
+//#region 全局工具函数
 let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
 	/** @type {Record<string, HTMLElement | null>} */ qs缓存 = {},
 	/** @type {Record<string, {已完成加载: boolean, 回调: ((事件?: any) => void)[], 失败回调: ((错误?: any) => void)[]}>} */ 已添加的脚本 =
@@ -175,30 +182,7 @@ function 提示(m) {
 		}, 500);
 	}, 3000);
 }
-function 尽快设置主题色() {
-	if (localStorage.getItem("主题色h")) {
-		const 主题色 = localStorage.getItem("主题色") || "";
-		gd("主题色", true)?.setAttribute("content", 主题色);
-		document.documentElement.style.setProperty("--theme-color", 主题色);
-		document.documentElement.style.setProperty(
-			"--theme-color-h",
-			localStorage.getItem("主题色h")
-		);
-		document.documentElement.style.setProperty(
-			"--theme-color-s",
-			localStorage.getItem("主题色s")
-		);
-		document.documentElement.style.setProperty(
-			"--theme-color-l",
-			localStorage.getItem("主题色l")
-		);
-		document.documentElement.style.setProperty(
-			"--theme-color-transparent",
-			localStorage.getItem("透明色")
-		);
-		document.documentElement.style.setProperty("--text-color", localStorage.getItem("字体色"));
-	}
-}
+
 function 阻止搜索引擎收录() {
 	gd("robots", true)?.setAttribute("content", "noindex");
 }
@@ -289,8 +273,36 @@ function 添加横幅(/** @type {string} */ html) {
 	}, 10000);
 	return div;
 }
+//#endregion
+
+//#region 前期准备
+function 尽快设置主题色() {
+	if (localStorage.getItem("主题色h")) {
+		const 主题色 = localStorage.getItem("主题色") || "";
+		gd("主题色", true)?.setAttribute("content", 主题色);
+		document.documentElement.style.setProperty("--theme-color", 主题色);
+		document.documentElement.style.setProperty(
+			"--theme-color-h",
+			localStorage.getItem("主题色h")
+		);
+		document.documentElement.style.setProperty(
+			"--theme-color-s",
+			localStorage.getItem("主题色s")
+		);
+		document.documentElement.style.setProperty(
+			"--theme-color-l",
+			localStorage.getItem("主题色l")
+		);
+		document.documentElement.style.setProperty(
+			"--theme-color-transparent",
+			localStorage.getItem("透明色")
+		);
+		document.documentElement.style.setProperty("--text-color", localStorage.getItem("字体色"));
+	}
+}
 
 let URL发生变化事件 = new CustomEvent("URL发生变化"),
+	/** 在内容准备好后设为 true */
 	可以滚动到视图中 = false;
 
 // 方便暴露到全局变量
@@ -306,7 +318,9 @@ addEventListener("load", () => {
 document.addEventListener("DOMContentLoaded", async () => {
 	DOMContentLoaded = true;
 });
+//#endregion
 
+//#region 域名迁移
 // 域名迁移：非 .icu 域名自动跳转到新域名 dsy4567.icu
 // 流程：
 //   1. 爬虫 / 本地环境 / 已在新域名 → 不做任何处理
@@ -385,7 +399,9 @@ try {
 } catch (e) {
 	console.error(e);
 }
+//#endregion
 
+//#region SW管理
 try {
 	// "serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
 
@@ -394,10 +410,10 @@ try {
 		if ("serviceWorker" in navigator) {
 			// 1. 获取所有注册
 			const registrations = await navigator.serviceWorker.getRegistrations();
+
 			// 2. 逐个注销
-			for (let registration of registrations) {
-				await registration.unregister();
-			}
+			for (let registration of registrations) await registration.unregister();
+
 			// 3. 清理所有缓存
 			const cacheNames = await caches.keys();
 			await Promise.all(cacheNames.map(name => caches.delete(name)));
@@ -409,3 +425,4 @@ try {
 } catch (e) {
 	console.error(e);
 }
+//#endregion

@@ -1,3 +1,11 @@
+/**
+ * @fileoverview 定义一些全局类型
+ * @author dsy4567
+ * @license
+ * Copyright (c) 2026 dsy4567
+ * SPDX-License-Identifier: MIT
+ */
+
 type 音乐信息 = {
 	/** 歌名 */ name: string;
 	/** 歌手 */ ar: { name: string }[];

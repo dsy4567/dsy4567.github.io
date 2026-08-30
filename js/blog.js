@@ -1,5 +1,10 @@
-/* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
-
+/**
+ * @fileoverview 为 /blog.html 渲染博客相关元素
+ * @author dsy4567
+ * @license
+ * Copyright (c) 2026 dsy4567
+ * SPDX-License-Identifier: MIT
+ */
 // @ts-check
 "use strict";
 
@@ -12,6 +17,8 @@ let /** @type {文章信息[]} */ 所有文章信息 = [],
 export async function main(/** @type {String} */ 路径) {
 	// @ts-ignore
 	await import("/js/lib/marked.min.js");
+
+	//#region 初始化: 解析地址参数与文章信息, 旧版 ?id= 参数重定向到新路径
 	const u = new URL(location.href),
 		id = u.searchParams.get("id"),
 		/** @type {文章信息 | null} */ 当前文章信息 = gd("当前文章信息")
@@ -20,16 +27,20 @@ export async function main(/** @type {String} */ 路径) {
 			: null;
 	gd("当前文章信息")?.remove();
 	if (id) location.href = `/blog/${id}/`;
+	//#endregion
 
 	if (当前文章信息)
+		// /blog/<id>/
 		try {
 			if (!location.pathname.endsWith("/")) location.href = `/blog/${当前文章信息.id}/`;
 			const 右 = qs("main .右", true);
 			if (!右) return;
 
+			//#region 渲染文章正文
 			if (当前文章信息.url) {
 				let t = await (await fetch(当前文章信息.url)).text();
 
+				// 解析 Markdown、追加许可与元信息
 				let sect = ce("section"),
 					html = t && marked.parse(t),
 					span = ce("span");
@@ -64,6 +75,7 @@ export async function main(/** @type {String} */ 路径) {
 				}
 				右.append(sect);
 
+				// 更新标题和 SEO 元数据
 				document.title =
 					(sect.querySelector("h1")?.innerText || "无标题") + " | " + document.title;
 				qs("meta[name='description']")?.setAttribute(
@@ -84,8 +96,9 @@ export async function main(/** @type {String} */ 路径) {
 				);
 				qs('meta[property="og:image"]')?.setAttribute("content", 当前文章信息.cover);
 			}
+			//#endregion
 
-			// 目录
+			//#region 目录
 			let ul = ce("ul"),
 				目录 = ce("section");
 			let t1 = [0, 0, 0, 0, 0, 0],
@@ -119,8 +132,9 @@ export async function main(/** @type {String} */ 路径) {
 			目录.append(ul);
 			目录.classList.add("目录");
 			qs("main > .左", true)?.append(目录);
+			//#endregion
 
-			// 高亮
+			//#region 高亮
 			添加脚本("/js/lib/highlight.min.js").then(() =>
 				右.querySelectorAll("pre > code").forEach(元素 => {
 					hljs.highlightElement(元素);
@@ -128,11 +142,14 @@ export async function main(/** @type {String} */ 路径) {
 					元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
 				})
 			);
+			//#endregion
 
+			//#region 收尾
 			gd("正在加载文章提示")?.remove();
 			显示或隐藏进度条(false);
 			_global["main.js"]().添加点击事件和设置图标();
 			if (location.hash) {
+				// 滚动到hash位置
 				try {
 					qs(`[id="${decodeURI(location.hash.substring(1))}"] + *`)?.classList.add(
 						"标记"
@@ -145,7 +162,9 @@ export async function main(/** @type {String} */ 路径) {
 				右.scrollIntoView({
 					behavior: "smooth",
 				});
+			//#endregion
 
+			//#region 评论区
 			当前文章信息.issue &&
 				fetch(
 					`https://api.github.com/repos/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}/comments`
@@ -219,6 +238,7 @@ ${(() => {
 						右.append(sect);
 						_global["main.js"]().添加点击事件和设置图标();
 					});
+			//#endregion
 		} catch (e) {
 			console.error(e);
 			阻止搜索引擎收录();
@@ -228,6 +248,7 @@ ${(() => {
 				正在加载文章提示.innerText = "加载失败, 加载时可能遇到了错误, 或此文章不存在";
 		}
 	else if (获取清理后的路径() === "/blog")
+		// /blog.html
 		fetch("/json/blog.json")
 			.then(res => {
 				if (!res.ok) throw new Error("状态码异常");
@@ -241,6 +262,7 @@ ${(() => {
 				let 所有标签 = new Set(),
 					限定标签 = u.searchParams.get("tag");
 				for (const 文章 of j) {
+					//#region 渲染文章列表
 					文章.tags?.forEach(标签 => 所有标签.add(标签));
 					if (文章.hidden || (限定标签 && !文章.tags.includes(限定标签))) continue;
 					let a = ce("a"),
@@ -265,8 +287,9 @@ ${(() => {
 					})()}`;
 					span.classList.add("淡化");
 					sect.append(p, a, br, span);
+					//#endregion
 
-					// 设置大小和懒加载
+					//#region 设置大小和懒加载、文字选中优化
 					for (const img of sect.getElementsByTagName("img")) {
 						const m = img.alt.match(/^s:[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?/gi);
 						if (!m) continue;
@@ -294,8 +317,12 @@ ${(() => {
 						)
 							_global["main.js"]().动态加载(a);
 					});
+					//#endregion
+
 					右.append(sect);
 				}
+
+				//#region 渲染标签列表
 				let 标签元素 = ce("section"),
 					div = ce("div");
 				所有标签.forEach(标签 => {
@@ -318,7 +345,9 @@ ${(() => {
 				标签元素.classList.add("标签");
 				标签元素.append(div);
 				qs("main > .左", true)?.append(标签元素);
+				//#endregion
 
+				//#region 收尾、滚动视图、高亮
 				显示或隐藏进度条(false);
 				gd("正在加载文章提示")?.remove();
 				_global["main.js"]().添加点击事件和设置图标();
@@ -327,12 +356,12 @@ ${(() => {
 						behavior: "smooth",
 					});
 
-				// 高亮
 				添加脚本("/js/lib/highlight.min.js").then(() => hljs.highlightAll());
 				document.querySelectorAll("pre > code").forEach(元素 => {
 					const s = 元素.classList[0]?.split("-")[1];
 					元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
 				});
+				//#endregion
 			})
 			.catch(e => {
 				console.error(e);
@@ -343,6 +372,7 @@ ${(() => {
 			});
 }
 
+// 判断是否仅hash变化，如果是则移除目录和标签元素
 addEventListener("URL发生变化", () => {
 	if (路径 !== 获取清理后的路径(true)) {
 		路径 = 获取清理后的路径(true);
