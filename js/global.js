@@ -211,15 +211,15 @@ function 获取清理后的路径(包含search = false) {
 	return l
 		? l
 		: 包含search
-		? (清理后的路径缓存_包含search[location.pathname] =
-				location.pathname.replace(/(index|\.html)/g, "").replace(/\/\//g, "") +
-				location.search)
-		: (清理后的路径缓存[location.pathname] =
-				"/" +
-				location.pathname
-					.replace(/(index|\.html)/g, "")
-					.replace(/\/\//g, "")
-					.split("/")[1]);
+			? (清理后的路径缓存_包含search[location.pathname] =
+					location.pathname.replace(/(index|\.html)/g, "").replace(/\/\//g, "") +
+					location.search)
+			: (清理后的路径缓存[location.pathname] =
+					"/" +
+					location.pathname
+						.replace(/(index|\.html)/g, "")
+						.replace(/\/\//g, "")
+						.split("/")[1]);
 }
 function 随机数(/** @type {number} */ 最大) {
 	let r = Math.floor(Math.random() * (最大 + 1));
@@ -360,7 +360,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 })();
 
 try {
-	"serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
+	// "serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
+
+	// 移除 Service Worker 并清理缓存
+	async function removeServiceWorker() {
+		if ("serviceWorker" in navigator) {
+			// 1. 获取所有注册
+			const registrations = await navigator.serviceWorker.getRegistrations();
+			// 2. 逐个注销
+			for (let registration of registrations) {
+				await registration.unregister();
+			}
+			// 3. 清理所有缓存
+			const cacheNames = await caches.keys();
+			await Promise.all(cacheNames.map(name => caches.delete(name)));
+			console.log("Service Worker 已移除，缓存已清空");
+		}
+	}
+
+	removeServiceWorker().catch(e => console.error(e));
 } catch (e) {
 	console.error(e);
 }
