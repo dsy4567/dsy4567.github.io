@@ -22,7 +22,8 @@
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"files.exclude": {
-		"out": false
+		"out": false,
+		"js/lib/**": false
 	},
 	"prettier.arrowParens": "avoid",
 	"prettier.bracketSpacing": true,
