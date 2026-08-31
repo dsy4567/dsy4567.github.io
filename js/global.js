@@ -230,6 +230,19 @@ function 随机含零自然数(最大) {
 	return Math.floor(Math.random() * (最大 + 1));
 }
 /**
+ * 使用 Fisher-Yates 算法原地洗牌
+ * @template T
+ * @param {T[]} 数组 - 待洗牌的数组（会被原地修改）
+ * @returns {T[]} 洗牌后的数组（与传入数组为同一引用）
+ */
+function 洗牌(数组) {
+	for (let i = 数组.length - 1; i > 0; i--) {
+		let j = 随机含零自然数(i);
+		[数组[i], 数组[j]] = [数组[j], 数组[i]];
+	}
+	return 数组;
+}
+/**
  * 将 RGB 颜色转换为 HSL 颜色
  * @param {number} 红 - 红色分量，范围 0-255
  * @param {number} 绿 - 绿色分量，范围 0-255
