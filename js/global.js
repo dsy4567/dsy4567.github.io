@@ -205,10 +205,9 @@ function 获取清理后的路径(包含search = false) {
 						.replace(/\/\//g, "")
 						.split("/")[1]);
 }
-function 随机数(/** @type {number} */ 最大) {
-	let r = Math.floor(Math.random() * (最大 + 1));
-	if (r < 0) r = 0;
-	return r;
+function 随机含零自然数(/** @type {number} */ 最大) {
+	if (!Number.isInteger(最大) || 最大 < 0) throw new RangeError("最大必须是非负整数");
+	return Math.floor(Math.random() * (最大 + 1));
 }
 /**
  * @param {number} r

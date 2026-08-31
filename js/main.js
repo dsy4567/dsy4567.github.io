@@ -412,7 +412,7 @@ try {
 			if (fuck)
 				fuck.innerText =
 					["\u4f60\u5988", "\u5c3c\u739b", "\u4f60\u5927\u7237", "\u5bc4\u5427"][
-						随机数(3)
+						随机含零自然数(3)
 					] || "\u4f60\u5988";
 			//#endregion
 
