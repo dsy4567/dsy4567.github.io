@@ -15,7 +15,7 @@ let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
 	/** @type {Record<string, {已完成加载: boolean, 回调: ((事件?: any) => void)[], 失败回调: ((错误?: any) => void)[]}>} */ 已添加的脚本 =
 		{};
 /**
- * document.getElementById
+ * document.getElementById 的快捷方式，支持缓存
  * @param {string} s
  * @param {boolean} 缓存
  * @returns {HTMLElement | null}
@@ -28,7 +28,7 @@ function gd(s, 缓存 = false) {
 	return document.getElementById(s);
 }
 /**
- * document.querySelector
+ * document.querySelector 的快捷方式，支持缓存
  * @param {string} s
  * @param {boolean} 缓存
  * @returns {HTMLElement | null}
@@ -41,34 +41,40 @@ function qs(s, 缓存 = false) {
 	return document.querySelector(s);
 }
 /**
- * document.querySelectorAll
+ * document.querySelectorAll 的快捷方式
  * @type {typeof document.querySelectorAll}
  */
 const qsa = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
 	return document.querySelectorAll(s);
 };
 /**
- * document.getElementsByTagName
+ * document.getElementsByTagName 的快捷方式
  * @type {typeof document.getElementsByTagName}
  */
 const ge = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
 	return document.getElementsByTagName(s);
 };
 /**
- * document.createElement
+ * document.createElement 的快捷方式
  * @type {typeof document.createElement}
  */
 const ce = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
 	return document.createElement(s);
 };
-function 显示或隐藏进度条(/** @type {boolean} */ 状态) {
+/**
+ * 显示或隐藏页面顶部的进度条
+ * @param {boolean} 状态 - true 显示，false 隐藏
+ */
+function 显示或隐藏进度条(状态) {
 	状态
 		? qs(".进度条外面", true)?.classList.add("显示")
 		: qs(".进度条外面", true)?.classList.remove("显示");
 }
 /**
- * @param {string} url
- * @param {"anonymous" | "use-credentials" | null} crossOrigin
+ * 动态添加一个外部样式表
+ * @param {string} url - 样式表 URL
+ * @param {"anonymous" | "use-credentials" | null} [crossOrigin="use-credentials"] - 跨域属性
+ * @returns {Promise<Event | {}>} 在样式表加载完成时 resolve
  */
 function 添加样式(url, crossOrigin = "use-credentials") {
 	return new Promise(resolve => {
@@ -84,9 +90,10 @@ function 添加样式(url, crossOrigin = "use-credentials") {
 	});
 }
 /**
- * @param {string} url
- * @param {"anonymous" | "use-credentials" | null} crossOrigin
- * @returns {Promise<any>}
+ * 动态添加一个外部脚本，若脚本已加载或正在加载则不会重复添加，而是等待其完成或失败
+ * @param {string} url - 脚本 URL
+ * @param {"anonymous" | "use-credentials" | null} [crossOrigin="use-credentials"] - 跨域属性
+ * @returns {Promise<Event>} 在脚本加载完成时 resolve，失败时 reject
  */
 async function 添加脚本(url, crossOrigin = "use-credentials") {
 	return new Promise((resolve, reject) => {
@@ -166,7 +173,8 @@ async function 添加脚本(url, crossOrigin = "use-credentials") {
 	});
 }
 /**
- * @param {string} m
+ * 显示一个临时的通知消息，3 秒后自动隐藏
+ * @param {string} m - 要显示的 HTML 内容
  */
 function 提示(m) {
 	let 元素 = ce("div");
@@ -182,12 +190,19 @@ function 提示(m) {
 		}, 500);
 	}, 3000);
 }
-
+/**
+ * 设置 meta robots 为 noindex，阻止搜索引擎收录当前页面
+ */
 function 阻止搜索引擎收录() {
 	gd("robots", true)?.setAttribute("content", "noindex");
 }
 let /** @type {Record<string, string>} */ 清理后的路径缓存 = {},
 	/** @type {Record<string, string>} */ 清理后的路径缓存_包含search = {};
+/**
+ * 获取清理后的路径：去除 "index" 和 ".html"，并规范斜杠
+ * @param {boolean} [包含search=false] - 是否包含 URL 的查询字符串（search 部分）
+ * @returns {string} 清理后的路径
+ */
 function 获取清理后的路径(包含search = false) {
 	let l = 包含search
 		? 清理后的路径缓存_包含search[location.pathname]
@@ -205,14 +220,22 @@ function 获取清理后的路径(包含search = false) {
 						.replace(/\/\//g, "")
 						.split("/")[1]);
 }
-function 随机含零自然数(/** @type {number} */ 最大) {
+/**
+ * 生成一个包含 0 的随机自然数，范围为 [0, 最大]
+ * @param {number} 最大 - 上限（包含）
+ * @returns {number} 随机整数
+ * @throws {RangeError} 当最大为负数或非整数时抛出异常
+ */
+function 随机含零自然数(最大) {
 	if (!Number.isInteger(最大) || 最大 < 0) throw new RangeError("最大必须是非负整数");
 	return Math.floor(Math.random() * (最大 + 1));
 }
 /**
- * @param {number} r
- * @param {number} g
- * @param {number} b
+ * 将 RGB 颜色转换为 HSL 颜色
+ * @param {number} 红 - 红色分量，范围 0-255
+ * @param {number} 绿 - 绿色分量，范围 0-255
+ * @param {number} 蓝 - 蓝色分量，范围 0-255
+ * @returns {[number, number, number]} [色相(0-1), 饱和度(0-1), 亮度(0-1)]
  */
 function rgb转hsl(红, 绿, 蓝) {
 	红 /= 255;
@@ -238,6 +261,14 @@ function rgb转hsl(红, 绿, 蓝) {
 
 	return [色相, 饱和度, 亮度];
 }
+/**
+ * 添加一个悬浮卡片到页面
+ * @param {string} html - 要显示的 HTML 内容
+ * @param {number} [x=0] - 水平位置（像素）
+ * @param {number} [y=0] - 垂直位置（像素）
+ * @param {boolean} [失去焦点时隐藏=true] - 是否失去焦点时隐藏卡片
+ * @returns {HTMLDivElement} 卡片元素
+ */
 function 添加悬浮卡片(/** @type {string} */ html, x = 0, y = 0, 失去焦点时隐藏 = true) {
 	let div = ce("div");
 	div.className = "悬浮卡片";
@@ -250,7 +281,11 @@ function 添加悬浮卡片(/** @type {string} */ html, x = 0, y = 0, 失去焦�
 	div.focus();
 	失去焦点时隐藏 && div.addEventListener("focusout", () => div.remove());
 	return div;
-}
+} /**
+ * 在页面底部添加一个横幅通知，10 秒后自动隐藏
+ * @param {string} html - 横幅内容的 HTML
+ * @returns {HTMLDivElement} 创建的横幅元素
+ */
 function 添加横幅(/** @type {string} */ html) {
 	let div = ce("div");
 	div.className = "横幅";
@@ -268,6 +303,9 @@ function 添加横幅(/** @type {string} */ html) {
 //#endregion
 
 //#region 前期准备
+/**
+ * 从 localStorage 读取主题色设置并尽快应用到页面
+ */
 function 尽快设置主题色() {
 	if (localStorage.getItem("主题色h")) {
 		const 主题色 = localStorage.getItem("主题色") || "";
