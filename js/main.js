@@ -51,9 +51,7 @@ function 动态加载(元素) {
 			!元素.popstate &&
 				history.pushState(
 					{
-						路径:
-							u.pathname.replace(/(index|\.html)/g, "").replace(/\/\//g, "") +
-							u.search,
+						路径: 清理路径(u.pathname) + u.search,
 					},
 					"",
 					元素.href
@@ -66,7 +64,7 @@ function 动态加载(元素) {
 				右.innerHTML = m[0];
 				加载模块();
 
-				if (u.pathname.replace(/(index|\.html)/g, "").replace(/\/\//g, "") === "/") {
+				if (清理路径(u.pathname) === "/") {
 					显示或隐藏进度条(false);
 					可以滚动到视图中 = true;
 					if (!location.hash)

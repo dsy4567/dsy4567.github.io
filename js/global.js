@@ -196,29 +196,28 @@ function 提示(m) {
 function 阻止搜索引擎收录() {
 	gd("robots", true)?.setAttribute("content", "noindex");
 }
-let /** @type {Record<string, string>} */ 清理后的路径缓存 = {},
-	/** @type {Record<string, string>} */ 清理后的路径缓存_包含search = {};
+let /** @type {Record<string, string>} */ 清理后的路径缓存 = {};
 /**
- * 获取清理后的路径：去除 "index" 和 ".html"，并规范斜杠
- * @param {boolean} [包含search=false] - 是否包含 URL 的查询字符串（search 部分）
+ * 清理路径：去除结尾的 "index" / "index.html" / ".html"，并将连续斜杠压缩为单个
+ * 只匹配结尾，避免误伤路径正文中含 "index" 或 ".html" 的部分
+ * @param {string} 路径 - 待清理的路径（如 URL 的 pathname）
  * @returns {string} 清理后的路径
  */
+function 清理路径(路径) {
+	return 路径
+		.replace(/\/index(\.html)?$/, "/")
+		.replace(/\.html$/, "")
+		.replace(/\/{2,}/g, "/");
+}
+/**
+ * 获取清理后的路径：基于 location.pathname 的清理结果
+ * @param {boolean} [包含search=false] - 是否在结果末尾附加 location.search
+ * @returns {string} 包含search 为 true 时返回完整清理路径加查询字符串；为 false 时只返回一级路径（如 "/blog/xxx/" → "/blog"），用于匹配加载清单
+ */
 function 获取清理后的路径(包含search = false) {
-	let l = 包含search
-		? 清理后的路径缓存_包含search[location.pathname]
-		: 清理后的路径缓存[location.pathname];
-	return l
-		? l
-		: 包含search
-			? (清理后的路径缓存_包含search[location.pathname] =
-					location.pathname.replace(/(index|\.html)/g, "").replace(/\/\//g, "") +
-					location.search)
-			: (清理后的路径缓存[location.pathname] =
-					"/" +
-					location.pathname
-						.replace(/(index|\.html)/g, "")
-						.replace(/\/\//g, "")
-						.split("/")[1]);
+	// 缓存只存依赖 pathname 的清理结果；search 每次现读，避免同路径不同查询参数时读到过期缓存
+	let 已清理路径 = (清理后的路径缓存[location.pathname] ??= 清理路径(location.pathname));
+	return 包含search ? 已清理路径 + location.search : "/" + 已清理路径.split("/")[1];
 }
 /**
  * 生成一个包含 0 的随机自然数，范围为 [0, 最大]
