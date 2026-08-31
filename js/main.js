@@ -136,102 +136,23 @@ function 添加点击事件和设置图标(选项 = {}) {
 }
 //#endregion
 
-//#region 网抑云阴乐歌单+控件
-!navigator.userAgent.match(/bot|spider/gi) &&
-	fetch("/json/ncm.json")
-		.then(res => res.json())
-		.then(async j => {
-			const 网抑云阴乐 = (await import("./ncm.js")).default;
+//#region 导出和加载模块
+_global["main.js"] = () => ({
+	loaded,
+	DOMContentLoaded,
+	路径,
+	图标,
+	正在动态加载,
+	加载模块,
+	动态加载,
+	添加点击事件和设置图标,
+});
 
-			for (let i = 0; i < j.songs.length; i++) {
-				const /** @type {音乐信息} */ 音乐信息 = j.songs[i];
+加载模块();
+//#endregion
 
-				let /** @type {string[]} */ 所有歌手 = [];
-				音乐信息.ar.forEach(歌手 => 所有歌手.push(歌手.name));
-				网抑云阴乐.歌单[i] = {
-					完整歌名: "",
-					歌名: 音乐信息.name,
-					歌手: 所有歌手.join(" / "),
-					专辑: 音乐信息.al.name,
-					封面: 音乐信息.al.picUrl,
-					mv: 音乐信息.mv,
-					id: 音乐信息.id,
-				};
-				网抑云阴乐.歌单[i].完整歌名 =
-					网抑云阴乐.歌单[i].歌手 + " - " + 网抑云阴乐.歌单[i].歌名;
-				网抑云阴乐.歌单索引[音乐信息.id] = i;
-			}
-			function svg(
-				/** @type {string} */ html,
-				/** @type {( 元素: HTMLButtonElement ) => void} */ onclick,
-				/** @type {string} */ title,
-				role = "button"
-			) {
-				// @ts-ignore
-				let /** @type {HTMLButtonElement} */ btn = ce("button");
-				btn.innerHTML = html;
-				btn.onclick = async () => {
-					await 网抑云阴乐.初始化();
-					onclick(btn);
-				};
-				btn.type = "button";
-				btn.title = title;
-				btn.role = role;
-				btn.ariaChecked = role === "checkbox" ? "false" : null;
-				gd("阴乐控件", true)?.append(btn);
-			}
-			const f = () => {
-				svg(`<svg class="特小尺寸" data-icon="上一首"></svg>`, 网抑云阴乐.上一首, "上一首");
-				svg(
-					`<svg class="特小尺寸" data-icon="播放暂停"></svg>`,
-					网抑云阴乐.播放暂停,
-					"播放/暂停"
-				);
-				svg(`<svg class="特小尺寸" data-icon="下一首"></svg>`, 网抑云阴乐.下一首, "下一首");
-				svg(
-					`<svg class="特小尺寸" data-icon="在网抑云阴乐中查看"></svg>`,
-					() => {
-						网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id &&
-							open(
-								"https://music.163.com/#/song?id=" +
-									网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-							);
-					},
-					"在网抑云阴乐中查看"
-				);
-				svg(
-					`<svg class="特小尺寸" data-icon="随机播放"></svg>`,
-					网抑云阴乐.启用或禁用随机播放,
-					"随机播放",
-					"checkbox"
-				);
-				svg(`<svg class="特小尺寸" data-icon="音量"></svg>`, 网抑云阴乐.更改音量, "音量");
-				gd("阴乐控件", true)?.insertAdjacentHTML(
-					"beforeend",
-					`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a><ol id="播放列表"></ol>`
-				);
-				// @ts-ignore
-				let 元素 = [];
-				网抑云阴乐.歌单.forEach(音乐信息 => {
-					let li = ce("li");
-					li.innerHTML = `${音乐信息.歌名} <span class="淡化">${音乐信息.歌手}</span>`;
-					// @ts-ignore
-					li.onclick = li.onkeyup = 事件 => {
-						if (事件?.key === "Enter" || !事件?.key)
-							网抑云阴乐.切换音乐(音乐信息.id, true);
-					};
-					li.tabIndex = 0;
-					li.title = 音乐信息.完整歌名;
-					li.dataset.id = "" + 音乐信息.id;
-					gd("播放列表", true)?.append(li);
-				});
-				添加点击事件和设置图标();
-
-				网抑云阴乐.初始化();
-			};
-			DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
-		})
-		.catch(e => console.error(e));
+//#region 网抑云阴乐
+!navigator.userAgent.match(/bot|spider/gi) && import("./ncm.js");
 //#endregion
 
 //#region 主题
@@ -597,15 +518,4 @@ addEventListener("popstate", 事件 => {
 	});
 });
 
-加载模块();
-
-_global["main.js"] = () => ({
-	loaded,
-	DOMContentLoaded,
-	路径,
-	图标,
-	正在动态加载,
-	加载模块,
-	动态加载,
-	添加点击事件和设置图标,
-});
+export {};
