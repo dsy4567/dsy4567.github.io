@@ -88,37 +88,44 @@ async function 渲染文章(当前文章信息) {
 		//#endregion
 
 		//#region 目录
-		let ul = ce("ul"),
-			目录 = ce("section");
-		let t1 = [0, 0, 0, 0, 0, 0],
-			t2 = 0,
-			t3 = 0;
-		for (const 元素 of 右.querySelectorAll("h1, h2, h3, h4, h5, h6") || []) {
+		let 目录 = ce("section"),
+			根列表 = ce("ul"),
+			// 列表栈: 列表栈[i] 为第 i+1 级的 ul, 栈顶为当前条目的插入位置
+			列表栈 = [根列表],
+			上一级别 = 1;
+		const 标题元素们 = 右.querySelectorAll("h1, h2, h3, h4, h5, h6"),
+			最小级别 = Math.min(...[...标题元素们].map(元素 => +元素.tagName[1]), 6);
+		for (const 元素 of 标题元素们) {
 			if (元素.id && !元素.className.includes("可固定") && !元素.querySelector("a")) {
 				元素.innerHTML = `<a href="#${元素.id}">${元素.innerHTML}</a>`;
 				元素.classList.add("可固定");
 			}
-			t3 = { H1: 0, H2: 1, H3: 2, H4: 3, H5: 4, H6: 5 }[元素.tagName] || 0;
-			if (t2 < t3) t2 = t3;
-			else if (t2 > t3) {
-				t1[t2] = 0;
-				t2 = t3;
-			}
-			t1[t2]++;
+			// 以最小的标题级别为第 1 级, 换算当前标题的相对层级
+			const 级别 = +元素.tagName[1] - 最小级别 + 1;
+			if (级别 > 上一级别)
+				// 下潜: 为每一级创建子列表, 挂到上一层最后一个条目下
+				for (let i = 上一级别; i < 级别; i++) {
+					const 父列表 = 列表栈[列表栈.length - 1],
+						子列表 = ce("ul");
+					(父列表.lastElementChild || 父列表).append(子列表);
+					列表栈.push(子列表);
+				}
+			else if (级别 < 上一级别)
+				// 回退: 裁掉栈中更深层的列表
+				列表栈.length = 级别 + 1;
 			let li = ce("li"),
 				a = ce("a");
-			a.innerText =
-				// @ts-ignore
-				t1.join(".").replace(/\.0/g, "") + " " + 元素.innerText;
+			a.innerText = /** @type {HTMLElement} */ (元素).innerText;
 			a.href = "#" + 元素.id;
 			li.append(a);
-			ul.append(li);
+			列表栈[列表栈.length - 1].append(li);
+			上一级别 = 级别;
 		}
 		目录.insertAdjacentHTML(
 			"afterbegin",
 			'<h2><svg class="小尺寸" data-icon="目录"></svg><span>目录</span></h2>'
 		);
-		目录.append(ul);
+		目录.append(根列表);
 		目录.classList.add("目录");
 		qs("main > .左", true)?.append(目录);
 		//#endregion
