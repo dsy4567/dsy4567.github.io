@@ -93,7 +93,7 @@ function 添加点击事件和设置图标(选项 = {}) {
 			? 选项.要设置图标的元素
 			: qsa("svg[data-icon]")) {
 			// @ts-ignore
-			if (!元素.dataset.icon) break;
+			if (!元素.dataset.icon) continue;
 			let c = 元素.getAttribute("class");
 			let h = c
 				? // @ts-ignore
