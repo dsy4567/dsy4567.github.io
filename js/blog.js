@@ -148,17 +148,16 @@ export async function main(/** @type {String} */ 路径) {
 			gd("正在加载文章提示")?.remove();
 			显示或隐藏进度条(false);
 			_global["main.js"]().添加点击事件和设置图标();
-			if (location.hash) {
+			if (location.hash)
 				// 滚动到hash位置
+				// 不能通过赋值 location.hash（置空再恢复）触发滚动：赋值 hash 属于 fragment 导航，
+				// 会 push 新历史条目，既污染后退栈，也会清空前进栈（导致后退后前进按钮变灰）
 				try {
-					qs(`[id="${decodeURI(location.hash.substring(1))}"] + *`)?.classList.add(
-						"标记"
-					);
+					let 目标 = qs(`[id="${decodeURI(location.hash.substring(1))}"]`);
+					目标?.nextElementSibling?.classList.add("标记");
+					目标?.scrollIntoView();
 				} catch (e) {}
-				let h = location.hash;
-				location.hash = "";
-				location.hash = h;
-			} else if (可以滚动到视图中)
+			else if (可以滚动到视图中)
 				右.scrollIntoView({
 					behavior: "smooth",
 				});
