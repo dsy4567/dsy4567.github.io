@@ -25,12 +25,20 @@
 ├── package.json                # npm 包信息与脚本
 ├── pnpm-lock.yaml              # pnpm 依赖锁定文件
 ├── vercel.json                 # Vercel 配置
-├── _vercel/                    # Vercel 自动生成的资源
+├── _vercel/                    # Vercel 自动生成的资源（弃用）
 ├── api/                        # Vercel Serverless 函数
 ├── blog/                       # 博客文章
 ├── css/                        # 样式表
 ├── img/                        # 图片资源
-├── js/                         # 脚本
+├── js/                         # js脚本
+    ├── lib/                    # 第三方库
+    ├── main.js                 # 核心脚本
+    ├── global.js               # 工具函数和变量，还负责域名迁移、SW管理等任务
+    ├── blog.js                 # 博客页
+    ├── friends.js              # 友链页
+    ├── analytics.js            # 第三方统计
+    ├── ncm.js                  # 网抑云阴乐
+    ├── index.d.ts              # 类型定义
 ├── json/                       # JSON 数据
 ├── tools/                      # 构建/开发脚本
 └── .github/workflows/          # GitHub Actions 工作流
