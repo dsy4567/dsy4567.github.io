@@ -1,11 +1,21 @@
 {
 	"compilerOptions": {
+		"target": "ESNext",
 		"module": "ESNext",
 		"moduleResolution": "Node",
-		"target": "esnext",
+		"lib": ["ESNext", "DOM", "DOM.Iterable"],
+		"checkJs": true,
+		"strict": true,
 		"strictNullChecks": true,
 		"strictFunctionTypes": true,
-		"strict": true
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"baseUrl": ".",
+		"paths": {
+			"/*": ["./*"]
+		}
 	},
-	"exclude": ["node_modules", "**/node_modules/*"]
+	"include": ["js/**/*", "json/**/*", "*.html"],
+	"exclude": ["node_modules", "**/node_modules/*", "tools/**/*", "api/**/*"]
 }
