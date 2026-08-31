@@ -222,9 +222,12 @@ let 网抑云阴乐 = {
 	},
 	更新歌曲信息(/** @type {number} */ 令牌) {
 		// @ts-ignore
-		qs(
-			"#播放列表 li[data-id='" + 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id + "']"
-		)?.scrollIntoView({ behavior: "smooth" });
+		gd("播放列表", true)?.scrollTo({
+			behavior: "smooth",
+			top:
+				qs("li[data-id='" + 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id + "']")
+					?.offsetTop || 0,
+		});
 
 		let 封面 = "";
 		navigator.mediaSession &&
@@ -306,8 +309,9 @@ let 网抑云阴乐 = {
 				// 没有上次播放时，设置一个无效id
 				网抑云阴乐.切换音乐(+(上次播放 || -1));
 				// @ts-ignore
-				qs("#播放列表 li[data-id='" + 上次播放 + "']")?.scrollIntoView({
+				gd("播放列表", true)?.scrollTo({
 					behavior: "smooth",
+					top: qs("li[data-id='" + 上次播放 + "']")?.offsetTop || 0,
 				});
 			}
 
