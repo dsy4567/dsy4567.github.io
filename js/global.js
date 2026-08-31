@@ -214,36 +214,29 @@ function 随机含零自然数(/** @type {number} */ 最大) {
  * @param {number} g
  * @param {number} b
  */
-function rgb转hsl(r, g, b) {
-	r /= 255;
-	g /= 255;
-	b /= 255;
-	let 最大 = Math.max(r, g, b),
-		最小 = Math.min(r, g, b);
-	let h,
-		s,
-		l = (最大 + 最小) / 2;
+function rgb转hsl(红, 绿, 蓝) {
+	红 /= 255;
+	绿 /= 255;
+	蓝 /= 255;
 
-	if (最大 === 最小) h = s = 0;
-	else {
-		let d = 最大 - 最小;
-		s = l > 0.5 ? d / (2 - 最大 - 最小) : d / (最大 + 最小);
-		switch (最大) {
-			case r:
-				h = (g - b) / d + (g < b ? 6 : 0);
-				break;
-			case g:
-				h = (b - r) / d + 2;
-				break;
-			case b:
-				h = (r - g) / d + 4;
-				break;
-		}
-		// @ts-ignore
-		h /= 6;
-	}
+	const 最大 = Math.max(红, 绿, 蓝);
+	const 最小 = Math.min(红, 绿, 蓝);
+	const 亮度 = (最大 + 最小) / 2;
+	const 差值 = 最大 - 最小;
 
-	return [h, s, l];
+	// 非彩色：灰、白、黑
+	if (差值 === 0) return [0, 0, 亮度];
+
+	const 饱和度 = 亮度 > 0.5 ? 差值 / (2 - 最大 - 最小) : 差值 / (最大 + 最小);
+
+	let 色相;
+	if (最大 === 红) 色相 = (绿 - 蓝) / 差值 + (绿 < 蓝 ? 6 : 0);
+	else if (最大 === 绿) 色相 = (蓝 - 红) / 差值 + 2;
+	else 色相 = (红 - 绿) / 差值 + 4;
+
+	色相 /= 6;
+
+	return [色相, 饱和度, 亮度];
 }
 function 添加悬浮卡片(/** @type {string} */ html, x = 0, y = 0, 失去焦点时隐藏 = true) {
 	let div = ce("div");
