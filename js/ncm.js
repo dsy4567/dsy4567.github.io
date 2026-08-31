@@ -18,6 +18,7 @@ let /** @type {HTMLDivElement} */ 网抑云阴乐元素 = gd("网抑云阴乐", 
 let 网抑云阴乐 = {
 	重试timeout: -1,
 	已初始化: false,
+	已首次播放: false,
 	立即播放: false,
 	设置: { 音量: 50 / 100, 随机播放: false, 域名: "ncm.vercel.dsy4567.icu" },
 	/** @type {歌单[]} */ 歌单: [],
@@ -25,7 +26,11 @@ let 网抑云阴乐 = {
 	/** @type {number[]} */ 洗牌后的索引: [],
 	洗牌位置: 0,
 	连续失败次数: 0,
-	播放令牌: 0,
+	/**
+	 * 每次调用“播放第几首”时自增，用于标识最新的播放请求，
+	 * 旧请求完成时可通过对比令牌来忽略，避免频繁操作导致的竞争
+	 */
+	播放请求令牌: 0,
 	正在播放: {
 		索引: 0,
 		/** @type {HTMLAudioElement} */ Audio: new Audio(),
@@ -45,7 +50,20 @@ let 网抑云阴乐 = {
 		网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量 =
 			((网抑云阴乐.设置.音量 * 100 + 25) % 125) / 100;
 	},
+	设置闪烁动画(/** @type {boolean} */ 启用) {
+		const svg = 网抑云阴乐元素.querySelector("svg");
+		if (svg) svg.classList[启用 ? "add" : "remove"]("网抑云加载闪烁");
+		if (网抑云阴乐封面元素)
+			网抑云阴乐封面元素.classList[启用 ? "add" : "remove"]("网抑云加载闪烁");
+	},
+	设置封面旋转动画(/** @type {boolean} */ 启用) {
+		if (网抑云阴乐封面元素) {
+			网抑云阴乐封面元素.classList.add("网抑云封面旋转"); // 初始状态为没有这个class，目的是便于统一管理
+			网抑云阴乐封面元素.classList[启用 ? "remove" : "add"]("暂停动画");
+		}
+	},
 	async 获取音乐地址(/** @type {number} */ id) {
+		if (网抑云阴乐.已首次播放) 网抑云阴乐.设置闪烁动画(true);
 		let 数据 = (
 			await (
 				await fetch(
@@ -100,6 +118,7 @@ let 网抑云阴乐 = {
 		if (typeof 网抑云阴乐.歌单索引[欲播放的音乐id] !== "undefined")
 			网抑云阴乐.正在播放.索引 = 网抑云阴乐.歌单索引[欲播放的音乐id];
 		if (!立即播放) return;
+
 		try {
 			clearTimeout(网抑云阴乐.重试timeout);
 			await 网抑云阴乐.初始化();
@@ -110,14 +129,17 @@ let 网抑云阴乐 = {
 		}
 	},
 	async 播放第几首(/** @type {number} */ 索引) {
+		if (!网抑云阴乐.已首次播放) 网抑云阴乐.已首次播放 = true;
+
 		// 令牌用于丢弃过期的播放请求，防止快速切歌时旧请求覆盖新请求
-		let 令牌 = ++网抑云阴乐.播放令牌;
+		let 令牌 = ++网抑云阴乐.播放请求令牌;
+
 		网抑云阴乐.正在播放.索引 = 索引;
 		歌词元素.innerText = "";
 		网抑云阴乐.正在播放.Audio.pause();
 		网抑云阴乐.正在播放.Audio.currentTime = 0;
 		网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(网抑云阴乐.歌单[索引].id);
-		if (令牌 !== 网抑云阴乐.播放令牌) return;
+		if (令牌 !== 网抑云阴乐.播放请求令牌) return;
 		网抑云阴乐.正在播放.Audio.autoplay = true;
 		网抑云阴乐元素 &&
 			(网抑云阴乐元素.title = "网抑云阴乐 - 正在播放: " + 网抑云阴乐.歌单[索引].完整歌名);
@@ -127,6 +149,14 @@ let 网抑云阴乐 = {
 		try {
 			clearTimeout(网抑云阴乐.重试timeout);
 			await 网抑云阴乐.初始化();
+
+			if (!网抑云阴乐.已首次播放) 网抑云阴乐.已首次播放 = true;
+
+			if (!网抑云阴乐.正在播放.Audio.src)
+				网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
+					网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
+				);
+
 			if (网抑云阴乐.正在播放.Audio.paused) 网抑云阴乐.正在播放.Audio.play();
 			else 网抑云阴乐.正在播放.Audio.pause();
 		} catch (e) {
@@ -154,6 +184,7 @@ let 网抑云阴乐 = {
 		try {
 			clearTimeout(网抑云阴乐.重试timeout);
 			await 网抑云阴乐.初始化();
+
 			let 索引;
 			if (网抑云阴乐.设置.随机播放) 索引 = 网抑云阴乐.洗牌取索引(1);
 			else {
@@ -194,14 +225,13 @@ let 网抑云阴乐 = {
 				gd("播放列表", true).scrollTop =
 					qs("li[data-id='" + 上次播放 + "']")?.offsetTop || 0;
 			}
-			网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
-				网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-			);
+			// 网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
+			// 	网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
+			// );
 
 			网抑云阴乐.正在播放.Audio.preload = "none";
 			网抑云阴乐.正在播放.Audio.autoplay = false;
 			网抑云阴乐.正在播放.Audio.volume = 网抑云阴乐.设置.音量;
-			网抑云阴乐.正在播放.Audio.onended = 网抑云阴乐.下一首;
 			网抑云阴乐.正在播放.歌词track = 网抑云阴乐.正在播放.Audio.addTextTrack(
 				"captions",
 				"歌词"
@@ -232,6 +262,16 @@ let 网抑云阴乐 = {
 			);
 			navigator.mediaSession?.setActionHandler("previoustrack", 网抑云阴乐.上一首);
 			navigator.mediaSession?.setActionHandler("nexttrack", 网抑云阴乐.下一首);
+			网抑云阴乐.正在播放.Audio.onended = 网抑云阴乐.下一首;
+			网抑云阴乐.正在播放.Audio.onloadstart = () => {
+				if (网抑云阴乐.已首次播放) 网抑云阴乐.设置闪烁动画(true);
+			};
+			网抑云阴乐.正在播放.Audio.onwaiting = () => {
+				网抑云阴乐.设置闪烁动画(true);
+			};
+			网抑云阴乐.正在播放.Audio.onloadeddata = () => {
+				网抑云阴乐.设置闪烁动画(false);
+			};
 			网抑云阴乐.正在播放.Audio.onloadedmetadata = () => {
 				网抑云阴乐.更新媒体会话进度();
 				歌词元素.innerText = "";
@@ -307,7 +347,6 @@ let 网抑云阴乐 = {
 				网抑云阴乐封面元素.src = 封面 + "?param=128x128";
 			};
 			网抑云阴乐.正在播放.Audio.onplay = () => {
-				网抑云阴乐封面元素.style.animationName = "匀速转";
 				qsa("li.正在播放")?.forEach(元素 => {
 					元素.classList.remove("正在播放");
 				});
@@ -315,14 +354,15 @@ let 网抑云阴乐 = {
 					"li[data-id='" + 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id + "']"
 				)?.classList.add("正在播放");
 			};
-			// 只有真正开始播放才算播放成功
 			网抑云阴乐.正在播放.Audio.onplaying = () => {
+				网抑云阴乐.设置闪烁动画(false);
+				网抑云阴乐.设置封面旋转动画(true);
 				网抑云阴乐.连续失败次数 = 0;
 				if (navigator.mediaSession) navigator.mediaSession.playbackState = "playing";
 				网抑云阴乐.更新媒体会话进度();
 			};
 			网抑云阴乐.正在播放.Audio.onpause = () => {
-				网抑云阴乐封面元素.style.animationName = "unset";
+				网抑云阴乐.设置封面旋转动画(false);
 				if (navigator.mediaSession) navigator.mediaSession.playbackState = "paused";
 			};
 			网抑云阴乐.正在播放.Audio.ontimeupdate = () => 网抑云阴乐.更新媒体会话进度();

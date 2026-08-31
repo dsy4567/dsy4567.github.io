@@ -49,6 +49,23 @@
 		opacity: 1;
 	}
 }
+@keyframes 高频闪烁 {
+	0% {
+		opacity: 0;
+	}
+	25% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
+	75% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
 @keyframes 标记 {
 	0% {
 		background-color: mark;
@@ -239,6 +256,10 @@ body {
 	padding: 0;
 }
 
+.暂停动画 {
+	animation-play-state: paused;
+}
+
 .隐藏链接 {
 	position: absolute;
 	width: 1px;
@@ -323,7 +344,9 @@ spoiler:hover {
 	animation-name: 标记;
 	animation-iteration-count: 1;
 	animation-timing-function: linear;
-	transition: 0.3s color, 0.3s background-color;
+	transition:
+		0.3s color,
+		0.3s background-color;
 }
 svg[data-icon] {
 	background-color: var(--theme-color);
@@ -394,9 +417,13 @@ body.宽屏 > main > #分界线 {
 main > #分界线 > svg {
 	background: var(--bg-color);
 	border-radius: 50%;
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px, rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+	box-shadow:
+		rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
+		rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
 	opacity: 0;
-	transition: 0.3s opacity, 0.3s transform;
+	transition:
+		0.3s opacity,
+		0.3s transform;
 }
 body.宽屏 > main #分界线:hover,
 main > #分界线:hover > svg {
@@ -578,7 +605,10 @@ hr {
 	justify-content: space-around;
 	position: sticky;
 	top: 0;
-	transition: 0.3s background-color, 0.3s transform, 0.3s box-shadow;
+	transition:
+		0.3s background-color,
+		0.3s transform,
+		0.3s box-shadow;
 	transform: translateY(0);
 	width: 100%;
 	height: 48px;
@@ -611,11 +641,14 @@ body.隐藏导航栏 #导航栏 {
 	font-weight: 600;
 }
 
-#网抑云阴乐封面 {
+#网抑云阴乐封面,
+#网抑云阴乐封面 + svg {
 	animation-duration: 5s;
-	animation-name: none;
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
+	animation-fill-mode: forwards;
+}
+#网抑云阴乐封面 {
 	border-radius: 50%;
 	display: none;
 }
@@ -624,6 +657,14 @@ body.隐藏导航栏 #导航栏 {
 }
 #网抑云阴乐封面[src*="http"] + svg {
 	display: none;
+}
+.网抑云加载闪烁 {
+	animation-name: 高频闪烁 !important;
+	animation-duration: 3s !important;
+	animation-play-state: running !important;
+}
+.网抑云封面旋转 {
+	animation-name: 匀速转;
 }
 div.侧边按钮 {
 	position: fixed;
@@ -642,7 +683,9 @@ div.侧边按钮 .stroke {
 } */
 div.侧边按钮 > * {
 	background-color: var(--bg-color-dark-2);
-	box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px, rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	box-shadow:
+		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
 	border: 1px solid transparent;
 	border-bottom-left-radius: 50%;
 	border-bottom-right-radius: 50%;
@@ -804,7 +847,9 @@ div.通知 {
 	background-color: var(--theme-color);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
-	box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px, rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	box-shadow:
+		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
 	opacity: 0;
 	margin: 16px;
 	padding: 8px;
@@ -887,7 +932,9 @@ main > .分界线 {
 	position: fixed;
 	top: 0;
 	left: 0;
-	transition: 0.3s opacity, 0.3s background-color;
+	transition:
+		0.3s opacity,
+		0.3s background-color;
 	width: 100%;
 	height: 100vh;
 	z-index: 1000;
@@ -907,7 +954,9 @@ main > .分界线 {
 	position: fixed;
 	top: 0;
 	left: 0;
-	transition: 0.3s width, 0.3s background-color;
+	transition:
+		0.3s width,
+		0.3s background-color;
 	width: 100%;
 	max-width: 100%;
 	height: 2px;
@@ -920,7 +969,9 @@ main > .分界线 {
 	background-color: var(--bg-color);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 12px 15px 0px, rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+	box-shadow:
+		rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
+		rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
 	padding: 4px;
 	position: absolute;
 	z-index: 997;
