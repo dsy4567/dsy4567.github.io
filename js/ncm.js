@@ -138,8 +138,11 @@ let 网抑云阴乐 = {
 		歌词元素.innerText = "";
 		网抑云阴乐.正在播放.Audio.pause();
 		网抑云阴乐.正在播放.Audio.currentTime = 0;
+
+		网抑云阴乐.更新歌曲信息(令牌);
 		网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(网抑云阴乐.歌单[索引].id);
 		if (令牌 !== 网抑云阴乐.播放请求令牌) return;
+
 		网抑云阴乐.正在播放.Audio.autoplay = true;
 		网抑云阴乐元素 &&
 			(网抑云阴乐元素.title = "网抑云阴乐 - 正在播放: " + 网抑云阴乐.歌单[索引].完整歌名);
@@ -152,10 +155,15 @@ let 网抑云阴乐 = {
 
 			if (!网抑云阴乐.已首次播放) 网抑云阴乐.已首次播放 = true;
 
-			if (!网抑云阴乐.正在播放.Audio.src)
+			if (!网抑云阴乐.正在播放.Audio.src) {
+				// 令牌用于丢弃过期的播放请求，防止快速切歌时旧请求覆盖新请求
+				let 令牌 = ++网抑云阴乐.播放请求令牌;
+				网抑云阴乐.更新歌曲信息(令牌);
 				网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
 					网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
 				);
+				if (令牌 !== 网抑云阴乐.播放请求令牌) return;
+			}
 
 			if (网抑云阴乐.正在播放.Audio.paused) 网抑云阴乐.正在播放.Audio.play();
 			else 网抑云阴乐.正在播放.Audio.pause();
@@ -212,6 +220,82 @@ let 网抑云阴乐 = {
 			console.warn(e);
 		}
 	},
+	更新歌曲信息(/** @type {number} */ 令牌) {
+		// @ts-ignore
+		qs(
+			"#播放列表 li[data-id='" + 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id + "']"
+		)?.scrollIntoView({ behavior: "smooth" });
+
+		let 封面 = "";
+		navigator.mediaSession &&
+			(navigator.mediaSession.metadata = new MediaMetadata({
+				title: 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].歌名,
+				artist: 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].歌手,
+				artwork: [
+					{
+						src: (封面 = 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].封面),
+					},
+				],
+			}));
+		网抑云阴乐封面元素.onerror = () => {
+			网抑云阴乐封面元素.src = "";
+		};
+		网抑云阴乐封面元素.src = 封面 + "?param=128x128";
+
+		// 歌词相关
+		歌词元素.innerText = "";
+		try {
+			网抑云阴乐.正在播放.所有歌词.forEach(歌词 =>
+				网抑云阴乐.正在播放.歌词track?.removeCue(歌词)
+			);
+			网抑云阴乐.正在播放.所有歌词翻译.forEach(歌词翻译 =>
+				网抑云阴乐.正在播放.翻译track?.removeCue(歌词翻译)
+			);
+		} catch (e) {
+			console.warn(e);
+		}
+		网抑云阴乐.正在播放.所有歌词 = [];
+		网抑云阴乐.正在播放.所有歌词翻译 = [];
+		fetch(
+			`https://${网抑云阴乐.设置.域名}/lyric?id=${
+				网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
+			}&realIP=111.18.65.162`
+		)
+			.then(res => res.json())
+			.then(async j => {
+				if (令牌 !== 网抑云阴乐.播放请求令牌) return;
+
+				let 待解析歌词,
+					待解析歌词翻译 = j.tlyric?.lyric;
+				if (
+					(!(待解析歌词 = j.lrc.lyric) && j.lrc.version !== 6) ||
+					!j.lrc.lyric.includes("[")
+				) {
+					歌词元素.innerText = "";
+					网抑云阴乐.正在播放.所有歌词 = [];
+					return;
+				}
+				await 添加脚本("/js/lib/lrc-parser.js");
+				let 所有歌词 = lrcParser(待解析歌词 + "[999:59.99]\n").scripts;
+				所有歌词.forEach(歌词 => {
+					let c = new VTTCue(歌词.start, 歌词.end, 歌词.text);
+					网抑云阴乐.正在播放.所有歌词.push(c);
+					网抑云阴乐.正在播放.歌词track?.addCue(c);
+				});
+
+				if (待解析歌词翻译?.includes("[")) {
+					let 所有歌词翻译 = lrcParser(待解析歌词翻译 + "[999:59.99]\n").scripts;
+					所有歌词翻译.forEach(歌词翻译 => {
+						let c = new VTTCue(歌词翻译.start, 歌词翻译.end, 歌词翻译.text);
+						网抑云阴乐.正在播放.所有歌词翻译.push(c);
+						网抑云阴乐.正在播放.翻译track?.addCue(c);
+					});
+				}
+			})
+			.catch(e => {
+				console.error(e);
+			});
+	},
 	async 初始化() {
 		try {
 			if (网抑云阴乐.已初始化) return;
@@ -222,12 +306,10 @@ let 网抑云阴乐 = {
 				// 没有上次播放时，设置一个无效id
 				网抑云阴乐.切换音乐(+(上次播放 || -1));
 				// @ts-ignore
-				gd("播放列表", true).scrollTop =
-					qs("li[data-id='" + 上次播放 + "']")?.offsetTop || 0;
+				qs("#播放列表 li[data-id='" + 上次播放 + "']")?.scrollIntoView({
+					behavior: "smooth",
+				});
 			}
-			// 网抑云阴乐.正在播放.Audio.src = await 网抑云阴乐.获取音乐地址(
-			// 	网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-			// );
 
 			网抑云阴乐.正在播放.Audio.preload = "none";
 			网抑云阴乐.正在播放.Audio.autoplay = false;
@@ -274,77 +356,6 @@ let 网抑云阴乐 = {
 			};
 			网抑云阴乐.正在播放.Audio.onloadedmetadata = () => {
 				网抑云阴乐.更新媒体会话进度();
-				歌词元素.innerText = "";
-				try {
-					网抑云阴乐.正在播放.所有歌词.forEach(歌词 =>
-						网抑云阴乐.正在播放.歌词track?.removeCue(歌词)
-					);
-					网抑云阴乐.正在播放.所有歌词翻译.forEach(歌词翻译 =>
-						网抑云阴乐.正在播放.翻译track?.removeCue(歌词翻译)
-					);
-				} catch (e) {
-					console.warn(e);
-				}
-				网抑云阴乐.正在播放.所有歌词 = [];
-				网抑云阴乐.正在播放.所有歌词翻译 = [];
-				fetch(
-					`https://${网抑云阴乐.设置.域名}/lyric?id=${
-						网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id
-					}&realIP=111.18.65.162`
-				)
-					.then(res => res.json())
-					.then(async j => {
-						let 待解析歌词,
-							待解析歌词翻译 = j.tlyric?.lyric;
-						if (
-							(!(待解析歌词 = j.lrc.lyric) && j.lrc.version !== 6) ||
-							!j.lrc.lyric.includes("[")
-						) {
-							歌词元素.innerText = "";
-							网抑云阴乐.正在播放.所有歌词 = [];
-							return;
-						}
-						await 添加脚本("/js/lib/lrc-parser.js");
-						let 所有歌词 = lrcParser(待解析歌词 + "[999:59.99]\n").scripts;
-						所有歌词.forEach(歌词 => {
-							let c = new VTTCue(歌词.start, 歌词.end, 歌词.text);
-							网抑云阴乐.正在播放.所有歌词.push(c);
-							网抑云阴乐.正在播放.歌词track?.addCue(c);
-						});
-
-						if (待解析歌词翻译?.includes("[")) {
-							let 所有歌词翻译 = lrcParser(待解析歌词翻译 + "[999:59.99]\n").scripts;
-							所有歌词翻译.forEach(歌词翻译 => {
-								let c = new VTTCue(歌词翻译.start, 歌词翻译.end, 歌词翻译.text);
-								网抑云阴乐.正在播放.所有歌词翻译.push(c);
-								网抑云阴乐.正在播放.翻译track?.addCue(c);
-							});
-						}
-					})
-					.catch(e => {
-						console.error(e);
-					});
-
-				// @ts-ignore
-				gd("播放列表", true).scrollTop =
-					qs("li[data-id='" + 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].id + "']")
-						?.offsetTop || 0;
-
-				let 封面 = "";
-				navigator.mediaSession &&
-					(navigator.mediaSession.metadata = new MediaMetadata({
-						title: 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].歌名,
-						artist: 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].歌手,
-						artwork: [
-							{
-								src: (封面 = 网抑云阴乐.歌单[网抑云阴乐.正在播放.索引].封面),
-							},
-						],
-					}));
-				网抑云阴乐封面元素.onerror = () => {
-					网抑云阴乐封面元素.src = "";
-				};
-				网抑云阴乐封面元素.src = 封面 + "?param=128x128";
 			};
 			网抑云阴乐.正在播放.Audio.onplay = () => {
 				qsa("li.正在播放")?.forEach(元素 => {
