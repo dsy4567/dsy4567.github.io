@@ -1,3 +1,5 @@
+// @ts-check
+
 const { defineConfig } = require("eslint/config");
 const js = require("@eslint/js");
 const globals = require("globals");
@@ -15,7 +17,7 @@ module.exports = defineConfig([
 	{
 		files: ["js/**/*.js"],
 		languageOptions: {
-			ecmaVersion: "latest",
+			ecmaVersion: 2022,
 			sourceType: "module",
 			globals: {
 				...globals.browser,
