@@ -97,7 +97,9 @@ async function 渲染文章(当前文章信息) {
 			最小级别 = Math.min(...[...标题元素们].map(元素 => +元素.tagName[1]), 6);
 		for (const 元素 of 标题元素们) {
 			if (元素.id && !元素.className.includes("可固定") && !元素.querySelector("a")) {
-				元素.innerHTML = `<a href="#${元素.id}">${元素.innerHTML}</a>`;
+				元素.addEventListener("click", () => {
+					location.hash = 元素.id;
+				});
 				元素.classList.add("可固定");
 			}
 			// 以最小的标题级别为第 1 级, 换算当前标题的相对层级
