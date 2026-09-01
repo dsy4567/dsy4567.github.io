@@ -20,7 +20,7 @@
 		<title>2024 年总结——我在地址栏输入 A-Z，浏览器会补全哪些域名？ | 博客 | dsy4567 的小站</title>
 		<link rel="canonical" href="https://dsy4567.icu/blog/2024-browser-history/" />
 		<!-- END META -->
-
+		
 		<base target="_self" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 		<link
@@ -30,9 +30,9 @@
 			href="https://dsy4567.github.io/rss.xml"
 		/>
 
-		<link rel="dns-prefetch" href="https://fonts.googleapis.cn" />
-		<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-		<link rel="dns-prefetch" href="https://fonts.gstatic.cn" />
+		<link rel="preconnect" href="https://fonts.googleapis.cn" />
+		<link rel="preconnect" href="https://www.googletagmanager.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.cn" />
 
 		<link rel="modulepreload" href="/js/analytics.js" crossorigin="use-credentials" />
 		<link rel="modulepreload" href="/js/blog.js" crossorigin="use-credentials" />
@@ -97,7 +97,7 @@
 			</div>
 		</nav>
 
-		<div id="主侧边按钮" class="侧边按钮">
+		<div id="侧边按钮容器">
 			<button type="button" title="回到顶部" id="回到顶部">
 				<svg class="特小尺寸" data-icon="回到顶部"></svg>
 			</button>
@@ -105,10 +105,12 @@
 				<img class="特小尺寸" id="网易云音乐封面" alt="封面" />
 				<svg aria-hidden="true" class="特小尺寸" data-icon="网易云音乐"></svg>
 				<div class="更多选项" id="音乐控件"></div>
+				<ol class="更多选项" id="播放列表"></ol>
 				<div id="歌词"></div>
 			</div>
 			<div class="拥有更多选项" type="button" title="切换主题" id="切换主题">
 				<svg class="特小尺寸" data-icon="切换主题"></svg>
+				<div class="更多选项" id="主题控件"></div>
 				<div role="radiogroup" class="更多选项" id="所有主题"></div>
 			</div>
 		</div>
