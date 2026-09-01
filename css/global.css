@@ -18,7 +18,7 @@ main、左右栏
 页脚
 侧边按钮-通用
 侧边按钮-回到顶部
-侧边按钮-网抑云阴乐
+侧边按钮-网易云音乐
 侧边按钮-主题
 首页
 博客
@@ -889,41 +889,41 @@ body.顶部 div#侧边按钮容器 > #回到顶部 {
 	pointer-events: none;
 }
 
-/* ==================== 侧边按钮-网抑云阴乐 ==================== */
+/* ==================== 侧边按钮-网易云音乐 ==================== */
 
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #网抑云阴乐封面,
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #网抑云阴乐封面 + svg {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面,
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面 + svg {
 	animation-duration: 5s;
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
 	animation-fill-mode: forwards;
 }
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #网抑云阴乐封面 {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面 {
 	border-radius: 50%;
 	display: none;
 }
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #网抑云阴乐封面[src*="http"] {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面[src*="http"] {
 	display: block;
 }
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #网抑云阴乐封面[src*="http"] + svg {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面[src*="http"] + svg {
 	display: none;
 }
 
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 .网抑云加载闪烁#网抑云阴乐封面 {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 .网易云加载闪烁#网易云音乐封面 {
 	animation-name: 高频闪烁 !important;
 	animation-duration: 3s !important;
 	animation-play-state: running !important;
 }
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 .网抑云封面旋转#网抑云阴乐封面 {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 .网易云封面旋转#网易云音乐封面 {
 	animation-name: 匀速转;
 }
 
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐:hover,
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐:focus-within {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover,
+div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-within {
 	transform: translateX(calc(-32px * 7));
 }
 
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #歌词 {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	font-size: 12px;
 	position: absolute;
 	user-select: none;
@@ -934,7 +934,7 @@ div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #歌词 {
 	word-wrap: break-word;
 	width: calc(100vw - 64px);
 }
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #歌词 > p {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 > p {
 	font-size: 12px;
 	height: 16px;
 	line-height: 16px;
@@ -942,11 +942,11 @@ div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #歌词 > p {
 	padding: 0;
 }
 
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#阴乐控件 {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#音乐控件 {
 	width: calc(32px * 6);
 }
 
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 {
 	box-shadow:
 		inset 0 16px 10px -5px var(--accent-color-transparent),
 		inset 0 -16px 10px -5px var(--accent-color-transparent);
@@ -963,7 +963,7 @@ div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播
 	width: calc(31px * 8);
 	height: 118px;
 }
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 li {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 li {
 	border-top: 1px solid var(--overlay);
 	cursor: pointer;
 	display: table-caption;
@@ -972,14 +972,14 @@ div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播
 	width: calc(100% + 8px);
 }
 
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li:hover,
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li:focus-visible {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 > li:hover,
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 > li:focus-visible {
 	background-color: var(--overlay);
 }
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li.正在播放 {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 > li.正在播放 {
 	background-color: var(--accent-color-transparent);
 }
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li.正在播放::before {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 > li.正在播放::before {
 	background-color: var(--accent-color);
 	display: block;
 	width: 5px;
@@ -989,7 +989,7 @@ div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播
 	content: "";
 }
 
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 li * {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 li * {
 	display: block;
 	white-space: nowrap;
 	text-overflow: ellipsis;

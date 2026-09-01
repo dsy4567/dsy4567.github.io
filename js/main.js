@@ -149,7 +149,7 @@ _global["main.js"] = () => ({
 加载模块();
 //#endregion
 
-//#region 网抑云阴乐
+//#region 网易云音乐
 !navigator.userAgent.match(/bot|spider/gi) && import("./ncm.js");
 //#endregion
 

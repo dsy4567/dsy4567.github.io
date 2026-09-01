@@ -39,7 +39,7 @@
     ├── blog.js                 # 博客页
     ├── friends.js              # 友链页
     ├── analytics.js            # 第三方统计
-    ├── ncm.js                  # 网抑云阴乐
+    ├── ncm.js                  # 网易云音乐
     ├── index.d.ts              # 类型定义
 ├── json/                       # JSON 数据
 ├── tools/                      # 构建/开发脚本
