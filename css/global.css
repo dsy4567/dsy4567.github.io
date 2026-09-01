@@ -267,13 +267,6 @@ main、左右栏
 }
 
 /* ==================== html/body/通用元素 ==================== */
-@media only screen and (max-width: 1000px) {
-	section {
-		margin-top: unset;
-		padding: 8px;
-	}
-}
-
 *:disabled {
 	cursor: not-allowed;
 }
@@ -558,13 +551,18 @@ div.通知 {
 	main > .左,
 	main > .右 {
 		display: block !important;
-		padding: 0;
-		position: unset;
+		padding: 0 !important;
+		position: unset !important;
 		width: 100% !important;
 		max-height: unset !important;
 	}
 	main > #分界线 {
-		display: none;
+		display: none !important;
+	}
+
+	section {
+		margin-top: unset;
+		padding: 8px;
 	}
 	.左 > section,
 	.右 > section {
