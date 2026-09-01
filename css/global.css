@@ -543,7 +543,7 @@ div.通知 {
 		flex-direction: column;
 		padding-left: 0;
 		padding-right: 0;
-		width: 100%;
+		width: 100% !important;
 	}
 	main > .左 {
 		transform: translateY(48px) !important;
