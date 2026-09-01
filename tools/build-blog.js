@@ -36,6 +36,9 @@ const CONFIG = {
 	timezone: "Asia/Shanghai",
 };
 
+// ncm.json 在 file-states 中的键（统一为不含 "./" 前缀的相对路径）
+const ncmStateKey = path.posix.normalize(CONFIG.ncmOutputPath);
+
 // ==================== 类型定义 ====================
 
 /**
@@ -64,7 +67,7 @@ const CONFIG = {
 /**
  * 文件状态记录项（file-states.json 单条结构）
  * @typedef {object} 文件状态
- * @property {string} hash - 内容去空白后计算的 SHA-256 十六进制
+ * @property {string} hash - 内容去空白后计算的 SHA-256 十六进制（ncm.json 为歌曲关键元数据 hash）
  * @property {string} updated - 内容修改时间（ISO 8601 + Z 后缀，UTC）
  */
 
@@ -189,6 +192,27 @@ function computeFileHash(content) {
 }
 
 /**
+ * 计算网易云歌单 hash：仅提取歌曲关键元数据（id、歌名、歌手、专辑名、mv、时长），
+ * 不含封面地址等易变字段，用于判断歌单内容是否真正变化
+ * @param {any[]} songs - 网易云 API 返回的歌曲列表
+ * @returns {string} SHA-256 十六进制（小写）
+ */
+function computeNcmHash(songs) {
+	const metadata = songs.map(song => ({
+		id: song.id,
+		name: song.name,
+		dt: song.dt,
+		mv: song.mv,
+		ar: (song.ar || []).map((/** @type {any} */ artist) => ({
+			id: artist.id,
+			name: artist.name,
+		})),
+		al: song.al?.name ?? null,
+	}));
+	return crypto.createHash("sha256").update(JSON.stringify(metadata), "utf8").digest("hex");
+}
+
+/**
  * 读取 file-states.json；文件不存在或解析失败时返回空状态表
  * @returns {文件状态表}
  */
@@ -219,7 +243,7 @@ function writeFileStates(states) {
 // ==================== 文件状态同步器 ====================
 
 /**
- * 同步文件状态：遍历博客源文件与静态页面，按 hash 变化更新 updated，
+ * 同步文件状态：遍历博客源文件、静态页面与网易云歌单，按 hash 变化更新 updated，
  * 并把博客文章的 updated 同步写回 article.json
  * @returns {文件状态表} 更新后的状态表
  */
@@ -271,6 +295,22 @@ function syncFileStates() {
 		else updated = prev.updated;
 		states[file] = { hash, updated };
 	}
+
+	// 3. 网易云歌单：json/ncm.json（按歌曲关键元数据计算 hash，忽略封面等易变字段）
+	// 文件不存在或损坏时读取会抛错，跳过追踪并保留旧状态
+	const ncmPath = path.join(projectRoot, CONFIG.ncmOutputPath);
+	try {
+		const data = jsonfile.readFileSync(ncmPath);
+		const mtime = fs.statSync(ncmPath).mtime;
+		const hash = computeNcmHash(data?.songs || []);
+		const prev = states[ncmStateKey];
+		let updated;
+		// 首次追踪：用文件修改时间作为初始 updated
+		if (!prev) updated = mtime.toISOString();
+		else if (prev.hash !== hash) updated = now;
+		else updated = prev.updated;
+		states[ncmStateKey] = { hash, updated };
+	} catch (_err) {}
 
 	writeFileStates(states);
 	return states;
@@ -507,7 +547,8 @@ class SiteGenerator {
 // ==================== 网易云歌单任务（带错误处理）====================
 
 /**
- * 拉取网易云歌单并写入 json/ncm.json；失败时不写入，保留旧缓存
+ * 拉取网易云歌单并按关键元数据 hash 与现有文件比较：
+ * 一致则跳过写入（避免封面等易变字段触发无意义变更），失败时不写入，保留旧缓存
  * @returns {Promise<void>}
  */
 async function fetchNeteasePlaylist() {
@@ -527,7 +568,27 @@ async function fetchNeteasePlaylist() {
 		}
 
 		delete body.privileges;
+
+		// 以磁盘上的现有文件为准计算旧 hash，状态缺失或过期时也能正确判断
+		const newHash = computeNcmHash(body.songs || []);
+		const ncmPath = path.join(projectRoot, CONFIG.ncmOutputPath);
+		let oldHash = null;
+		try {
+			oldHash = computeNcmHash(jsonfile.readFileSync(ncmPath)?.songs || []);
+		} catch (_err) {
+			// 文件不存在或损坏时视为内容变化
+		}
+		if (oldHash !== null && oldHash === newHash) {
+			console.log("Netease playlist unchanged, skipping write.");
+			return;
+		}
+
 		jsonfile.writeFileSync(CONFIG.ncmOutputPath, body);
+
+		// syncFileStates 阶段记录的仍是旧文件状态，这里同步更新
+		const states = readFileStates();
+		states[ncmStateKey] = { hash: newHash, updated: new Date().toISOString() };
+		writeFileStates(states);
 		console.log("Netease playlist saved.");
 	} catch (err) {
 		console.error("Unexpected error in NCM task:", /** @type {Error} */ (err).message);
