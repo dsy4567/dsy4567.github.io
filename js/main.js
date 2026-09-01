@@ -483,7 +483,8 @@ try {
     section,
     img,
     nav,
-    li {
+    li,
+	.更多选项 {
         transition: 0.3s border-radius, 0.3s backdrop-filter, 0.3s background-image,
 		0.3s transform, 0.3s box-shadow, 0.3s filter, 0.3s background-color,
 		0.3s opacity, 0.3s max-height;

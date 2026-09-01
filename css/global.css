@@ -706,12 +706,6 @@ div.侧边按钮 > *:focus-within {
 	opacity: 1;
 	transform: translateX(0);
 }
-
-div.侧边按钮 > #网抑云阴乐:hover,
-div.侧边按钮 > #网抑云阴乐:focus-within {
-	border-bottom-left-radius: 0;
-	z-index: 1;
-}
 div.侧边按钮 > #切换主题 {
 	z-index: 0;
 }
@@ -726,6 +720,8 @@ div.侧边按钮 > #切换主题:focus-within {
 div.侧边按钮 > #网抑云阴乐:hover,
 div.侧边按钮 > #网抑云阴乐:focus-within {
 	transform: translateX(calc(-32px * 7));
+	border-bottom-left-radius: 0;
+	z-index: 1;
 }
 div.侧边按钮 > .拥有更多选项 > .更多选项 {
 	background: var(--bg-color-dark-2);
@@ -779,7 +775,7 @@ div.侧边按钮 > #网抑云阴乐 #播放列表 {
 	padding: 5px;
 	position: absolute;
 	top: 32px;
-	left: -34px;
+	left: -29px;
 	width: calc(31px * 8);
 	height: 118px;
 }
@@ -814,6 +810,7 @@ div.侧边按钮 > #网抑云阴乐 #播放列表 li * {
 }
 
 div.侧边按钮 > .拥有更多选项:hover > .更多选项,
+div.侧边按钮 > .拥有更多选项:focus-within > .更多选项,
 .更多选项:focus-within {
 	pointer-events: all !important;
 	opacity: 1 !important;

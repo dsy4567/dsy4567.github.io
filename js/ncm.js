@@ -343,8 +343,7 @@ let 网抑云阴乐 = {
 			网抑云阴乐.正在播放.Audio.onloadeddata = () => {
 				网抑云阴乐.设置闪烁动画(false);
 			};
-			网抑云阴乐.正在播放.Audio.onloadedmetadata = () => {
-			};
+			网抑云阴乐.正在播放.Audio.onloadedmetadata = () => {};
 			网抑云阴乐.正在播放.Audio.onplay = () => {
 				qsa("li.正在播放")?.forEach(元素 => {
 					元素.classList.remove("正在播放");
@@ -363,7 +362,7 @@ let 网抑云阴乐 = {
 				网抑云阴乐.设置封面旋转动画(false);
 				if (navigator.mediaSession) navigator.mediaSession.playbackState = "paused";
 			};
-			网抑云阴乐.正在播放.Audio.ontimeupdate = () => {}
+			网抑云阴乐.正在播放.Audio.ontimeupdate = () => {};
 			网抑云阴乐.正在播放.Audio.onerror = e => {
 				// 连续失败达到歌单长度时停止自动切换，成功播放一次即清零（见 onplaying）
 				网抑云阴乐.连续失败次数++;
@@ -458,7 +457,7 @@ fetch("/json/ncm.json")
 			svg(`<svg class="特小尺寸" data-icon="音量"></svg>`, 网抑云阴乐.更改音量, "音量");
 			gd("阴乐控件", true)?.insertAdjacentHTML(
 				"beforeend",
-				`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a><ol id="播放列表"></ol>`
+				`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a>`
 			);
 			网抑云阴乐.歌单.forEach(音乐信息 => {
 				let li = ce("li");
