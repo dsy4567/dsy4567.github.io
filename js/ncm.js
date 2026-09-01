@@ -205,21 +205,6 @@ let 网抑云阴乐 = {
 			console.error(e);
 		}
 	},
-	/** 向系统媒体控件上报播放进度，用于在系统界面显示/拖动进度条 */
-	更新媒体会话进度() {
-		let Audio = 网抑云阴乐.正在播放.Audio;
-		if (!navigator.mediaSession || !Number.isFinite(Audio.duration) || Audio.duration <= 0)
-			return;
-		try {
-			navigator.mediaSession.setPositionState({
-				duration: Audio.duration,
-				playbackRate: Audio.playbackRate,
-				position: Math.min(Audio.currentTime, Audio.duration),
-			});
-		} catch (e) {
-			console.warn(e);
-		}
-	},
 	更新歌曲信息(/** @type {number} */ 令牌) {
 		// @ts-ignore
 		gd("播放列表", true)?.scrollTo({
@@ -359,7 +344,6 @@ let 网抑云阴乐 = {
 				网抑云阴乐.设置闪烁动画(false);
 			};
 			网抑云阴乐.正在播放.Audio.onloadedmetadata = () => {
-				网抑云阴乐.更新媒体会话进度();
 			};
 			网抑云阴乐.正在播放.Audio.onplay = () => {
 				qsa("li.正在播放")?.forEach(元素 => {
@@ -374,13 +358,12 @@ let 网抑云阴乐 = {
 				网抑云阴乐.设置封面旋转动画(true);
 				网抑云阴乐.连续失败次数 = 0;
 				if (navigator.mediaSession) navigator.mediaSession.playbackState = "playing";
-				网抑云阴乐.更新媒体会话进度();
 			};
 			网抑云阴乐.正在播放.Audio.onpause = () => {
 				网抑云阴乐.设置封面旋转动画(false);
 				if (navigator.mediaSession) navigator.mediaSession.playbackState = "paused";
 			};
-			网抑云阴乐.正在播放.Audio.ontimeupdate = () => 网抑云阴乐.更新媒体会话进度();
+			网抑云阴乐.正在播放.Audio.ontimeupdate = () => {}
 			网抑云阴乐.正在播放.Audio.onerror = e => {
 				// 连续失败达到歌单长度时停止自动切换，成功播放一次即清零（见 onplaying）
 				网抑云阴乐.连续失败次数++;
