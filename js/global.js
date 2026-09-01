@@ -274,6 +274,35 @@ function rgb转hsl(红, 绿, 蓝) {
 	return [色相, 饱和度, 亮度];
 }
 /**
+ * 将十六进制颜色拆为 RGB 分量
+ * @param {string} hex - 形如 "#66ccff" 的颜色
+ * @returns {[number, number, number]} [红, 绿, 蓝]，范围 0-255
+ */
+function hex转rgb(hex) {
+	return [
+		parseInt(hex.slice(1, 3), 16),
+		parseInt(hex.slice(3, 5), 16),
+		parseInt(hex.slice(5, 7), 16),
+	];
+}
+/**
+ * 将 HSL 颜色转换为十六进制颜色
+ * @param {number} 色相 - 0-1
+ * @param {number} 饱和度 - 0-1
+ * @param {number} 亮度 - 0-1
+ * @returns {string} 形如 "#66ccff" 的颜色
+ */
+function hsl转hex(色相, 饱和度, 亮度) {
+	const 分量 = (/** @type {number} */ n) => {
+		const k = (n + 色相 * 12) % 12;
+		const a = 饱和度 * Math.min(亮度, 1 - 亮度);
+		return Math.round((亮度 - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))) * 255)
+			.toString(16)
+			.padStart(2, "0");
+	};
+	return "#" + 分量(0) + 分量(8) + 分量(4);
+}
+/**
  * 添加一个悬浮卡片到页面
  * @param {string} html - 要显示的 HTML 内容
  * @param {number} [x=0] - 水平位置（像素）
@@ -315,33 +344,95 @@ function 添加横幅(/** @type {string} */ html) {
 //#endregion
 
 //#region 前期准备
+//#region 主题（两级模型：背景模式 + 强调色）
+/** 默认强调色（天依蓝） */
+const 默认强调色 = "#66ccff";
+
 /**
- * 从 localStorage 读取主题色设置并尽快应用到页面
+ * 读取背景模式设置
+ * @returns {"自动" | "浅色" | "深色"}
  */
-function 尽快设置主题色() {
-	if (localStorage.getItem("主题色h")) {
-		const 主题色 = localStorage.getItem("主题色") || "";
-		gd("主题色", true)?.setAttribute("content", 主题色);
-		document.documentElement.style.setProperty("--theme-color", 主题色);
-		document.documentElement.style.setProperty(
-			"--theme-color-h",
-			localStorage.getItem("主题色h")
-		);
-		document.documentElement.style.setProperty(
-			"--theme-color-s",
-			localStorage.getItem("主题色s")
-		);
-		document.documentElement.style.setProperty(
-			"--theme-color-l",
-			localStorage.getItem("主题色l")
-		);
-		document.documentElement.style.setProperty(
-			"--theme-color-transparent",
-			localStorage.getItem("透明色")
-		);
-		document.documentElement.style.setProperty("--text-color", localStorage.getItem("字体色"));
-	}
+function 读取背景模式() {
+	const 模式 = localStorage.getItem("主题背景");
+	return 模式 === "浅色" || 模式 === "深色" ? 模式 : "自动";
 }
+/**
+ * 读取强调色设置
+ * @returns {string} 强调色的 hex 值，如 "#66ccff"
+ */
+function 读取强调色() {
+	return localStorage.getItem("强调色") || 默认强调色;
+}
+/**
+ * 判断当前生效的背景是否为深色（自动模式跟随系统偏好）
+ * @returns {boolean}
+ */
+function 当前是否深色() {
+	const 模式 = 读取背景模式();
+	if (模式 === "深色") return true;
+	if (模式 === "浅色") return false;
+	return matchMedia("(prefers-color-scheme: dark)").matches;
+}
+/**
+ * 按背景深浅对强调色做方向调整（浅色背景上加深、深色背景上提亮），
+ * 连同衍生色一起写入 CSS 变量
+ * @param {string} hex - 强调色原色，如 "#66ccff"
+ */
+function 写入强调色变量(hex) {
+	const 深 = 当前是否深色();
+	const [红, 绿, 蓝] = hex转rgb(hex);
+	const [色相, 饱和度, 亮度] = rgb转hsl(红, 绿, 蓝);
+	// 主色用作链接/图标等前景色，深色背景上提亮、浅色背景上压暗，保证可读性
+	const 主色 = hsl转hex(色相, 饱和度, 深 ? Math.max(亮度, 0.66) : Math.min(亮度, 0.38));
+	const 强色 = hsl转hex(色相, 饱和度, 深 ? Math.max(亮度, 0.78) : Math.min(亮度, 0.3));
+	const 根 = document.documentElement.style;
+	根.setProperty("--accent-color", 主色);
+	根.setProperty("--accent-color-strong", 强色);
+	// 原色低透明度，用作高亮底色（正在播放、引用块边线等）
+	根.setProperty("--accent-color-transparent", hex + "2e");
+	// 强调色块上的文字色：深色模式的主色偏亮、浅色模式的主色偏暗，故方向相反
+	根.setProperty("--accent-text-color", 深 ? "#222" : "#eee");
+	根.setProperty("--link-color", 主色);
+}
+/**
+ * 依据 localStorage 重算背景类、meta 主题色和强调色变量
+ */
+function 刷新主题() {
+	const 深 = 当前是否深色();
+	// 自动模式也解析为具体类，保证 hljs 等只认类的地方能跟随
+	document.documentElement.classList.toggle("深色", 深);
+	document.documentElement.classList.toggle("浅色", !深);
+	gd("主题色", true)?.setAttribute("content", 深 ? "#18171c" : "#eeeeee");
+	写入强调色变量(读取强调色());
+}
+/**
+ * 切换背景模式并持久化
+ * @param {"自动" | "浅色" | "深色"} 模式
+ */
+function 应用背景模式(模式) {
+	localStorage.setItem("主题背景", 模式);
+	刷新主题();
+}
+/**
+ * 设置强调色并持久化
+ * @param {string} hex - 强调色，如 "#66ccff"
+ */
+function 应用强调色(hex) {
+	localStorage.setItem("强调色", hex);
+	写入强调色变量(hex);
+}
+
+// 清理旧版主题键（旧模型为多键存储，已被两级模型取代）
+["theme", "主题色", "主题色h", "主题色s", "主题色l", "透明色", "字体色"].forEach(键 =>
+	localStorage.removeItem(键)
+);
+// 自动模式下跟随系统深浅色变化
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", 刷新主题);
+// 跨标签页同步主题设置
+addEventListener("storage", 刷新主题);
+// 尽早应用主题，避免加载闪烁（global.js 位于 head，先于样式表和正文执行）
+刷新主题();
+//#endregion
 
 let URL发生变化事件 = new CustomEvent("URL发生变化"),
 	/** 在内容准备好后设为 true */
@@ -349,8 +440,6 @@ let URL发生变化事件 = new CustomEvent("URL发生变化"),
 
 // 方便暴露到全局变量
 let _global = {};
-addEventListener("storage", 尽快设置主题色);
-尽快设置主题色();
 
 let DOMContentLoaded = false,
 	loaded = false;

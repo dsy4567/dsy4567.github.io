@@ -156,115 +156,95 @@ _global["main.js"] = () => ({
 //#region 主题
 fetch("/json/theme.json")
 	.then(res => res.json())
-	.then(主题 => {
-		Object.keys(主题).forEach(t => {
-			// @ts-ignore
-			let /** @type {HTMLButtonElement} */ btn = ce("button");
-			btn.style.backgroundColor = 主题[t]["--theme-color"];
-			btn.title = t;
-			btn.role = "radio";
-			btn.ariaChecked = "false";
-			btn.onclick = 提示用户 => {
-				// @ts-ignore
-				if (提示用户 !== false) {
-					[
-						"--theme-color",
-						"--theme-color-h",
-						"--theme-color-s",
-						"--theme-color-l",
-						"--theme-color-transparent",
-						"--text-color",
-					].forEach(n => {
-						document.documentElement.style.setProperty(n, 主题[t][n]);
-					});
-					localStorage.setItem("theme", t);
-					localStorage.setItem(
-						"主题色",
-						// @ts-ignore
-						(gd("自定义主题色", true).value = 主题[t]["--theme-color"])
-					);
-					localStorage.setItem("主题色h", 主题[t]["--theme-color-h"]);
-					localStorage.setItem("主题色s", 主题[t]["--theme-color-s"]);
-					localStorage.setItem("主题色l", 主题[t]["--theme-color-l"]);
-					localStorage.setItem("透明色", 主题[t]["--theme-color-transparent"]);
-					localStorage.setItem("字体色", 主题[t]["--text-color"]);
-					提示("已切换主题: " + t);
-				}
+	.then(
+		/** @type {Record<string, string>} */ 主题表 => {
+			const f = () => {
+				const 控件容器 = gd("主题控件", true),
+					主题容器 = gd("所有主题", true);
+				if (!控件容器 || !主题容器) return;
 
-				gd("主题色")?.setAttribute("content", 主题[t]["--theme-color"]);
-				qsa("#所有主题 > button").forEach(元素 => (元素.ariaChecked = "false"));
-				btn.ariaChecked = "true";
+				//#region 第一行：背景模式切换、自定义强调色调色盘
+				/** @type {HTMLButtonElement} */
+				let 模式按钮 = ce("button");
+				模式按钮.id = "背景模式";
+				const 更新模式按钮 = () => {
+					const 模式 = 读取背景模式();
+					模式按钮.title = "背景: " + 模式 + (模式 === "自动" ? "（跟随系统）" : "");
+				};
+				模式按钮.onclick = () => {
+					// 自动 → 浅色 → 深色 循环
+					const 列表 = /** @type {("自动" | "浅色" | "深色")[]} */ ([
+						"自动",
+						"浅色",
+						"深色",
+					]);
+					const 下一个 = 列表[(列表.indexOf(读取背景模式()) + 1) % 列表.length];
+					应用背景模式(下一个);
+					更新模式按钮();
+					提示("背景模式: " + 下一个);
+				};
+				更新模式按钮();
+				控件容器.append(模式按钮);
+
+				/** @type {HTMLButtonElement} */
+				let 调色盘按钮 = ce("button");
+				调色盘按钮.title = "自定义强调色";
+				调色盘按钮.role = "radio";
+				调色盘按钮.ariaChecked = "false";
+				调色盘按钮.innerHTML =
+					"<svg class='特小尺寸' data-icon='调色盘'></svg><input aria-label='自定义强调色调色盘' style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0' tabindex='-1' id='自定义强调色' type='color' />";
+				调色盘按钮.onclick = () => {
+					let 输入 = /** @type {HTMLInputElement} */ (gd("自定义强调色", true));
+					if (!输入) return;
+					输入.click();
+					输入.onchange = () => {
+						应用强调色(输入.value);
+						同步选中态();
+						提示("已切换自定义强调色");
+					};
+				};
+				控件容器.append(调色盘按钮);
+				//#endregion
+
+				//#region 下方：预设强调色色板
+				/** 根据当前强调色高亮对应色板，为自定义色时高亮调色盘 */
+				const 同步选中态 = () => {
+					const 当前 = 读取强调色();
+					let 命中预设 = false;
+					主题容器.querySelectorAll("button").forEach(元素 => {
+						const 命中 = 元素.dataset.hex === 当前;
+						元素.ariaChecked = "" + 命中;
+						if (命中) 命中预设 = true;
+					});
+					调色盘按钮.ariaChecked = "" + !命中预设;
+				};
+				Object.entries(主题表).forEach(([名字, hex]) => {
+					/** @type {HTMLButtonElement} */
+					let btn = ce("button");
+					btn.dataset.hex = hex;
+					btn.style.backgroundColor = hex;
+					btn.title = "强调色: " + 名字;
+					btn.role = "radio";
+					btn.ariaChecked = "false";
+					btn.onclick = () => {
+						应用强调色(hex);
+						同步选中态();
+						提示("已切换强调色: " + 名字);
+					};
+					主题容器.append(btn);
+				});
+				同步选中态();
+				//#endregion
+
+				添加点击事件和设置图标({
+					添加链接点击事件: false,
+					设置图标: true,
+					要设置图标的元素: 调色盘按钮.getElementsByTagName("svg"),
+				});
 			};
-			// @ts-ignore
-			if (t === localStorage.getItem("theme")) btn.onclick(false);
-			const f = () => gd("所有主题", true)?.append(btn);
 			DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
-		});
-
-		// @ts-ignore
-		let /** @type {HTMLButtonElement} */ btn = ce("button");
-		btn.title = "自定义主题色";
-		btn.role = "radio";
-		btn.ariaChecked = "false";
-		btn.innerHTML =
-			"<svg class='特小尺寸' data-icon='调色盘'></svg></svg><input aria-label='自定义主题色调色盘' style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0' tabindex='-1' id='自定义主题色' type='color' />";
-		btn.onclick = 提示用户 => {
-			let 自定义主题色 = gd("自定义主题色", true);
-			if (!自定义主题色) return;
-			自定义主题色.click();
-			自定义主题色.onchange = () => {
-				let rgb, r, g, b, hsl;
-				// @ts-ignore
-				if (提示用户 !== false) {
-					rgb =
-						// @ts-ignore
-						gd("自定义主题色", true)?.value || "#000000";
-					r = parseInt("0x" + rgb.substring(1, 3));
-					g = parseInt("0x" + rgb.substring(3, 5));
-					b = parseInt("0x" + rgb.substring(5, 7));
-					hsl = rgb转hsl(r, g, b);
-					let 字体色 =
-						(r * 0.2126 + g * 0.7152 + b * 0.0722) / 255 >= 0.5 ? "#222" : "#ccc";
-					btn.ariaChecked = "true";
-					Object.entries({
-						"--theme-color": rgb,
-						"--theme-color-h": hsl[0],
-						"--theme-color-s": hsl[1],
-						"--theme-color-l": hsl[2],
-						"--theme-color-transparent": "#8888",
-						"--text-color": 字体色,
-					}).forEach(a => {
-						document.documentElement.style.setProperty(a[0], "" + a[1]);
-					});
-					localStorage.setItem("theme", "自定义主题");
-					localStorage.setItem("主题色", rgb);
-					localStorage.setItem("主题色h", "" + hsl[0]);
-					localStorage.setItem("主题色s", "" + hsl[1]);
-					localStorage.setItem("主题色l", "" + hsl[2]);
-					localStorage.setItem("透明色", "#8888");
-					localStorage.setItem("字体色", 字体色);
-				}
-				gd("主题色")?.setAttribute("content", localStorage.getItem("主题色") || "");
-
-				// @ts-ignore
-				提示用户 !== false && 提示("已切换自定义主题");
-			};
-			gd("主题色")?.setAttribute("content", localStorage.getItem("主题色") || "");
-			qsa("#所有主题 > button").forEach(元素 => (元素.ariaChecked = "false"));
-			btn.ariaChecked = "true";
-		};
-		const f = () => {
-			gd("所有主题", true)?.append(btn);
-			添加点击事件和设置图标({
-				添加链接点击事件: false,
-				设置图标: true,
-				要设置图标的元素: btn.getElementsByTagName("svg"),
-			});
-		};
-		// @ts-ignore
-		if (localStorage.getItem("theme") === "自定义主题") btn.onclick(false);
-		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
-	})
+		}
+	)
 	.catch(e => console.error(e));
 //#endregion
 

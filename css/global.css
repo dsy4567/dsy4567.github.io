@@ -107,27 +107,52 @@ main、左右栏
 }
 
 /* ==================== @media ==================== */
-@media not (prefers-color-scheme: dark) {
-	html {
-		--theme-color: #eee;
-		--theme-color-h: 0;
-		--theme-color-s: 0;
-		--theme-color-l: 0.93;
-		--theme-color-transparent: #8888;
-		--text-color: #222;
-		color-scheme: light;
-	}
+/*
+主题背景变量：浅色为缺省（含无偏好）。
+深色由两处决定：@media（无 JS 时的兜底）与 html.深色 / html.浅色 类（global.js 写入，
+自动模式也会被解析为具体类，保证 hljs 等只依赖类即可跟随）。
+*/
+:root {
+	--bg-color: #eeeeee;
+	--surface-1: #f7f7f7;
+	--surface-2: #ffffff;
+	--text-color: #222;
+	--overlay: #8888;
+	--overlay-strong: #888;
+	--selection-bg: #0006;
+	color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
-	html {
-		--theme-color: #18171c;
-		--theme-color-h: 0.7;
-		--theme-color-s: 0.1;
-		--theme-color-l: 0.1;
-		--theme-color-transparent: #fff2;
+	:root {
+		--bg-color: #18171c;
+		--surface-1: #222027;
+		--surface-2: #2a2931;
 		--text-color: #ccc;
+		--overlay: #fff2;
+		--overlay-strong: #888;
+		--selection-bg: #fff5;
 		color-scheme: dark;
 	}
+}
+:root.深色 {
+	--bg-color: #18171c;
+	--surface-1: #222027;
+	--surface-2: #2a2931;
+	--text-color: #ccc;
+	--overlay: #fff2;
+	--overlay-strong: #888;
+	--selection-bg: #fff5;
+	color-scheme: dark;
+}
+:root.浅色 {
+	--bg-color: #eeeeee;
+	--surface-1: #f7f7f7;
+	--surface-2: #ffffff;
+	--text-color: #222;
+	--overlay: #8888;
+	--overlay-strong: #888;
+	--selection-bg: #0006;
+	color-scheme: light;
 }
 @media (forced-colors: active) {
 	a:hover {
@@ -155,13 +180,17 @@ main、左右栏
 @media print {
 	html,
 	body {
-		--theme-color: #fff !important;
-		--theme-color-h: 1 !important;
-		--theme-color-s: 1 !important;
-		--theme-color-l: 1 !important;
-		--theme-color-transparent: #fff0 !important;
-		--text-color: #000 !important;
 		--bg-color: #fff !important;
+		--surface-1: #fff !important;
+		--surface-2: #fff !important;
+		--text-color: #000 !important;
+		--overlay: #0000 !important;
+		--overlay-strong: #0000 !important;
+		--selection-bg: #0000 !important;
+		--accent-color: #000 !important;
+		--accent-color-strong: #000 !important;
+		--accent-color-transparent: #0000 !important;
+		--accent-text-color: #fff !important;
 		color-scheme: light !important;
 	}
 	a::after {
@@ -221,7 +250,7 @@ main、左右栏
 
 /* ==================== ::* ==================== */
 ::selection {
-	background-color: #888;
+	background-color: var(--selection-bg);
 }
 
 ::-webkit-scrollbar {
@@ -230,11 +259,11 @@ main、左右栏
 	height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-	background-color: #8888;
+	background-color: var(--overlay);
 	border-radius: var(--border-radius);
 }
 ::-webkit-scrollbar-thumb:active {
-	background-color: #888;
+	background-color: var(--overlay-strong);
 }
 
 /* ==================== html/body/通用元素 ==================== */
@@ -253,29 +282,18 @@ main、左右栏
 }
 
 html {
-	--bg-color: hsl(
-		calc(var(--theme-color-h) * 360),
-		calc(var(--theme-color-s) * 100%),
-		calc(var(--theme-color-l) * 100% + 4%)
-	);
-	--bg-color-dark: hsl(
-		calc(var(--theme-color-h) * 360),
-		calc(var(--theme-color-s) * 100%),
-		calc(var(--theme-color-l) * 100%)
-	);
-	--bg-color-dark-2: hsl(
-		calc(var(--theme-color-h) * 360),
-		calc(var(--theme-color-s) * 100%),
-		calc(var(--theme-color-l) * 100% + 2%)
-	);
-	--bg-color-light: 0;
+	/* 强调色缺省（中性）：未设置时回退为文字色/叠层色，自动跟随背景深浅 */
+	--accent-color: var(--text-color);
+	--accent-color-strong: var(--text-color);
+	--accent-color-transparent: var(--overlay);
+	--accent-text-color: var(--bg-color);
 	--link-color: var(--text-color);
 	--border-radius: 8px;
 	--hostname: "dsy4567.icu";
 	scroll-behavior: smooth;
 }
 body {
-	background-color: var(--theme-color);
+	background-color: var(--bg-color);
 	color: var(--text-color);
 	display: flex;
 	flex-direction: column;
@@ -292,7 +310,7 @@ svg {
 }
 a {
 	opacity: 0.9;
-	text-decoration: 1px underline #888;
+	text-decoration: 1px underline var(--overlay);
 }
 a.无滤镜,
 a.无滤镜:hover,
@@ -317,12 +335,12 @@ a[title]::after {
 
 abbr {
 	cursor: help;
-	text-decoration: dashed underline var(--theme-color);
+	text-decoration: dashed underline var(--accent-color-strong);
 }
 
 img,
 video {
-	background-color: var(--theme-color);
+	background-color: var(--bg-color);
 	border-radius: var(--border-radius);
 }
 
@@ -336,12 +354,12 @@ spoiler:hover {
 }
 
 svg[data-icon] {
-	background-color: var(--theme-color);
+	background-color: var(--bg-color);
 	border-radius: 50%;
 }
 
 section {
-	background-color: var(--bg-color);
+	background-color: var(--surface-1);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
@@ -350,7 +368,7 @@ section {
 	word-break: break-word;
 }
 section section {
-	background-color: var(--bg-color-dark-2);
+	background-color: var(--surface-2);
 }
 section h2 {
 	display: flex;
@@ -367,15 +385,15 @@ section video {
 }
 
 blockquote {
-	background-color: var(--bg-color-dark-2);
+	background-color: var(--surface-2);
 	border: 1px solid transparent;
-	border-left: 8px solid var(--theme-color-transparent);
+	border-left: 8px solid var(--accent-color-transparent);
 	border-radius: var(--border-radius);
 	margin: 4px 0;
 	padding: 4px;
 }
 code {
-	background-color: var(--theme-color-transparent);
+	background-color: var(--overlay);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	font-family: "Source Code Pro", monospace;
@@ -383,7 +401,7 @@ code {
 }
 pre {
 	background-color: transparent;
-	color: #111;
+	color: var(--text-color);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	overflow: auto;
@@ -397,7 +415,7 @@ pre > code {
 }
 
 hr {
-	border: 1px solid var(--theme-color-transparent);
+	border: 1px solid var(--overlay);
 }
 
 /* ==================== 通用工具类 class ==================== */
@@ -468,7 +486,7 @@ hr {
 }
 
 .悬浮卡片 {
-	background-color: var(--bg-color);
+	background-color: var(--surface-1);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	box-shadow:
@@ -484,7 +502,7 @@ hr {
 	animation-fill-mode: forwards;
 	animation-iteration-count: 1;
 	/* animation-name: 隐藏; */
-	background-color: var(--bg-color-dark-2);
+	background-color: var(--surface-2);
 	font-size: larger;
 	padding: 2px;
 	position: fixed;
@@ -500,7 +518,7 @@ div.通知 {
 	animation-iteration-count: 1;
 	animation-name: 显示;
 	/* animation-name: 隐藏; */
-	background-color: var(--theme-color);
+	background-color: var(--surface-1);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	box-shadow:
@@ -556,7 +574,7 @@ div.通知 {
 
 /* ==================== 导航栏和进度条 ==================== */
 #导航栏 {
-	background-color: var(--bg-color);
+	background-color: var(--surface-1);
 	border-bottom: 1px solid transparent;
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 	color: var(--text-color);
@@ -627,7 +645,7 @@ body.隐藏导航栏 #导航栏 {
 	animation-fill-mode: forwards;
 	animation-iteration-count: 1;
 	animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
-	background-color: var(--theme-color);
+	background-color: var(--accent-color);
 	box-shadow: rgba(0, 0, 0) 0px 0px 16px 2px;
 	position: fixed;
 	top: 0;
@@ -675,8 +693,8 @@ main > .右 {
 }
 
 main > #分界线 {
-	background-color: var(--bg-color);
-	border: 8px solid var(--theme-color);
+	background-color: var(--surface-1);
+	border: 8px solid var(--bg-color);
 	border-radius: var(--border-radius);
 	display: flex;
 	margin-top: 96px;
@@ -693,7 +711,7 @@ body.宽屏 > main > #分界线 {
 	margin-left: -40px;
 }
 main > #分界线 > svg {
-	background: var(--bg-color);
+	background: var(--surface-1);
 	border-radius: 50%;
 	box-shadow:
 		rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
@@ -758,7 +776,7 @@ span#联系方式 > * {
 }
 
 .标签 > div > * {
-	background-color: var(--bg-color-dark-2);
+	background-color: var(--surface-2);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	line-height: 2.5;
@@ -770,7 +788,7 @@ span#联系方式 > * {
 /* ==================== 页脚 ==================== */
 
 #copyright {
-	background-color: var(--bg-color);
+	background-color: var(--surface-1);
 	border-top: 1px solid transparent;
 	border-top-left-radius: var(--border-radius);
 	border-top-right-radius: var(--border-radius);
@@ -790,7 +808,7 @@ div#侧边按钮容器 {
 	top: calc(75vh - 33px * 4);
 }
 div#侧边按钮容器 > * {
-	background-color: var(--bg-color-dark-2);
+	background-color: var(--surface-2);
 	box-shadow:
 		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
 		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
@@ -815,8 +833,14 @@ div#侧边按钮容器 > *:focus-within {
 	transform: translateX(0);
 }
 
+div#侧边按钮容器 > .拥有更多选项:hover,
+div#侧边按钮容器 > .拥有更多选项:focus-within {
+	border-bottom-left-radius: 0;
+	z-index: 1;
+}
+
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
-	background: var(--bg-color-dark-2);
+	background: var(--surface-2);
 	color: var(--text-color);
 	border: 1px solid transparent;
 	display: flex;
@@ -835,9 +859,14 @@ div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项,
 	pointer-events: all !important;
 	opacity: 1 !important;
 }
+div#侧边按钮容器 > .拥有更多选项:hover > .更多选项 + .更多选项,
+div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项 + .更多选项 {
+	border-bottom-left-radius: var(--border-radius);
+	border-top: 1px solid var(--accent-color);
+}
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
-	background-color: var(--bg-color-dark-2);
-	border: 1px solid #888;
+	background-color: var(--surface-2);
+	border: 1px solid var(--overlay-strong);
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
@@ -850,7 +879,7 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *.激活,
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:hover,
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:focus-visible {
-	background-color: #888;
+	background-color: var(--overlay);
 }
 
 /* ==================== 侧边按钮-回到顶部 ==================== */
@@ -892,8 +921,6 @@ div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 .网抑云封面旋
 div#侧边按钮容器 > .拥有更多选项#网抑云阴乐:hover,
 div#侧边按钮容器 > .拥有更多选项#网抑云阴乐:focus-within {
 	transform: translateX(calc(-32px * 7));
-	border-bottom-left-radius: 0;
-	z-index: 1;
 }
 
 div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #歌词 {
@@ -920,6 +947,9 @@ div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#阴
 }
 
 div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 {
+	box-shadow:
+		inset 0 16px 10px -5px var(--accent-color-transparent),
+		inset 0 -16px 10px -5px var(--accent-color-transparent);
 	flex-direction: column;
 	flex-wrap: nowrap;
 	font-size: 0.9em;
@@ -928,13 +958,13 @@ div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播
 	overflow-x: hidden;
 	padding: 5px;
 	position: absolute;
-	top: 32px;
+	top: 38px;
 	left: -29px;
 	width: calc(31px * 8);
 	height: 118px;
 }
 div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 li {
-	border-top: 1px solid #888;
+	border-top: 1px solid var(--overlay);
 	cursor: pointer;
 	display: table-caption;
 	user-select: none;
@@ -942,13 +972,15 @@ div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播
 	width: calc(100% + 8px);
 }
 
-div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li.正在播放,
 div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li:hover,
 div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li:focus-visible {
-	background-color: var(--theme-color-transparent);
+	background-color: var(--overlay);
+}
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li.正在播放 {
+	background-color: var(--accent-color-transparent);
 }
 div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li.正在播放::before {
-	background-color: var(--link-color);
+	background-color: var(--accent-color);
 	display: block;
 	width: 5px;
 	height: 43px;
@@ -970,12 +1002,35 @@ div#侧边按钮容器 > #切换主题 {
 }
 div#侧边按钮容器 > #切换主题:hover,
 div#侧边按钮容器 > #切换主题:focus-within {
-	transform: translateX(calc(-32px * 4));
+	transform: translateX(calc(-32px * 3 + -1px));
 }
 
-div#侧边按钮容器 > #切换主题 > #所有主题 {
+/* 第一行：背景模式切换、自定义强调色调色盘 */
+div#侧边按钮容器 > #切换主题 > #主题控件 {
+	padding-right: 0;
 	width: calc(32px * 3);
-	height: calc(32px * 3);
+}
+/* 背景模式按钮：填充色反映当前生效的背景（浅色→白、深色→黑），边框提供轮廓 */
+div#侧边按钮容器 > #切换主题 > #主题控件 > button#背景模式 {
+	background-color: #fff;
+	border: 1px solid var(--overlay-strong);
+}
+html.深色 div#侧边按钮容器 > #切换主题 > #主题控件 > button#背景模式 {
+	background-color: #000;
+}
+
+/* 下方：预设强调色色板，3 个一行 */
+div#侧边按钮容器 > #切换主题 > #所有主题 {
+	flex-wrap: wrap;
+	height: auto;
+	left: -1px;
+	padding: 3px;
+	top: 33px;
+	transform: none;
+	width: calc(32px * 4);
+}
+div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="true"] {
+	outline: 2px solid var(--text-color);
 }
 
 /* ==================== 首页 ==================== */
@@ -991,7 +1046,7 @@ div#侧边按钮容器 > #切换主题 > #所有主题 {
 	margin-bottom: 16px;
 }
 #技能 > p > span {
-	background-color: var(--theme-color-transparent);
+	background-color: var(--overlay);
 	border: 1px solid;
 	border-radius: var(--border-radius);
 	display: block;
