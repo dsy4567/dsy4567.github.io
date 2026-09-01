@@ -1,6 +1,31 @@
-/* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
+/* Copyright (c) 2026 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
 
 @charset "utf-8";
+
+/*
+
+Ctrl + F 导航
+
+@keyframes
+@media
+::*
+html/body/通用元素
+通用工具类 class
+导航栏、左右栏通用
+导航栏和进度条
+main、左右栏
+左栏
+页脚
+侧边按钮-通用
+侧边按钮-回到顶部
+侧边按钮-网抑云阴乐
+侧边按钮-主题
+首页
+博客
+友链
+
+*/
+/* ==================== @keyframes ==================== */
 @keyframes 进度条 {
 	from {
 		width: 0%;
@@ -81,23 +106,7 @@
 	}
 }
 
-::selection {
-	background-color: #888;
-}
-
-::-webkit-scrollbar {
-	background-color: transparent;
-	width: 8px;
-	height: 8px;
-}
-::-webkit-scrollbar-thumb {
-	background-color: #8888;
-	border-radius: var(--border-radius);
-}
-::-webkit-scrollbar-thumb:active {
-	background-color: #888;
-}
-
+/* ==================== @media ==================== */
 @media not (prefers-color-scheme: dark) {
 	html {
 		--theme-color: #eee;
@@ -204,23 +213,44 @@
 	main > #分界线,
 	footer,
 	#导航栏,
-	#主侧边按钮,
+	#侧边按钮容器,
 	#评论区 {
 		display: none !important;
 	}
 }
 
-/* a,
-button,
-div,
-section,
-img,
-nav,
-li {
-	transition: 0.3s border-radius, 0.3s backdrop-filter, 0.3s background-image,
-		0.3s transform, 0.3s box-shadow, 0.3s filter, 0.3s background-color,
-		0.3s opacity, 0.3s max-height;
-} */
+/* ==================== ::* ==================== */
+::selection {
+	background-color: #888;
+}
+
+::-webkit-scrollbar {
+	background-color: transparent;
+	width: 8px;
+	height: 8px;
+}
+::-webkit-scrollbar-thumb {
+	background-color: #8888;
+	border-radius: var(--border-radius);
+}
+::-webkit-scrollbar-thumb:active {
+	background-color: #888;
+}
+
+/* ==================== html/body/通用元素 ==================== */
+@media only screen and (max-width: 1000px) {
+	section {
+		margin-top: unset;
+		padding: 8px;
+	}
+}
+
+*:disabled {
+	cursor: not-allowed;
+}
+*:focus-visible {
+	outline: 2px dashed var(--link-color);
+}
 
 html {
 	--bg-color: hsl(
@@ -256,37 +286,6 @@ body {
 	padding: 0;
 }
 
-.暂停动画 {
-	animation-play-state: paused;
-}
-
-.隐藏链接 {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	margin: 0;
-	opacity: 0;
-	overflow: hidden;
-}
-
-.隐藏链接:focus-visible {
-	width: auto;
-	height: auto;
-	opacity: 1;
-	z-index: 999;
-}
-
-span#联系方式 {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: center;
-}
-
-span#联系方式 > * {
-	margin-left: 4px;
-	margin-right: 4px;
-}
 a,
 svg {
 	color: var(--link-color);
@@ -312,19 +311,21 @@ a.外链::after {
 a.外链.无滤镜::after {
 	content: "";
 }
-
 a[title]::after {
 	content: "" !important;
 }
+
 abbr {
 	cursor: help;
 	text-decoration: dashed underline var(--theme-color);
 }
+
 img,
 video {
 	background-color: var(--theme-color);
 	border-radius: var(--border-radius);
 }
+
 spoiler {
 	background-color: #000;
 	color: #000;
@@ -333,141 +334,38 @@ spoiler {
 spoiler:hover {
 	color: #fff !important;
 }
-*:disabled {
-	cursor: not-allowed;
-}
-*:focus-visible {
-	outline: 2px dashed var(--link-color);
-}
-.标记 {
-	animation-duration: 3s;
-	animation-name: 标记;
-	animation-iteration-count: 1;
-	animation-timing-function: linear;
-	transition:
-		0.3s color,
-		0.3s background-color;
-}
+
 svg[data-icon] {
 	background-color: var(--theme-color);
 	border-radius: 50%;
 }
-.fill {
-	fill: var(--link-color);
-}
-.stroke {
-	stroke: var(--link-color);
-}
-main {
-	display: flex;
-	align-items: flex-start;
-	justify-content: space-around;
-	width: calc(100vw - 90px);
-	max-width: 1600px;
-}
-main > .左 {
-	overflow-y: auto;
-	position: sticky;
-	top: 0;
-	transform: translateY(48px);
-	width: calc(25% - 5px);
-	max-height: calc(100vh - 69px);
-}
-body.隐藏导航栏 > main > .左 {
-	transform: translateY(0);
-	max-height: calc(100vh - 21px);
-}
-main > .右 {
-	margin-top: 48px;
-	width: calc(75% - 5px);
-}
-main > .左,
-main > .右 {
-	padding: 4px;
-}
 
-.标签 > div > * {
-	background-color: var(--bg-color-dark-2);
+section {
+	background-color: var(--bg-color);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
-	line-height: 2.5;
-	margin: 2px;
-	padding: 4px;
-	white-space: nowrap;
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
+	margin: 8px;
+	padding: 12px;
+	word-break: break-word;
 }
-
-main > #分界线 {
-	background-color: var(--bg-color);
-	border: 8px solid var(--theme-color);
-	border-radius: var(--border-radius);
+section section {
+	background-color: var(--bg-color-dark-2);
+}
+section h2 {
 	display: flex;
-	margin-top: 96px;
-	position: sticky;
-	top: 0;
-	width: 4px;
-	height: calc(100vh - 16px);
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
+	align-items: stretch;
+	justify-content: flex-start;
 }
-body.宽屏 > main > #分界线 {
-	/* opacity: 0; */
-	margin-left: -40px;
+section h2 svg {
+	margin-right: 8px;
 }
-main > #分界线 > svg {
-	background: var(--bg-color);
-	border-radius: 50%;
-	box-shadow:
-		rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
-		rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
-	opacity: 0;
-	transition:
-		0.3s opacity,
-		0.3s transform;
-}
-body.宽屏 > main #分界线:hover,
-main > #分界线:hover > svg {
-	opacity: 1;
-}
-body.宽屏 > main #分界线 > svg {
-	transform: rotateY(180deg);
-}
-body.宽屏 > main .左 {
-	display: none;
-	width: 0%;
-}
-body.宽屏 > main .右 {
-	width: calc(100% - 20px);
-}
-
-#copyright {
-	background-color: var(--bg-color);
-	border-top: 1px solid transparent;
-	border-top-left-radius: var(--border-radius);
-	border-top-right-radius: var(--border-radius);
-	padding-top: 16px;
-	padding-bottom: 16px;
-	margin-top: 32px;
-	margin-bottom: 0;
-	text-align: center;
-	width: 100%;
-}
-.rss {
-	transform: translate(-4px, 2px) rotate(45deg);
-}
-.淡化 {
-	opacity: 0.7;
-}
-.组 {
-	display: flex;
+section img,
+section video {
 	max-width: 100%;
-	overflow: auto;
-	padding: 16px;
+	height: auto;
 }
-.组 > section {
-	max-width: 256px;
-	min-width: 256px;
-}
+
 blockquote {
 	background-color: var(--bg-color-dark-2);
 	border: 1px solid transparent;
@@ -497,48 +395,135 @@ pre > code {
 	margin: 0;
 	padding: 0;
 }
-code.hljs::before {
-	content: attr(data-lang) " | 双击复制代码";
-	border-radius: var(--border-radius);
-	font-size: 0.5em;
-	margin: -12px;
-	opacity: 0.5;
-	pointer-events: none;
-	position: absolute;
-}
-code.hljs.已复制:hover::before {
-	content: attr(data-lang) " | 已复制";
-}
-section {
-	background-color: var(--bg-color);
-	border: 1px solid transparent;
-	border-radius: var(--border-radius);
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
-	margin: 8px;
-	padding: 12px;
-	word-break: break-word;
-}
-section section {
-	background-color: var(--bg-color-dark-2);
-}
-section h2 {
-	display: flex;
-	align-items: stretch;
-	justify-content: flex-start;
-}
-section h2 svg {
-	margin-right: 8px;
-}
-section img,
-section video {
-	max-width: 100%;
-	height: auto;
-}
 
 hr {
 	border: 1px solid var(--theme-color-transparent);
 }
 
+/* ==================== 通用工具类 class ==================== */
+
+.暂停动画 {
+	animation-play-state: paused;
+}
+
+.隐藏链接 {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	opacity: 0;
+	overflow: hidden;
+}
+.隐藏链接:focus-visible {
+	width: auto;
+	height: auto;
+	opacity: 1;
+	z-index: 999;
+}
+
+.标记 {
+	animation-duration: 3s;
+	animation-name: 标记;
+	animation-iteration-count: 1;
+	animation-timing-function: linear;
+	transition:
+		0.3s color,
+		0.3s background-color;
+}
+
+.淡化 {
+	opacity: 0.7;
+}
+
+.头像 {
+	border-radius: 50%;
+}
+
+.特小尺寸 {
+	width: 24px;
+	height: 24px;
+}
+.小尺寸 {
+	width: 32px;
+	height: 32px;
+}
+.中尺寸 {
+	width: 48px;
+	height: 48px;
+}
+.大尺寸 {
+	width: 128px;
+	height: 128px;
+}
+
+.组 {
+	display: flex;
+	max-width: 100%;
+	overflow: auto;
+	padding: 16px;
+}
+.组 > section {
+	max-width: 256px;
+	min-width: 256px;
+}
+
+.悬浮卡片 {
+	background-color: var(--bg-color);
+	border: 1px solid transparent;
+	border-radius: var(--border-radius);
+	box-shadow:
+		rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
+		rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+	padding: 4px;
+	position: absolute;
+	z-index: 997;
+}
+
+.横幅 {
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+	animation-iteration-count: 1;
+	/* animation-name: 隐藏; */
+	background-color: var(--bg-color-dark-2);
+	font-size: larger;
+	padding: 2px;
+	position: fixed;
+	bottom: 0;
+	text-align: center;
+	width: 100%;
+	z-index: 996;
+}
+
+div.通知 {
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+	animation-iteration-count: 1;
+	animation-name: 显示;
+	/* animation-name: 隐藏; */
+	background-color: var(--theme-color);
+	border: 1px solid transparent;
+	border-radius: var(--border-radius);
+	box-shadow:
+		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	opacity: 0;
+	margin: 16px;
+	padding: 8px;
+	pointer-events: none;
+	position: fixed;
+	bottom: 32px;
+	word-break: break-all;
+	z-index: 1000;
+}
+
+.fill {
+	fill: var(--link-color);
+}
+.stroke {
+	stroke: var(--link-color);
+}
+
+/* ==================== 导航栏、左右栏通用 ==================== */
 @media only screen and (max-width: 1000px) {
 	#导航栏 > .右 > a svg {
 		display: none;
@@ -548,10 +533,6 @@ hr {
 		padding-left: 0;
 		padding-right: 0;
 		width: 100%;
-	}
-	section {
-		margin-top: unset;
-		padding: 8px;
 	}
 	main > .左 {
 		transform: translateY(48px) !important;
@@ -573,26 +554,7 @@ hr {
 	}
 }
 
-.特小尺寸 {
-	width: 24px;
-	height: 24px;
-}
-.小尺寸 {
-	width: 32px;
-	height: 32px;
-}
-.中尺寸 {
-	width: 48px;
-	height: 48px;
-}
-.大尺寸 {
-	width: 128px;
-	height: 128px;
-}
-.头像 {
-	border-radius: 50%;
-}
-
+/* ==================== 导航栏和进度条 ==================== */
 #导航栏 {
 	background-color: var(--bg-color);
 	border-bottom: 1px solid transparent;
@@ -641,285 +603,6 @@ body.隐藏导航栏 #导航栏 {
 	font-weight: 600;
 }
 
-#网抑云阴乐封面,
-#网抑云阴乐封面 + svg {
-	animation-duration: 5s;
-	animation-iteration-count: infinite;
-	animation-timing-function: linear;
-	animation-fill-mode: forwards;
-}
-#网抑云阴乐封面 {
-	border-radius: 50%;
-	display: none;
-}
-#网抑云阴乐封面[src*="http"] {
-	display: block;
-}
-#网抑云阴乐封面[src*="http"] + svg {
-	display: none;
-}
-.网抑云加载闪烁 {
-	animation-name: 高频闪烁 !important;
-	animation-duration: 3s !important;
-	animation-play-state: running !important;
-}
-.网抑云封面旋转 {
-	animation-name: 匀速转;
-}
-div.侧边按钮 {
-	position: fixed;
-	right: 0;
-	z-index: 998;
-}
-
-div#主侧边按钮 {
-	top: calc(75vh - 33px * 4);
-}
-/* div.侧边按钮 .fill {
-	fill: #000;
-}
-div.侧边按钮 .stroke {
-	stroke: #000;
-} */
-div.侧边按钮 > * {
-	background-color: var(--bg-color-dark-2);
-	box-shadow:
-		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
-		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
-	border: 1px solid transparent;
-	border-bottom-left-radius: 50%;
-	border-bottom-right-radius: 50%;
-	border-top-left-radius: 50%;
-	border-top-right-radius: 50%;
-	display: flex;
-	opacity: 0.5;
-	margin-top: 5px;
-	padding: 4px;
-	position: relative;
-	transform: translateX(-4px);
-}
-div.侧边按钮 > *:hover,
-div.侧边按钮 > *:focus-visible,
-div.侧边按钮 > *:focus-within {
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-	opacity: 1;
-	transform: translateX(0);
-}
-div.侧边按钮 > #切换主题 {
-	z-index: 0;
-}
-body.顶部 div.侧边按钮 > #回到顶部 {
-	opacity: 0;
-	pointer-events: none;
-}
-div.侧边按钮 > #切换主题:hover,
-div.侧边按钮 > #切换主题:focus-within {
-	transform: translateX(calc(-32px * 4));
-}
-div.侧边按钮 > #网抑云阴乐:hover,
-div.侧边按钮 > #网抑云阴乐:focus-within {
-	transform: translateX(calc(-32px * 7));
-	border-bottom-left-radius: 0;
-	z-index: 1;
-}
-div.侧边按钮 > .拥有更多选项 > .更多选项 {
-	background: var(--bg-color-dark-2);
-	border: 1px solid transparent;
-	display: flex;
-	opacity: 0;
-	padding-right: 32px;
-	pointer-events: none;
-	position: absolute;
-	transform: translateX(28px) translateY(-5px);
-	height: 32px;
-	flex-direction: row;
-	flex-wrap: wrap;
-}
-div.侧边按钮 > #切换主题 > #所有主题 {
-	width: calc(32px * 3);
-	height: calc(32px * 3);
-}
-div.侧边按钮 > #网抑云阴乐 #歌词 {
-	font-size: 12px;
-	position: absolute;
-	user-select: none;
-	overflow: hidden;
-	pointer-events: none;
-	right: 48px;
-	text-align: end;
-	word-wrap: break-word;
-	width: calc(100vw - 64px);
-}
-
-div.侧边按钮 > #网抑云阴乐 #歌词 > p {
-	font-size: 12px;
-	height: 16px;
-	line-height: 16px;
-	margin: 0;
-	padding: 0;
-}
-div.侧边按钮 > #网抑云阴乐 > #阴乐控件 {
-	width: calc(32px * 6);
-}
-div.侧边按钮 > #网抑云阴乐 #播放列表 {
-	background: var(--bg-color-dark-2);
-	color: var(--text-color);
-	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-	font-size: 0.9em;
-	margin: 0;
-	overflow-y: auto;
-	overflow-x: hidden;
-	padding: 5px;
-	position: absolute;
-	top: 32px;
-	left: -29px;
-	width: calc(31px * 8);
-	height: 118px;
-}
-
-div.侧边按钮 > #网抑云阴乐 #播放列表 li {
-	border-top: 1px solid #888;
-	cursor: pointer;
-	display: table-caption;
-	user-select: none;
-	white-space: nowrap;
-	width: calc(100% + 8px);
-}
-div.侧边按钮 > #网抑云阴乐 #播放列表 > li.正在播放,
-div.侧边按钮 > #网抑云阴乐 #播放列表 > li:hover,
-div.侧边按钮 > #网抑云阴乐 #播放列表 > li:focus-visible {
-	background-color: var(--theme-color-transparent);
-}
-div.侧边按钮 > #网抑云阴乐 #播放列表 > li.正在播放::before {
-	background-color: var(--link-color);
-	display: block;
-	width: 5px;
-	height: 43px;
-	position: absolute;
-	left: 0px;
-	content: "";
-}
-
-div.侧边按钮 > #网抑云阴乐 #播放列表 li * {
-	display: block;
-	white-space: nowrap;
-	text-overflow: ellipsis;
-}
-
-div.侧边按钮 > .拥有更多选项:hover > .更多选项,
-div.侧边按钮 > .拥有更多选项:focus-within > .更多选项,
-.更多选项:focus-within {
-	pointer-events: all !important;
-	opacity: 1 !important;
-}
-div.侧边按钮 > .拥有更多选项 > .更多选项 > button {
-	background-color: var(--bg-color-dark-2);
-	border: 1px solid #888;
-	border-radius: 50%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	margin: 3px;
-	cursor: pointer;
-	width: 24px;
-	height: 24px;
-}
-div.侧边按钮 > .拥有更多选项 > .更多选项 > *.激活,
-div.侧边按钮 > .拥有更多选项 > .更多选项 > *:hover,
-div.侧边按钮 > .拥有更多选项 > .更多选项 > *:focus-visible {
-	background-color: #888;
-}
-
-div.通知 {
-	animation-duration: 0.3s;
-	animation-fill-mode: forwards;
-	animation-iteration-count: 1;
-	animation-name: 显示;
-	/* animation-name: 隐藏; */
-	background-color: var(--theme-color);
-	border: 1px solid transparent;
-	border-radius: var(--border-radius);
-	box-shadow:
-		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
-		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
-	opacity: 0;
-	margin: 16px;
-	padding: 8px;
-	pointer-events: none;
-	position: fixed;
-	bottom: 32px;
-	word-break: break-all;
-	z-index: 1000;
-}
-
-section#我 {
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	justify-content: center;
-	margin-top: 64px;
-}
-section#我 > img {
-	margin-bottom: -64px;
-	position: relative;
-	top: -64px;
-}
-
-section#我 > img:hover {
-	transform: rotateY(180deg);
-}
-main > .右 > section:nth-child(1),
-main > .分界线 {
-	margin-top: 64px;
-}
-
-#评论区 {
-}
-.评论 {
-}
-.评论 .用户信息 {
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-}
-.评论 .用户信息 > * {
-	margin-left: 8px;
-}
-.评论 > * {
-}
-.评论 .评论正文 {
-	margin: 4px;
-}
-
-/* .hljs {
-	background-color: transparent !important;
-} */
-
-#技能 {
-	display: flex;
-	flex-direction: column;
-	overflow: hidden;
-	padding: 8px;
-}
-#技能 > p {
-	margin: 4px;
-	margin-bottom: 16px;
-}
-#技能 > p > span {
-	background-color: var(--theme-color-transparent);
-	border: 1px solid;
-	border-radius: var(--border-radius);
-	display: block;
-	margin-top: 8px;
-	height: 2px;
-}
-#技能 > p > span::before {
-	content: attr(aria-label);
-}
-
 .进度条外面 {
 	background-color: rgba(127, 127, 127, 0);
 	opacity: 0;
@@ -960,17 +643,398 @@ main > .分界线 {
 	animation-name: 进度条;
 }
 
-.悬浮卡片 {
+/* ==================== main、左右栏 ==================== */
+main {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-around;
+	width: calc(100vw - 90px);
+	max-width: 1600px;
+}
+main > .左,
+main > .右 {
+	padding: 4px;
+}
+
+main > .左 {
+	overflow-y: auto;
+	position: sticky;
+	top: 0;
+	transform: translateY(48px);
+	width: calc(25% - 5px);
+	max-height: calc(100vh - 69px);
+}
+body.隐藏导航栏 > main > .左 {
+	transform: translateY(0);
+	max-height: calc(100vh - 21px);
+}
+
+main > .右 {
+	margin-top: 48px;
+	width: calc(75% - 5px);
+}
+
+main > #分界线 {
 	background-color: var(--bg-color);
-	border: 1px solid transparent;
+	border: 8px solid var(--theme-color);
 	border-radius: var(--border-radius);
+	display: flex;
+	margin-top: 96px;
+	position: sticky;
+	top: 0;
+	width: 4px;
+	height: calc(100vh - 16px);
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+body.宽屏 > main > #分界线 {
+	/* opacity: 0; */
+	margin-left: -40px;
+}
+main > #分界线 > svg {
+	background: var(--bg-color);
+	border-radius: 50%;
 	box-shadow:
 		rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
 		rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
-	padding: 4px;
-	position: absolute;
-	z-index: 997;
+	opacity: 0;
+	transition:
+		0.3s opacity,
+		0.3s transform;
 }
+body.宽屏 > main #分界线:hover,
+main > #分界线:hover > svg {
+	opacity: 1;
+}
+body.宽屏 > main #分界线 > svg {
+	transform: rotateY(180deg);
+}
+
+body.宽屏 > main .左 {
+	display: none;
+	width: 0%;
+}
+body.宽屏 > main .右 {
+	width: calc(100% - 20px);
+}
+
+main > .右 > section:nth-child(1),
+main > .分界线 {
+	margin-top: 64px;
+}
+
+/* ==================== 左栏 ==================== */
+
+section#我 {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+	margin-top: 64px;
+}
+
+section#我 > img {
+	margin-bottom: -64px;
+	position: relative;
+	top: -64px;
+}
+section#我 > img:hover {
+	transform: rotateY(180deg);
+}
+
+span#联系方式 {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+span#联系方式 > * {
+	margin-left: 4px;
+	margin-right: 4px;
+}
+.rss {
+	transform: translate(-4px, 2px) rotate(45deg);
+}
+
+.标签 > div > * {
+	background-color: var(--bg-color-dark-2);
+	border: 1px solid transparent;
+	border-radius: var(--border-radius);
+	line-height: 2.5;
+	margin: 2px;
+	padding: 4px;
+	white-space: nowrap;
+}
+
+/* ==================== 页脚 ==================== */
+
+#copyright {
+	background-color: var(--bg-color);
+	border-top: 1px solid transparent;
+	border-top-left-radius: var(--border-radius);
+	border-top-right-radius: var(--border-radius);
+	padding-top: 16px;
+	padding-bottom: 16px;
+	margin-top: 32px;
+	margin-bottom: 0;
+	text-align: center;
+	width: 100%;
+}
+
+/* ==================== 侧边按钮-通用 ==================== */
+div#侧边按钮容器 {
+	position: fixed;
+	right: 0;
+	z-index: 998;
+	top: calc(75vh - 33px * 4);
+}
+div#侧边按钮容器 > * {
+	background-color: var(--bg-color-dark-2);
+	box-shadow:
+		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	border: 1px solid transparent;
+	border-bottom-left-radius: 50%;
+	border-bottom-right-radius: 50%;
+	border-top-left-radius: 50%;
+	border-top-right-radius: 50%;
+	display: flex;
+	opacity: 0.5;
+	margin-top: 5px;
+	padding: 4px;
+	position: relative;
+	transform: translateX(-4px);
+}
+div#侧边按钮容器 > *:hover,
+div#侧边按钮容器 > *:focus-visible,
+div#侧边按钮容器 > *:focus-within {
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	opacity: 1;
+	transform: translateX(0);
+}
+
+div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
+	background: var(--bg-color-dark-2);
+	color: var(--text-color);
+	border: 1px solid transparent;
+	display: flex;
+	opacity: 0;
+	padding-right: 32px;
+	pointer-events: none;
+	position: absolute;
+	transform: translateX(28px) translateY(-5px);
+	height: 32px;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
+div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项,
+.更多选项:focus-within {
+	pointer-events: all !important;
+	opacity: 1 !important;
+}
+div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
+	background-color: var(--bg-color-dark-2);
+	border: 1px solid #888;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 3px;
+	cursor: pointer;
+	width: 24px;
+	height: 24px;
+}
+div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *.激活,
+div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:hover,
+div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:focus-visible {
+	background-color: #888;
+}
+
+/* ==================== 侧边按钮-回到顶部 ==================== */
+
+body.顶部 div#侧边按钮容器 > #回到顶部 {
+	opacity: 0;
+	pointer-events: none;
+}
+
+/* ==================== 侧边按钮-网抑云阴乐 ==================== */
+
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #网抑云阴乐封面,
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #网抑云阴乐封面 + svg {
+	animation-duration: 5s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	animation-fill-mode: forwards;
+}
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #网抑云阴乐封面 {
+	border-radius: 50%;
+	display: none;
+}
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #网抑云阴乐封面[src*="http"] {
+	display: block;
+}
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #网抑云阴乐封面[src*="http"] + svg {
+	display: none;
+}
+
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 .网抑云加载闪烁#网抑云阴乐封面 {
+	animation-name: 高频闪烁 !important;
+	animation-duration: 3s !important;
+	animation-play-state: running !important;
+}
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 .网抑云封面旋转#网抑云阴乐封面 {
+	animation-name: 匀速转;
+}
+
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐:hover,
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐:focus-within {
+	transform: translateX(calc(-32px * 7));
+	border-bottom-left-radius: 0;
+	z-index: 1;
+}
+
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #歌词 {
+	font-size: 12px;
+	position: absolute;
+	user-select: none;
+	overflow: hidden;
+	pointer-events: none;
+	right: 48px;
+	text-align: end;
+	word-wrap: break-word;
+	width: calc(100vw - 64px);
+}
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 #歌词 > p {
+	font-size: 12px;
+	height: 16px;
+	line-height: 16px;
+	margin: 0;
+	padding: 0;
+}
+
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#阴乐控件 {
+	width: calc(32px * 6);
+}
+
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 {
+	flex-direction: column;
+	flex-wrap: nowrap;
+	font-size: 0.9em;
+	margin: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 5px;
+	position: absolute;
+	top: 32px;
+	left: -29px;
+	width: calc(31px * 8);
+	height: 118px;
+}
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 li {
+	border-top: 1px solid #888;
+	cursor: pointer;
+	display: table-caption;
+	user-select: none;
+	white-space: nowrap;
+	width: calc(100% + 8px);
+}
+
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li.正在播放,
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li:hover,
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li:focus-visible {
+	background-color: var(--theme-color-transparent);
+}
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 > li.正在播放::before {
+	background-color: var(--link-color);
+	display: block;
+	width: 5px;
+	height: 43px;
+	position: absolute;
+	left: 0px;
+	content: "";
+}
+
+div#侧边按钮容器 > .拥有更多选项#网抑云阴乐 > .更多选项#播放列表 li * {
+	display: block;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+/* ==================== 侧边按钮-主题 ==================== */
+
+div#侧边按钮容器 > #切换主题 {
+	z-index: 0;
+}
+div#侧边按钮容器 > #切换主题:hover,
+div#侧边按钮容器 > #切换主题:focus-within {
+	transform: translateX(calc(-32px * 4));
+}
+
+div#侧边按钮容器 > #切换主题 > #所有主题 {
+	width: calc(32px * 3);
+	height: calc(32px * 3);
+}
+
+/* ==================== 首页 ==================== */
+
+#技能 {
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	padding: 8px;
+}
+#技能 > p {
+	margin: 4px;
+	margin-bottom: 16px;
+}
+#技能 > p > span {
+	background-color: var(--theme-color-transparent);
+	border: 1px solid;
+	border-radius: var(--border-radius);
+	display: block;
+	margin-top: 8px;
+	height: 2px;
+}
+#技能 > p > span::before {
+	content: attr(aria-label);
+}
+
+/* ==================== 博客 ==================== */
+code.hljs::before {
+	content: attr(data-lang) " | 双击复制代码";
+	border-radius: var(--border-radius);
+	font-size: 0.5em;
+	margin: -12px;
+	opacity: 0.5;
+	pointer-events: none;
+	position: absolute;
+}
+code.hljs.已复制:hover::before {
+	content: attr(data-lang) " | 已复制";
+}
+
+#评论区 {
+}
+.评论 {
+}
+.评论 .用户信息 {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+}
+.评论 .用户信息 > * {
+	margin-left: 8px;
+}
+.评论 > * {
+}
+.评论 .评论正文 {
+	margin: 4px;
+}
+
+/* ==================== 友链 ==================== */
 
 #友链 > div > section > span {
 	display: flex;
@@ -986,19 +1050,4 @@ main > .分界线 {
 	border-radius: 50%;
 	width: 16px;
 	height: 16px;
-}
-
-.横幅 {
-	animation-duration: 0.3s;
-	animation-fill-mode: forwards;
-	animation-iteration-count: 1;
-	/* animation-name: 隐藏; */
-	background-color: var(--bg-color-dark-2);
-	font-size: larger;
-	padding: 2px;
-	position: fixed;
-	bottom: 0;
-	text-align: center;
-	width: 100%;
-	z-index: 996;
 }
