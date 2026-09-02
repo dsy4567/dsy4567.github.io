@@ -117,7 +117,7 @@ main、左右栏
 	--surface-1: #f7f7f7;
 	--surface-2: #ffffff;
 	--text-color: #222;
-	--overlay: #8888;
+	--overlay: #8885;
 	--overlay-strong: #888;
 	--selection-bg: #0006;
 	color-scheme: light;
@@ -149,7 +149,7 @@ main、左右栏
 	--surface-1: #f7f7f7;
 	--surface-2: #ffffff;
 	--text-color: #222;
-	--overlay: #8888;
+	--overlay: #8885;
 	--overlay-strong: #888;
 	--selection-bg: #0006;
 	color-scheme: light;
@@ -404,7 +404,7 @@ section video {
 
 blockquote {
 	background-color: var(--surface-2);
-	border: 1px solid transparent;
+	border: 1px solid var(--accent-color-transparent);
 	border-left: 8px solid var(--accent-color-transparent);
 	border-radius: var(--border-radius);
 	margin: 4px 0;
