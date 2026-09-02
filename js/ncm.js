@@ -21,6 +21,7 @@ let 网易云音乐 = {
 	已首次播放: false,
 	立即播放: false,
 	设置: { 音量: 50 / 100, 随机播放: false, 域名: "ncm.vercel.dsy4567.icu" },
+	/** @type {Record<string, HTMLButtonElement>} */ 按钮: {},
 	/** @type {歌单[]} */ 歌单: [],
 	/** @type {Record<number, number>} */ 歌单索引: {},
 	/** @type {number[]} */ 洗牌后的索引: [],
@@ -44,11 +45,13 @@ let 网易云音乐 = {
 		按钮.ariaChecked = "" + 网易云音乐.设置.随机播放;
 		if (网易云音乐.设置.随机播放) 按钮.classList.add("激活");
 		else 按钮.classList.remove("激活");
+		按钮.title = "随机播放: " + (网易云音乐.设置.随机播放 ? "开" : "关");
 	},
 	更改音量() {
 		// 0.5→0.75→1→0→0.25
 		网易云音乐.正在播放.Audio.volume = 网易云音乐.设置.音量 =
 			((网易云音乐.设置.音量 * 100 + 25) % 125) / 100;
+		网易云音乐.按钮.音量.title = "音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%";
 	},
 	设置闪烁动画(/** @type {boolean} */ 启用) {
 		const svg = 网易云音乐元素.querySelector("svg");
@@ -411,6 +414,7 @@ fetch("/json/ncm.json")
 			网易云音乐.歌单索引[音乐信息.id] = i;
 		}
 		function svg(
+			/** @type {string} */ 名称,
 			/** @type {string} */ html,
 			/** @type {( 元素: HTMLButtonElement ) => void} */ onclick,
 			/** @type {string} */ title,
@@ -427,17 +431,30 @@ fetch("/json/ncm.json")
 			btn.title = title;
 			btn.role = role;
 			btn.ariaChecked = role === "checkbox" ? "false" : null;
+			网易云音乐.按钮[名称] = btn;
 			gd("音乐控件", true)?.append(btn);
 		}
 		const f = () => {
-			svg(`<svg class="特小尺寸" data-icon="上一首"></svg>`, 网易云音乐.上一首, "上一首");
 			svg(
+				"上一首",
+				`<svg class="特小尺寸" data-icon="上一首"></svg>`,
+				网易云音乐.上一首,
+				"上一首"
+			);
+			svg(
+				"播放暂停",
 				`<svg class="特小尺寸" data-icon="播放暂停"></svg>`,
 				网易云音乐.播放暂停,
 				"播放/暂停"
 			);
-			svg(`<svg class="特小尺寸" data-icon="下一首"></svg>`, 网易云音乐.下一首, "下一首");
 			svg(
+				"下一首",
+				`<svg class="特小尺寸" data-icon="下一首"></svg>`,
+				网易云音乐.下一首,
+				"下一首"
+			);
+			svg(
+				"在网易云音乐中查看",
 				`<svg class="特小尺寸" data-icon="在网易云音乐中查看"></svg>`,
 				() => {
 					网易云音乐.歌单[网易云音乐.正在播放.索引].id &&
@@ -449,12 +466,18 @@ fetch("/json/ncm.json")
 				"在网易云音乐中查看"
 			);
 			svg(
+				"随机播放",
 				`<svg class="特小尺寸" data-icon="随机播放"></svg>`,
 				网易云音乐.启用或禁用随机播放,
-				"随机播放",
+				"随机播放: " + (网易云音乐.设置.随机播放 ? "开" : "关"),
 				"checkbox"
 			);
-			svg(`<svg class="特小尺寸" data-icon="音量"></svg>`, 网易云音乐.更改音量, "音量");
+			svg(
+				"音量",
+				`<svg class="特小尺寸" data-icon="音量"></svg>`,
+				网易云音乐.更改音量,
+				"音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%"
+			);
 			gd("音乐控件", true)?.insertAdjacentHTML(
 				"beforeend",
 				`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a>`
