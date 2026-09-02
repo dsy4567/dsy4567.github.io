@@ -876,6 +876,10 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 	flex-direction: row;
 	flex-wrap: wrap;
 }
+div#侧边按钮容器 > .拥有更多选项 > .更多选项 + .更多选项 {
+	border-bottom-left-radius: 19px;
+	border-top: 1px solid var(--accent-color);
+}
 div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
 div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项,
 .更多选项:focus-within {
@@ -884,8 +888,6 @@ div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项,
 }
 div#侧边按钮容器 > .拥有更多选项:hover > .更多选项 + .更多选项,
 div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项 + .更多选项 {
-	border-bottom-left-radius: var(--border-radius);
-	border-top: 1px solid var(--accent-color);
 }
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 	background-color: var(--surface-2);
