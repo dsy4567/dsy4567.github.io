@@ -214,7 +214,6 @@ main、左右栏
 		--overlay-strong: #0000 !important;
 		--selection-bg: #0000 !important;
 		--accent-color: #000 !important;
-		--accent-color-strong: #000 !important;
 		--accent-color-transparent: #0000 !important;
 		--accent-text-color: #fff !important;
 		color-scheme: light !important;
@@ -303,7 +302,6 @@ main、左右栏
 html {
 	/* 强调色缺省（中性）：未设置时回退为文字色/叠层色，自动跟随背景深浅 */
 	--accent-color: var(--text-color);
-	--accent-color-strong: var(--text-color);
 	--accent-color-transparent: var(--overlay);
 	--accent-text-color: var(--bg-color);
 	--link-color: var(--text-color);
@@ -354,7 +352,7 @@ a[title]::after {
 
 abbr {
 	cursor: help;
-	text-decoration: dashed underline var(--accent-color-strong);
+	text-decoration: dashed underline var(--accent-color);
 }
 
 img,

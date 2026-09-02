@@ -303,6 +303,73 @@ function hsl转hex(色相, 饱和度, 亮度) {
 	return "#" + 分量(0) + 分量(8) + 分量(4);
 }
 /**
+ * 将 hex 颜色转换为 WCAG 相对亮度（0~1）
+ * @param {string} hex - 形如 "#66ccff"
+ * @returns {number} 相对亮度
+ */
+function 相对亮度(hex) {
+	const [r, g, b] = hex转rgb(hex).map(v => {
+		v /= 255;
+		return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+	});
+	return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/**
+ * 计算两个颜色之间的 WCAG 对比度（1~21）
+ * @param {string} 颜色1
+ * @param {string} 颜色2
+ * @returns {number} 对比度
+ */
+function 对比度(颜色1, 颜色2) {
+	const L1 = 相对亮度(颜色1);
+	const L2 = 相对亮度(颜色2);
+	const 亮 = Math.max(L1, L2);
+	const 暗 = Math.min(L1, L2);
+	return (亮 + 0.05) / (暗 + 0.05);
+}
+
+/**
+ * 保持色相和饱和度不变，调整亮度使前景色与背景色达到目标对比度。
+ * 若原始颜色已满足对比度，则原样返回；否则沿正确方向微调，直至刚好达标。
+ * @param {string} 前景hex - 原始强调色
+ * @param {string} 背景hex - 背景色
+ * @param {number} 目标对比度 - 默认 4.5（WCAG AA 文字）
+ * @returns {string} 调整后的 hex
+ */
+function 调整亮度以满足对比度(前景hex, 背景hex, 目标对比度 = 4.5) {
+	const [h, s, l原始] = rgb转hsl(...hex转rgb(前景hex));
+
+	// 当前对比度
+	const 当前对比度 = 对比度(前景hex, 背景hex);
+	if (当前对比度 >= 目标对比度) return 前景hex;
+
+	// 背景亮度决定调整方向：亮背景需变暗，暗背景需变亮
+	const 背景相对亮度 = 相对亮度(背景hex);
+	const 需要变暗 = 背景相对亮度 > 0.5; // 浅色背景
+
+	// 二分查找临界亮度（在保证对比度达标的前提下，最小化与原亮度的差异）
+	let 低 = 需要变暗 ? 0 : l原始;
+	let 高 = 需要变暗 ? l原始 : 1;
+
+	for (let i = 0; i < 20; i++) {
+		const 中 = (低 + 高) / 2;
+		const 候选hex = hsl转hex(h, s, 中);
+		const 候选对比度 = 对比度(候选hex, 背景hex);
+		if (候选对比度 >= 目标对比度)
+			if (需要变暗)
+				低 = 中; // 达标，尝试更接近原始亮度
+			else 高 = 中;
+		else if (需要变暗)
+			高 = 中; // 未达标，需要更极端的亮度
+		else 低 = 中;
+	}
+
+	// 取满足条件且最接近原始亮度的值（取高侧或低侧边界）
+	const 最终亮度 = 需要变暗 ? 低 : 高;
+	return hsl转hex(h, s, 最终亮度);
+}
+/**
  * 添加一个悬浮卡片到页面
  * @param {string} html - 要显示的 HTML 内容
  * @param {number} [x=0] - 水平位置（像素）
@@ -380,15 +447,14 @@ function 当前是否深色() {
  */
 function 写入强调色变量(hex) {
 	const 深 = 当前是否深色();
-	const [红, 绿, 蓝] = hex转rgb(hex);
-	const [色相, 饱和度, 亮度] = rgb转hsl(红, 绿, 蓝);
-	// 主色用作链接/图标等前景色，深色背景上提亮、浅色背景上压暗，保证可读性
-	const 主色 = hsl转hex(色相, 饱和度, 深 ? Math.max(亮度, 0.66) : Math.min(亮度, 0.38));
-	const 强色 = hsl转hex(色相, 饱和度, 深 ? Math.max(亮度, 0.78) : Math.min(亮度, 0.3));
+	const 背景hex = 深 ? "#18171c" : "#eeeeee";
+
+	// 主色用作链接/图标等前景文字
+	const 主色 = 调整亮度以满足对比度(hex, 背景hex, 4.5);
+
 	const 根 = document.documentElement.style;
 	根.setProperty("--accent-color", 主色);
-	根.setProperty("--accent-color-strong", 强色);
-	// 原色低透明度，用作高亮底色（正在播放、引用块边线等）
+	// 原色低透明度，用作高亮底色（保持原色不变，因为透明度会降低对比度要求）
 	根.setProperty("--accent-color-transparent", hex + "2e");
 	// 强调色块上的文字色：深色模式的主色偏亮、浅色模式的主色偏暗，故方向相反
 	根.setProperty("--accent-text-color", 深 ? "#222" : "#eee");
