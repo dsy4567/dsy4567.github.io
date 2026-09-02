@@ -3,3 +3,4 @@ node_modules
 .vercel
 todo.txt
 .ssl
+.well-known/appspecific/com.chrome.devtools.json
