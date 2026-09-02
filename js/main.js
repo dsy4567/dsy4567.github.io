@@ -195,6 +195,7 @@ fetch("/json/theme.json")
 				调色盘按钮.onclick = () => {
 					let 输入 = /** @type {HTMLInputElement} */ (gd("自定义强调色", true));
 					if (!输入) return;
+					输入.value = 读取强调色().toLowerCase();
 					输入.click();
 					输入.onchange = () => {
 						应用强调色(输入.value);
