@@ -66,7 +66,6 @@ function 动态加载(元素) {
 
 				if (清理路径(u.pathname) === "/") {
 					显示或隐藏进度条(false);
-					可以滚动到视图中 = true;
 					if (!location.hash)
 						右.scrollIntoView({
 							behavior: "smooth",

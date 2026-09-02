@@ -434,9 +434,7 @@ addEventListener("storage", 刷新主题);
 刷新主题();
 //#endregion
 
-let URL发生变化事件 = new CustomEvent("URL发生变化"),
-	/** 在内容准备好后设为 true */
-	可以滚动到视图中 = false;
+let URL发生变化事件 = new CustomEvent("URL发生变化");
 
 // 方便暴露到全局变量
 let _global = {};

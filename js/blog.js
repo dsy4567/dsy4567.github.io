@@ -155,7 +155,7 @@ async function 渲染文章(当前文章信息) {
 				目标?.nextElementSibling?.classList.add("标记");
 				目标?.scrollIntoView();
 			} catch (e) {}
-		else if (可以滚动到视图中)
+		else
 			右.scrollIntoView({
 				behavior: "smooth",
 			});
@@ -353,7 +353,7 @@ async function 渲染文章列表(u) {
 			显示或隐藏进度条(false);
 			gd("正在加载文章提示")?.remove();
 			_global["main.js"]().添加点击事件和设置图标();
-			if (!location.hash && 可以滚动到视图中)
+			if (!location.hash)
 				右.scrollIntoView({
 					behavior: "smooth",
 				});
