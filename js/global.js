@@ -13,7 +13,11 @@
 let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
 	/** @type {Record<string, HTMLElement | null>} */ qs缓存 = {},
 	/** @type {Record<string, {已完成加载: boolean, 回调: ((事件?: any) => void)[], 失败回调: ((错误?: any) => void)[]}>} */ 已添加的脚本 =
-		{};
+		{},
+	/** @type {延迟执行状态类型} */ 延迟执行状态 = {
+		DOMContentLoaded: { 回调: {}, 已触发: false },
+		关键任务完成: { 回调: {}, 已触发: false },
+	};
 /**
  * document.getElementById 的快捷方式，支持缓存
  * @param {string} s
@@ -173,16 +177,41 @@ async function 添加脚本(url, crossOrigin = "use-credentials") {
 	});
 }
 /**
- * 延迟执行一个函数，确保在浏览器渲染完成后执行
+ * 延迟执行一个函数，若事件已经触发则立即执行，否则等待事件触发后执行; 迟到的回调排在所有已入队回调之后执行
+ * @param {"DOMContentLoaded" | "关键任务完成"} 事件名
  * @param {() => any} 回调
+ * @param {number} [优先级=0] - 优先级，数值越小越先执行
  */
-function 延迟执行(回调) {
-	requestAnimationFrame(() => {
-		setTimeout(() => {
-			// 此时大概率渲染已完成，接近空闲时机
-			回调();
-		}, 0);
-	});
+async function 延迟执行(事件名, 回调, 优先级 = 0) {
+	if (延迟执行状态[事件名].已触发) {
+		for (const 回调们 of Object.keys(延迟执行状态[事件名].回调)) {
+			延迟执行状态[事件名].回调[+回调们].forEach(async 以前的回调 => {
+				try {
+					await 以前的回调();
+				} catch (e) {
+					console.error(e);
+				}
+			});
+			delete 延迟执行状态[事件名].回调[+回调们];
+			document.addEventListener("DOMContentLoaded", async () => {
+				DOMContentLoaded = true;
+				延迟执行状态["DOMContentLoaded"].已触发 = true;
+			});
+		}
+		try {
+			await 回调();
+		} catch (e) {
+			console.error(e);
+		}
+
+		if (事件名 === "DOMContentLoaded") {
+			延迟执行状态["关键任务完成"].已触发 = true;
+			延迟执行("关键任务完成", () => {}, 999);
+		}
+	} else {
+		延迟执行状态[事件名].回调[优先级] ??= [];
+		延迟执行状态[事件名].回调[优先级].push(回调);
+	}
 }
 /**
  * 显示一个临时的通知消息，3 秒后自动隐藏
@@ -522,8 +551,10 @@ let DOMContentLoaded = false,
 addEventListener("load", () => {
 	loaded = true;
 });
-document.addEventListener("DOMContentLoaded", async () => {
+document.addEventListener("DOMContentLoaded", () => {
 	DOMContentLoaded = true;
+	延迟执行状态["DOMContentLoaded"].已触发 = true;
+	延迟执行("DOMContentLoaded", () => {}, 999); // 冲刷 DOMContentLoaded 队列并级联 关键任务完成
 });
 //#endregion
 
@@ -533,20 +564,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 //   1. 爬虫 / 本地环境 / 已在新域名 → 不做任何处理
 //   2. 用户选择过「不跳转」（URL 参数或 localStorage 的 no-redirect）→ 仅弹横幅提示新域名
 //   3. 其余情况 → 自动跳转并在 URL 携带来源参数，供新域名页面弹「回原域名」横幅
-try {
-	(() => {
-		const 网页访问者不为爬虫 = !navigator.userAgent.match(/bot|spider/gi);
-		// 所有改写先在 URL 副本上进行，最后统一生效
-		let U = new URL(location.href);
-		// 删除迁移流程专用的 URL 参数：
-		// from-hostname（来源域名）、from-non-icu-tld（来自非 .icu 域名）、no-redirect（用户选择不跳转）
-		const 删除url参数 = () => {
-			U.searchParams.delete("from-hostname");
-			U.searchParams.delete("from-non-icu-tld");
-			U.searchParams.delete("no-redirect");
-		};
-		const 本地域名 = ["dev.dsy4567.icu", "localhost", "127.0.0.1"];
-		const f = () => {
+延迟执行(
+	"关键任务完成",
+	() => {
+		try {
+			const 网页访问者不为爬虫 = !navigator.userAgent.match(/bot|spider/gi);
+			// 所有改写先在 URL 副本上进行，最后统一生效
+			let U = new URL(location.href);
+			// 删除迁移流程专用的 URL 参数：
+			// from-hostname（来源域名）、from-non-icu-tld（来自非 .icu 域名）、no-redirect（用户选择不跳转）
+			const 删除url参数 = () => {
+				U.searchParams.delete("from-hostname");
+				U.searchParams.delete("from-non-icu-tld");
+				U.searchParams.delete("no-redirect");
+			};
+			const 本地域名 = ["dev.dsy4567.icu", "localhost", "127.0.0.1"];
+
 			// 已在 dsy4567.icu（含子域名）或黑名单域名上则无需处理
 			if (location.hostname.endsWith("dsy4567.icu") || 本地域名.includes(location.hostname))
 				return;
@@ -600,36 +633,42 @@ try {
 			// 清理辅助参数并同步到地址栏（replaceState 不会新增历史记录）
 			删除url参数();
 			history.replaceState(history.state, "", U.href);
-		};
-		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
-	})();
-} catch (e) {
-	console.error(e);
-}
+		} catch (e) {
+			console.error(e);
+		}
+	},
+	0
+);
 //#endregion
 
 //#region SW管理
-try {
-	// "serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
+延迟执行(
+	"关键任务完成",
+	() => {
+		try {
+			// "serviceWorker" in navigator && navigator.serviceWorker.register("/sw.js");
 
-	// 移除 Service Worker 并清理缓存
-	async function removeServiceWorker() {
-		if ("serviceWorker" in navigator) {
-			// 1. 获取所有注册
-			const registrations = await navigator.serviceWorker.getRegistrations();
+			// 移除 Service Worker 并清理缓存
+			async function removeServiceWorker() {
+				if ("serviceWorker" in navigator) {
+					// 1. 获取所有注册
+					const registrations = await navigator.serviceWorker.getRegistrations();
 
-			// 2. 逐个注销
-			for (let registration of registrations) await registration.unregister();
+					// 2. 逐个注销
+					for (let registration of registrations) await registration.unregister();
 
-			// 3. 清理所有缓存
-			const cacheNames = await caches.keys();
-			await Promise.all(cacheNames.map(name => caches.delete(name)));
-			console.log("Service Worker 已移除，缓存已清空");
+					// 3. 清理所有缓存
+					const cacheNames = await caches.keys();
+					await Promise.all(cacheNames.map(name => caches.delete(name)));
+					console.log("Service Worker 已移除，缓存已清空");
+				}
+			}
+
+			removeServiceWorker().catch(e => console.error(e));
+		} catch (e) {
+			console.error(e);
 		}
-	}
-
-	removeServiceWorker().catch(e => console.error(e));
-} catch (e) {
-	console.error(e);
-}
+	},
+	0
+);
 //#endregion

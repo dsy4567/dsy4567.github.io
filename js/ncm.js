@@ -394,7 +394,18 @@ let 网易云音乐 = {
 };
 
 fetch("/json/ncm.json")
-	.then(res => res.json())
+	.then(
+		res =>
+			new Promise((resolve, reject) => {
+				延迟执行(
+					"关键任务完成",
+					() => {
+						resolve(res.json());
+					},
+					2
+				);
+			})
+	)
 	.then(async j => {
 		for (let i = 0; i < j.songs.length; i++) {
 			const /** @type {音乐信息} */ 音乐信息 = j.songs[i];
@@ -434,71 +445,69 @@ fetch("/json/ncm.json")
 			网易云音乐.按钮[名称] = btn;
 			gd("音乐控件", true)?.append(btn);
 		}
-		const f = () => {
-			svg(
-				"上一首",
-				`<svg class="特小尺寸" data-icon="上一首"></svg>`,
-				网易云音乐.上一首,
-				"上一首"
-			);
-			svg(
-				"播放暂停",
-				`<svg class="特小尺寸" data-icon="播放暂停"></svg>`,
-				网易云音乐.播放暂停,
-				"播放/暂停"
-			);
-			svg(
-				"下一首",
-				`<svg class="特小尺寸" data-icon="下一首"></svg>`,
-				网易云音乐.下一首,
-				"下一首"
-			);
-			svg(
-				"在网易云音乐中查看",
-				`<svg class="特小尺寸" data-icon="在网易云音乐中查看"></svg>`,
-				() => {
-					网易云音乐.歌单[网易云音乐.正在播放.索引].id &&
-						open(
-							"https://music.163.com/#/song?id=" +
-								网易云音乐.歌单[网易云音乐.正在播放.索引].id
-						);
-				},
-				"在网易云音乐中查看"
-			);
-			svg(
-				"随机播放",
-				`<svg class="特小尺寸" data-icon="随机播放"></svg>`,
-				网易云音乐.启用或禁用随机播放,
-				"随机播放: " + (网易云音乐.设置.随机播放 ? "开" : "关"),
-				"checkbox"
-			);
-			svg(
-				"音量",
-				`<svg class="特小尺寸" data-icon="音量"></svg>`,
-				网易云音乐.更改音量,
-				"音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%"
-			);
-			gd("音乐控件", true)?.insertAdjacentHTML(
-				"beforeend",
-				`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a>`
-			);
-			网易云音乐.歌单.forEach(音乐信息 => {
-				let li = ce("li");
-				li.innerHTML = `${音乐信息.歌名} <span class="淡化">${音乐信息.歌手}</span>`;
-				// @ts-ignore
-				li.onclick = li.onkeyup = 事件 => {
-					if (事件?.key === "Enter" || !事件?.key) 网易云音乐.切换音乐(音乐信息.id, true);
-				};
-				li.tabIndex = 0;
-				li.title = 音乐信息.完整歌名;
-				li.dataset.id = "" + 音乐信息.id;
-				gd("播放列表", true)?.append(li);
-			});
-			_global["main.js"]().渲染图标();
 
-			网易云音乐.初始化();
-		};
-		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+		svg(
+			"上一首",
+			`<svg class="特小尺寸" data-icon="上一首"></svg>`,
+			网易云音乐.上一首,
+			"上一首"
+		);
+		svg(
+			"播放暂停",
+			`<svg class="特小尺寸" data-icon="播放暂停"></svg>`,
+			网易云音乐.播放暂停,
+			"播放/暂停"
+		);
+		svg(
+			"下一首",
+			`<svg class="特小尺寸" data-icon="下一首"></svg>`,
+			网易云音乐.下一首,
+			"下一首"
+		);
+		svg(
+			"在网易云音乐中查看",
+			`<svg class="特小尺寸" data-icon="在网易云音乐中查看"></svg>`,
+			() => {
+				网易云音乐.歌单[网易云音乐.正在播放.索引].id &&
+					open(
+						"https://music.163.com/#/song?id=" +
+							网易云音乐.歌单[网易云音乐.正在播放.索引].id
+					);
+			},
+			"在网易云音乐中查看"
+		);
+		svg(
+			"随机播放",
+			`<svg class="特小尺寸" data-icon="随机播放"></svg>`,
+			网易云音乐.启用或禁用随机播放,
+			"随机播放: " + (网易云音乐.设置.随机播放 ? "开" : "关"),
+			"checkbox"
+		);
+		svg(
+			"音量",
+			`<svg class="特小尺寸" data-icon="音量"></svg>`,
+			网易云音乐.更改音量,
+			"音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%"
+		);
+		gd("音乐控件", true)?.insertAdjacentHTML(
+			"beforeend",
+			`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a>`
+		);
+		网易云音乐.歌单.forEach(音乐信息 => {
+			let li = ce("li");
+			li.innerHTML = `${音乐信息.歌名} <span class="淡化">${音乐信息.歌手}</span>`;
+			// @ts-ignore
+			li.onclick = li.onkeyup = 事件 => {
+				if (事件?.key === "Enter" || !事件?.key) 网易云音乐.切换音乐(音乐信息.id, true);
+			};
+			li.tabIndex = 0;
+			li.title = 音乐信息.完整歌名;
+			li.dataset.id = "" + 音乐信息.id;
+			gd("播放列表", true)?.append(li);
+		});
+		_global["main.js"]().渲染图标();
+
+		延迟执行("关键任务完成", 网易云音乐.初始化, 2);
 	})
 	.catch(e => console.error(e));
 

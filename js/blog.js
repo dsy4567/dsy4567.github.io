@@ -135,7 +135,13 @@ async function 渲染文章(当前文章信息) {
 		//#region 高亮
 		添加脚本("/js/lib/highlight.min.js").then(() =>
 			右.querySelectorAll("pre > code").forEach(元素 => {
-				hljs.highlightElement(元素);
+				延迟执行(
+					"关键任务完成",
+					() => {
+						hljs.highlightElement(元素);
+					},
+					1
+				);
 				const s = 元素.classList[0]?.split("-")[1];
 				元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
 			})
@@ -226,7 +232,13 @@ ${(() => {
 					// 高亮
 					添加脚本("/js/lib/highlight.min.js").then(() =>
 						sect.querySelectorAll("pre > code").forEach(元素 => {
-							hljs.highlightElement(元素);
+							延迟执行(
+								"关键任务完成",
+								() => {
+									hljs.highlightElement(元素);
+								},
+								1
+							);
 							const s = 元素.classList[0]?.split("-")[1];
 							元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
 						})
@@ -357,7 +369,9 @@ async function 渲染文章列表(u) {
 					behavior: "smooth",
 				});
 
-			添加脚本("/js/lib/highlight.min.js").then(() => hljs.highlightAll());
+			添加脚本("/js/lib/highlight.min.js").then(() =>
+				延迟执行("关键任务完成", hljs.highlightAll, 1)
+			);
 			document.querySelectorAll("pre > code").forEach(元素 => {
 				const s = 元素.classList[0]?.split("-")[1];
 				元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");

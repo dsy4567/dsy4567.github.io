@@ -6,6 +6,11 @@
  * SPDX-License-Identifier: MIT
  */
 
+type 延迟执行状态类型 = Record<
+	"DOMContentLoaded" | "关键任务完成",
+	{ 回调: Record<number, (() => any)[]>; 已触发: boolean }
+>;
+
 type 音乐信息 = {
 	/** 歌名 */ name: string;
 	/** 歌手 */ ar: { name: string }[];

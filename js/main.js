@@ -24,11 +24,14 @@ function 加载模块() {
 	路径 = 获取清理后的路径();
 	let 路径2 = 获取清理后的路径(true);
 	for (const s of 加载清单[路径] || []) {
-		const i = import(`/js/${s}.js`),
-			f = async () => {
+		const i = import(`/js/${s}.js`);
+		延迟执行(
+			"DOMContentLoaded",
+			async () => {
 				(await i).main(路径2);
-			};
-		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+			},
+			0
+		);
 	}
 	路径 = 路径2;
 }
@@ -123,93 +126,91 @@ _global["main.js"] = () => ({
 
 //#region 主题
 fetch("/json/theme.json")
-	.then(res => res.json())
+	.then(
+		res =>
+			new Promise((resolve, reject) => {
+				延迟执行("关键任务完成", () => resolve(res.json()), 2);
+			})
+	)
 	.then(
 		/** @type {Record<string, string>} */ 主题表 => {
-			const f = () => {
-				const 控件容器 = gd("主题控件", true),
-					主题容器 = gd("所有主题", true);
-				if (!控件容器 || !主题容器) return;
+			const 控件容器 = gd("主题控件", true),
+				主题容器 = gd("所有主题", true);
+			if (!控件容器 || !主题容器) return;
 
-				//#region 第一行：背景模式切换、自定义强调色调色盘
-				/** @type {HTMLButtonElement} */
-				let 模式按钮 = ce("button");
-				模式按钮.id = "背景模式";
-				const 更新模式按钮 = () => {
-					const 模式 = 读取背景模式();
-					模式按钮.title = "背景: " + 模式 + (模式 === "自动" ? "（跟随系统）" : "");
-				};
-				模式按钮.onclick = () => {
-					// 自动 → 浅色 → 深色 循环
-					const 列表 = /** @type {("自动" | "浅色" | "深色")[]} */ ([
-						"自动",
-						"浅色",
-						"深色",
-					]);
-					const 下一个 = 列表[(列表.indexOf(读取背景模式()) + 1) % 列表.length];
-					应用背景模式(下一个);
-					更新模式按钮();
-					提示("背景模式: " + 下一个);
-				};
-				更新模式按钮();
-				控件容器.append(模式按钮);
-
-				/** @type {HTMLButtonElement} */
-				let 调色盘按钮 = ce("button");
-				调色盘按钮.title = "自定义强调色";
-				调色盘按钮.role = "radio";
-				调色盘按钮.ariaChecked = "false";
-				调色盘按钮.innerHTML =
-					"<svg class='特小尺寸' data-icon='调色盘'></svg><input aria-label='自定义强调色调色盘' style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0' tabindex='-1' id='自定义强调色' type='color' />";
-				调色盘按钮.onclick = () => {
-					let 输入 = /** @type {HTMLInputElement} */ (gd("自定义强调色", true));
-					if (!输入) return;
-					输入.value = 读取强调色().toLowerCase();
-					输入.click();
-					输入.onchange = () => {
-						应用强调色(输入.value);
-						同步选中态();
-						提示("已切换自定义强调色");
-					};
-				};
-				控件容器.append(调色盘按钮);
-				//#endregion
-
-				//#region 下方：预设强调色色板
-				/** 根据当前强调色高亮对应色板，为自定义色时高亮调色盘 */
-				const 同步选中态 = () => {
-					const 当前 = 读取强调色();
-					let 命中预设 = false;
-					主题容器.querySelectorAll("button").forEach(元素 => {
-						const 命中 = 元素.dataset.hex === 当前;
-						元素.ariaChecked = "" + 命中;
-						if (命中) 命中预设 = true;
-					});
-					调色盘按钮.ariaChecked = "" + !命中预设;
-				};
-				Object.entries(主题表).forEach(([名字, hex]) => {
-					/** @type {HTMLButtonElement} */
-					let btn = ce("button");
-					btn.dataset.hex = hex;
-					btn.style.backgroundColor = hex;
-					btn.title = "强调色: " + 名字;
-					btn.role = "radio";
-					btn.ariaChecked = "false";
-					btn.onclick = () => {
-						应用强调色(hex);
-						同步选中态();
-						提示("已切换强调色: " + 名字);
-					};
-					主题容器.append(btn);
-				});
-				同步选中态();
-				//#endregion
-
-				渲染图标({
-					要渲染图标的元素: 调色盘按钮.getElementsByTagName("svg"),
-				});
+			//#region 第一行：背景模式切换、自定义强调色调色盘
+			/** @type {HTMLButtonElement} */
+			let 模式按钮 = ce("button");
+			模式按钮.id = "背景模式";
+			const 更新模式按钮 = () => {
+				const 模式 = 读取背景模式();
+				模式按钮.title = "背景: " + 模式 + (模式 === "自动" ? "（跟随系统）" : "");
 			};
-			DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+			模式按钮.onclick = () => {
+				// 自动 → 浅色 → 深色 循环
+				const 列表 = /** @type {("自动" | "浅色" | "深色")[]} */ (["自动", "浅色", "深色"]);
+				const 下一个 = 列表[(列表.indexOf(读取背景模式()) + 1) % 列表.length];
+				应用背景模式(下一个);
+				更新模式按钮();
+				提示("背景模式: " + 下一个);
+			};
+			更新模式按钮();
+			控件容器.append(模式按钮);
+
+			/** @type {HTMLButtonElement} */
+			let 调色盘按钮 = ce("button");
+			调色盘按钮.title = "自定义强调色";
+			调色盘按钮.role = "radio";
+			调色盘按钮.ariaChecked = "false";
+			调色盘按钮.innerHTML =
+				"<svg class='特小尺寸' data-icon='调色盘'></svg><input aria-label='自定义强调色调色盘' style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0' tabindex='-1' id='自定义强调色' type='color' />";
+			调色盘按钮.onclick = () => {
+				let 输入 = /** @type {HTMLInputElement} */ (gd("自定义强调色", true));
+				if (!输入) return;
+				输入.value = 读取强调色().toLowerCase();
+				输入.click();
+				输入.onchange = () => {
+					应用强调色(输入.value);
+					同步选中态();
+					提示("已切换自定义强调色");
+				};
+			};
+			控件容器.append(调色盘按钮);
+			//#endregion
+
+			//#region 下方：预设强调色色板
+			/** 根据当前强调色高亮对应色板，为自定义色时高亮调色盘 */
+			const 同步选中态 = () => {
+				const 当前 = 读取强调色();
+				let 命中预设 = false;
+				主题容器.querySelectorAll("button").forEach(元素 => {
+					const 命中 = 元素.dataset.hex === 当前;
+					元素.ariaChecked = "" + 命中;
+					if (命中) 命中预设 = true;
+				});
+				调色盘按钮.ariaChecked = "" + !命中预设;
+			};
+			Object.entries(主题表).forEach(([名字, hex]) => {
+				/** @type {HTMLButtonElement} */
+				let btn = ce("button");
+				btn.dataset.hex = hex;
+				btn.style.backgroundColor = hex;
+				btn.title = "强调色: " + 名字;
+				btn.role = "radio";
+				btn.ariaChecked = "false";
+				btn.onclick = () => {
+					应用强调色(hex);
+					同步选中态();
+					提示("已切换强调色: " + 名字);
+				};
+				主题容器.append(btn);
+			});
+			同步选中态();
+			//#endregion
+
+			渲染图标({
+				要渲染图标的元素: 调色盘按钮.getElementsByTagName("svg"),
+			});
 		}
 	)
 	.catch(e => console.error(e));
@@ -217,53 +218,78 @@ fetch("/json/theme.json")
 
 //#region 一言
 fetch("https://dsy4567.icu/api/hitokoto")
-	.then(res => res.json())
+	.then(
+		res =>
+			new Promise((resolve, reject) => {
+				延迟执行(
+					"关键任务完成",
+					() => {
+						resolve(res.json());
+					},
+					2
+				);
+			})
+	)
 	.then(j => {
-		const f = () => {
-			let 一言 = gd("一言", true),
-				// @ts-ignore
-				/** @type {HTMLAnchorElement} */ 链接 = qs("#一言+a");
-			if (!一言 || !链接) return;
-			一言.innerText = j.hitokoto;
-			链接.href = "https://hitokoto.cn/?uuid=" + j.uuid;
-		};
-		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+		let 一言 = gd("一言", true),
+			// @ts-ignore
+			/** @type {HTMLAnchorElement} */ 链接 = qs("#一言+a");
+		if (!一言 || !链接) return;
+		一言.innerText = j.hitokoto;
+		链接.href = "https://hitokoto.cn/?uuid=" + j.uuid;
 	})
 	.catch(e => console.error(e));
 //#endregion
 
 //#region 图标
 fetch("/json/icon.json")
-	.then(res => res.json())
+	.then(
+		res =>
+			new Promise((resolve, reject) => {
+				延迟执行(
+					"关键任务完成",
+					() => {
+						resolve(res.json());
+					},
+					1
+				);
+			})
+	)
 	.then(j => {
-		const f = () => {
-			图标 = j;
-			渲染图标();
-		};
-		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+		图标 = j;
+		渲染图标();
 	})
 	.catch(e => console.error(e));
 //#endregion
 
 //#region 关注被关注码龄
 fetch("https://api.github.com/users/dsy4567")
-	.then(res => res.json())
+	.then(
+		res =>
+			new Promise((resolve, reject) => {
+				延迟执行(
+					"关键任务完成",
+					() => {
+						resolve(res.json());
+					},
+					2
+				);
+			})
+	)
 	.then(个人信息 => {
-		const f = () => {
-			const 关注被关注码龄 = gd("关注被关注码龄");
-			if (!关注被关注码龄) return;
-			关注被关注码龄.innerHTML = ` 关注: ${个人信息.following} | 被关注: ${
-				个人信息.followers
-			} | 码龄: ${new Date().getFullYear() - new Date(个人信息.created_at).getFullYear()}年 `;
-		};
-		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
+		const 关注被关注码龄 = gd("关注被关注码龄");
+		if (!关注被关注码龄) return;
+		关注被关注码龄.innerHTML = ` 关注: ${个人信息.following} | 被关注: ${
+			个人信息.followers
+		} | 码龄: ${new Date().getFullYear() - new Date(个人信息.created_at).getFullYear()}年 `;
 	})
 	.catch(e => console.error(e));
 //#endregion
 
-try {
-	(() => {
-		const f = async () => {
+延迟执行(
+	"关键任务完成",
+	() => {
+		try {
 			//#region 核心元素、事件、字体css等
 			gd("回到顶部")?.addEventListener("click", () =>
 				document.body.scrollIntoView({ behavior: "smooth" })
@@ -414,21 +440,18 @@ try {
 		0.3s transform, 0.3s box-shadow, 0.3s filter, 0.3s background-color,
 		0.3s opacity, 0.3s max-height;
     }`;
-			setTimeout(() => {
-				document.head.append(style);
-			}, 500);
+			document.head.append(style);
 			//#endregion
 
 			//#region 引入统计脚本
 			import("./analytics.js");
 			//#endregion
-		};
-
-		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
-	})();
-} catch (e) {
-	console.error(e);
-}
+		} catch (e) {
+			console.error(e);
+		}
+	},
+	2
+);
 
 addEventListener("copy", () => {
 	提示("复制成功");
