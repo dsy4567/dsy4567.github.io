@@ -326,8 +326,8 @@ svg {
 	color: var(--link-color);
 }
 a {
-	opacity: 0.9;
-	text-decoration: 1px underline var(--overlay);
+	/* opacity: 0.9; */
+	text-decoration: none;
 }
 a.无滤镜,
 a.无滤镜:hover,
@@ -337,8 +337,9 @@ a.无滤镜:focus-visible {
 }
 a:hover,
 a:focus-visible {
-	opacity: 1;
+	/* opacity: 1; */
 	text-decoration: 1px underline var(--link-color);
+	text-underline-offset: 0.2em;
 }
 a.外链::after {
 	content: "";
