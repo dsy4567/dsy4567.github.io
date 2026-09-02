@@ -27,7 +27,10 @@
 ├── vercel.json                 # Vercel 配置
 ├── _vercel/                    # Vercel 自动生成的资源（弃用）
 ├── api/                        # Vercel Serverless 函数
-├── blog/                       # 博客文章
+├── blog/*/                     # 博客文章
+    ├── index.md                # markdown 源文件
+    ├── article.json            # json 元数据
+    ├── index.html              # 构建产物
 ├── css/                        # 样式表
 ├── img/                        # 图片资源
 ├── js/                         # js脚本
