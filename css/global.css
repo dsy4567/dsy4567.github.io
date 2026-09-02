@@ -156,13 +156,39 @@ main、左右栏
 }
 @media (forced-colors: active) {
 	a:hover {
-		outline: 2px solid #ffff00;
+		outline: 2px solid #0000ff;
 	}
 	svg.fill {
-		fill: #ffff00 !important;
+		fill: #0000ff !important;
 	}
 	svg.stroke {
-		stroke: #ffff00 !important;
+		stroke: #0000ff !important;
+	}
+}
+@media (prefers-color-scheme: light) {
+	@media (forced-colors: active) {
+		a:hover {
+			outline: 2px solid #0000ff;
+		}
+		svg.fill {
+			fill: #0000ff !important;
+		}
+		svg.stroke {
+			stroke: #0000ff !important;
+		}
+	}
+}
+@media (prefers-color-scheme: dark) {
+	@media (forced-colors: active) {
+		a:hover {
+			outline: 2px solid #ffff00;
+		}
+		svg.fill {
+			fill: #ffff00 !important;
+		}
+		svg.stroke {
+			stroke: #ffff00 !important;
+		}
 	}
 }
 @media (prefers-reduced-motion: reduce) {
