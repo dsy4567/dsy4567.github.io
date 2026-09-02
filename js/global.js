@@ -173,6 +173,18 @@ async function 添加脚本(url, crossOrigin = "use-credentials") {
 	});
 }
 /**
+ * 延迟执行一个函数，确保在浏览器渲染完成后执行
+ * @param {() => any} 回调
+ */
+function 延迟执行(回调) {
+	requestAnimationFrame(() => {
+		setTimeout(() => {
+			// 此时大概率渲染已完成，接近空闲时机
+			回调();
+		}, 0);
+	});
+}
+/**
  * 显示一个临时的通知消息，3 秒后自动隐藏
  * @param {string} m - 要显示的 HTML 内容
  */
