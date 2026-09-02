@@ -744,6 +744,9 @@ main > #分界线 > svg {
 		0.3s opacity,
 		0.3s transform;
 }
+main > #分界线 > svg > * {
+	transform: translateX(-2px);
+}
 body.宽屏 > main #分界线:hover,
 main > #分界线:hover > svg {
 	opacity: 1;
