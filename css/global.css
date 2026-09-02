@@ -344,7 +344,7 @@ a:focus-visible {
 a.外链::after {
 	content: "";
 }
-a.外链.无滤镜::after {
+a.外链:has(img, svg)::after {
 	content: "";
 }
 a[title]::after {

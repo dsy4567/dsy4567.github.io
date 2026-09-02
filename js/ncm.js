@@ -494,7 +494,7 @@ fetch("/json/ncm.json")
 				li.dataset.id = "" + 音乐信息.id;
 				gd("播放列表", true)?.append(li);
 			});
-			_global["main.js"]().添加点击事件和设置图标();
+			_global["main.js"]().渲染图标();
 
 			网易云音乐.初始化();
 		};

@@ -19,7 +19,7 @@ let 路径 = 获取清理后的路径(true),
 	正在动态加载 = false,
 	/** @type {Record<string, string | undefined>} */ 图标 = {};
 
-//#region 加载模块、动态加载、添加点击事件和设置图标
+//#region 加载模块、动态加载、渲染图标
 function 加载模块() {
 	路径 = 获取清理后的路径();
 	let 路径2 = 获取清理后的路径(true);
@@ -72,7 +72,7 @@ function 动态加载(元素) {
 						});
 				}
 				正在动态加载 = false;
-				添加点击事件和设置图标();
+				渲染图标();
 			} catch (e) {
 				console.error(e);
 				open(元素.href, "_self");
@@ -85,50 +85,19 @@ function 动态加载(元素) {
 			显示或隐藏进度条(false);
 		});
 }
-/** 在新增元素时调用，以确保图标正常显示、点击事件正常触发 @param {添加点击事件和设置图标选项} 选项 */
-function 添加点击事件和设置图标(选项 = {}) {
-	if (typeof 选项.设置图标 === "undefined" ? true : 选项.设置图标)
-		for (const 元素 of 选项.要设置图标的元素?.[0]
-			? 选项.要设置图标的元素
-			: qsa("svg[data-icon]")) {
-			// @ts-ignore
-			if (!元素.dataset.icon) continue;
-			let c = 元素.getAttribute("class");
-			let h = c
-				? // @ts-ignore
-					图标[元素.dataset.icon]?.replace(/特?小尺寸/, c)
-				: // @ts-ignore
-					图标[元素.dataset.icon];
-			h && (元素.outerHTML = h);
-		}
-	if (typeof 选项.添加链接点击事件 === "undefined" ? true : 选项.添加链接点击事件) {
-		const a = 选项.要添加链接点击事件的元素?.[0] ? 选项.要添加链接点击事件的元素 : ge("a");
-		for (const 元素 of a) {
-			if (元素.pathname === location.pathname && 元素.hash) {
-				if (!元素.classList.contains("hash链接")) 元素.classList.add("hash链接");
-				continue;
-			}
-			if (!元素.classList.contains("内链") && 元素.host === location.host) {
-				元素.classList.add("内链");
-				元素.classList.remove("外链");
-				元素.href = new URL(元素.href, location.href).href;
-			}
-			if (元素.host !== location.host && !元素.classList.contains("外链")) {
-				元素.classList.add("外链");
-				元素.classList.remove("内链");
-				元素.classList.remove("动态加载");
-				元素.target = "_blank";
-			} else if (元素.host === location.host && !元素.classList.contains("动态加载")) {
-				元素.classList.add("动态加载");
-				元素.addEventListener("click", 事件 => {
-					if (!元素.classList.contains("动态加载")) return;
-					事件.preventDefault();
-					动态加载(元素);
-				});
-			}
-			if (元素.querySelector("img, svg") && !元素.classList.contains("无滤镜"))
-				元素.classList.add("无滤镜");
-		}
+/** 在新增元素时调用，以确保图标正常显示、点击事件正常触发 @param {渲染图标选项} 选项 */
+function 渲染图标(选项 = {}) {
+	const re = /特?小尺寸/;
+	for (const 元素 of 选项.要渲染图标的元素?.[0] ? 选项.要渲染图标的元素 : qsa("svg[data-icon]")) {
+		// @ts-ignore
+		if (!元素.dataset.icon) continue;
+		let c = 元素.getAttribute("class");
+		let h = c
+			? // @ts-ignore
+				图标[元素.dataset.icon]?.replace(re, c)
+			: // @ts-ignore
+				图标[元素.dataset.icon];
+		h && (元素.outerHTML = h);
 	}
 }
 //#endregion
@@ -142,7 +111,7 @@ _global["main.js"] = () => ({
 	正在动态加载,
 	加载模块,
 	动态加载,
-	添加点击事件和设置图标,
+	渲染图标,
 });
 
 加载模块();
@@ -236,10 +205,8 @@ fetch("/json/theme.json")
 				同步选中态();
 				//#endregion
 
-				添加点击事件和设置图标({
-					添加链接点击事件: false,
-					设置图标: true,
-					要设置图标的元素: 调色盘按钮.getElementsByTagName("svg"),
+				渲染图标({
+					要渲染图标的元素: 调色盘按钮.getElementsByTagName("svg"),
 				});
 			};
 			DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
@@ -259,11 +226,6 @@ fetch("https://dsy4567.icu/api/hitokoto")
 			if (!一言 || !链接) return;
 			一言.innerText = j.hitokoto;
 			链接.href = "https://hitokoto.cn/?uuid=" + j.uuid;
-			添加点击事件和设置图标({
-				添加链接点击事件: true,
-				设置图标: false,
-				要添加链接点击事件的元素: [链接],
-			});
 		};
 		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 	})
@@ -276,10 +238,7 @@ fetch("/json/icon.json")
 	.then(j => {
 		const f = () => {
 			图标 = j;
-			添加点击事件和设置图标({
-				添加链接点击事件: false,
-				设置图标: true,
-			});
+			渲染图标();
 		};
 		DOMContentLoaded ? f() : addEventListener("DOMContentLoaded", f);
 	})
@@ -335,11 +294,6 @@ try {
 						事件.pageY,
 						false
 					);
-					添加点击事件和设置图标({
-						设置图标: false,
-						添加链接点击事件: true,
-						要添加链接点击事件的元素: div.getElementsByTagName("a"),
-					});
 					添加脚本("https://www.recaptcha.net/recaptcha/api.js?render=explicit", null)
 						.then(() => {
 							gd("close_recaptcha")?.addEventListener("click", () => {
@@ -358,11 +312,6 @@ try {
 												回复
 										)
 									).text();
-									添加点击事件和设置图标({
-										设置图标: false,
-										添加链接点击事件: true,
-										要添加链接点击事件的元素: div.getElementsByTagName("a"),
-									});
 									gr.focus();
 								} catch (e) {
 									gr.tabIndex = 0;
@@ -452,10 +401,6 @@ try {
 			//#endregion
 
 			//#region 初始化图标、事件，延后启用动画
-			添加点击事件和设置图标({
-				设置图标: false,
-			});
-
 			let style = ce("style");
 			style.innerHTML = `a,
     button,
@@ -495,6 +440,22 @@ addEventListener("popstate", 事件 => {
 		href: location.pathname,
 		popstate: true,
 	});
+});
+/** 用事件委托统一处理动态加载链接的点击，避免给每个链接单独绑定监听器和闭包 */
+addEventListener("click", 事件 => {
+	const 目标 = 事件.target;
+	if (!(目标 instanceof Element)) return;
+	const a = 目标.closest("a");
+	if (!a) return;
+
+	const 本站 = location.host,
+		当前路径 = location.pathname;
+
+	if (a.pathname === 当前路径 && a.hash) return;
+	else if (a.host === 本站) {
+		事件.preventDefault();
+		动态加载(a);
+	} else a.target = "_blank";
 });
 
 export {};

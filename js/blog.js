@@ -145,7 +145,6 @@ async function 渲染文章(当前文章信息) {
 		//#region 收尾
 		gd("正在加载文章提示")?.remove();
 		显示或隐藏进度条(false);
-		_global["main.js"]().添加点击事件和设置图标();
 		if (location.hash)
 			// 滚动到hash位置
 			// 不能通过赋值 location.hash（置空再恢复）触发滚动：赋值 hash 属于 fragment 导航，
@@ -233,7 +232,7 @@ ${(() => {
 						})
 					);
 					右.append(sect);
-					_global["main.js"]().添加点击事件和设置图标();
+					_global["main.js"]().渲染图标();
 				});
 		//#endregion
 	} catch (e) {
@@ -352,7 +351,7 @@ async function 渲染文章列表(u) {
 			//#region 收尾、滚动视图、高亮
 			显示或隐藏进度条(false);
 			gd("正在加载文章提示")?.remove();
-			_global["main.js"]().添加点击事件和设置图标();
+			_global["main.js"]().渲染图标();
 			if (!location.hash)
 				右.scrollIntoView({
 					behavior: "smooth",
