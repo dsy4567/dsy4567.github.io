@@ -532,8 +532,7 @@ function 当前是否深色() {
  * 连同衍生色一起写入 CSS 变量
  * @param {string} hex - 强调色原色，如 "#66ccff"
  */
-function 写入强调色变量(hex) {
-	const 深 = 当前是否深色();
+function 写入强调色变量(hex, 深 = 当前是否深色()) {
 	const 背景hex = 深 ? "#18171c" : "#eeeeee";
 
 	// 主色用作链接/图标等前景文字
@@ -556,7 +555,7 @@ function 刷新主题() {
 	document.documentElement.classList.toggle("深色", 深);
 	document.documentElement.classList.toggle("浅色", !深);
 	gd("主题色", true)?.setAttribute("content", 深 ? "#18171c" : "#eeeeee");
-	写入强调色变量(读取强调色());
+	写入强调色变量(读取强调色(), 深);
 }
 /**
  * 切换背景模式并持久化
