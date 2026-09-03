@@ -59,7 +59,9 @@ function 动态加载(元素) {
 					"",
 					元素.href
 				);
-			document.title = mt ? mt[0].replace(/<\/?title>/g, "") : "dsy4567 的小站";
+			document.title = mt
+				? mt[0].replaceAll("<title>", "").replaceAll("</title>", "")
+				: "dsy4567 的小站";
 			dispatchEvent(URL发生变化事件);
 			try {
 				let 右 = qs("main .右", true);

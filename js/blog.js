@@ -58,7 +58,7 @@ async function 渲染文章(当前文章信息) {
 				img.alt = img.alt.replace(m[0], "");
 				img.loading = "lazy";
 				[img.width, img.height] = m[0]
-					.replace(/s:/g, "")
+					.replaceAll("s:", "")
 					.split("x")
 					.map(s => +s);
 			}
@@ -311,7 +311,7 @@ async function 渲染文章列表(u) {
 					img.alt = img.alt.replace(m[0], "");
 					img.loading = "lazy";
 					[img.width, img.height] = m[0]
-						.replace(/s:/g, "")
+						.replaceAll("s:", "")
 						.split("x")
 						.map(s => +s);
 				}
