@@ -913,6 +913,8 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 	cursor: pointer;
 	width: 24px;
 	height: 24px;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-touch-callout: none;
 }
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *.激活,
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:hover,
@@ -1004,6 +1006,8 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 li {
 	border-bottom: 1px solid var(--overlay);
 	cursor: pointer;
+	-webkit-tap-highlight-color: transparent;
+	-webkit-touch-callout: none;
 	display: table-caption;
 	user-select: none;
 	white-space: nowrap;
