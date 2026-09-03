@@ -32,8 +32,6 @@
 		<link rel="preconnect" href="https://t1.gstatic.cn" />
 
 		<link rel="modulepreload" href="/js/analytics.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/friends.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/main.js" crossorigin="use-credentials" />
 		<link rel="modulepreload" href="/js/ncm.js" crossorigin="use-credentials" />
 		<link
 			rel="preload"
@@ -52,6 +50,8 @@
 		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
 
 		<script src="/js/global.js"></script>
+		<script src="/js/main.js" type="module" defer></script>
+		<script src="/js/friends.js" type="module" defer></script>
 		<link rel="stylesheet" href="/css/global.css" />
 		<link
 			rel="preload"
@@ -217,6 +217,5 @@
 		<noscript>
 			<div>请启用 JavaScript 以获得更好的浏览体验</div>
 		</noscript>
-		<script src="/js/main.js" type="module" async></script>
 	</body>
 </html>
