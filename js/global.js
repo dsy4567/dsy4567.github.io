@@ -220,7 +220,7 @@ async function 触发事件(事件名) {
 	// 按优先级数值升序处理
 	const 优先级列表 = [...队列快照.keys()].sort((a, b) => a - b);
 
-	for (const 优先级 of 优先级列表) {
+	批量低阻塞操作(优先级列表, async 优先级 => {
 		const 回调列表 = 队列快照.get(优先级) || [];
 		// 同一优先级并行执行
 		await Promise.all(
@@ -233,7 +233,7 @@ async function 触发事件(事件名) {
 				}
 			})
 		);
-	}
+	});
 
 	if (事件名 === "DOMContentLoaded") await 触发事件("关键任务完成");
 }
