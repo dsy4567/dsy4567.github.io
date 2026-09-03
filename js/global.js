@@ -244,34 +244,18 @@ async function 触发事件(事件名) {
  * @param {number} [优先级=0] - 优先级，数值越小越先执行
  */
 async function 延迟执行(事件名, 回调, 优先级 = 0) {
-	if (延迟执行状态[事件名].已触发) {
-		for (const 回调们 of Object.keys(延迟执行状态[事件名].回调)) {
-			延迟执行状态[事件名].回调[+回调们].forEach(async 以前的回调 => {
-				try {
-					await 以前的回调();
-				} catch (e) {
-					console.error(e);
-				}
-			});
-			delete 延迟执行状态[事件名].回调[+回调们];
-			document.addEventListener("DOMContentLoaded", async () => {
-				DOMContentLoaded = true;
-				延迟执行状态["DOMContentLoaded"].已触发 = true;
-			});
-		}
+	const 状态 = 延迟执行状态[事件名];
+	if (!状态) throw new Error(`未知事件: ${事件名}`);
+
+	if (状态.已触发)
 		try {
 			await 回调();
 		} catch (e) {
-			console.error(e);
+			console.error(`[${事件名}] 优先级 ${优先级} 回调执行失败:`, e);
 		}
-
-		if (事件名 === "DOMContentLoaded") {
-			延迟执行状态["关键任务完成"].已触发 = true;
-			延迟执行("关键任务完成", () => {}, 999);
-		}
-	} else {
-		延迟执行状态[事件名].回调[优先级] ??= [];
-		延迟执行状态[事件名].回调[优先级].push(回调);
+	else {
+		if (!状态.回调.has(优先级)) 状态.回调.set(优先级, []);
+		状态.回调.get(优先级)?.push(回调);
 	}
 }
 /**
@@ -611,7 +595,6 @@ addEventListener("load", () => {
 });
 document.addEventListener("DOMContentLoaded", () => {
 	DOMContentLoaded = true;
-	延迟执行状态["DOMContentLoaded"].已触发 = true;
-	延迟执行("DOMContentLoaded", () => {}, 999); // 冲刷 DOMContentLoaded 队列并级联 关键任务完成
+	触发事件("DOMContentLoaded");
 });
 //#endregion
