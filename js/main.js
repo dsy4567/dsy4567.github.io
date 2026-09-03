@@ -129,7 +129,7 @@ fetch("/json/theme.json")
 	.then(
 		res =>
 			new Promise((resolve, reject) => {
-				延迟执行("关键任务完成", () => resolve(res.json()), 2);
+				延迟执行("关键任务完成", () => resolve(res.json()), 3);
 			})
 	)
 	.then(
@@ -250,7 +250,7 @@ fetch("/json/icon.json")
 		res =>
 			new Promise((resolve, reject) => {
 				延迟执行(
-					"关键任务完成",
+					"DOMContentLoaded",
 					() => {
 						resolve(res.json());
 					},
@@ -477,7 +477,7 @@ fetch("https://api.github.com/users/dsy4567")
 			console.error(e);
 		}
 	},
-	2
+	0
 );
 
 addEventListener("copy", () => {

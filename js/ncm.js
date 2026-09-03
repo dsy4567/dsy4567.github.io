@@ -402,7 +402,7 @@ fetch("/json/ncm.json")
 					() => {
 						resolve(res.json());
 					},
-					2
+					3
 				);
 			})
 	)
