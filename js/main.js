@@ -96,6 +96,9 @@ function 渲染图标(选项 = {}) {
 	);
 	批量低阻塞操作(全部元素, 元素 => {
 		if (!元素.dataset.icon) return;
+		// 批量处理是异步分批的，期间元素可能已被并发的其他“渲染图标”调用替换或移出文档，
+		// 此时元素没有父节点，设置 outerHTML 会抛出 DOMException 并中断整批渲染，必须跳过
+		if (!元素.isConnected) return;
 		let c = 元素.getAttribute("class");
 		let h = c ? 图标[元素.dataset.icon]?.replace(re, c) : 图标[元素.dataset.icon];
 		h && (元素.outerHTML = h);
@@ -209,11 +212,12 @@ fetch("/json/theme.json")
 			同步选中态();
 			//#endregion
 
-			渲染图标();
-			// 要渲染图标的元素 存在bug需要排查
-			// 渲染图标({
-			// 	要渲染图标的元素: 调色盘按钮.getElementsByTagName("svg"),
-			// });
+			// 渲染图标();
+			// 此前指定元素渲染报“没有父节点”，根因是多个“渲染图标”调用并发时，
+			// 异步分批处理会处理到已被替换而脱离文档的元素，现已在“渲染图标”内跳过
+			渲染图标({
+				要渲染图标的元素: 调色盘按钮.getElementsByTagName("svg"),
+			});
 		}
 	)
 	.catch(e => console.error(e));
