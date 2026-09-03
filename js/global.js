@@ -15,8 +15,8 @@ let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
 	/** @type {Record<string, {已完成加载: boolean, 回调: ((事件?: any) => void)[], 失败回调: ((错误?: any) => void)[]}>} */ 已添加的脚本 =
 		{},
 	/** @type {延迟执行状态类型} */ 延迟执行状态 = {
-		DOMContentLoaded: { 回调: {}, 已触发: false },
-		关键任务完成: { 回调: {}, 已触发: false },
+		DOMContentLoaded: { 回调: new Map(), 已触发: false },
+		关键任务完成: { 回调: new Map(), 已触发: false },
 	};
 /**
  * document.getElementById 的快捷方式，支持缓存
@@ -177,7 +177,68 @@ async function 添加脚本(url, crossOrigin = "use-credentials") {
 	});
 }
 /**
- * 延迟执行一个函数，若事件已经触发则立即执行，否则等待事件触发后执行; 迟到的回调排在所有已入队回调之后执行
+ * 批量处理元素，避免长时间阻塞主线程。
+ * @template T
+ * @param {ArrayLike<T>} 待处理元素 - 需要被处理的元素数组或类数组对象
+ * @param {(元素: T, 索引: number) => void} 回调 - 对每个元素执行的操作
+ * @param {Object} [选项] - 可选配置
+ * @param {number} [选项.时间片=8] - 每次让出主线程前允许占用的最大毫秒数
+ * @returns {void}
+ */
+function 批量低阻塞操作(待处理元素, 回调, { 时间片 = 8 } = {}) {
+	const 总数 = 待处理元素.length;
+	let 索引 = 0;
+
+	const 处理一批 = () => {
+		const 截止时间 = Date.now() + 时间片;
+		// 至少处理一个元素，避免时间片为 0 时死循环
+		while (索引 < 总数) {
+			回调(待处理元素[索引], 索引);
+			索引++;
+			if (Date.now() >= 截止时间) break;
+		}
+
+		if (索引 < 总数) setTimeout(处理一批, 0); // 让出主线程，使用 setTimeout(0) 减少调度延迟
+	};
+
+	// 启动异步处理
+	setTimeout(处理一批, 0);
+}
+/**
+ * 触发一个事件，执行所有已注册的回调函数
+ * @param {"DOMContentLoaded" | "关键任务完成"} 事件名
+ */
+async function 触发事件(事件名) {
+	const 状态 = 延迟执行状态[事件名];
+	if (!状态 || 状态.已触发) return;
+	状态.已触发 = true;
+
+	// 快照当前所有优先级队列，并清空原队列，防止执行期间新增回调干扰
+	const 队列快照 = new Map(状态.回调);
+	状态.回调.clear();
+
+	// 按优先级数值升序处理
+	const 优先级列表 = [...队列快照.keys()].sort((a, b) => a - b);
+
+	for (const 优先级 of 优先级列表) {
+		const 回调列表 = 队列快照.get(优先级) || [];
+		// 同一优先级并行执行
+		await Promise.all(
+			回调列表.map(async 回调 => {
+				try {
+					// 包装非 async 回调，确保统一为 Promise，并能捕获错误
+					await Promise.resolve().then(() => 回调());
+				} catch (e) {
+					console.error(`[${事件名}] 优先级 ${优先级} 回调执行失败:`, e);
+				}
+			})
+		);
+	}
+
+	if (事件名 === "DOMContentLoaded") await 触发事件("关键任务完成");
+}
+/**
+ * 延迟执行一个函数，若事件已经触发则立即执行，否则等待事件触发后执行
  * @param {"DOMContentLoaded" | "关键任务完成"} 事件名
  * @param {() => any} 回调
  * @param {number} [优先级=0] - 优先级，数值越小越先执行
