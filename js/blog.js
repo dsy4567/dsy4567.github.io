@@ -173,7 +173,18 @@ async function 渲染文章(当前文章信息) {
 			fetch(
 				`https://api.github.com/repos/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}/comments`
 			)
-				.then(res => res.json())
+				.then(
+					res =>
+						new Promise((resolve, reject) => {
+							延迟执行(
+								"关键任务完成",
+								() => {
+									resolve(res.json());
+								},
+								2
+							);
+						})
+				)
 				.then(async j => {
 					if (typeof j !== "object") j = [];
 					// prettier-ignore
