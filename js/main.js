@@ -25,13 +25,9 @@ function 加载模块() {
 	let 路径2 = 获取清理后的路径(true);
 	for (const s of 加载清单[路径] || []) {
 		const i = import(`/js/${s}.js`);
-		延迟执行(
-			"DOMContentLoaded",
-			async () => {
-				(await i).main(路径2);
-			},
-			0
-		);
+		setTimeout(async () => {
+			(await i).main(路径2);
+		}, 0);
 	}
 	路径 = 路径2;
 }
