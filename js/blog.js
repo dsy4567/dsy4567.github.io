@@ -274,7 +274,8 @@ async function 渲染文章列表(u) {
 
 			所有文章信息 = j;
 			let 所有标签 = new Set(),
-				限定标签 = u.searchParams.get("tag");
+				限定标签 = u.searchParams.get("tag"),
+				待添加 = [];
 			for (const 文章 of j) {
 				//#region 渲染文章列表
 				文章.tags?.forEach(标签 => 所有标签.add(标签));
@@ -333,8 +334,9 @@ async function 渲染文章列表(u) {
 				});
 				//#endregion
 
-				右.append(sect);
+				待添加.push(sect);
 			}
+			右.append(...待添加);
 
 			//#region 渲染标签列表
 			let 标签元素 = ce("section"),
@@ -356,6 +358,7 @@ async function 渲染文章列表(u) {
 			[...(document.getElementsByClassName("标签") || [])]?.forEach(元素 => {
 				元素.remove();
 			});
+
 			标签元素.classList.add("标签");
 			标签元素.append(div);
 			qs("main > .左", true)?.append(标签元素);

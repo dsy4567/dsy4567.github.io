@@ -190,6 +190,8 @@ fetch("/json/theme.json")
 				});
 				调色盘按钮.ariaChecked = "" + !命中预设;
 			};
+			/** @type {HTMLButtonElement[]} */
+			let 待添加元素 = [];
 			Object.entries(主题表).forEach(([名字, hex]) => {
 				/** @type {HTMLButtonElement} */
 				let btn = ce("button");
@@ -203,8 +205,9 @@ fetch("/json/theme.json")
 					同步选中态();
 					提示("已切换强调色: " + 名字);
 				};
-				主题容器.append(btn);
+				待添加元素.push(btn);
 			});
+			主题容器.append(...待添加元素);
 			同步选中态();
 			//#endregion
 

@@ -424,6 +424,9 @@ fetch("/json/ncm.json")
 			网易云音乐.歌单[i].完整歌名 = 网易云音乐.歌单[i].歌手 + " - " + 网易云音乐.歌单[i].歌名;
 			网易云音乐.歌单索引[音乐信息.id] = i;
 		}
+
+		/** @type {HTMLButtonElement[]} */
+		let 待添加按钮 = [];
 		function svg(
 			/** @type {string} */ 名称,
 			/** @type {string} */ html,
@@ -443,7 +446,7 @@ fetch("/json/ncm.json")
 			btn.role = role;
 			btn.ariaChecked = role === "checkbox" ? "false" : null;
 			网易云音乐.按钮[名称] = btn;
-			gd("音乐控件", true)?.append(btn);
+			待添加按钮.push(btn);
 		}
 
 		svg(
@@ -493,6 +496,10 @@ fetch("/json/ncm.json")
 			"beforeend",
 			`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a>`
 		);
+		gd("音乐控件", true)?.append(...待添加按钮);
+
+		/** @type {HTMLLIElement[]} */
+		let 待添加播放列表项 = [];
 		网易云音乐.歌单.forEach(音乐信息 => {
 			let li = ce("li");
 			li.innerHTML = `${音乐信息.歌名} <span class="淡化">${音乐信息.歌手}</span>`;
@@ -503,8 +510,9 @@ fetch("/json/ncm.json")
 			li.tabIndex = 0;
 			li.title = 音乐信息.完整歌名;
 			li.dataset.id = "" + 音乐信息.id;
-			gd("播放列表", true)?.append(li);
+			待添加播放列表项.push(li);
 		});
+		gd("播放列表", true)?.append(...待添加播放列表项);
 		_global["main.js"]().渲染图标();
 
 		延迟执行("关键任务完成", 网易云音乐.初始化, 2);
