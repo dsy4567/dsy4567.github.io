@@ -370,25 +370,49 @@ fetch("https://api.github.com/users/dsy4567")
 			//#endregion
 
 			//#region 导航栏
+
+			/** 记录上一次滚动条距离文档顶部的位置（用于判断滚动方向） */
 			let scrollTop = 0,
+				/**
+				 * 当前导航栏的显示模式
+				 *  - -1：初始状态（尚未判断过）
+				 *  -  0：页面位于顶部（显示顶部样式）
+				 *  -  1：向下滚动（隐藏导航栏）
+				 *  -  2：向上滚动（显示导航栏，但不含顶部样式）
+				 */
 				状态 = -1;
-			const f = () => {
-				if (document.documentElement.scrollTop === 0 && 状态 !== 0) {
-					document.body.classList.add("顶部");
-					document.body.classList.remove("隐藏导航栏");
-					状态 = 0;
-				} else if (document.documentElement.scrollTop > scrollTop && 状态 !== 1) {
-					document.body.classList.remove("顶部");
-					document.body.classList.add("隐藏导航栏");
-					状态 = 1;
-				} else if (document.documentElement.scrollTop < scrollTop && 状态 !== 2) {
-					document.body.classList.remove("顶部");
-					document.body.classList.remove("隐藏导航栏");
-					状态 = 2;
-				}
-				scrollTop = document.documentElement.scrollTop;
-			};
-			addEventListener("scroll", f);
+
+			const 类列表 = document.body.classList;
+
+			// 监听页面滚动事件（passive: 声明不调用 preventDefault，浏览器无需等待本监听器即可滚动）
+			addEventListener(
+				"scroll",
+				() => {
+					const 当前滚动位置 = scrollY;
+
+					// 情况一：滚动到页面最顶部（scrollTop 为 0）且当前状态不是“顶部”
+					if (当前滚动位置 === 0 && 状态 !== 0) {
+						类列表.add("顶部");
+						类列表.remove("隐藏导航栏");
+						状态 = 0;
+					}
+					// 情况二：向下滚动（当前滚动位置比上次大）且状态不是“隐藏导航栏”
+					else if (当前滚动位置 > scrollTop && 状态 !== 1) {
+						类列表.remove("顶部");
+						类列表.add("隐藏导航栏");
+						状态 = 1;
+					}
+					// 情况三：向上滚动（当前滚动位置比上次小）且状态不是“显示导航栏”
+					else if (当前滚动位置 < scrollTop && 状态 !== 2) {
+						类列表.remove("顶部", "隐藏导航栏");
+						状态 = 2;
+					}
+
+					// 更新 scrollTop 为当前滚动位置，供下一次事件判断方向
+					scrollTop = 当前滚动位置;
+				},
+				{ passive: true }
+			);
 			//#endregion
 
 			//#region 双击打开图片/复制代码
