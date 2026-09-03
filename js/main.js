@@ -209,9 +209,11 @@ fetch("/json/theme.json")
 			同步选中态();
 			//#endregion
 
-			渲染图标({
-				要渲染图标的元素: 调色盘按钮.getElementsByTagName("svg"),
-			});
+			渲染图标();
+			// 要渲染图标的元素 存在bug需要排查
+			// 渲染图标({
+			// 	要渲染图标的元素: 调色盘按钮.getElementsByTagName("svg"),
+			// });
 		}
 	)
 	.catch(e => console.error(e));
