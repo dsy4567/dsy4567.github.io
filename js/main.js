@@ -252,7 +252,7 @@ fetch("/json/icon.json")
 					() => {
 						resolve(res.json());
 					},
-					1
+					0
 				);
 			})
 	)
