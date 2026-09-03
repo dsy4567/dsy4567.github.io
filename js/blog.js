@@ -127,9 +127,10 @@ async function 渲染文章(当前文章信息) {
 			"afterbegin",
 			'<h2><svg class="小尺寸" data-icon="目录"></svg><span>目录</span></h2>'
 		);
-		目录.append(根列表);
 		目录.classList.add("目录");
+		目录.append(根列表);
 		qs("main > .左", true)?.append(目录);
+		_global["main.js"]().渲染图标();
 		//#endregion
 
 		//#region 高亮
@@ -358,12 +359,12 @@ async function 渲染文章列表(u) {
 			标签元素.classList.add("标签");
 			标签元素.append(div);
 			qs("main > .左", true)?.append(标签元素);
+			_global["main.js"]().渲染图标();
 			//#endregion
 
 			//#region 收尾、滚动视图、高亮
 			显示或隐藏进度条(false);
 			gd("正在加载文章提示")?.remove();
-			_global["main.js"]().渲染图标();
 			if (!location.hash)
 				右.scrollIntoView({
 					behavior: "smooth",
