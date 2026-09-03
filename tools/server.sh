@@ -58,4 +58,4 @@ fi
 
 # 启动服务器（仅监听本地回环地址）
 cd "$repo_root"
-authbind --deep http-server -a 127.0.0.1 -p "$port" -c-1 -S -C "$cert" -K "$key"
+authbind --deep http-server -p "$port" -c-1 -S -C "$cert" -K "$key"
