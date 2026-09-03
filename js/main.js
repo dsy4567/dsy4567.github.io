@@ -298,7 +298,10 @@ fetch("https://api.github.com/users/dsy4567")
 			gd("分界线")?.addEventListener("click", () => {
 				document.body.classList.toggle("宽屏");
 			});
-			qsa("link[disabled]").forEach(元素 => 元素.removeAttribute("disabled"));
+			qsa("link[data-preload='style']").forEach(元素 => {
+				// @ts-ignore
+				元素.rel = "stylesheet";
+			});
 			//#endregion
 
 			//#region reCAPTCHA 获取邮箱/tg
