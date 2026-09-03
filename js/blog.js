@@ -15,6 +15,19 @@ let /** @type {文章信息[]} */ 所有文章信息 = [],
 添加样式("/css/hl.min.css");
 
 /**
+ * 高亮目标元素中的代码
+ * @param {Element} 目标 目标元素
+ */
+async function 高亮代码(目标) {
+	return 添加脚本("/js/lib/highlight.min.js").then(() => {
+		批量低阻塞操作(目标.querySelectorAll("pre > code"), (元素, 索引) => {
+			hljs.highlightElement(元素);
+			const s = 元素.classList[0]?.split("-")[1];
+			元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
+		});
+	});
+}
+/**
  *
  * @param {文章信息} 当前文章信息
  */
@@ -134,19 +147,7 @@ async function 渲染文章(当前文章信息) {
 		//#endregion
 
 		//#region 高亮
-		添加脚本("/js/lib/highlight.min.js").then(() =>
-			右.querySelectorAll("pre > code").forEach(元素 => {
-				延迟执行(
-					"关键任务完成",
-					() => {
-						hljs.highlightElement(元素);
-					},
-					1
-				);
-				const s = 元素.classList[0]?.split("-")[1];
-				元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
-			})
-		);
+		高亮代码(右);
 		//#endregion
 
 		//#region 收尾
@@ -231,19 +232,7 @@ ${(() => {
 					sect.innerHTML = html;
 
 					// 高亮
-					添加脚本("/js/lib/highlight.min.js").then(() =>
-						sect.querySelectorAll("pre > code").forEach(元素 => {
-							延迟执行(
-								"关键任务完成",
-								() => {
-									hljs.highlightElement(元素);
-								},
-								1
-							);
-							const s = 元素.classList[0]?.split("-")[1];
-							元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
-						})
-					);
+					高亮代码(sect);
 					右.append(sect);
 					_global["main.js"]().渲染图标();
 				});
@@ -373,13 +362,7 @@ async function 渲染文章列表(u) {
 					behavior: "smooth",
 				});
 
-			添加脚本("/js/lib/highlight.min.js").then(() =>
-				延迟执行("关键任务完成", hljs.highlightAll, 1)
-			);
-			document.querySelectorAll("pre > code").forEach(元素 => {
-				const s = 元素.classList[0]?.split("-")[1];
-				元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
-			});
+			高亮代码(右);
 			//#endregion
 		})
 		.catch(e => {
