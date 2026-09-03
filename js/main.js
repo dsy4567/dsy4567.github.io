@@ -93,17 +93,17 @@ function 动态加载(元素) {
 /** 在新增元素时调用，以确保图标正常显示、点击事件正常触发 @param {渲染图标选项} 选项 */
 function 渲染图标(选项 = {}) {
 	const re = /特?小尺寸/;
-	for (const 元素 of 选项.要渲染图标的元素?.[0] ? 选项.要渲染图标的元素 : qsa("svg[data-icon]")) {
-		// @ts-ignore
-		if (!元素.dataset.icon) continue;
+	const 全部元素 = /** @type {ArrayLike<SVGSVGElement>} */ (
+		选项.要渲染图标的元素?.[0]
+			? 选项.要渲染图标的元素
+			: document.querySelectorAll("svg[data-icon]")
+	);
+	批量低阻塞操作(全部元素, 元素 => {
+		if (!元素.dataset.icon) return;
 		let c = 元素.getAttribute("class");
-		let h = c
-			? // @ts-ignore
-				图标[元素.dataset.icon]?.replace(re, c)
-			: // @ts-ignore
-				图标[元素.dataset.icon];
+		let h = c ? 图标[元素.dataset.icon]?.replace(re, c) : 图标[元素.dataset.icon];
 		h && (元素.outerHTML = h);
-	}
+	});
 }
 //#endregion
 
