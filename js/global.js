@@ -257,7 +257,8 @@ function 清理路径(路径) {
  */
 function 获取清理后的路径(包含search = false) {
 	// 缓存只存依赖 pathname 的清理结果；search 每次现读，避免同路径不同查询参数时读到过期缓存
-	let 已清理路径 = (清理后的路径缓存[location.pathname] ??= 清理路径(location.pathname));
+	const pn = location.pathname;
+	let 已清理路径 = (清理后的路径缓存[pn] ??= 清理路径(pn));
 	return 包含search ? 已清理路径 + location.search : "/" + 已清理路径.split("/")[1];
 }
 /**
