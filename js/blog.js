@@ -49,7 +49,7 @@ async function 渲染文章(当前文章信息) {
 					html += `<a href="/blog.html?tag=${标签}">${标签}</a> `;
 				return html;
 			})()}`;
-			span.classList.add("淡化");
+			span.classList.add("元数据");
 			sect.append(span);
 			// 设置大小和懒加载
 			for (const img of sect.getElementsByTagName("img")) {
@@ -201,8 +201,8 @@ ${(() => {
 		<span class="用户名"><a href="${评论.user.html_url}">${评论.user.login}</a></span>
 	</div>
 	<div class="评论正文">${marked.parse(评论.body)}</div>
-	<span class="淡化">发表于: ${new Date(评论.created_at).toLocaleString()} 更新于: ${new Date(评论.updated_at).toLocaleString()}</span><br />
-	<span class="淡化">${(() => {
+	<span class="元数据">发表于: ${new Date(评论.created_at).toLocaleString()} 更新于: ${new Date(评论.updated_at).toLocaleString()}</span><br />
+	<span class="元数据">${(() => {
 			let emojis = {
 					"+1": "👍",
 					"-1": "👎",
@@ -299,7 +299,7 @@ async function 渲染文章列表(u) {
 					});
 					return html;
 				})()}`;
-				span.classList.add("淡化");
+				span.classList.add("元数据");
 				sect.append(p, a, br, span);
 				//#endregion
 
