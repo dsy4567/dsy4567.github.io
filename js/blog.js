@@ -153,19 +153,22 @@ async function 渲染文章(当前文章信息) {
 		//#region 收尾
 		gd("正在加载文章提示")?.remove();
 		显示或隐藏进度条(false);
-		if (location.hash)
-			// 滚动到hash位置
-			// 不能通过赋值 location.hash（置空再恢复）触发滚动：赋值 hash 属于 fragment 导航，
-			// 会 push 新历史条目，既污染后退栈，也会清空前进栈（导致后退后前进按钮变灰）
-			try {
-				let 目标 = qs(`[id="${decodeURI(location.hash.substring(1))}"]`);
-				目标?.nextElementSibling?.classList.add("标记");
-				目标?.scrollIntoView();
-			} catch (e) {}
-		else
-			右.scrollIntoView({
-				behavior: "smooth",
-			});
+		if (已触发动态加载)
+			if (location.hash)
+				// 滚动到hash位置
+				// 不能通过赋值 location.hash（置空再恢复）触发滚动：赋值 hash 属于 fragment 导航，
+				// 会 push 新历史条目，既污染后退栈，也会清空前进栈（导致后退后前进按钮变灰）
+				try {
+					let 目标 = qs(`[id="${decodeURI(location.hash.substring(1))}"]`);
+					目标?.nextElementSibling?.classList.add("标记");
+					目标?.scrollIntoView({
+						behavior: "smooth",
+					});
+				} catch (e) {}
+			else
+				右.scrollIntoView({
+					behavior: "smooth",
+				});
 		//#endregion
 
 		//#region 评论区
@@ -368,7 +371,7 @@ async function 渲染文章列表(u) {
 			//#region 收尾、滚动视图、高亮
 			显示或隐藏进度条(false);
 			gd("正在加载文章提示")?.remove();
-			if (!location.hash)
+			if (!location.hash && 已触发动态加载)
 				右.scrollIntoView({
 					behavior: "smooth",
 				});

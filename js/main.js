@@ -38,6 +38,7 @@ function 动态加载(元素) {
 		return 显示或隐藏进度条(false);
 	}
 	正在动态加载 = true;
+	已触发动态加载 = true;
 	显示或隐藏进度条(true);
 	gd("robots", true)?.setAttribute("content", "");
 	fetch(元素.href)

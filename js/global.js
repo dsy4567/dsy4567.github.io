@@ -588,7 +588,8 @@ let URL发生变化事件 = new CustomEvent("URL发生变化");
 let _global = {};
 
 let DOMContentLoaded = false,
-	loaded = false;
+	loaded = false,
+	已触发动态加载 = false;
 addEventListener("load", () => {
 	loaded = true;
 });
