@@ -28,9 +28,9 @@ export default (() => {
 	s2.setAttribute("data-cf-beacon", '{"token": "9ef701d58e594dcc960850227e0f2436"}');
 	s2.src = "https://static.cloudflareinsights.com/beacon.min.js";
 
-	if (location.hostname !== "dsy4567.icu") return;
-	const /** @type {HTMLScriptElement} */ s3 = document.createElement("script");
-	s3.src = "/_vercel/insights/script.js";
-	s3.async = s2.defer = true;
-	document.body.append(s2);
+	// if (location.hostname !== "dsy4567.icu") return;
+	// const /** @type {HTMLScriptElement} */ s3 = document.createElement("script");
+	// s3.src = "/_vercel/insights/script.js";
+	//  s2.defer = true;
+	// document.body.append(s2);
 })();
