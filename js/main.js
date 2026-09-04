@@ -536,10 +536,21 @@ addEventListener("click", 事件 => {
 				U.searchParams.delete("from-non-icu-tld");
 				U.searchParams.delete("no-redirect");
 			};
-			const 本地域名 = ["dev.dsy4567.icu", "localhost", "127.0.0.1"];
+			const 本地域名 = ["dev.dsy4567.icu", "localhost"];
+			const 是否为纯ip = /** @param {string} hostname */ hostname => {
+				return hostname.split(".").every(p => {
+					const n = Number(p);
+					return Number.isInteger(n) && n >= 0 && n <= 255 && String(n) === p;
+				});
+			};
 
 			// 已在 dsy4567.icu（含子域名）或黑名单域名上则无需处理
-			if (location.hostname.endsWith("dsy4567.icu") || 本地域名.includes(location.hostname))
+			if (
+				location.hostname.endsWith("dsy4567.icu") ||
+				location.hostname.endsWith(".ts.net") || // Tailscale
+				本地域名.includes(location.hostname) ||
+				是否为纯ip(location.hostname)
+			)
 				return;
 
 			// 情况 A：用户已选择「不跳转」→ 仅弹横幅提示，不强制跳转
