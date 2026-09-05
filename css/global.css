@@ -581,7 +581,8 @@ div.通知 {
 	}
 	main > .左 {
 		transform: translateY(48px) !important;
-		max-height: 45vh !important;
+		max-height: 420px !important;
+		scrollbar-width: none;
 	}
 	main > .左::after {
 		/* border-top: 1px solid rgba(0,0,0,0.10); */
@@ -598,13 +599,15 @@ div.通知 {
 		pointer-events: none;
 		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
 	}
+	main > .左::webkit-scrollbar {
+		display: none;
+	}
 	main > .左,
 	main > .右 {
 		display: block !important;
 		padding: 0 !important;
 		position: unset !important;
 		width: 100% !important;
-		min-height: 45vh !important;
 	}
 	main > #分界线 {
 		display: none !important;
@@ -750,7 +753,7 @@ body.隐藏导航栏 > main > .左 {
 main > .右 {
 	margin-top: 48px;
 	width: calc(75% - 5px);
-	min-height: 1vh;
+	min-height: 100vh;
 }
 
 main > #分界线 {
