@@ -367,7 +367,9 @@ spoiler {
 	color: #000;
 	transition: 0.3s color;
 }
-spoiler:hover {
+/* 鼠标悬停，或检测到键盘导航（页面任意元素获得可见焦点）时显示内容 */
+spoiler:hover,
+body:has(:focus-visible) spoiler {
 	color: #fff !important;
 }
 
