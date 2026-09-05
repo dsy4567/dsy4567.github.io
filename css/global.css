@@ -296,7 +296,7 @@ main、左右栏
 	cursor: not-allowed;
 }
 *:focus-visible {
-	outline: 2px dashed var(--link-color);
+	outline: 2px dashed var(--link-color) !important;
 }
 
 html {
