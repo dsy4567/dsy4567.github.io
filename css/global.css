@@ -1029,13 +1029,13 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	text-align: end;
 	word-wrap: break-word;
 	width: calc(100vw - 64px);
+	transition: 0.3s color;
+	transition-delay: 0s;
 }
-div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 > p {
-	font-size: 12px;
-	height: 16px;
-	line-height: 16px;
-	margin: 0;
-	padding: 0;
+div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover #歌词,
+div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-within #歌词 {
+	color: #fff;
+	transition-delay: 0.3s;
 }
 
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#音乐控件 {
