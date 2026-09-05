@@ -978,9 +978,21 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:focus-visible {
 	background-color: var(--overlay);
 }
 
+/* ==================== 侧边按钮-关闭侧边按钮 ==================== */
+
+div#侧边按钮容器 > #关闭侧边按钮 > svg {
+	transform: translateX(2px) rotateY(180deg);
+}
+body:has(#侧边按钮容器 > .拥有更多选项:hover) #侧边按钮容器 > #关闭侧边按钮,
+body:has(#侧边按钮容器 > .拥有更多选项:focus-within) #侧边按钮容器 > #关闭侧边按钮 {
+	opacity: 1;
+	pointer-events: all;
+}
+
 /* ==================== 侧边按钮-回到顶部 ==================== */
 
-body.顶部 div#侧边按钮容器 > #回到顶部 {
+body.顶部 div#侧边按钮容器 > #回到顶部,
+div#侧边按钮容器 > #关闭侧边按钮 {
 	opacity: 0;
 	pointer-events: none;
 }
