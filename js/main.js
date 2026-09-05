@@ -91,9 +91,7 @@ function 动态加载(元素) {
 function 渲染图标(选项 = {}) {
 	const re = /特?小尺寸/;
 	const 全部元素 = /** @type {ArrayLike<SVGSVGElement>} */ (
-		选项.要渲染图标的元素?.[0]
-			? 选项.要渲染图标的元素
-			: document.querySelectorAll("svg[data-icon]")
+		选项.要渲染图标的元素?.[0] ? 选项.要渲染图标的元素 : qsa("svg[data-icon]")
 	);
 	批量低阻塞操作(全部元素, 元素 => {
 		if (!元素.dataset.icon) return;
