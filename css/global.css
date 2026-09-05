@@ -630,6 +630,7 @@ div.通知 {
 		flex-wrap: nowrap;
 		align-items: center;
 		overflow: auto;
+		padding: 4px;
 	}
 	.标签 > div > * {
 		padding-top: 0 !important;
