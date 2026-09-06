@@ -42,17 +42,18 @@ let 网易云音乐 = {
 	},
 	启用或禁用随机播放(/** @type {HTMLButtonElement} */ 按钮) {
 		网易云音乐.设置.随机播放 = !网易云音乐.设置.随机播放;
-		按钮.ariaChecked = "" + 网易云音乐.设置.随机播放;
+		按钮.setAttribute("aria-checked", "" + 网易云音乐.设置.随机播放);
 		if (网易云音乐.设置.随机播放) 按钮.classList.add("激活");
 		else 按钮.classList.remove("激活");
-		提示(按钮.title = "随机播放: " + (网易云音乐.设置.随机播放 ? "开" : "关"));
+		提示((按钮.title = "随机播放: " + (网易云音乐.设置.随机播放 ? "开" : "关")));
 	},
 	更改音量() {
 		// 0.5→0.75→1→0→0.25
 		网易云音乐.正在播放.Audio.volume = 网易云音乐.设置.音量 =
 			((网易云音乐.设置.音量 * 100 + 25) % 125) / 100;
-		提示(网易云音乐.按钮.音量.title = "音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%");
-
+		提示(
+			(网易云音乐.按钮.音量.title = "音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%")
+		);
 	},
 	设置闪烁动画(/** @type {boolean} */ 启用) {
 		const svg = 网易云音乐元素.querySelector("svg");
@@ -298,10 +299,10 @@ let 网易云音乐 = {
 				// 没有上次播放时，设置一个无效id
 				网易云音乐.切换音乐(+(上次播放 || -1));
 				// @ts-ignore
-				gd("播放列表", true)?.scrollTo({
-					behavior: "smooth",
-					top: qs("li[data-id='" + 上次播放 + "']")?.offsetTop || 0,
-				});
+				// gd("播放列表", true)?.scrollTo({
+				// 	behavior: "smooth",
+				// 	top: qs("li[data-id='" + 上次播放 + "']")?.offsetTop || 0,
+				// });
 			}
 
 			网易云音乐.正在播放.Audio.preload = "none";
@@ -428,49 +429,30 @@ fetch("/json/ncm.json")
 
 		/** @type {HTMLButtonElement[]} */
 		let 待添加按钮 = [];
-		function svg(
-			/** @type {string} */ 名称,
-			/** @type {string} */ html,
-			/** @type {( 元素: HTMLButtonElement ) => void} */ onclick,
-			/** @type {string} */ title,
-			role = "button"
-		) {
+		/**
+		 * @param {string} 名称 - 按钮索引，也是 data-icon 图标名
+		 * @param {(元素: HTMLButtonElement) => void} onclick
+		 * @param {string} title
+		 * @param {string} [role]
+		 */
+		function 创建按钮(名称, onclick, title, role = "button") {
 			// @ts-ignore
 			let /** @type {HTMLButtonElement} */ btn = ce("button");
-			btn.innerHTML = html;
-			btn.onclick = async () => {
-				await 网易云音乐.初始化();
-				onclick(btn);
-			};
+			btn.innerHTML = `<svg class="特小尺寸" data-icon="${名称}"></svg>`;
+			btn.onclick = () => onclick(btn); // 播放类按钮内部会自行初始化
 			btn.type = "button";
 			btn.title = title;
-			btn.role = role;
-			btn.ariaChecked = role === "checkbox" ? "false" : null;
+			btn.setAttribute("role", role);
+			if (role === "checkbox") btn.setAttribute("aria-checked", "false");
 			网易云音乐.按钮[名称] = btn;
 			待添加按钮.push(btn);
 		}
 
-		svg(
-			"上一首",
-			`<svg class="特小尺寸" data-icon="上一首"></svg>`,
-			网易云音乐.上一首,
-			"上一首"
-		);
-		svg(
-			"播放暂停",
-			`<svg class="特小尺寸" data-icon="播放暂停"></svg>`,
-			网易云音乐.播放暂停,
-			"播放/暂停"
-		);
-		svg(
-			"下一首",
-			`<svg class="特小尺寸" data-icon="下一首"></svg>`,
-			网易云音乐.下一首,
-			"下一首"
-		);
-		svg(
+		创建按钮("上一首", 网易云音乐.上一首, "上一首");
+		创建按钮("播放暂停", 网易云音乐.播放暂停, "播放/暂停");
+		创建按钮("下一首", 网易云音乐.下一首, "下一首");
+		创建按钮(
 			"在网易云音乐中查看",
-			`<svg class="特小尺寸" data-icon="在网易云音乐中查看"></svg>`,
 			() => {
 				网易云音乐.歌单[网易云音乐.正在播放.索引].id &&
 					open(
@@ -480,16 +462,14 @@ fetch("/json/ncm.json")
 			},
 			"在网易云音乐中查看"
 		);
-		svg(
+		创建按钮(
 			"随机播放",
-			`<svg class="特小尺寸" data-icon="随机播放"></svg>`,
 			网易云音乐.启用或禁用随机播放,
 			"随机播放: " + (网易云音乐.设置.随机播放 ? "开" : "关"),
 			"checkbox"
 		);
-		svg(
+		创建按钮(
 			"音量",
-			`<svg class="特小尺寸" data-icon="音量"></svg>`,
 			网易云音乐.更改音量,
 			"音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%"
 		);
@@ -499,21 +479,34 @@ fetch("/json/ncm.json")
 		);
 		gd("音乐控件", true)?.append(...待添加按钮);
 
-		/** @type {HTMLLIElement[]} */
-		let 待添加播放列表项 = [];
-		网易云音乐.歌单.forEach(音乐信息 => {
-			let li = ce("li");
-			li.innerHTML = `${音乐信息.歌名} <span class="淡化">${音乐信息.歌手}</span>`;
-			// @ts-ignore
-			li.onclick = li.onkeyup = 事件 => {
-				if (事件?.key === "Enter" || !事件?.key) 网易云音乐.切换音乐(音乐信息.id, true);
+		let 播放列表 = gd("播放列表", true);
+		if (播放列表) {
+			// 事件委托：整个列表只挂 2 个监听器，靠 dataset.id 定位歌曲
+			let 定位并播放 = (/** @type {Event} */ 事件) => {
+				if (!(事件.target instanceof HTMLElement)) return;
+				let li = 事件.target.closest("li");
+				if (li instanceof HTMLElement && li.dataset.id)
+					网易云音乐.切换音乐(+li.dataset.id, true);
 			};
-			li.tabIndex = 0;
-			li.title = 音乐信息.完整歌名;
-			li.dataset.id = "" + 音乐信息.id;
-			待添加播放列表项.push(li);
-		});
-		gd("播放列表", true)?.append(...待添加播放列表项);
+			播放列表.addEventListener("click", 定位并播放);
+			播放列表.addEventListener("keyup", 事件 => {
+				if (事件.key === "Enter") 定位并播放(事件);
+			});
+
+			let 文档片段 = document.createDocumentFragment();
+			网易云音乐.歌单.forEach(音乐信息 => {
+				let li = ce("li");
+				let 歌手 = ce("span");
+				歌手.className = "淡化";
+				歌手.textContent = 音乐信息.歌手;
+				li.append(音乐信息.歌名, " ", 歌手);
+				li.tabIndex = 0;
+				li.title = 音乐信息.完整歌名;
+				li.dataset.id = "" + 音乐信息.id;
+				文档片段.append(li);
+			});
+			播放列表.append(文档片段);
+		}
 		_global["main.js"]().渲染图标();
 
 		延迟执行("关键任务完成", 网易云音乐.初始化, 2);
