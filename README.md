@@ -32,6 +32,8 @@
     ├── article.json            # json 元数据
     ├── index.html              # 构建产物
 ├── css/                        # 样式表
+    ├── global-fp.css           # 首屏样式表
+    ├── global-nfp.css          # 非首屏样式表
 ├── img/                        # 图片资源
 ├── js/                         # js脚本
     ├── lib/                    # 第三方库
