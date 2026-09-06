@@ -30,8 +30,8 @@
 		<link rel="preconnect" href="https://www.googletagmanager.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.cn" />
 
-		<link rel="modulepreload" href="/js/analytics.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/ncm.js" crossorigin="use-credentials" />
+		<link rel="prefetch" href="/js/analytics.js" crossorigin="use-credentials" />
+		<link rel="prefetch" href="/js/ncm.js" crossorigin="use-credentials" />
 		<link
 			rel="preload"
 			href="https://dsy4567.icu/api/hitokoto"
@@ -45,8 +45,8 @@
 			crossorigin="anonymous"
 		/>
 		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
-		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
-		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
+		<link rel="prefetch" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link rel="prefetch" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
 
 		<script src="/js/global.js"></script>
 		<script src="/js/main.js" type="module" defer></script>
@@ -115,6 +115,7 @@
 						src="/img/avatar.jpg"
 						alt="自画像"
 						title="头像"
+						fetchpriority="high"
 					/>
 					<h2>dsy4567</h2>
 					<span id="关注被关注码龄"> 关注: 加载中 | 被关注: 加载中 | 码龄: 加载中 </span>
