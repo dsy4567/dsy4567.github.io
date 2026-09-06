@@ -30,15 +30,13 @@
 			href="https://dsy4567.github.io/rss.xml"
 		/>
 
-		<link rel="preconnect" href="https://fonts.googleapis.cn" />
 		<link rel="preconnect" href="https://www.googletagmanager.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.cn" />
 
-		<link rel="modulepreload" href="/js/analytics.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/blog.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/main.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/lib/marked.min.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/ncm.js" crossorigin="use-credentials" />
+		<link rel="preload" href="/js/lib/marked.min.js" crossorigin="use-credentials" />
+		<link rel="prefetch" href="/js/analytics.js" crossorigin="use-credentials" />
+		<link rel="prefetch" href="/js/ncm.js" crossorigin="use-credentials" />
+
 		<link
 			rel="preload"
 			href="/js/lib/highlight.min.js"
@@ -60,11 +58,21 @@
 		/>
 		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
 		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
-		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
-		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
+		<link rel="prefetch" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link rel="prefetch" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
 
 		<script src="/js/global.js"></script>
-		<link rel="stylesheet" href="/css/global.css" />
+		<script src="/js/main.js" type="module" defer></script>
+		<script src="/js/blog.js" type="module" defer></script>
+		<link rel="stylesheet" href="/css/global-fp.css" />
+		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
+		<link
+			rel="preload"
+			as="style"
+			crossorigin="anonymous"
+			data-preload="style"
+			href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400&family=Source+Code+Pro:wght@400&display=swap"
+		/>
 
 		<!-- BEGIN OG -->
 		<meta property="og:url" content="https://dsy4567.icu/blog/vercel-dev-sidecar-fq/" />
@@ -98,6 +106,9 @@
 		</nav>
 
 		<div id="侧边按钮容器">
+			<button type="button" title="关闭侧边按钮" id="关闭侧边按钮">
+				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
+			</button>
 			<button type="button" title="回到顶部" id="回到顶部">
 				<svg class="特小尺寸" data-icon="回到顶部"></svg>
 			</button>
@@ -126,6 +137,7 @@
 						src="/img/avatar.jpg"
 						alt="自画像"
 						title="头像"
+						fetchpriority="high"
 					/>
 					<h2>dsy4567</h2>
 					<span id="关注被关注码龄"> 关注: 加载中 | 被关注: 加载中 | 码龄: 加载中 </span>
@@ -196,7 +208,5 @@
 		<noscript>
 			<div>请启用 JavaScript 以获得更好的浏览体验</div>
 		</noscript>
-		<link disabled rel="stylesheet" href="/css/font.css" />
-		<script src="/js/main.js" type="module" async></script>
 	</body>
 </html>

@@ -30,15 +30,13 @@
 			href="https://dsy4567.github.io/rss.xml"
 		/>
 
-		<link rel="preconnect" href="https://fonts.googleapis.cn" />
 		<link rel="preconnect" href="https://www.googletagmanager.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.cn" />
 
-		<link rel="modulepreload" href="/js/analytics.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/blog.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/main.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/lib/marked.min.js" crossorigin="use-credentials" />
-		<link rel="modulepreload" href="/js/ncm.js" crossorigin="use-credentials" />
+		<link rel="preload" href="/js/lib/marked.min.js" crossorigin="use-credentials" />
+		<link rel="prefetch" href="/js/analytics.js" crossorigin="use-credentials" />
+		<link rel="prefetch" href="/js/ncm.js" crossorigin="use-credentials" />
+
 		<link
 			rel="preload"
 			href="/js/lib/highlight.min.js"
@@ -60,11 +58,21 @@
 		/>
 		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
 		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
-		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
-		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
+		<link rel="prefetch" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link rel="prefetch" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
 
 		<script src="/js/global.js"></script>
-		<link rel="stylesheet" href="/css/global.css" />
+		<script src="/js/main.js" type="module" defer></script>
+		<script src="/js/blog.js" type="module" defer></script>
+		<link rel="stylesheet" href="/css/global-fp.css" />
+		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
+		<link
+			rel="preload"
+			as="style"
+			crossorigin="anonymous"
+			data-preload="style"
+			href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400&family=Source+Code+Pro:wght@400&display=swap"
+		/>
 
 		<!-- BEGIN OG -->
 		<meta property="og:url" content="https://dsy4567.icu/blog/cf-vjmirror/" />
@@ -98,6 +106,9 @@
 		</nav>
 
 		<div id="侧边按钮容器">
+			<button type="button" title="关闭侧边按钮" id="关闭侧边按钮">
+				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
+			</button>
 			<button type="button" title="回到顶部" id="回到顶部">
 				<svg class="特小尺寸" data-icon="回到顶部"></svg>
 			</button>
@@ -126,6 +137,7 @@
 						src="/img/avatar.jpg"
 						alt="自画像"
 						title="头像"
+						fetchpriority="high"
 					/>
 					<h2>dsy4567</h2>
 					<span id="关注被关注码龄"> 关注: 加载中 | 被关注: 加载中 | 码龄: 加载中 </span>
@@ -231,7 +243,7 @@
 <p>最后，尽情享受吧~</p>
 <p>Demo（已失效）：<del><a href="https://vjmirror.workers.dsy4567.cf/">https://vjmirror.workers.dsy4567.cf/</a></del></p>
 <hr />如无特别说明，本作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">CC BY-NC-SA 4.0</a>进行许可。<br />
-<span class="淡化">发表于: 2023/5/20 22:57:26, 更新于: 2023/5/21 11:19:53</br>标签: <a href="/blog.html?tag=技术">技术</a> <a href="/blog.html?tag=CloudFlare">CloudFlare</a></span>
+<span class="元数据">发表于: 2023/5/20 22:57:26, 更新于: 2023/5/21 11:19:53</br>标签: <a href="/blog.html?tag=技术">技术</a> <a href="/blog.html?tag=CloudFlare">CloudFlare</a></span>
 				</section>
 				<script id="当前文章信息" type="application/json">{"updated":"2023-05-21T03:19:53.502Z","date":"2023-05-20T14:57:26.700Z","issue":16,"tags":["技术","CloudFlare"],"id":"cf-vjmirror","title":"使用 CloudFlare Workers 免费搭建 Virtual Judge 反代","desc":"# 使用 CloudFlare Workers 免费搭建 Virtual Judge 反代\n\n最近闲的没事干，受 [如何科学地制作一个镜像反代站点](https://blog.immccn123.xyz/archives/362) 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。\n\n","desc_text":"最近闲的没事干，受 如何科学地制作一个镜像反代站点 这篇文章的启发，我一个买不起服务器的穷逼准备用 CF Workers 搭一个 Virtual Judge 反代，以缓解 VJ 在大陆经常断网的情况。而且 CF Workers 有更高的 SLA 保证，如果运气好，访问速度还会嘎嘎快。...","cover":"https://dsy4567.icu/blog/cf-workers-ip/img/workers.webp"}</script>
 		<!-- END MAIN -->
@@ -253,7 +265,5 @@
 		<noscript>
 			<div>请启用 JavaScript 以获得更好的浏览体验</div>
 		</noscript>
-		<link disabled rel="stylesheet" href="/css/font.css" />
-		<script src="/js/main.js" type="module" async></script>
 	</body>
 </html>
