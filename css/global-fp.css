@@ -627,6 +627,10 @@ span#联系方式 > * {
 	transform: translate(-4px, 2px) rotate(45deg);
 }
 
+#关注被关注码龄 {
+	font-size: smaller;
+}
+
 .标签 > div > * {
 	color: var(--text-color);
 	background-color: var(--accent-color-transparent);
