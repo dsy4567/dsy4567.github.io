@@ -692,6 +692,9 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 
 body.顶部 div#侧边按钮容器 > #回到顶部,
 div#侧边按钮容器 > #关闭侧边按钮 {
+	animation-name: 延迟不可见;
+	animation-duration: 3s;
+	animation-fill-mode: forwards;
 	opacity: 0;
 	pointer-events: none;
 }
