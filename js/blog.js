@@ -279,7 +279,8 @@ async function 渲染文章列表(u) {
 			let 所有标签 = new Set(),
 				限定标签 = u.searchParams.get("tag"),
 				待添加 = [];
-			for (const 文章 of j) {
+			for (let i = 0; i < j.length; i++) {
+				const 文章 = j[i];
 				//#region 渲染文章列表
 				文章.tags?.forEach(标签 => 所有标签.add(标签));
 				if (文章.hidden || (限定标签 && !文章.tags.includes(限定标签))) continue;
@@ -337,9 +338,15 @@ async function 渲染文章列表(u) {
 				});
 				//#endregion
 
-				待添加.push(sect);
+				i === 0
+					? setTimeout(() => {
+							右.prepend(sect);
+						}, 0)
+					: 待添加.push(sect);
 			}
-			右.append(...待添加);
+			setTimeout(() => {
+				右.prepend(...待添加);
+			}, 0);
 
 			//#region 渲染标签列表
 			let 标签元素 = ce("section"),
