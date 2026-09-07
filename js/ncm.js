@@ -473,11 +473,11 @@ fetch("/json/ncm.json")
 			网易云音乐.更改音量,
 			"音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%"
 		);
+		gd("音乐控件", true)?.append(...待添加按钮);
 		gd("音乐控件", true)?.insertAdjacentHTML(
 			"beforeend",
 			`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a>`
 		);
-		gd("音乐控件", true)?.append(...待添加按钮);
 
 		let 播放列表 = gd("播放列表", true);
 		if (播放列表) {
