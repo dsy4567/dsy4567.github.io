@@ -27,13 +27,23 @@
 			href="https://dsy4567.github.io/rss.xml"
 		/>
 
-		<link rel="preconnect" href="https://www.googletagmanager.com" />
+		<!-- 首屏资源 -->
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
+		<script src="/js/global.js"></script>
+		<link rel="modulepreload" href="/js/main.js" />
+		<link rel="modulepreload" href="/js/friends.js" />
+		<link rel="stylesheet" href="/css/global-fp.css" />
+		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
+
+		<!-- 次要资源 -->
 		<link rel="preconnect" href="https://fonts.gstatic.cn" />
-		<link rel="preconnect" href="https://t1.gstatic.cn" />
-
-		<link rel="prefetch" href="/js/analytics.js" crossorigin="use-credentials" />
-		<link rel="prefetch" href="/js/ncm.js" crossorigin="use-credentials" />
-
+		<link
+			rel="preload"
+			as="style"
+			crossorigin="anonymous"
+			data-preload="style"
+			href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400&family=Source+Code+Pro:wght@400&display=swap"
+		/>
 		<link
 			rel="preload"
 			href="https://dsy4567.icu/api/hitokoto"
@@ -46,22 +56,15 @@
 			as="fetch"
 			crossorigin="anonymous"
 		/>
-		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
-		<link rel="prefetch" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
-		<link rel="prefetch" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
 
-		<script src="/js/global.js"></script>
-		<script src="/js/main.js" type="module" defer></script>
-		<script src="/js/friends.js" type="module" defer></script>
-		<link rel="stylesheet" href="/css/global-fp.css" />
-		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
-		<link
-			rel="preload"
-			as="style"
-			crossorigin="anonymous"
-			data-preload="style"
-			href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400&family=Source+Code+Pro:wght@400&display=swap"
-		/>
+		<!-- 最次资源 -->
+		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
+		<link rel="modulepreload" href="/js/ncm.js" />
+
+		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+
+		<link rel="preconnect" href="https://www.googletagmanager.com" />
+		<link rel="modulepreload" href="/js/analytics.js" />
 	</head>
 	<body>
 		<a href="#main" class="隐藏链接">转到正文</a>
@@ -223,5 +226,8 @@
 		<noscript>
 			<div>请启用 JavaScript 以获得更好的浏览体验</div>
 		</noscript>
+
+		<script src="/js/main.js" type="module" defer></script>
+		<script src="/js/friends.js" type="module" defer></script>
 	</body>
 </html>
