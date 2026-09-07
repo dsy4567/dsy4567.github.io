@@ -422,6 +422,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover #歌词,
 div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-within #歌词 {
 	color: #fff;
 	transition-delay: 0.3s;
+	width: calc(100vw - 284px);
 }
 
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#音乐控件 {
