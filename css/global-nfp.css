@@ -549,9 +549,8 @@ article h5.可固定:hover::before,
 article h6.可固定:hover::before {
 	position: absolute;
 	content: "🔗";
-	opacity: 0.5;
 	font-size: 0.5em;
-	transform: translate(-1.5em, 1em);
+	transform: translate(-16px, 1em);
 }
 
 code.hljs::before {
