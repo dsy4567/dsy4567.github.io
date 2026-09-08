@@ -560,6 +560,7 @@ main > .右 {
 }
 
 main > .左 {
+	border-radius: var(--border-radius);
 	overflow-y: auto;
 	position: sticky;
 	top: 0;
@@ -603,7 +604,6 @@ section#我 {
 	justify-content: center;
 	margin-top: 64px;
 }
-
 section#我 > img {
 	margin-bottom: -64px;
 	position: relative;
