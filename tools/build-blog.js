@@ -67,7 +67,7 @@ const ncmStateKey = path.posix.normalize(CONFIG.ncmOutputPath);
 /**
  * 文件状态记录项（file-states.json 单条结构）
  * @typedef {object} 文件状态
- * @property {string} hash - 内容去空白后计算的 SHA-256 十六进制（ncm.json 为歌曲关键元数据 hash）
+ * @property {string} hash - 内容去空白后计算的 SHA-256 十六进制（静态页面取 <main> 元素，blog.html 取 json/blog.json 聚合数据，ncm.json 为歌曲关键元数据）
  * @property {string} updated - 内容修改时间（ISO 8601 + Z 后缀，UTC）
  */
 
@@ -192,6 +192,33 @@ function computeFileHash(content) {
 }
 
 /**
+ * 计算静态页面 hash：仅对去除空白的 <main> 元素计算，找不到时回退到整个文件
+ * （哈希应反映主要内容的变化，页头页脚、脚本等外围改动不应触发内容更新）
+ * @param {string} content - 页面 HTML 原文
+ * @returns {string} SHA-256 十六进制（小写）
+ */
+function computeStaticPageHash(content) {
+	const match = content.match(/<main[^>]*>[\s\S]*?<\/main>/i);
+	return computeFileHash(match ? match[0] : content);
+}
+
+/**
+ * 计算 blog.html 的内容 hash：读取 json/blog.json，先 parse 再 stringify 以忽略格式差异，
+ * 最后对序列化结果计算 hash（博客页主要内容由客户端根据聚合数据渲染，聚合数据变化才算内容变化）
+ * @returns {string|null} SHA-256 十六进制（小写）；blog.json 缺失或损坏时返回 null
+ */
+function computeBlogPageHash() {
+	try {
+		const data = JSON.parse(
+			fs.readFileSync(path.join(projectRoot, CONFIG.outputJsonPath), "utf-8")
+		);
+		return crypto.createHash("sha256").update(JSON.stringify(data), "utf8").digest("hex");
+	} catch (_err) {
+		return null;
+	}
+}
+
+/**
  * 计算网易云歌单 hash：仅提取歌曲关键元数据（id、歌名、歌手、专辑名、mv、时长），
  * 不含封面地址等易变字段，用于判断歌单内容是否真正变化
  * @param {any[]} songs - 网易云 API 返回的歌曲列表
@@ -283,12 +310,14 @@ function syncFileStates() {
 		}
 	}
 
-	// 2. 静态页面：index.html / blog.html / friends.html
+	// 2. 静态页面：index.html / friends.html 仅对 <main> 元素计算 hash；
+	//    blog.html 的 hash 基于聚合数据，延后到 blog.json 生成后单独同步（见 syncBlogPageState）
 	for (const file of CONFIG.staticTrackedFiles) {
+		if (file === "blog.html") continue;
 		const filePath = path.join(projectRoot, file);
 		if (!fs.existsSync(filePath)) continue;
 		const content = fs.readFileSync(filePath, "utf-8");
-		const hash = computeFileHash(content);
+		const hash = computeStaticPageHash(content);
 		const prev = states[file];
 		let updated;
 		if (!prev || prev.hash !== hash) updated = now;
@@ -314,6 +343,21 @@ function syncFileStates() {
 
 	writeFileStates(states);
 	return states;
+}
+
+/**
+ * 同步 blog.html 的追踪状态：基于 json/blog.json 的聚合数据计算内容 hash。
+ * 必须在 generateJson 之后调用，否则会基于上一轮构建的旧数据误判内容变化
+ * @param {文件状态表} states - 文件状态表（会被原地修改并写回磁盘）
+ * @returns {void}
+ */
+function syncBlogPageState(states) {
+	const hash = computeBlogPageHash();
+	if (!hash) return; // blog.json 缺失或损坏时保留旧状态
+	const prev = states["blog.html"];
+	const updated = !prev || prev.hash !== hash ? new Date().toISOString() : prev.updated;
+	states["blog.html"] = { hash, updated };
+	writeFileStates(states);
 }
 
 // ==================== 文章处理器 ====================
@@ -625,6 +669,8 @@ async function main() {
 	console.log("Generating aggregate files...");
 	const generator = new SiteGenerator(articles, fileStates);
 	generator.generateJson();
+	// blog.json 已落盘，此时才能基于它同步 blog.html 的内容状态
+	syncBlogPageState(fileStates);
 	generator.generateRss();
 	generator.generateSitemap();
 	generator.generateBlogIndex();
