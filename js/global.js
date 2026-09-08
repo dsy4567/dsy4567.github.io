@@ -12,8 +12,8 @@
 //#region 全局工具函数
 let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
 	/** @type {Record<string, HTMLElement | null>} */ qs缓存 = {},
-	/** @type {Record<string, {已完成加载: boolean, 回调: ((事件?: any) => void)[], 失败回调: ((错误?: any) => void)[]}>} */ 已添加的脚本 =
-		{},
+	/** @type {Map<string, Promise<Event>>} */ 已添加的脚本 = new Map(),
+	/** @type {Map<string, Promise<Event | {}>>} */ 已添加的样式 = new Map(),
 	/** @type {延迟执行状态类型} */ 延迟执行状态 = {
 		DOMContentLoaded: { 回调: new Map(), 已触发: false },
 		关键任务完成: { 回调: new Map(), 已触发: false },
@@ -66,6 +66,17 @@ const ce = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
 	return document.createElement(s);
 };
 /**
+ * scheduler.yield 的 polyfill 实现
+ * @returns {Promise<void>}
+ */
+async function schedulerYield() {
+	// @ts-ignore
+	if (scheduler?.yield) return scheduler.yield();
+	return new Promise(resolve => {
+		setTimeout(resolve, 0);
+	});
+}
+/**
  * 显示或隐藏页面顶部的进度条
  * @param {boolean} 状态 - true 显示，false 隐藏
  */
@@ -75,106 +86,58 @@ function 显示或隐藏进度条(状态) {
 		: qs(".进度条外面", true)?.classList.remove("显示");
 }
 /**
- * 动态添加一个外部样式表
+ * 动态添加一个外部样式表，若样式表已添加或正在加载则不会重复添加，而是等待其完成或失败
+ * 加载失败的 Promise 同样会被缓存，之后对同一 url 的调用会得到同一个失败的 Promise 而不会重新加载，由调用方自行处理失败
  * @param {string} url - 样式表 URL
  * @param {"anonymous" | "use-credentials" | null} [crossOrigin="use-credentials"] - 跨域属性
- * @returns {Promise<Event | {}>} 在样式表加载完成时 resolve
+ * @returns {Promise<Event | {}>} 在样式表加载完成时 resolve，失败时 reject
  */
-function 添加样式(url, crossOrigin = "use-credentials") {
-	return new Promise(resolve => {
+function 添加样式(url, crossOrigin = "use-credentials", 使用缓存 = true) {
+	let 已缓存 = 已添加的样式.get(url);
+	if (使用缓存 && 已缓存) return 已缓存;
+	/** @type {Promise<Event | {}>} */
+	let 加载 = new Promise((resolve, reject) => {
+		// 用 href*= 子串匹配判断样式表是否已在文档中，调用方需自行保证按一定规范传入 url
+		// （如传入完整路径），使其能唯一匹配目标样式表而不误伤其他链接
 		if (qs("link[href*='" + url + "'][rel='stylesheet']")) return resolve({});
 		let l = ce("link");
-		l.onload = 事件 => {
-			resolve(事件);
+		l.onload = 事件 => resolve(事件);
+		l.onerror = 事件 => {
+			l.remove();
+			reject(事件);
 		};
 		l.href = url;
 		l.rel = "stylesheet";
 		l.crossOrigin = crossOrigin;
 		document.head.append(l);
 	});
+	已添加的样式.set(url, 加载);
+	return 加载;
 }
 /**
  * 动态添加一个外部脚本，若脚本已加载或正在加载则不会重复添加，而是等待其完成或失败
+ * 加载失败的 Promise 同样会被缓存，之后对同一 url 的调用会得到同一个失败的 Promise 而不会重新加载，由调用方自行处理失败
  * @param {string} url - 脚本 URL
  * @param {"anonymous" | "use-credentials" | null} [crossOrigin="use-credentials"] - 跨域属性
  * @returns {Promise<Event>} 在脚本加载完成时 resolve，失败时 reject
  */
-async function 添加脚本(url, crossOrigin = "use-credentials") {
-	return new Promise((resolve, reject) => {
-		if (已添加的脚本[url]) return 已添加的脚本[url].回调.push(resolve);
-
-		已添加的脚本[url] = {
-			已完成加载: false,
-			回调: [],
-			失败回调: [],
-		};
-
-		let a = 已添加的脚本[url];
-
-		// @ts-ignore
-		a.回调._push = a.回调.push;
-		a.回调.push = (..._) => {
-			if (a.已完成加载)
-				_.forEach(回调 => {
-					try {
-						回调();
-					} catch (e) {
-						console.error(e);
-					}
-				});
-			// @ts-ignore
-			else a.回调._push(..._);
-			return a.回调.length;
-		};
-		a.回调.push(resolve);
-
-		// @ts-ignore
-		a.失败回调._push = a.失败回调.push;
-		a.失败回调.push = (..._) => {
-			if (a.已完成加载)
-				_.forEach(失败回调 => {
-					try {
-						失败回调();
-					} catch (e) {
-						console.error(e);
-					}
-				});
-			// @ts-ignore
-			else a.失败回调._push(..._);
-			return a.失败回调.length;
-		};
-		a.失败回调.push(reject);
-
+function 添加脚本(url, crossOrigin = "use-credentials", 使用缓存 = true) {
+	let 已缓存 = 已添加的脚本.get(url);
+	if (使用缓存 && 已缓存) return 已缓存;
+	/** @type {Promise<Event>} */
+	let 加载 = new Promise((resolve, reject) => {
 		let s = ce("script");
-		s.onload = 事件 => {
-			a.已完成加载 = true;
-			let 回调 = a.回调.pop();
-			while (回调) {
-				try {
-					回调();
-				} catch (e) {
-					console.error(e);
-				}
-				回调 = a.回调.pop();
-			}
-		};
+		s.onload = 事件 => resolve(事件);
 		s.onerror = 事件 => {
-			let 失败回调 = a.失败回调.pop();
-			while (失败回调) {
-				try {
-					失败回调();
-				} catch (e) {
-					console.error(e);
-				}
-				失败回调 = a.失败回调.pop();
-			}
 			s.remove();
-			delete 已添加的脚本[url];
+			reject(事件);
 		};
 		s.src = url;
 		s.crossOrigin = crossOrigin;
 		document.head.append(s);
 	});
+	已添加的脚本.set(url, 加载);
+	return 加载;
 }
 /**
  * 批量处理元素，避免长时间阻塞主线程。
