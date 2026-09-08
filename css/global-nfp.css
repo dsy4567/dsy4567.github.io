@@ -106,6 +106,12 @@ main、左右栏
 
 /* ==================== @media ==================== */
 
+@media (any-pointer: coarse) {
+	body:has(#侧边按钮容器 > .拥有更多选项:hover) #侧边按钮容器 > #关闭侧边按钮 {
+		opacity: 1;
+		pointer-events: all;
+	}
+}
 @media (prefers-reduced-data: reduce) {
 }
 @media print {
@@ -308,16 +314,15 @@ body::after {
 	pointer-events: none;
 }
 body:has(#侧边按钮容器 > .拥有更多选项:hover)::after,
-body:has(#侧边按钮容器 > .拥有更多选项:focus-within)::after {
+body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible)::after {
 	content: "";
 	opacity: 0.5;
 	pointer-events: all;
 	transition-delay: 0.3s;
 }
-
 div#侧边按钮容器 > *:hover,
 div#侧边按钮容器 > *:focus-visible,
-div#侧边按钮容器 > *:focus-within {
+div#侧边按钮容器 > *:has(*:focus-visible) {
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 	opacity: 1;
@@ -325,7 +330,7 @@ div#侧边按钮容器 > *:focus-within {
 }
 
 div#侧边按钮容器 > .拥有更多选项:hover,
-div#侧边按钮容器 > .拥有更多选项:focus-within {
+div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) {
 	border-bottom-left-radius: 0;
 	z-index: 1;
 }
@@ -345,13 +350,12 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 + .更多选项 {
 	border-top: 1px solid var(--accent-color);
 }
 div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
-div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项,
-.更多选项:focus-within {
+div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) > .更多选项 {
 	pointer-events: all !important;
 	opacity: 1 !important;
 }
 div#侧边按钮容器 > .拥有更多选项:hover > .更多选项 + .更多选项,
-div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项 + .更多选项 {
+div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) > .更多选项 + .更多选项 {
 }
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 	background-color: var(--surface-2);
@@ -376,16 +380,12 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:focus-visible {
 div#侧边按钮容器 > #关闭侧边按钮 > svg {
 	transform: translateX(2px) rotateY(180deg);
 }
-body:has(#侧边按钮容器 > .拥有更多选项:hover) #侧边按钮容器 > #关闭侧边按钮,
-body:has(#侧边按钮容器 > .拥有更多选项:focus-within) #侧边按钮容器 > #关闭侧边按钮 {
-	opacity: 1;
-	pointer-events: all;
-}
+/* see: @media */
 
 /* ==================== 侧边按钮-关闭侧边按钮、回到顶部 ==================== */
 div#侧边按钮容器 > #回到顶部,
 body:has(#侧边按钮容器 > .拥有更多选项:hover) #侧边按钮容器 > #关闭侧边按钮,
-body:has(#侧边按钮容器 > .拥有更多选项:focus-within) #侧边按钮容器 > #关闭侧边按钮 {
+body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible) #侧边按钮容器 > #关闭侧边按钮 {
 	animation-name: none;
 }
 
@@ -415,7 +415,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 .网易云封面旋
 }
 
 div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover,
-div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-within {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐:has(*:focus-visible) {
 	transform: translateX(calc(-32px * 7));
 }
 
@@ -433,7 +433,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	transition-delay: 0s;
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover #歌词,
-div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-within #歌词 {
+div#侧边按钮容器 > .拥有更多选项#网易云音乐:has(*:focus-visible) #歌词 {
 	color: #fff;
 	transition-delay: 0.3s;
 	width: calc(100vw - 284px);
@@ -499,7 +499,7 @@ div#侧边按钮容器 > #切换主题 {
 	z-index: 0;
 }
 div#侧边按钮容器 > #切换主题:hover,
-div#侧边按钮容器 > #切换主题:focus-within {
+div#侧边按钮容器 > #切换主题:has(*:focus-visible) {
 	transform: translateX(calc(-32px * 3 + -1px));
 }
 
