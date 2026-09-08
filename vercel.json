@@ -85,6 +85,15 @@
 			]
 		},
 		{
+			"source": "/img/avatar.webp",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=259200, must-revalidate"
+				}
+			]
+		},
+		{
 			"source": "/img/svg/css.svg",
 			"headers": [
 				{
