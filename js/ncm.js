@@ -428,12 +428,10 @@ fetch("/json/ncm.json")
 			})
 	)
 	.then(async j => {
-		for (let i = 0; i < j.songs.length; i++) {
-			const /** @type {音乐信息} */ 音乐信息 = j.songs[i];
-
+		await 批量低阻塞操作(j.songs, async (/** @type {音乐信息} */ 音乐信息, 索引) => {
 			let /** @type {string[]} */ 所有歌手 = [];
 			音乐信息.ar.forEach(歌手 => 所有歌手.push(歌手.name));
-			网易云音乐.歌单[i] = {
+			网易云音乐.歌单[索引] = {
 				完整歌名: "",
 				歌名: 音乐信息.name,
 				歌手: 所有歌手.join(" / "),
@@ -442,9 +440,10 @@ fetch("/json/ncm.json")
 				mv: 音乐信息.mv,
 				id: 音乐信息.id,
 			};
-			网易云音乐.歌单[i].完整歌名 = 网易云音乐.歌单[i].歌手 + " - " + 网易云音乐.歌单[i].歌名;
-			网易云音乐.歌单索引[音乐信息.id] = i;
-		}
+			网易云音乐.歌单[索引].完整歌名 =
+				网易云音乐.歌单[索引].歌手 + " - " + 网易云音乐.歌单[索引].歌名;
+			网易云音乐.歌单索引[音乐信息.id] = 索引;
+		});
 
 		/** @type {HTMLButtonElement[]} */
 		let 待添加按钮 = [];
@@ -492,6 +491,7 @@ fetch("/json/ncm.json")
 			网易云音乐.更改音量,
 			"音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%"
 		);
+		await schedulerYield();
 		gd("音乐控件", true)?.append(...待添加按钮);
 		gd("音乐控件", true)?.insertAdjacentHTML(
 			"beforeend",
@@ -513,7 +513,7 @@ fetch("/json/ncm.json")
 			});
 
 			let 文档片段 = document.createDocumentFragment();
-			网易云音乐.歌单.forEach(音乐信息 => {
+			await 批量低阻塞操作(网易云音乐.歌单, async (/** @type {歌单} */ 音乐信息) => {
 				let li = ce("li");
 				let 歌手 = ce("span");
 				歌手.className = "淡化";
@@ -528,7 +528,7 @@ fetch("/json/ncm.json")
 		}
 		_global["main.js"]().渲染图标();
 
-		延迟执行("关键任务完成", 网易云音乐.初始化, 2);
+		延迟执行("关键任务完成", 网易云音乐.初始化, 3);
 	})
 	.catch(e => console.error(e));
 

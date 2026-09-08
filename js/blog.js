@@ -183,7 +183,7 @@ async function 渲染文章(当前文章信息) {
 								() => {
 									resolve(res.json());
 								},
-								2
+								3
 							);
 						})
 				)
@@ -271,7 +271,7 @@ async function 渲染文章列表(u) {
 			if (!res.ok) throw new Error("状态码异常");
 			return res.json();
 		})
-		.then((/** @type {Array<文章信息>} */ j) => {
+		.then(async (/** @type {Array<文章信息>} */ j) => {
 			const 右 = qs("main .右", true);
 			if (!右) return;
 
@@ -340,9 +340,8 @@ async function 渲染文章列表(u) {
 
 				待添加.push(sect);
 			}
-			setTimeout(() => {
-				gd("正在加载文章提示")?.replaceWith(...待添加);
-			}, 0);
+			await schedulerYield();
+			gd("正在加载文章提示")?.replaceWith(...待添加);
 
 			//#region 渲染标签列表
 			let 标签元素 = ce("section"),

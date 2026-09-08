@@ -20,14 +20,13 @@ let 路径 = 获取清理后的路径(true),
 	/** @type {Record<string, string | undefined>} */ 图标 = {};
 
 //#region 加载模块、动态加载、渲染图标
-function 加载模块() {
+async function 加载模块() {
 	路径 = 获取清理后的路径();
 	let 路径2 = 获取清理后的路径(true);
 	for (const s of 加载清单[路径] || []) {
 		const i = import(`/js/${s}.js`);
-		setTimeout(async () => {
-			(await i).main(路径2);
-		}, 0);
+		await schedulerYield();
+		(await i).main(路径2);
 	}
 	路径 = 路径2;
 }
@@ -286,11 +285,11 @@ fetch("/json/icon.json")
 			缓存一言 = null;
 		}
 
+		await schedulerYield();
 		一言json = 缓存一言 || (await 获取一言("json"));
-		setTimeout(() => {
-			一言元素.innerText = 一言json.hitokoto;
-			链接.href = "https://hitokoto.cn/?uuid=" + 一言json.uuid;
-		}, 0);
+		await schedulerYield();
+		一言元素.innerText = 一言json.hitokoto;
+		链接.href = "https://hitokoto.cn/?uuid=" + 一言json.uuid;
 
 		setTimeout(async () => {
 			try {
@@ -520,7 +519,7 @@ fetch("https://api.github.com/users/dsy4567")
 			console.error(e);
 		}
 	},
-	0
+	3
 );
 
 addEventListener("copy", () => {
@@ -642,7 +641,7 @@ addEventListener("click", 事件 => {
 			console.error(e);
 		}
 	},
-	0
+	3
 );
 //#endregion
 

@@ -143,29 +143,28 @@ function 添加脚本(url, crossOrigin = "use-credentials", 使用缓存 = true)
  * 批量处理元素，避免长时间阻塞主线程。
  * @template T
  * @param {ArrayLike<T>} 待处理元素 - 需要被处理的元素数组或类数组对象
- * @param {(元素: T, 索引: number) => void} 回调 - 对每个元素执行的操作
+ * @param {(元素: T, 索引: number) => any} 回调 - 对每个元素执行的操作
  * @param {Object} [选项] - 可选配置
  * @param {number} [选项.时间片=8] - 每次让出主线程前允许占用的最大毫秒数
- * @returns {void}
+ * @returns {Promise<void>}
  */
-function 批量低阻塞操作(待处理元素, 回调, { 时间片 = 8 } = {}) {
+async function 批量低阻塞操作(待处理元素, 回调, { 时间片 = 8 } = {}) {
 	const 总数 = 待处理元素.length;
 	let 索引 = 0;
 
-	const 处理一批 = () => {
+	const 处理一批 = async () => {
 		const 截止时间 = Date.now() + 时间片;
 		// 至少处理一个元素，避免时间片为 0 时死循环
 		while (索引 < 总数) {
-			回调(待处理元素[索引], 索引);
+			await 回调(待处理元素[索引], 索引);
 			索引++;
 			if (Date.now() >= 截止时间) break;
 		}
-
-		if (索引 < 总数) setTimeout(处理一批, 0); // 让出主线程，使用 setTimeout(0) 减少调度延迟
 	};
 
 	// 启动异步处理
-	setTimeout(处理一批, 0);
+	await 处理一批();
+	await schedulerYield();
 }
 /**
  * 触发一个事件，执行所有已注册的回调函数
@@ -213,6 +212,7 @@ async function 延迟执行(事件名, 回调, 优先级 = 0) {
 	if (状态.已触发)
 		try {
 			await 回调();
+			await schedulerYield();
 		} catch (e) {
 			console.error(`[${事件名}] 优先级 ${优先级} 回调执行失败:`, e);
 		}
