@@ -75,7 +75,7 @@ async function 渲染文章(当前文章信息) {
 					.split("x")
 					.map(s => +s);
 			}
-			右.append(sect);
+			gd("正在加载文章提示")?.replaceWith(sect);
 
 			// 更新标题和 SEO 元数据
 			document.title =
@@ -151,7 +151,6 @@ async function 渲染文章(当前文章信息) {
 		//#endregion
 
 		//#region 收尾
-		gd("正在加载文章提示")?.remove();
 		显示或隐藏进度条(false);
 
 		if (location.hash)
@@ -257,7 +256,8 @@ ${(() => {
 		显示或隐藏进度条(false);
 		const 正在加载文章提示 = gd("正在加载文章提示");
 		if (正在加载文章提示)
-			正在加载文章提示.innerText = "加载失败, 加载时可能遇到了错误, 或此文章不存在";
+			正在加载文章提示.innerHTML =
+				"加载失败, 加载时可能遇到了错误, 或此文章不存在。<a href=''>点击重试</a>";
 	}
 }
 
@@ -286,13 +286,13 @@ async function 渲染文章列表(u) {
 				if (文章.hidden || (限定标签 && !文章.tags.includes(限定标签))) continue;
 				let a = ce("a"),
 					br = ce("br"),
-					p = ce("p"),
+					预览 = ce("div"),
 					span = ce("span"),
 					sect = ce("section"),
 					鼠标已移动 = false;
 				a.href = `/blog/${文章.id}/`;
 				a.innerText = "阅读更多";
-				p.innerHTML = marked.parse(文章.desc);
+				预览.innerHTML = marked.parse(文章.desc);
 				span.innerHTML = `发表于: ${new Date(
 					文章.date
 				).toLocaleString()}, 更新于: ${new Date(
@@ -305,7 +305,7 @@ async function 渲染文章列表(u) {
 					return html;
 				})()}`;
 				span.classList.add("元数据");
-				sect.append(p, a, br, span);
+				sect.append(预览, a, br, span);
 				//#endregion
 
 				//#region 设置大小和懒加载、文字选中优化
@@ -338,14 +338,10 @@ async function 渲染文章列表(u) {
 				});
 				//#endregion
 
-				i === 0
-					? setTimeout(() => {
-							右.prepend(sect);
-						}, 0)
-					: 待添加.push(sect);
+				待添加.push(sect);
 			}
 			setTimeout(() => {
-				右.prepend(...待添加);
+				gd("正在加载文章提示")?.replaceWith(...待添加);
 			}, 0);
 
 			//#region 渲染标签列表
@@ -377,7 +373,6 @@ async function 渲染文章列表(u) {
 
 			//#region 收尾、滚动视图、高亮
 			显示或隐藏进度条(false);
-			gd("正在加载文章提示")?.remove();
 			if (!location.hash && 已触发动态加载)
 				右.scrollIntoView({
 					behavior: "smooth",
@@ -391,7 +386,7 @@ async function 渲染文章列表(u) {
 			阻止搜索引擎收录();
 			显示或隐藏进度条(false);
 			const 正在加载文章提示 = gd("正在加载文章提示");
-			if (正在加载文章提示) 正在加载文章提示.innerText = "加载失败";
+			if (正在加载文章提示) 正在加载文章提示.innerHTML = "加载失败，<a href=''>点击重试</a>";
 		});
 }
 
