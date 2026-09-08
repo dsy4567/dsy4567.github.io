@@ -389,7 +389,16 @@ async function 渲染文章列表(u) {
 		});
 }
 
+let 入口函数首次调用 = false;
 export async function main(/** @type {String} */ 路径) {
+	if (!入口函数首次调用) {
+		入口函数首次调用 = true;
+		return;
+	}
+	await _main();
+}
+
+async function _main() {
 	// @ts-ignore
 	await import("/js/lib/marked.min.js");
 
@@ -407,6 +416,7 @@ export async function main(/** @type {String} */ 路径) {
 	if (当前文章信息) 渲染文章(当前文章信息);
 	else if (获取清理后的路径() === "/blog") 渲染文章列表(u);
 }
+_main();
 
 // 判断是否仅hash变化，如果不是则移除目录和标签元素
 addEventListener("URL发生变化", () => {
