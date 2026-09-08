@@ -631,6 +631,11 @@ span#联系方式 > * {
 	font-size: smaller;
 }
 
+#一言 {
+	height: 3em;
+	overflow-y: auto;
+}
+
 .标签 > div > * {
 	color: var(--text-color);
 	background-color: var(--accent-color-transparent);
