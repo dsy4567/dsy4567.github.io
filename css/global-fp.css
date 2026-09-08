@@ -375,10 +375,6 @@ hr {
 }
 
 .横幅 {
-	animation-duration: 0.3s;
-	animation-fill-mode: forwards;
-	animation-iteration-count: 1;
-	/* animation-name: 隐藏; */
 	background-color: var(--surface-2);
 	font-size: larger;
 	padding: 2px;
@@ -390,11 +386,6 @@ hr {
 }
 
 div.通知 {
-	animation-duration: 0.3s;
-	animation-fill-mode: forwards;
-	animation-iteration-count: 1;
-	animation-name: 显示;
-	/* animation-name: 隐藏; */
 	background-color: var(--surface-1);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);

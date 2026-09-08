@@ -187,6 +187,20 @@ main、左右栏
 	animation-play-state: paused;
 }
 
+.横幅 {
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+	animation-iteration-count: 1;
+	/* animation-name: 隐藏; */
+}
+div.通知 {
+	animation-duration: 0.3s;
+	animation-fill-mode: forwards;
+	animation-iteration-count: 1;
+	animation-name: 显示;
+	/* animation-name: 隐藏; */
+}
+
 .悬浮卡片 {
 	background-color: var(--surface-1);
 	border: 1px solid transparent;
