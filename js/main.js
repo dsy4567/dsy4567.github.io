@@ -236,31 +236,6 @@ fetch("/json/theme.json")
 	.catch(e => console.error(e));
 //#endregion
 
-//#region 一言
-fetch("https://dsy4567.icu/api/hitokoto")
-	.then(
-		res =>
-			new Promise((resolve, reject) => {
-				延迟执行(
-					"关键任务完成",
-					() => {
-						resolve(res.json());
-					},
-					2
-				);
-			})
-	)
-	.then(j => {
-		let 一言 = gd("一言", true),
-			// @ts-ignore
-			/** @type {HTMLAnchorElement} */ 链接 = qs("#一言+a");
-		if (!一言 || !链接) return;
-		一言.innerText = j.hitokoto;
-		链接.href = "https://hitokoto.cn/?uuid=" + j.uuid;
-	})
-	.catch(e => console.error(e));
-//#endregion
-
 //#region 图标
 fetch("/json/icon.json")
 	.then(
@@ -281,6 +256,54 @@ fetch("/json/icon.json")
 	})
 	.catch(e => console.error(e));
 //#endregion
+
+(async () => {
+	//#region 一言
+	const 获取一言 = (/** @type {"text" | "json"} */ json类型) =>
+		fetch("https://dsy4567.icu/api/hitokoto").then(
+			res =>
+				new Promise((resolve, reject) => {
+					延迟执行(
+						"关键任务完成",
+						() => {
+							resolve(res[json类型]());
+						},
+						2
+					);
+				})
+		);
+
+	try {
+		let 一言元素 = gd("一言", true),
+			// @ts-ignore
+			/** @type {HTMLAnchorElement} */ 链接 = qs("#一言+a"),
+			缓存一言 = localStorage.getItem("缓存一言"),
+			/** @type {{hitokoto: string, uuid: string}} */ 一言json;
+		if (!一言元素 || !链接) return;
+		try {
+			if (缓存一言) 缓存一言 = JSON.parse(缓存一言);
+		} catch (e) {
+			缓存一言 = null;
+		}
+
+		一言json = 缓存一言 || (await 获取一言("json"));
+		setTimeout(() => {
+			一言元素.innerText = 一言json.hitokoto;
+			链接.href = "https://hitokoto.cn/?uuid=" + 一言json.uuid;
+		}, 0);
+
+		setTimeout(async () => {
+			try {
+				localStorage.setItem("缓存一言", await 获取一言("text"));
+			} catch (e) {
+				console.error(e);
+			}
+		}, 3000);
+	} catch (e) {
+		console.error(e);
+	}
+	//#endregion
+})();
 
 //#region 关注被关注码龄
 fetch("https://api.github.com/users/dsy4567")
