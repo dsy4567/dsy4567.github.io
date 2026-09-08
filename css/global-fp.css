@@ -724,8 +724,10 @@ article#main > .骨架屏占位 {
 	display: none;
 }
 article#main:has(.骨架屏占位#正在加载文章提示) > .骨架屏占位 {
-	display: block;
+	display: flex;
 	height: 25vh;
+	justify-content: center;
+	align-items: center;
 }
 
 /* ==================== 友链 ==================== */
