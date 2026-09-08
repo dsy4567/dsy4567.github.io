@@ -30,20 +30,32 @@
 			href="https://dsy4567.github.io/rss.xml"
 		/>
 
-		<link rel="preconnect" href="https://www.googletagmanager.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.cn" />
-
-		<link rel="preload" href="/js/lib/marked.min.js" crossorigin="use-credentials" />
-		<link rel="prefetch" href="/js/analytics.js" crossorigin="use-credentials" />
-		<link rel="prefetch" href="/js/ncm.js" crossorigin="use-credentials" />
-
+		<!-- 首屏资源 -->
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
+		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
+		<script src="/js/global.js"></script>
+		<link rel="modulepreload" href="/js/main.js" />
+		<link rel="modulepreload" href="/js/blog.js" />
+		<link rel="modulepreload" href="/js/lib/marked.min.js" />
 		<link
 			rel="preload"
 			href="/js/lib/highlight.min.js"
 			as="script"
 			crossorigin="use-credentials"
 		/>
+		<link rel="stylesheet" href="/css/global-fp.css" />
 		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="use-credentials" />
+		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
+
+		<!-- 次要资源 -->
+		<link rel="preconnect" href="https://fonts.gstatic.cn" />
+		<link
+			rel="preload"
+			as="style"
+			crossorigin="anonymous"
+			data-preload="style"
+			href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400&family=Source+Code+Pro:wght@400&display=swap"
+		/>
 		<link
 			rel="preload"
 			href="https://dsy4567.icu/api/hitokoto"
@@ -56,23 +68,16 @@
 			as="fetch"
 			crossorigin="anonymous"
 		/>
-		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
-		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
-		<link rel="prefetch" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
-		<link rel="prefetch" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
 
-		<script src="/js/global.js"></script>
-		<script src="/js/main.js" type="module" defer></script>
-		<script src="/js/blog.js" type="module" defer></script>
-		<link rel="stylesheet" href="/css/global-fp.css" />
-		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
-		<link
-			rel="preload"
-			as="style"
-			crossorigin="anonymous"
-			data-preload="style"
-			href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400&family=Source+Code+Pro:wght@400&display=swap"
-		/>
+		<!-- 最次资源 -->
+
+		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
+		<link rel="modulepreload" href="/js/ncm.js" />
+
+		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+
+		<link rel="preconnect" href="https://www.googletagmanager.com" />
+		<link rel="modulepreload" href="/js/analytics.js" />
 
 		<!-- BEGIN OG -->
 		<meta property="og:url" content="https://dsy4567.icu/blog/vercel-dev-sidecar-fq/" />
@@ -134,7 +139,7 @@
 					<img
 						aria-label="自画像"
 						class="头像 大尺寸"
-						src="/img/avatar.jpg"
+						src="/img/avatar.webp"
 						alt="自画像"
 						title="头像"
 						fetchpriority="high"
@@ -208,5 +213,9 @@
 		<noscript>
 			<div>请启用 JavaScript 以获得更好的浏览体验</div>
 		</noscript>
+
+		<script src="/js/main.js" type="module" defer></script>
+		<script src="/js/blog.js" type="module" defer></script>
+		<script src="/js/lib/marked.min.js" type="module" defer></script>
 	</body>
 </html>
