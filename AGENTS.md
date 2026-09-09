@@ -79,6 +79,7 @@
 ### 浏览器兼容基线
 
 - 最低支持 Chrome 109（Windows 7 可用的最后一个 Chromium 大版本），JavaScript 语法基线为 ES2022（与 `jsconfig.json` 的 `lib` 一致）
+- JavaScript 可通过实现简单 polyfill，有限使用新特性
 - CSS 可放心使用：自定义属性、`calc()`、`min()` / `max()` / `clamp()`、`hsl()` / `rgb()` / `rgba()` 逗号语法、`#rrggbbaa` 十六进制透明度、`color-scheme`、`prefers-color-scheme`、`@property`、`:has()`、`:not()` 选择器列表、`Mark` / `MarkText` 系统色
 - CSS 禁止使用（均为 Chrome 111+ 至 123+ 特性，109 不支持）：`color-mix()`、`oklch()` / `oklab()`、相对颜色语法（如 `hsl(from var(--x) ...)`）、`light-dark()`、CSS 嵌套
 - 颜色需要「按明暗选方向」的逻辑（叠层色、选区色、`color-scheme`、代码高亮主题等）一律由 JS 在写入主题变量时计算好，CSS 只做与方向无关的派生，不得依赖上述禁用特性
@@ -156,7 +157,7 @@ const a1 = 计算();
 
 ### 全局工具函数
 
-- 本项目频繁使用 `js/global.js` 中的工具函数，建议在使用前先查看其定义和作用。
+- 本项目频繁使用 `js/global.js` 中的工具函数，任务涉及 `js/` 下的文件时，应当首先读取 `js/global.js`。
 
 
 ### 执行构建脚本
