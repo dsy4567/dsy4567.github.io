@@ -358,8 +358,9 @@ async function 渲染文章列表(u) {
 				if (标签 === 限定标签) {
 					a.style.border = "1px solid var(--accent-color)";
 					document.title = "标签：" + 标签 + " | " + document.title;
-				}
-				div.append(a);
+					// 限定标签排在容器第一位
+					div.prepend(a);
+				} else div.append(a);
 			});
 			标签元素.insertAdjacentHTML(
 				"afterbegin",
