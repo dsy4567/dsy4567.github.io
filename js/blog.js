@@ -356,7 +356,7 @@ async function 渲染文章列表(u) {
 				a.innerText = 标签;
 				a.href = "?tag=" + 标签;
 				if (标签 === 限定标签) {
-					a.style.border = "1px solid var(--text-color)";
+					a.style.border = "1px solid var(--accent-color)";
 					document.title = "标签：" + 标签 + " | " + document.title;
 				}
 				div.append(a);
