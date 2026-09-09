@@ -1,54 +1,54 @@
 {
-	"blog.html": {
-		"hash": "7d93f5631a7a4d49ea79e83965e9a13e83b503efbc6d9915add81891c683e7d4",
-		"updated": "2026-09-06T15:27:30.297Z"
-	},
-	"blog/2022-ccf-csp-j-you-ji/index.md": {
-		"hash": "eef12de9b2048a1dd9b0865c4e4eac8c5c092637ac4f81001db05d51eb4a0483",
-		"updated": "2023-01-12T16:00:00.000Z"
-	},
-	"blog/2024-browser-history/index.md": {
-		"hash": "7a41dd2e509048a437db45d8b46888ee1c6e07c0423fb50c0aae525225ec5b9f",
-		"updated": "2025-01-02T12:37:17.008Z"
-	},
-	"blog/P1932/index.md": {
-		"hash": "56fe07fae94f573fb0c16187e650ab4a0e9f95bb202172521c4a4a8aa112e7c1",
-		"updated": "2023-02-04T08:56:05.388Z"
-	},
-	"blog/ccf-noi-lncfgg/index.md": {
-		"hash": "3907e2b1234d9d9316302b6a9e35609eb4742458a2e7f62ef3cebfe24f39795c",
-		"updated": "2023-01-16T09:41:54.000Z"
-	},
-	"blog/cf-vjmirror/index.md": {
-		"hash": "38f06471105c136a969da0d64a5c0edcd2c2ae7d20dbb28186a85422f4ac7988",
-		"updated": "2023-05-21T03:19:53.502Z"
-	},
-	"blog/cf-workers-ip/index.md": {
-		"hash": "84620faf582871d39d3b889d9be7bd48bc07c9fb11e451325c612eed509d0e41",
-		"updated": "2023-02-13T09:55:45.491Z"
-	},
-	"blog/code-server-on-termux/index.md": {
-		"hash": "cdaa268557227a0aabcc01d5a9d8fdcf60f6f62b67a5f8db8dd7b5e72f4c4b9e",
-		"updated": "2023-10-02T04:12:07.650Z"
-	},
-	"blog/how-to-improve-performance/index.md": {
-		"hash": "a5d8cc2dc6b5fb33cea459301b2d26fbd1f2deea38bba792de34b3c2b577f242",
-		"updated": "2023-06-24T07:38:27.834Z"
-	},
-	"blog/vercel-dev-sidecar-fq/index.md": {
-		"hash": "a9443fe80453692f065a98cc255449513b092aa032bdd2ed69f0c4caf79803a3",
-		"updated": "2023-08-22T13:10:35.171Z"
-	},
-	"friends.html": {
-		"hash": "a1a2758f267f8a03a87227d24ea290dd7f7bd8aeb7883067ccc8844d69ef4751",
-		"updated": "2026-09-06T15:27:30.297Z"
-	},
-	"index.html": {
-		"hash": "7646d54c87e661f53079e85c5c09aaa40bdd1e8b296b8f3cc629baccf236b811",
-		"updated": "2026-09-06T15:27:30.297Z"
-	},
-	"json/ncm.json": {
-		"hash": "c42c7295732d5fdbcd4a1a7ac5578afb39ff262c8d9e63bcfcf2d5ccb641bb71",
-		"updated": "2026-09-08T15:21:29.974Z"
-	}
+    "blog.html": {
+        "hash": "28d393d0a1e58368caa394726c93c0c7cad3a5cf455c8e61b21499bbc0dcce96",
+        "updated": "2026-09-06T15:27:30.297Z"
+    },
+    "blog/2022-ccf-csp-j-you-ji/index.md": {
+        "hash": "eef12de9b2048a1dd9b0865c4e4eac8c5c092637ac4f81001db05d51eb4a0483",
+        "updated": "2023-01-12T16:00:00.000Z"
+    },
+    "blog/2024-browser-history/index.md": {
+        "hash": "7a41dd2e509048a437db45d8b46888ee1c6e07c0423fb50c0aae525225ec5b9f",
+        "updated": "2025-01-02T12:37:17.008Z"
+    },
+    "blog/P1932/index.md": {
+        "hash": "56fe07fae94f573fb0c16187e650ab4a0e9f95bb202172521c4a4a8aa112e7c1",
+        "updated": "2023-02-04T08:56:05.388Z"
+    },
+    "blog/ccf-noi-lncfgg/index.md": {
+        "hash": "3907e2b1234d9d9316302b6a9e35609eb4742458a2e7f62ef3cebfe24f39795c",
+        "updated": "2023-01-16T09:41:54.000Z"
+    },
+    "blog/cf-vjmirror/index.md": {
+        "hash": "38f06471105c136a969da0d64a5c0edcd2c2ae7d20dbb28186a85422f4ac7988",
+        "updated": "2023-05-21T03:19:53.502Z"
+    },
+    "blog/cf-workers-ip/index.md": {
+        "hash": "84620faf582871d39d3b889d9be7bd48bc07c9fb11e451325c612eed509d0e41",
+        "updated": "2023-02-13T09:55:45.491Z"
+    },
+    "blog/code-server-on-termux/index.md": {
+        "hash": "cdaa268557227a0aabcc01d5a9d8fdcf60f6f62b67a5f8db8dd7b5e72f4c4b9e",
+        "updated": "2023-10-02T04:12:07.650Z"
+    },
+    "blog/how-to-improve-performance/index.md": {
+        "hash": "a5d8cc2dc6b5fb33cea459301b2d26fbd1f2deea38bba792de34b3c2b577f242",
+        "updated": "2023-06-24T07:38:27.834Z"
+    },
+    "blog/vercel-dev-sidecar-fq/index.md": {
+        "hash": "a9443fe80453692f065a98cc255449513b092aa032bdd2ed69f0c4caf79803a3",
+        "updated": "2023-08-22T13:10:35.171Z"
+    },
+    "friends.html": {
+        "hash": "faa23bf90aff476262b9c5fd44e25d5b503561eeb2fb675613947aba3ee262c8",
+        "updated": "2026-09-06T15:27:30.297Z"
+    },
+    "index.html": {
+        "hash": "00deb50fe66ba374e62697c305920aa9fc7f45a4c55abaad36ee42dddc8325ec",
+        "updated": "2026-09-06T15:27:30.297Z"
+    },
+    "json/ncm.json": {
+        "hash": "c42c7295732d5fdbcd4a1a7ac5578afb39ff262c8d9e63bcfcf2d5ccb641bb71",
+        "updated": "2026-09-08T15:21:29.974Z"
+    }
 }
