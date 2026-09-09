@@ -282,8 +282,13 @@ async function 渲染文章列表(u) {
 			for (let i = 0; i < j.length; i++) {
 				const 文章 = j[i];
 				//#region 渲染文章列表
-				文章.tags?.forEach(标签 => 所有标签.add(标签));
-				if (文章.hidden || (限定标签 && !文章.tags.includes(限定标签))) continue;
+				// hidden 文章始终跳过, 已归档文章仅在"已归档"筛选下显示
+				文章.tags.forEach(标签 => 所有标签.add(标签));
+				if (文章.hidden) continue;
+				const 是已归档 = 文章.tags.includes("已归档");
+				if (限定标签 === "已归档") {
+					if (!是已归档) continue;
+				} else if (是已归档 || (限定标签 && !文章.tags.includes(限定标签))) continue;
 				let a = ce("a"),
 					br = ce("br"),
 					预览 = ce("div"),
