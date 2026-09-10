@@ -158,13 +158,16 @@ async function 批量低阻塞操作(待处理元素, 回调, { 时间片 = 8 } 
 		while (索引 < 总数) {
 			await 回调(待处理元素[索引], 索引);
 			索引++;
-			if (Date.now() >= 截止时间) break;
+			if (Date.now() >= 截止时间) {
+				await schedulerYield();
+				await 处理一批();
+				break;
+			}
 		}
 	};
 
 	// 启动异步处理
 	await 处理一批();
-	await schedulerYield();
 }
 /**
  * 触发一个事件，执行所有已注册的回调函数
