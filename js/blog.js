@@ -394,9 +394,23 @@ async function 渲染文章列表(u) {
 			if (正在加载文章提示) 正在加载文章提示.innerHTML = "加载失败，<a href=''>点击重试</a>";
 		});
 }
+function 重定向到博文() {
+	//#region 旧版 ?id= 参数重定向到新路径
+	const u = new URL(location.href),
+		id = u.searchParams.get("id"),
+		动态加载 = _global["main.js"]?.()?.动态加载;
+
+	if (id) {
+		const 需要重定向到 = `/blog/${id}/`;
+		if (动态加载) 动态加载({ href: 需要重定向到, replaceState: true });
+		else location.href = 需要重定向到;
+	}
+	//#endregion
+}
 
 let 入口函数首次调用 = false;
 export async function main(/** @type {String} */ 路径) {
+	重定向到博文();
 	if (!入口函数首次调用) {
 		入口函数首次调用 = true;
 		return;
@@ -405,22 +419,20 @@ export async function main(/** @type {String} */ 路径) {
 }
 
 async function _main() {
+	const U = new URL(location.href);
+	// 旧版 ?id= 参数存在时不渲染列表，由 重定向到博文() 改为加载文章页；
+	// 必须在首个 await 前同步读取，重定向的 replaceState 执行后该参数即被移除
+	const 旧版id = U.searchParams.get("id");
 	// @ts-ignore
 	await import("/js/lib/marked.min.js");
-
-	//#region 初始化: 解析地址参数与文章信息, 旧版 ?id= 参数重定向到新路径
-	const u = new URL(location.href),
-		id = u.searchParams.get("id"),
-		/** @type {文章信息 | null} */ 当前文章信息 = gd("当前文章信息")
+	let /** @type {文章信息 | null} */ 当前文章信息 = gd("当前文章信息")
 			? // @ts-ignore
 				JSON.parse(gd("当前文章信息")?.text)
 			: null;
 	gd("当前文章信息")?.remove();
-	if (id) location.href = `/blog/${id}/`;
-	//#endregion
 
 	if (当前文章信息) 渲染文章(当前文章信息);
-	else if (获取清理后的路径() === "/blog") 渲染文章列表(u);
+	else if (获取清理后的路径() === "/blog" && !旧版id) 渲染文章列表(U);
 }
 _main();
 

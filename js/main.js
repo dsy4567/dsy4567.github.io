@@ -30,7 +30,7 @@ async function 加载模块() {
 	}
 	路径 = 路径2;
 }
-/** @param {{ href: string; popstate?: boolean }} 元素 */
+/** @param {{ href: string; popstate?: boolean, replaceState?: boolean }} 元素 */
 function 动态加载(元素) {
 	if (正在动态加载) {
 		open(元素.href, "_self");
@@ -47,7 +47,15 @@ function 动态加载(元素) {
 				mt = html.match(/<title>.+<\/title>/s);
 			if (!m) throw new Error("动态加载失败: 匹配结果为空");
 			let u = new URL(元素.href, location.href);
-			!元素.popstate &&
+			if (元素.replaceState)
+				history.replaceState(
+					{
+						路径: 清理路径(u.pathname) + u.search,
+					},
+					"",
+					元素.href
+				);
+			else if (!元素.popstate)
 				history.pushState(
 					{
 						路径: 清理路径(u.pathname) + u.search,
