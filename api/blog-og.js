@@ -5,7 +5,7 @@ function html2Escape(/** @type {string} */ sHtml) {
 }
 async function f(/** @type {Request} */ req) {
 	const /** @type {文章信息[]} */ 所有文章信息 = await (
-			await fetch("https://dsy4567-github-io-dsy4567.vercel.app/json/blog.json")
+			await fetch("https://raw.githubusercontent.com/dsy4567/dsy4567.github.io/refs/heads/main/json/blog.json")
 		).json();
 	let /** @type {文章信息} */ 当前文章信息;
 	for (const 文章信息 of 所有文章信息)
