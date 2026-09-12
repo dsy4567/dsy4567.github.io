@@ -198,9 +198,9 @@ async function 触发事件(事件名) {
 				}
 			})
 		);
-	});
 
-	if (事件名 === "DOMContentLoaded") await 触发事件("关键任务完成");
+		if (优先级 === -0x66ccff && 事件名 === "DOMContentLoaded") await 触发事件("关键任务完成");
+	});
 }
 /**
  * 延迟执行一个函数，若事件已经触发则立即执行，否则等待事件触发后执行
