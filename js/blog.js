@@ -356,8 +356,15 @@ async function 渲染文章列表(u) {
 				});
 				//#endregion
 
-				待添加.push(sect);
+				if (i === 0) {
+					gd("正在加载文章提示")?.replaceWith(sect);
+					await schedulerYield();
+				} else 待添加.push(sect);
+
+				console.log(_通用计数器, 文章);
+				console.timeEnd(`渲染文章列表 id:${_通用计数器}`);
 			}
+			右.append(...待添加);
 			await schedulerYield();
 			gd("正在加载文章提示")?.replaceWith(...待添加);
 
