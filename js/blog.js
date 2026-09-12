@@ -34,6 +34,11 @@ async function 高亮代码(目标) {
 async function 渲染文章(当前文章信息) {
 	// /blog/<id>/
 	try {
+		await new Promise(
+			/** @type {() => void} */ resolve => {
+				延迟执行("DOMContentLoaded", resolve, 0);
+			}
+		);
 		if (!location.pathname.endsWith("/")) location.href = `/blog/${当前文章信息.id}/`;
 		const 右 = qs("main .右", true);
 		if (!右) return;
@@ -143,7 +148,7 @@ async function 渲染文章(当前文章信息) {
 		目录.classList.add("目录");
 		目录.append(根列表);
 		qs("main > .左", true)?.append(目录);
-		_global["main.js"]().渲染图标();
+		_global["main.js"]?.()?.渲染图标();
 		//#endregion
 
 		//#region 高亮
@@ -247,7 +252,7 @@ ${(() => {
 					// 高亮
 					高亮代码(sect);
 					右.append(sect);
-					_global["main.js"]().渲染图标();
+					_global["main.js"]?.()?.渲染图标();
 				});
 		//#endregion
 	} catch (e) {
@@ -269,7 +274,15 @@ async function 渲染文章列表(u) {
 	fetch("/json/blog.json")
 		.then(res => {
 			if (!res.ok) throw new Error("状态码异常");
-			return res.json();
+			return new Promise((resolve, reject) => {
+				延迟执行(
+					"DOMContentLoaded",
+					() => {
+						resolve(res.json());
+					},
+					0
+				);
+			});
 		})
 		.then(async (/** @type {Array<文章信息>} */ j) => {
 			const 右 = qs("main .右", true);
@@ -339,7 +352,7 @@ async function 渲染文章列表(u) {
 						事件.target?.parentElement?.tagName !== "A" &&
 						!鼠标已移动
 					)
-						_global["main.js"]().动态加载(a);
+						_global["main.js"]?.()?.动态加载(a);
 				});
 				//#endregion
 
@@ -373,7 +386,7 @@ async function 渲染文章列表(u) {
 			标签元素.classList.add("标签");
 			标签元素.append(div);
 			qs("main > .左", true)?.append(标签元素);
-			_global["main.js"]().渲染图标();
+			_global["main.js"]?.()?.渲染图标();
 			//#endregion
 
 			//#region 收尾、滚动视图、高亮

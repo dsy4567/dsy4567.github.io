@@ -36,11 +36,12 @@
 		/>
 
 		<!-- 首屏资源 -->
-		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
 		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
 		<script src="/js/global.js"></script>
+		<script src="/js/blog.js" type="module" defer></script>
+
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
 		<link rel="modulepreload" href="/js/main.js" />
-		<link rel="modulepreload" href="/js/blog.js" />
 		<link rel="modulepreload" href="/js/lib/marked.min.js" />
 		<link
 			rel="preload"
@@ -218,7 +219,6 @@
 		</noscript>
 
 		<script src="/js/main.js" type="module" defer></script>
-		<script src="/js/blog.js" type="module" defer></script>
 		<script src="/js/lib/marked.min.js" type="module" defer></script>
 	</body>
 </html>
