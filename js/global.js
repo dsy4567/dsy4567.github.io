@@ -9,6 +9,10 @@
 // @ts-check
 "use strict";
 
+// for debug
+console.time = () => {};
+console.timeEnd = () => {};
+
 //#region 全局工具函数
 let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
 	/** @type {Record<string, HTMLElement | null>} */ qs缓存 = {},
@@ -17,7 +21,8 @@ let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
 	/** @type {延迟执行状态类型} */ 延迟执行状态 = {
 		DOMContentLoaded: { 回调: new Map(), 已触发: false },
 		关键任务完成: { 回调: new Map(), 已触发: false },
-	};
+	},
+	通用计数器 = -1;
 /**
  * document.getElementById 的快捷方式，支持缓存
  * @param {string} s
@@ -93,6 +98,7 @@ function 显示或隐藏进度条(状态) {
  * @returns {Promise<Event | {}>} 在样式表加载完成时 resolve，失败时 reject
  */
 function 添加样式(url, crossOrigin = "use-credentials", 使用缓存 = true) {
+	console.time("添加样式 " + url);
 	let 已缓存 = 已添加的样式.get(url);
 	if (使用缓存 && 已缓存) return 已缓存;
 	/** @type {Promise<Event | {}>} */
@@ -112,6 +118,7 @@ function 添加样式(url, crossOrigin = "use-credentials", 使用缓存 = true)
 		document.head.append(l);
 	});
 	已添加的样式.set(url, 加载);
+	console.timeEnd("添加样式 " + url);
 	return 加载;
 }
 /**
@@ -122,6 +129,7 @@ function 添加样式(url, crossOrigin = "use-credentials", 使用缓存 = true)
  * @returns {Promise<Event>} 在脚本加载完成时 resolve，失败时 reject
  */
 function 添加脚本(url, crossOrigin = "use-credentials", 使用缓存 = true) {
+	console.time("添加脚本 " + url);
 	let 已缓存 = 已添加的脚本.get(url);
 	if (使用缓存 && 已缓存) return 已缓存;
 	/** @type {Promise<Event>} */
@@ -137,6 +145,7 @@ function 添加脚本(url, crossOrigin = "use-credentials", 使用缓存 = true)
 		document.head.append(s);
 	});
 	已添加的脚本.set(url, 加载);
+	console.timeEnd("添加脚本 " + url);
 	return 加载;
 }
 /**
@@ -156,14 +165,20 @@ async function 批量低阻塞操作(待处理元素, 回调, { 时间片 = 8 } 
 		const 截止时间 = Date.now() + 时间片;
 		// 至少处理一个元素，避免时间片为 0 时死循环
 		while (索引 < 总数) {
+			const _通用计数器 = ++通用计数器;
+			console.time(`处理一批-回调 id:${_通用计数器}`);
 			await 回调(待处理元素[索引], 索引);
+			console.timeEnd(`处理一批-回调 id:${_通用计数器}`);
+			console.log(_通用计数器, 回调);
 			索引++;
 			if (Date.now() >= 截止时间) {
 				await schedulerYield();
 				await 处理一批();
+				console.log(`处理一批：达到时间片限制，上一个任务id:${_通用计数器}`);
 				break;
 			}
 		}
+		console.log("处理一批：处理完成");
 	};
 
 	// 启动异步处理
@@ -174,6 +189,7 @@ async function 批量低阻塞操作(待处理元素, 回调, { 时间片 = 8 } 
  * @param {"DOMContentLoaded" | "关键任务完成"} 事件名
  */
 async function 触发事件(事件名) {
+	console.log(`触发事件 ${事件名}`);
 	const 状态 = 延迟执行状态[事件名];
 	if (!状态 || 状态.已触发) return;
 	状态.已触发 = true;
@@ -184,6 +200,7 @@ async function 触发事件(事件名) {
 
 	// 按优先级数值升序处理
 	const 优先级列表 = [...队列快照.keys()].sort((a, b) => a - b);
+	优先级列表.push(-0x66ccff); // 完成标记
 
 	批量低阻塞操作(优先级列表, async 优先级 => {
 		const 回调列表 = 队列快照.get(优先级) || [];
@@ -191,8 +208,12 @@ async function 触发事件(事件名) {
 		await Promise.all(
 			回调列表.map(async 回调 => {
 				try {
+					const _通用计数器 = ++通用计数器;
+					console.time(`触发事件-回调 id:${_通用计数器}`);
 					// 包装非 async 回调，确保统一为 Promise，并能捕获错误
 					await Promise.resolve().then(() => 回调());
+					console.timeEnd(`触发事件-回调 id:${_通用计数器}`);
+					console.log(_通用计数器, 回调);
 				} catch (e) {
 					console.error(`[${事件名}] 优先级 ${优先级} 回调执行失败:`, e);
 				}
@@ -214,7 +235,11 @@ async function 延迟执行(事件名, 回调, 优先级 = 0) {
 
 	if (状态.已触发)
 		try {
+			const _通用计数器 = ++通用计数器;
+			console.time(`延迟执行-回调 id:${_通用计数器}`);
 			await 回调();
+			console.timeEnd(`延迟执行-回调 id:${_通用计数器}`);
+			console.log(_通用计数器, 回调);
 			await schedulerYield();
 		} catch (e) {
 			console.error(`[${事件名}] 优先级 ${优先级} 回调执行失败:`, e);
@@ -516,12 +541,14 @@ function 写入强调色变量(hex, 深 = 当前是否深色()) {
  * 依据 localStorage 重算背景类、meta 主题色和强调色变量
  */
 function 刷新主题() {
+	console.time("刷新主题");
 	const 深 = 当前是否深色();
 	// 自动模式也解析为具体类，保证 hljs 等只认类的地方能跟随
 	document.documentElement.classList.toggle("深色", 深);
 	document.documentElement.classList.toggle("浅色", !深);
 	gd("主题色", true)?.setAttribute("content", 深 ? "#18171c" : "#eeeeee");
 	写入强调色变量(读取强调色(), 深);
+	console.timeEnd("刷新主题");
 }
 /**
  * 切换背景模式并持久化
