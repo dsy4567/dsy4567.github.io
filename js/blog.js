@@ -231,8 +231,8 @@ ${(() => {
 		<span class="用户名"><a href="${评论.user.html_url}">${评论.user.login}</a></span>
 	</div>
 	<div class="评论正文">${marked.parse(评论.body)}</div>
-	<span class="元数据">发表于: ${new Date(评论.created_at).toLocaleString()} 更新于: ${new Date(评论.updated_at).toLocaleString()}</span><br />
-	<span class="元数据">${(() => {
+	<span class="元数据">发表于: ${new Date(评论.created_at).toLocaleString()} 更新于: ${new Date(评论.updated_at).toLocaleString()}</span>
+${(() => {
 			let emojis = {
 					"+1": "👍",
 					"-1": "👎",
@@ -243,13 +243,18 @@ ${(() => {
 					rocket: "🚀",
 					eyes: "👀",
 				},
-				s = "";
-			Object.keys(emojis).forEach(k => {
-				if (评论.reactions[k])
+				s = '',
+				outerHTML_开始 = "",
+				outerHTML_结束 = "";
+			Object.keys(emojis).forEach((k,i) => {
+				if (评论.reactions[k]) {
+					!outerHTML_开始 && (outerHTML_开始 = '<span class="元数据">');
+					!outerHTML_结束 && (outerHTML_结束 = "</span>");
 					// @ts-ignore
 					s += emojis[k] + ": " + 评论.reactions[k] + " ";
+				}
 			});
-			return s;
+			return outerHTML_开始 + s + outerHTML_结束;
 		})()}
 	</span>
 </section>`;
