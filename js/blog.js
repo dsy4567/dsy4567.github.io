@@ -423,8 +423,7 @@ async function _main() {
 	// 旧版 ?id= 参数存在时不渲染列表，由 重定向到博文() 改为加载文章页；
 	// 必须在首个 await 前同步读取，重定向的 replaceState 执行后该参数即被移除
 	const 旧版id = U.searchParams.get("id");
-	// @ts-ignore
-	await import("/js/lib/marked.min.js");
+	await 添加脚本("/js/lib/marked.min.js");
 	let /** @type {文章信息 | null} */ 当前文章信息 = gd("当前文章信息")
 			? // @ts-ignore
 				JSON.parse(gd("当前文章信息")?.text)

@@ -378,7 +378,6 @@ fetch("https://api.github.com/users/dsy4567")
 							gd("close_recaptcha")?.addEventListener("click", () => {
 								div.remove();
 							});
-							// @ts-ignore
 							gd("recaptcha")?.addEventListener("click", async 事件 => {
 								const gr = gd("g-recaptcha");
 								if (!gr) return;

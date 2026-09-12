@@ -230,7 +230,6 @@ let 网易云音乐 = {
 		}
 	},
 	更新歌曲信息(/** @type {number} */ 令牌) {
-		// @ts-ignore
 		gd("播放列表", true)?.scrollTo({
 			behavior: "smooth",
 			top:
@@ -317,7 +316,6 @@ let 网易云音乐 = {
 				let 上次播放 = localStorage.getItem("上次播放");
 				// 没有上次播放时，设置一个无效id
 				网易云音乐.切换音乐(+(上次播放 || -1));
-				// @ts-ignore
 				// gd("播放列表", true)?.scrollTo({
 				// 	behavior: "smooth",
 				// 	top: qs("li[data-id='" + 上次播放 + "']")?.offsetTop || 0,
@@ -401,8 +399,7 @@ let 网易云音乐 = {
 						", 将在 3 秒后切换下一首"
 				);
 				clearTimeout(网易云音乐.重试timeout);
-				// @ts-ignore
-				网易云音乐.重试timeout = setTimeout(网易云音乐.下一首, 3000);
+				网易云音乐.重试timeout = window.setTimeout(网易云音乐.下一首, 3000);
 			};
 			网易云音乐元素.title =
 				"网易云音乐 - 正在播放: " + 网易云音乐.歌单[网易云音乐.正在播放.索引].完整歌名;
@@ -454,7 +451,6 @@ fetch("/json/ncm.json")
 		 * @param {string} [role]
 		 */
 		function 创建按钮(名称, onclick, title, role = "button") {
-			// @ts-ignore
 			let /** @type {HTMLButtonElement} */ btn = ce("button");
 			btn.innerHTML = `<svg class="特小尺寸" data-icon="${名称}"></svg>`;
 			btn.onclick = () => onclick(btn); // 播放类按钮内部会自行初始化
