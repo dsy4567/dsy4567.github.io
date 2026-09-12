@@ -8,7 +8,20 @@
 
 type 延迟执行状态类型 = Record<
 	"DOMContentLoaded" | "关键任务完成",
-	{ 回调: Map<number, (() => any)[]>; 已触发: boolean }
+	{
+		/** 事件未触发时按优先级暂存的回调队列 */
+		回调: Map<number, (() => any)[]>;
+		/** 事件是否已触发 */
+		已触发: boolean;
+		/** 事件已触发后，低优先级回调的等待池 */
+		低优池: Map<number, (() => any)[]>;
+		/** 低优池的检查定时器句柄 */
+		池定时器: ReturnType<typeof setTimeout> | null;
+		/** 低优池是否正在执行中 */
+		池执行中: boolean;
+		/** 上次高优任务（优先级 <= 1）注册的时间戳，安静窗口的计时起点 */
+		上次高优时间: number;
+	}
 >;
 
 type 音乐信息 = {

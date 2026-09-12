@@ -10,19 +10,15 @@
 "use strict";
 
 // for debug
-console.time = () => {};
-console.timeEnd = () => {};
+// console.time = () => {};
+// console.timeEnd = () => {};
 
 //#region 全局工具函数
 let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
 	/** @type {Record<string, HTMLElement | null>} */ qs缓存 = {},
 	/** @type {Map<string, Promise<Event>>} */ 已添加的脚本 = new Map(),
-	/** @type {Map<string, Promise<Event | {}>>} */ 已添加的样式 = new Map(),
-	/** @type {延迟执行状态类型} */ 延迟执行状态 = {
-		DOMContentLoaded: { 回调: new Map(), 已触发: false },
-		关键任务完成: { 回调: new Map(), 已触发: false },
-	},
-	通用计数器 = -1;
+	/** @type {Map<string, Promise<Event | {}>>} */ 已添加的样式 = new Map();
+
 /**
  * document.getElementById 的快捷方式，支持缓存
  * @param {string} s
@@ -70,17 +66,6 @@ const ge = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
 const ce = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
 	return document.createElement(s);
 };
-/**
- * scheduler.yield 的 polyfill 实现
- * @returns {Promise<void>}
- */
-async function schedulerYield() {
-	// @ts-ignore
-	if (scheduler?.yield) return scheduler.yield();
-	return new Promise(resolve => {
-		setTimeout(resolve, 0);
-	});
-}
 /**
  * 显示或隐藏页面顶部的进度条
  * @param {boolean} 状态 - true 显示，false 隐藏
@@ -148,6 +133,38 @@ function 添加脚本(url, crossOrigin = "use-credentials", 使用缓存 = true)
 	console.timeEnd("添加脚本 " + url);
 	return 加载;
 }
+
+/** scheduler.yield 的 polyfill 实现 */
+async function schedulerYield() {
+	// @ts-ignore
+	if (window.scheduler?.yield) return window.scheduler.yield();
+	return new Promise(resolve => {
+		setTimeout(resolve, 0);
+	});
+}
+
+let /** @type {延迟执行状态类型} */ 延迟执行状态 = {
+		DOMContentLoaded: {
+			回调: new Map(),
+			已触发: false,
+			低优池: new Map(),
+			池定时器: null,
+			池执行中: false,
+			上次高优时间: Number.NEGATIVE_INFINITY,
+		},
+		关键任务完成: {
+			回调: new Map(),
+			已触发: false,
+			低优池: new Map(),
+			池定时器: null,
+			池执行中: false,
+			上次高优时间: Number.NEGATIVE_INFINITY,
+		},
+	};
+
+/** 安静窗口时长（毫秒）：低优任务需在距离上次高优任务超过该时长后才执行 */
+const 安静窗口 = 16;
+
 /**
  * 批量处理元素，避免长时间阻塞主线程。
  * @template T
@@ -161,92 +178,146 @@ async function 批量低阻塞操作(待处理元素, 回调, { 时间片 = 8 } 
 	const 总数 = 待处理元素.length;
 	let 索引 = 0;
 
-	const 处理一批 = async () => {
-		const 截止时间 = Date.now() + 时间片;
+	while (索引 < 总数) {
+		const 截止时间 = performance.now() + 时间片;
 		// 至少处理一个元素，避免时间片为 0 时死循环
-		while (索引 < 总数) {
-			const _通用计数器 = ++通用计数器;
-			console.time(`处理一批-回调 id:${_通用计数器}`);
+		do {
 			await 回调(待处理元素[索引], 索引);
-			console.timeEnd(`处理一批-回调 id:${_通用计数器}`);
-			console.log(_通用计数器, 回调);
 			索引++;
-			if (Date.now() >= 截止时间) {
-				await schedulerYield();
-				await 处理一批();
-				console.log(`处理一批：达到时间片限制，上一个任务id:${_通用计数器}`);
-				break;
-			}
-		}
-		console.log("处理一批：处理完成");
-	};
-
-	// 启动异步处理
-	await 处理一批();
+		} while (索引 < 总数 && performance.now() < 截止时间);
+		// 时间片耗尽且仍有剩余，让出主线程后继续
+		if (索引 < 总数) await schedulerYield();
+	}
 }
+
 /**
- * 触发一个事件，执行所有已注册的回调函数
+ * 启动低优池检查定时器（幂等：已有定时器或无任务时不重复启动）
+ * @param {"DOMContentLoaded" | "关键任务完成"} 事件名
+ */
+function 启动低优池定时器(事件名) {
+	const 状态 = 延迟执行状态[事件名];
+	if (状态.池定时器 === null && 状态.低优池.size > 0)
+		状态.池定时器 = setTimeout(() => 检查低优池(事件名), 安静窗口);
+}
+
+/**
+ * 触发一个事件：高优（优先级 <= 0）回调按优先级升序尽快执行（同优先级并行），
+ * 低优（优先级 > 0）回调统一转入低优池等待安静窗口。
  * @param {"DOMContentLoaded" | "关键任务完成"} 事件名
  */
 async function 触发事件(事件名) {
-	console.log(`触发事件 ${事件名}`);
 	const 状态 = 延迟执行状态[事件名];
 	if (!状态 || 状态.已触发) return;
 	状态.已触发 = true;
 
-	// 快照当前所有优先级队列，并清空原队列，防止执行期间新增回调干扰
-	const 队列快照 = new Map(状态.回调);
+	// 分离高低优：高优进入本次执行批次，低优转入低优池等待安静窗口
+	const /** @type {Map<number, (() => void)[]>} */ 高优快照 = new Map();
+	for (const [优先级, 回调列表] of 状态.回调)
+		if (优先级 <= 0) 高优快照.set(优先级, 回调列表);
+		else {
+			if (!状态.低优池.has(优先级)) 状态.低优池.set(优先级, []);
+			状态.低优池.get(优先级)?.push(...回调列表);
+		}
+
 	状态.回调.clear();
 
-	// 按优先级数值升序处理
-	const 优先级列表 = [...队列快照.keys()].sort((a, b) => a - b);
-	优先级列表.push(-0x66ccff); // 完成标记
+	// 高优批次：按优先级数值升序处理，同优先级并行
+	const 优先级列表 = [...高优快照.keys()].sort((a, b) => a - b);
+	if (优先级列表.length > 0)
+		await 批量低阻塞操作(优先级列表, async 优先级 => {
+			const 回调列表 = 高优快照.get(优先级) || [];
+			await Promise.all(
+				回调列表.map(async 回调 => {
+					try {
+						await Promise.resolve().then(() => 回调());
+					} catch (e) {
+						console.error(`[${事件名}] 优先级 ${优先级} 回调执行失败:`, e);
+					}
+				})
+			);
+		});
 
-	批量低阻塞操作(优先级列表, async 优先级 => {
-		const 回调列表 = 队列快照.get(优先级) || [];
-		// 同一优先级并行执行
-		await Promise.all(
-			回调列表.map(async 回调 => {
-				try {
-					const _通用计数器 = ++通用计数器;
-					console.time(`触发事件-回调 id:${_通用计数器}`);
-					// 包装非 async 回调，确保统一为 Promise，并能捕获错误
-					await Promise.resolve().then(() => 回调());
-					console.timeEnd(`触发事件-回调 id:${_通用计数器}`);
-					console.log(_通用计数器, 回调);
-				} catch (e) {
-					console.error(`[${事件名}] 优先级 ${优先级} 回调执行失败:`, e);
-				}
-			})
-		);
+	// 触发前积压的低优任务（以及执行期间新注册的低优任务）统一等待安静窗口
+	if (状态.低优池.size > 0) 启动低优池定时器(事件名);
 
-		if (优先级 === -0x66ccff && 事件名 === "DOMContentLoaded") await 触发事件("关键任务完成");
-	});
+	// 事件链：DOMContentLoaded 的高优任务全部完成后，触发下一阶段
+	if (事件名 === "DOMContentLoaded") await 触发事件("关键任务完成");
 }
+
 /**
- * 延迟执行一个函数，若事件已经触发则立即执行，否则等待事件触发后执行
+ * 检查低优池：若距离上次高优任务注册已超过安静窗口，则按优先级升序执行池中所有回调
+ * （同优先级并行）；否则再等一个窗口。执行完毕后若池中有新任务，自动开启下一轮。
+ * @param {"DOMContentLoaded" | "关键任务完成"} 事件名
+ */
+async function 检查低优池(事件名) {
+	const 状态 = 延迟执行状态[事件名];
+	状态.池定时器 = null;
+
+	if (performance.now() - 状态.上次高优时间 < 安静窗口 || 状态.池执行中) {
+		// 尚未安静满一个窗口，或上一批低优任务仍在执行，再等一个窗口
+		状态.池定时器 = setTimeout(() => 检查低优池(事件名), 安静窗口);
+		return;
+	}
+
+	// 快照当前池并清空，防止执行期间新增回调干扰（新增回调会重新入池并启动新定时器）
+	const 队列快照 = new Map(状态.低优池);
+	状态.低优池.clear();
+	if (队列快照.size === 0) return;
+
+	状态.池执行中 = true;
+	try {
+		const 优先级列表 = [...队列快照.keys()].sort((a, b) => a - b);
+		await 批量低阻塞操作(优先级列表, async 优先级 => {
+			const 回调列表 = 队列快照.get(优先级) || [];
+			await Promise.all(
+				回调列表.map(async 回调 => {
+					try {
+						await 回调();
+					} catch (e) {
+						console.error(`[${事件名}] 低优池优先级 ${优先级} 回调执行失败:`, e);
+					}
+				})
+			);
+		});
+	} finally {
+		状态.池执行中 = false;
+		// 执行期间有新任务入池则开启下一轮（此刻定时器必为 null，不会重复启动）
+		if (状态.低优池.size > 0) 启动低优池定时器(事件名);
+	}
+}
+
+/**
+ * 延迟执行一个函数，优先级语义统一：
+ * - 优先级 <= 0（高优）：尽快执行——事件未触发则排队等触发，已触发则立即执行并刷新安静窗口
+ * - 优先级 > 0（低优）：进入低优池等待安静窗口（入池即返回，不等待执行完成）
  * @param {"DOMContentLoaded" | "关键任务完成"} 事件名
  * @param {() => any} 回调
- * @param {number} [优先级=0] - 优先级，数值越小越先执行
+ * @param {number} [优先级=0] - 数值越小越先执行；<= 0 视为高优
  */
 async function 延迟执行(事件名, 回调, 优先级 = 0) {
 	const 状态 = 延迟执行状态[事件名];
 	if (!状态) throw new Error(`未知事件: ${事件名}`);
 
-	if (状态.已触发)
+	if (优先级 <= 0) {
+		if (!状态.已触发) {
+			// 高优排队：事件触发时按优先级升序执行
+			if (!状态.回调.has(优先级)) 状态.回调.set(优先级, []);
+			状态.回调.get(优先级)?.push(回调);
+			return;
+		}
+		// 高优立即执行，并刷新安静窗口计时起点
+		状态.上次高优时间 = performance.now();
 		try {
-			const _通用计数器 = ++通用计数器;
-			console.time(`延迟执行-回调 id:${_通用计数器}`);
 			await 回调();
-			console.timeEnd(`延迟执行-回调 id:${_通用计数器}`);
-			console.log(_通用计数器, 回调);
 			await schedulerYield();
 		} catch (e) {
-			console.error(`[${事件名}] 优先级 ${优先级} 回调执行失败:`, e);
+			console.error(`[${事件名}] 高优回调执行失败:`, e);
 		}
-	else {
-		if (!状态.回调.has(优先级)) 状态.回调.set(优先级, []);
-		状态.回调.get(优先级)?.push(回调);
+	} else {
+		// 低优入池等待安静窗口（触发前后语义一致）
+		if (!状态.低优池.has(优先级)) 状态.低优池.set(优先级, []);
+		状态.低优池.get(优先级)?.push(回调);
+		启动低优池定时器(事件名);
 	}
 }
 /**
