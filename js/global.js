@@ -17,7 +17,8 @@
 let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
 	/** @type {Record<string, HTMLElement | null>} */ qs缓存 = {},
 	/** @type {Map<string, Promise<Event>>} */ 已添加的脚本 = new Map(),
-	/** @type {Map<string, Promise<Event | {}>>} */ 已添加的样式 = new Map();
+	/** @type {Map<string, Promise<Event | {}>>} */ 已添加的样式 = new Map(),
+	/** @type {number} */ 通用计数器 = 0;
 
 /**
  * document.getElementById 的快捷方式，支持缓存
@@ -206,6 +207,7 @@ function 启动低优池定时器(事件名) {
  * @param {"DOMContentLoaded" | "关键任务完成"} 事件名
  */
 async function 触发事件(事件名) {
+	console.log(`触发事件: ${事件名}`);
 	const 状态 = 延迟执行状态[事件名];
 	if (!状态 || 状态.已触发) return;
 	状态.已触发 = true;
@@ -229,7 +231,11 @@ async function 触发事件(事件名) {
 			await Promise.all(
 				回调列表.map(async 回调 => {
 					try {
+						const _通用计数器 = 通用计数器++;
+						console.time(`高优回调 id:${_通用计数器}`);
 						await Promise.resolve().then(() => 回调());
+						console.log(_通用计数器, 回调, 优先级);
+						console.timeEnd(`高优回调 id:${_通用计数器}`);
 					} catch (e) {
 						console.error(`[${事件名}] 优先级 ${优先级} 回调执行失败:`, e);
 					}
@@ -272,7 +278,11 @@ async function 检查低优池(事件名) {
 			await Promise.all(
 				回调列表.map(async 回调 => {
 					try {
+						const _通用计数器 = 通用计数器++;
+						console.time(`低优池回调 id:${_通用计数器}`);
 						await 回调();
+						console.log(_通用计数器, 回调, 优先级);
+						console.timeEnd(`低优池回调 id:${_通用计数器}`);
 					} catch (e) {
 						console.error(`[${事件名}] 低优池优先级 ${优先级} 回调执行失败:`, e);
 					}
