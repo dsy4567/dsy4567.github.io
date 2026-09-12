@@ -248,7 +248,10 @@ function 提示(m) {
 function 阻止搜索引擎收录() {
 	gd("robots", true)?.setAttribute("content", "noindex");
 }
-let /** @type {Record<string, string>} */ 清理后的路径缓存 = {};
+let /** @type {Record<string, string>} */ 清理后的路径缓存 = {},
+	re1 = /\/index(\.html)?$/, // "/index.html" -> "/"
+	re2 = /\.html$/, // "/blog.html" -> "/blog"
+	re3 = /\/{2,}/g; // "//" -> "/"
 /**
  * 清理路径：去除结尾的 "index" / "index.html" / ".html"，并将连续斜杠压缩为单个
  * 只匹配结尾，避免误伤路径正文中含 "index" 或 ".html" 的部分
@@ -256,10 +259,7 @@ let /** @type {Record<string, string>} */ 清理后的路径缓存 = {};
  * @returns {string} 清理后的路径
  */
 function 清理路径(路径) {
-	return 路径
-		.replace(/\/index(\.html)?$/, "/")
-		.replace(/\.html$/, "")
-		.replace(/\/{2,}/g, "/");
+	return 路径.replace(re1, "/").replace(re2, "").replace(re3, "/");
 }
 /**
  * 获取清理后的路径：基于 location.pathname 的清理结果
