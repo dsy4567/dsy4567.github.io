@@ -462,7 +462,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 	padding: 8px;
 	position: absolute;
 	top: 38px;
-	left: -29px;
+	left: -28px;
 	width: calc(var(--container-width));
 	height: 160px;
 }
@@ -475,8 +475,8 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 	user-select: none;
 	white-space: nowrap;
 	width: calc(100% + -16px);
-	border-radius: 12px;
-	padding: 6px;
+	border-radius: var(--border-radius);
+	padding: 8px;
 	margin-bottom: 4px;
 	position: relative;
 }
@@ -490,7 +490,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 > li.正在播放::before {
 	background-color: var(--accent-color);
-	border-radius: 12px;
+	border-radius: var(--border-radius);
 	display: block;
 	width: 3px;
 	height: 32px;

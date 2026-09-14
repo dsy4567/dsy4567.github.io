@@ -170,7 +170,7 @@ html {
 	--accent-color-transparent: var(--overlay);
 	--accent-text-color: var(--bg-color);
 	--link-color: var(--text-color);
-	--border-radius: 8px;
+	--border-radius: 12px;
 	--hostname: "dsy4567.icu";
 	scroll-behavior: smooth;
 }
@@ -364,6 +364,8 @@ hr {
 }
 
 .组 {
+	background-color: var(--bg-color);
+	border-radius: var(--border-radius);
 	display: flex;
 	max-width: 100%;
 	overflow: auto;
@@ -372,6 +374,7 @@ hr {
 .组 > section {
 	max-width: 256px;
 	min-width: 256px;
+	margin-bottom: 0px;
 }
 
 .横幅 {
