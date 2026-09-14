@@ -656,10 +656,10 @@ span#联系方式 > * {
 /* ==================== 侧边按钮-通用 ==================== */
 div#侧边按钮容器 {
 	position: fixed;
-	right: 0;
+	right: 0px;
 	z-index: 1007;
 	top: calc(75vh - 33px * 4);
-	transition-delay: 0;
+	transition-delay: 0ms;
 }
 div#侧边按钮容器 > * {
 	background-color: var(--surface-2);
