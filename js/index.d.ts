@@ -40,6 +40,44 @@ type 歌单 = {
 	id: number;
 	mv: number;
 };
+type 排行歌曲项 = {
+	songId: number;
+	picId: number;
+	picUrl: string;
+	songName: string;
+	albumName: string;
+	artists: { artistId: number; artistName: string }[];
+	playCount: number;
+};
+type 副歌信息 = {
+	id: number;
+	/** 毫秒 */ startTime: number;
+	/** 毫秒 */ endTime: number;
+	ugcLocked: number;
+};
+type 最近聆听排行数据 = {
+	rank_raw?: {
+		code?: number;
+		data?: {
+			type?: string;
+			songItems?: 排行歌曲项[];
+		};
+	};
+	/** 第 1 名歌曲的原始歌词接口响应 */
+	first_lyric_raw?: {
+		lrc?: { version?: number; lyric?: string };
+	};
+	/** 第 1 名歌曲的副歌时间区间 */
+	first_chorus_raw?: {
+		code?: number;
+		chorus?: 副歌信息[];
+	};
+};
+type 精选歌词 = {
+	行: string[];
+	歌手: string;
+	歌名: string;
+};
 type 文章信息 = {
 	updated: string;
 	date: string;

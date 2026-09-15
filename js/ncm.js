@@ -15,6 +15,7 @@ let /** @type {HTMLDivElement} */ 网易云音乐元素 = gd("网易云音乐", 
 	/** @type {HTMLDivElement} */ 歌词元素 = gd("歌词", true),
 	// @ts-ignore
 	/** @type {HTMLImageElement} */ 网易云音乐封面元素 = gd("网易云音乐封面", true);
+let /** @type {(value?: any) => void} */ 歌单加载完成Resolve = () => {};
 let 网易云音乐 = {
 	重试timeout: -1,
 	已初始化: false,
@@ -32,6 +33,11 @@ let 网易云音乐 = {
 	 * 旧请求完成时可通过对比令牌来忽略，避免频繁操作导致的竞争
 	 */
 	播放请求令牌: 0,
+	/**
+	 * ncm.json 基础歌单填充完成的信号。
+	 * 首页“最近在听”批量添加歌曲前需等待其完成，避免基础歌单按索引写入时覆盖新增歌曲
+	 */
+	歌单加载完成: new Promise(resolve => (歌单加载完成Resolve = resolve)),
 	正在播放: {
 		索引: 0,
 		/** 最近一次写入 Audio.src 的歌曲 id，-1 表示尚未加载过 */
@@ -276,6 +282,7 @@ let 网易云音乐 = {
 			.then(async j => {
 				if (令牌 !== 网易云音乐.播放请求令牌) return;
 
+				// 忽略非法歌词
 				let 待解析歌词,
 					待解析歌词翻译 = j.tlyric?.lyric;
 				if (
@@ -548,7 +555,11 @@ fetch("/json/ncm.json")
 
 		延迟执行("关键任务完成", 网易云音乐.初始化, 3);
 	})
-	.catch(e => console.error(e));
+	.catch(e => {
+		console.error(e);
+		// 加载失败也要放行，避免首页“最近在听”的点击交互一直等待
+		歌单加载完成Resolve();
+	});
 
 export default 网易云音乐;
 
