@@ -630,14 +630,21 @@ span#联系方式 > * {
 	overflow-y: auto;
 }
 
+.标签 > div {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	justify-content: center;
+}
 .标签 > div > * {
 	color: var(--text-color);
 	background-color: var(--accent-color-transparent);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	line-height: 3;
-	margin-left: 8px;
-	padding: 8px;
+	margin-left: 0px;
+	padding-left: 8px;
+	padding-right: 8px;
 	white-space: nowrap;
 }
 
