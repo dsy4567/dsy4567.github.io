@@ -110,7 +110,7 @@ let 网易云音乐 = {
 					).json()
 				)?.data?.url?.replace("http://", "https://");
 		} catch (e) {
-			return "/404.html";
+			return `/404.html?failNcmId=${id}`;
 		}
 	},
 	/** 随机播放时按洗牌顺序取下一首（方向 1）或上一首（方向 -1）的歌单索引 */
