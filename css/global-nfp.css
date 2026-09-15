@@ -465,6 +465,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 	left: -28px;
 	width: calc(var(--container-width));
 	height: 160px;
+	max-height: calc(25vh - 16px);
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 li {
 	border: 1px solid var(--overlay);
