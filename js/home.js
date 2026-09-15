@@ -192,7 +192,7 @@ function 渲染最近在听() {
 		if (项元素 instanceof HTMLElement && 项元素.dataset.songId)
 			处理排行点击(+项元素.dataset.songId);
 	};
-	排行容器.addEventListener("click", 定位并播放);
+	排行容器.addEventListener("dblclick", 定位并播放);
 	/** @param {KeyboardEvent} 事件 */
 	const 键盘定位并播放 = 事件 => {
 		if (事件.key === "Enter") 定位并播放(事件);
