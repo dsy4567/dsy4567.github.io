@@ -474,7 +474,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 	display: table-caption;
 	user-select: none;
 	white-space: nowrap;
-	width: calc(100% + -8px);
+	width: calc(100% + -10px);
 	border-radius: var(--border-radius);
 	padding: 4px;
 	margin-bottom: 4px;
