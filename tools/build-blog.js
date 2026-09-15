@@ -599,7 +599,7 @@ async function fetchNeteasePlaylist() {
 	console.log("Fetching Netease playlist...");
 	try {
 		// NeteaseCloudMusicApi 的类型声明与实际响应结构差异较大，这里统一按 any 处理
-		const { body } = await /** @type {any} */ (require("NeteaseCloudMusicApi"))
+		const { body } = await /** @type {any} */ (require("@neteasecloudmusicapienhanced/api"))
 			.playlist_track_all({ id: CONFIG.ncmPlaylistId })
 			.catch((/** @type {Error} */ err) => {
 				console.error("Netease API failed:", err.message);
