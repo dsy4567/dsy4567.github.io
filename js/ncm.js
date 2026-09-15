@@ -76,37 +76,42 @@ let 网易云音乐 = {
 		}
 	},
 	async 获取音乐地址(/** @type {number} */ id) {
-		if (网易云音乐.已首次播放) 网易云音乐.设置闪烁动画(true);
-		let 数据 = (
-			await (
-				await fetch(
-					`https://${网易云音乐.设置.域名}/song/url?id=${id}&realIP=116.25.146.177`
-				)
-			).json()
-		)?.data[0];
-		// vip 歌曲尝试获取 mv
-		if (数据?.fee === 0 || 数据?.fee === 8) return 数据?.url?.replace("http://", "https://");
-		else
-			return (
+		try {
+			if (网易云音乐.已首次播放) 网易云音乐.设置闪烁动画(true);
+			let 数据 = (
 				await (
 					await fetch(
-						`https://${网易云音乐.设置.域名}/mv/url?id=${
-							网易云音乐.歌单[网易云音乐.歌单索引[id]].mv
-						}&r=${
-							// 最小分辨率
-							(
-								await (
-									await fetch(
-										`https://${网易云音乐.设置.域名}/mv/detail?mvid=${
-											网易云音乐.歌单[网易云音乐.歌单索引[id]].mv
-										}`
-									)
-								).json()
-							)?.data?.brs?.[0]?.br
-						}`
+						`https://${网易云音乐.设置.域名}/song/url?id=${id}&realIP=116.25.146.177`
 					)
 				).json()
-			)?.data?.url?.replace("http://", "https://");
+			)?.data[0];
+			// vip 歌曲尝试获取 mv
+			if (数据?.fee === 0 || 数据?.fee === 8)
+				return 数据?.url?.replace("http://", "https://");
+			else
+				return (
+					await (
+						await fetch(
+							`https://${网易云音乐.设置.域名}/mv/url?id=${
+								网易云音乐.歌单[网易云音乐.歌单索引[id]].mv
+							}&r=${
+								// 最小分辨率
+								(
+									await (
+										await fetch(
+											`https://${网易云音乐.设置.域名}/mv/detail?mvid=${
+												网易云音乐.歌单[网易云音乐.歌单索引[id]].mv
+											}`
+										)
+									).json()
+								)?.data?.brs?.[0]?.br
+							}`
+						)
+					).json()
+				)?.data?.url?.replace("http://", "https://");
+		} catch (e) {
+			return "/404.html";
+		}
 	},
 	/** 随机播放时按洗牌顺序取下一首（方向 1）或上一首（方向 -1）的歌单索引 */
 	洗牌取索引(/** @type {number} */ 方向) {
@@ -554,6 +559,7 @@ fetch("/json/ncm.json")
 		_global["main.js"]().渲染图标();
 
 		延迟执行("关键任务完成", 网易云音乐.初始化, 3);
+		歌单加载完成Resolve();
 	})
 	.catch(e => {
 		console.error(e);
