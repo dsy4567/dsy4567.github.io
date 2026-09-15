@@ -10,7 +10,7 @@
 "use strict";
 
 const /** @type {Record<string, string[]>} */ 加载清单 = {
-		"/": [],
+		"/": ["home"],
 		"/blog": ["blog"],
 		"/friends": ["friends"],
 	},
@@ -73,13 +73,6 @@ function 动态加载(元素) {
 				右.innerHTML = m[0];
 				加载模块();
 
-				if (清理路径(u.pathname) === "/") {
-					显示或隐藏进度条(false);
-					if (!location.hash)
-						右.scrollIntoView({
-							behavior: "smooth",
-						});
-				}
 				正在动态加载 = false;
 				渲染图标();
 			} catch (e) {
