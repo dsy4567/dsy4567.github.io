@@ -374,7 +374,7 @@ hr {
 .组 > section {
 	max-width: 256px;
 	min-width: 256px;
-	margin-bottom: 0px;
+	/* margin-bottom: 0px; */
 }
 
 .横幅 {
@@ -458,7 +458,7 @@ div.通知 {
 	}
 
 	section {
-		margin-top: unset;
+		/* margin-top: unset; */
 		padding: 8px;
 	}
 	.左 > section,
