@@ -307,6 +307,28 @@ let 网易云音乐 = {
 				console.error(e);
 			});
 	},
+	/** 动态批量添加歌曲到播放列表：写入歌单与歌单索引、创建列表元素，并重置随机播放的洗牌顺序 */
+	async 添加歌曲到播放列表(/** @type {歌单[]} */ 待添加歌单) {
+		if (!待添加歌单?.length) return;
+		let 播放列表 = gd("播放列表", true);
+		let 文档片段 = document.createDocumentFragment();
+		await 批量低阻塞操作(待添加歌单, async (/** @type {歌单} */ 音乐信息) => {
+			// 数据与元素在同一迭代内写入，保证列表元素可见时其数据已可播放
+			网易云音乐.歌单索引[音乐信息.id] = 网易云音乐.歌单.push(音乐信息) - 1;
+			let li = ce("li");
+			let 歌手 = ce("span");
+			歌手.className = "淡化";
+			歌手.textContent = 音乐信息.歌手;
+			li.append(音乐信息.歌名, " ", 歌手);
+			li.tabIndex = 0;
+			li.title = 音乐信息.完整歌名;
+			li.dataset.id = "" + 音乐信息.id;
+			文档片段.append(li);
+		});
+		播放列表?.append(文档片段);
+		// 歌单已变化，重置洗牌顺序，下次随机切换时重新洗牌并定位到当前歌曲（见 洗牌取索引）
+		网易云音乐.洗牌后的索引 = [];
+	},
 	async 初始化() {
 		try {
 			if (网易云音乐.已初始化) return;
