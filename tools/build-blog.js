@@ -726,7 +726,7 @@ async function fetchNcmListenRank() {
 			return;
 		}
 		const [lyricResult, chorusResult] = await Promise.all([
-			api.lyric_new({ id: firstSongId, cookie }).catch((/** @type {Error} */ err) => {
+			api.lyric({ id: firstSongId, cookie }).catch((/** @type {Error} */ err) => {
 				console.error("NCM lyric failed:", err.message);
 				return null;
 			}),
@@ -816,5 +816,5 @@ async function main() {
 	console.log("Done!");
 }
 
-main().catch(console.error);
-// fetchNcmListenRank();
+// main().catch(console.error);
+fetchNcmListenRank();
