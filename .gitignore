@@ -4,3 +4,4 @@ node_modules
 todo.txt
 .ssl
 .well-known/appspecific/com.chrome.devtools.json
+*.secret
