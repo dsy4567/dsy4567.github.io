@@ -114,7 +114,43 @@ main、左右栏
 }
 
 /* ==================== @media ==================== */
-
+@media (forced-colors: active) {
+	a:hover {
+		outline: 2px solid #0000ff;
+	}
+	svg.fill {
+		fill: #0000ff !important;
+	}
+	svg.stroke {
+		stroke: #0000ff !important;
+	}
+}
+@media (prefers-color-scheme: light) {
+	@media (forced-colors: active) {
+		a:hover {
+			outline: 2px solid #0000ff;
+		}
+		svg.fill {
+			fill: #0000ff !important;
+		}
+		svg.stroke {
+			stroke: #0000ff !important;
+		}
+	}
+}
+@media (prefers-color-scheme: dark) {
+	@media (forced-colors: active) {
+		a:hover {
+			outline: 2px solid #ffff00;
+		}
+		svg.fill {
+			fill: #ffff00 !important;
+		}
+		svg.stroke {
+			stroke: #ffff00 !important;
+		}
+	}
+}
 @media (any-pointer: coarse) {
 	body:has(#侧边按钮容器 > .拥有更多选项:hover) #侧边按钮容器 > #关闭侧边按钮 {
 		opacity: 1;
@@ -196,6 +232,26 @@ main、左右栏
 /* ==================== ::* ==================== */
 
 /* ==================== html/body/通用元素 ==================== */
+a:hover,
+a:focus-visible {
+	/* opacity: 1; */
+	text-decoration: 1px underline var(--link-color);
+	text-underline-offset: 0.2em;
+}
+a.外链::after {
+	content: "";
+}
+a.外链:has(img, svg)::after {
+	content: "";
+}
+a[title]::after {
+	content: "" !important;
+}
+/* 鼠标悬停，或检测到键盘导航（页面任意元素获得可见焦点）时显示内容 */
+spoiler:hover,
+body:has(:focus-visible) spoiler {
+	color: #fff !important;
+}
 
 /* ==================== 通用工具类 class ==================== */
 .横幅 {
@@ -210,6 +266,12 @@ div.通知 {
 	animation-iteration-count: 1;
 	animation-name: 显示;
 	/* animation-name: 隐藏; */
+	box-shadow:
+		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	background-color: var(--surface-1);
+	border: 1px solid transparent;
+	border-radius: var(--border-radius);
 }
 
 .悬浮卡片 {
@@ -225,6 +287,21 @@ div.通知 {
 }
 
 /* ==================== 导航栏、左右栏 ==================== */
+#导航栏 {
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
+	transition:
+		0.3s background-color,
+		0.3s transform,
+		0.3s box-shadow;
+	transform: translateY(0);
+}
+body.顶部 #导航栏 {
+	box-shadow: none;
+}
+body.隐藏导航栏 #导航栏 {
+	transform: translateY(-49px);
+	box-shadow: none;
+}
 
 /* ==================== 导航栏和进度条 ==================== */
 .进度条外面 {
