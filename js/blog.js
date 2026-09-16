@@ -456,6 +456,7 @@ export async function main(/** @type {String} */ 路径) {
 	await _main();
 }
 
+// 绕过 main.js，尽快渲染文章列表或文章页
 async function _main() {
 	const U = new URL(location.href);
 	// 旧版 ?id= 参数存在时不渲染列表，由 重定向到博文() 改为加载文章页；
