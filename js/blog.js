@@ -307,7 +307,8 @@ async function 渲染文章列表(u) {
 			所有文章信息 = j;
 			let 所有标签 = new Set(),
 				限定标签 = u.searchParams.get("tag"),
-				待添加 = [];
+				待添加 = [],
+				骨架屏已移除 = false;
 			for (let i = 0; i < j.length; i++) {
 				const _通用计数器 = 通用计数器++;
 				console.time(`渲染文章列表 id:${_通用计数器}`);
@@ -375,9 +376,10 @@ async function 渲染文章列表(u) {
 				});
 				//#endregion
 
-				if (i === 0) {
+				if (!骨架屏已移除) {
 					gd("正在加载文章提示")?.replaceWith(sect);
 					await schedulerYield();
+					骨架屏已移除 = true;
 				} else 待添加.push(sect);
 
 				// console.log(_通用计数器, 文章);
