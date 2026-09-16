@@ -30,56 +30,58 @@ async function 加载模块() {
 	}
 	路径 = 路径2;
 }
+/** 动态加载内容缓存：键为「清理后的路径 + 查询字符串」，值为匹配到的正文与标题；仅存于内存，页面关闭时随会话销毁 */
+const 动态加载缓存 = /** @type {Map<string, { 正文: string, 标题: string }>} */ (new Map());
 /** @param {{ href: string; popstate?: boolean, replaceState?: boolean }} 元素 */
 function 动态加载(元素) {
 	if (正在动态加载) {
 		open(元素.href, "_self");
 		return 显示或隐藏进度条(false);
 	}
+	const 目标url = new URL(元素.href, location.href),
+		键 = 清理路径(目标url.pathname) + 目标url.search;
 	正在动态加载 = true;
 	已触发动态加载 = true;
 	显示或隐藏进度条(true);
 	gd("robots", true)?.setAttribute("content", "");
+
+	/** 将取得的页面正文应用到当前页面：更新历史状态、标题、正文并加载模块 @param {string} 正文 @param {string} 标题 */
+	const 应用正文 = (正文, 标题) => {
+		if (元素.replaceState) history.replaceState({ 路径: 键 }, "", 元素.href);
+		else if (!元素.popstate) history.pushState({ 路径: 键 }, "", 元素.href);
+		document.title = 标题 || "dsy4567 的小站";
+		dispatchEvent(URL发生变化事件);
+		try {
+			let 右 = qs("main .右", true);
+			if (!右) return;
+			右.innerHTML = 正文;
+			加载模块();
+
+			正在动态加载 = false;
+			渲染图标();
+		} catch (e) {
+			console.error(e);
+			open(元素.href, "_self");
+			显示或隐藏进度条(false);
+		}
+	};
+
+	// 命中缓存则不再发起请求
+	const 缓存 = 动态加载缓存.get(键);
+	if (缓存) return 应用正文(缓存.正文, 缓存.标题);
+
 	fetch(元素.href)
 		.then(res => res.text())
-		.then(async html => {
+		.then(html => {
 			let m = html.match(/<!-- BEGIN MAIN -->.+<!-- END MAIN -->/s),
 				mt = html.match(/<title>.+<\/title>/s);
 			if (!m) throw new Error("动态加载失败: 匹配结果为空");
-			let u = new URL(元素.href, location.href);
-			if (元素.replaceState)
-				history.replaceState(
-					{
-						路径: 清理路径(u.pathname) + u.search,
-					},
-					"",
-					元素.href
-				);
-			else if (!元素.popstate)
-				history.pushState(
-					{
-						路径: 清理路径(u.pathname) + u.search,
-					},
-					"",
-					元素.href
-				);
-			document.title = mt
-				? mt[0].replaceAll("<title>", "").replaceAll("</title>", "")
-				: "dsy4567 的小站";
-			dispatchEvent(URL发生变化事件);
-			try {
-				let 右 = qs("main .右", true);
-				if (!右) return;
-				右.innerHTML = m[0];
-				加载模块();
-
-				正在动态加载 = false;
-				渲染图标();
-			} catch (e) {
-				console.error(e);
-				open(元素.href, "_self");
-				显示或隐藏进度条(false);
-			}
+			const 条目 = {
+				正文: m[0],
+				标题: mt ? mt[0].replaceAll("<title>", "").replaceAll("</title>", "") : "",
+			};
+			动态加载缓存.set(键, 条目);
+			应用正文(条目.正文, 条目.标题);
 		})
 		.catch(e => {
 			console.error(e);
