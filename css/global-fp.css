@@ -284,9 +284,9 @@ blockquote {
 code {
 	background-color: var(--overlay);
 	border: 1px solid transparent;
-	border-radius: var(--border-radius);
+	border-radius: 6px;
 	font-family: "Source Code Pro", monospace;
-	padding: 1px;
+	padding: 2px;
 }
 pre {
 	background-color: transparent;
