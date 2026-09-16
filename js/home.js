@@ -26,6 +26,9 @@ const 标点符号正则 = /[\p{P}\p{S}]/u;
 /** 已完成加载的 1024px 大封面地址缓存：换页重渲染时可直接显示大图，避免先糊后清 */
 const 大封面已加载 = new Set();
 
+/** 排行项不在视口内（含被排行容器滚动裁剪）时暂停其封面平移动画，回到视口恢复（懒创建，换页后逐项重新观察） */
+let /** @type {IntersectionObserver | null} */ 排行可见性观察器 = null;
+
 /** 将排行项映射为播放列表使用的歌单结构（排行数据无 mv 字段，统一置 0） */
 function 排行项转歌单(/** @type {排行歌曲项} */ 项) {
 	const 歌手 = 项.artists.map(歌手信息 => 歌手信息.artistName).join(" / ");
@@ -211,6 +214,14 @@ function 渲染最近在听() {
 		排行片段.append(项元素);
 	}
 	排行容器.append(排行片段);
+	// 换页会重建正文：先解除旧项的观察，再逐项观察；不在视口内的项加类暂停其封面动画
+	if (!排行可见性观察器)
+		排行可见性观察器 = new IntersectionObserver(条目列表 => {
+			for (const 条目 of 条目列表)
+				条目.target.classList.toggle("暂停动画", !条目.isIntersecting);
+		});
+	排行可见性观察器.disconnect();
+	for (const 项元素 of 排行容器.children) 排行可见性观察器.observe(项元素);
 	const 定位并播放 = (/** @type {Event} */ 事件) => {
 		if (!(事件.target instanceof HTMLElement)) return;
 		const 项元素 = 事件.target.closest("[data-song-id]");

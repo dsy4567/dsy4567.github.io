@@ -136,6 +136,10 @@ main、左右栏
 	html {
 		scroll-behavior: auto !important;
 	}
+
+	#网易云音乐-最近在听 .播放排行 > * > .封面 {
+		animation: none;
+	}
 }
 
 /* ==================== ::* ==================== */
