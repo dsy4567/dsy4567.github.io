@@ -23,6 +23,9 @@ let /** @type {最近聆听排行数据 | null} */ 排行原始数据 = null,
 /** 全/半角标点与符号，用于无副歌数据时挑选“干净”的歌词行 */
 const 标点符号正则 = /[\p{P}\p{S}]/u;
 
+/** 已完成加载的 1024px 大封面地址缓存：换页重渲染时可直接显示大图，避免先糊后清 */
+const 大封面已加载 = new Set();
+
 /** 将排行项映射为播放列表使用的歌单结构（排行数据无 mv 字段，统一置 0） */
 function 排行项转歌单(/** @type {排行歌曲项} */ 项) {
 	const 歌手 = 项.artists.map(歌手信息 => 歌手信息.artistName).join(" / ");
@@ -170,10 +173,26 @@ function 渲染最近在听() {
 		if (项.picUrl) {
 			const 封面 = ce("img");
 			封面.className = "封面";
-			封面.src = 项.picUrl.replace("http://", "https://") + "?param=300y300";
+			const 封面地址 = 项.picUrl.replace("http://", "https://");
+			// 封面铺满整行，16px 小图放大严重模糊：先用小图立即占位，再异步换入 1024px 大图
+			封面.src = 封面地址 + "?param=16y16";
 			封面.alt = "";
 			封面.loading = "lazy";
 			封面.decoding = "async";
+			const 大图地址 = 封面地址 + "?param=1024y1024";
+			if (大封面已加载.has(大图地址)) 封面.src = 大图地址;
+			// 小图带 lazy，其加载完成即代表该行接近视口，此时才启动大图请求，避免离屏浪费带宽
+			else
+				封面.onload = () => {
+					封面.onload = null; // 避免重复触发
+					const 大图 = new Image();
+					大图.onload = () => {
+						大封面已加载.add(大图地址);
+						// 换页会重建列表，此时元素可能已脱离文档
+						if (封面.isConnected) 封面.src = 大图地址;
+					};
+					大图.src = 大图地址;
+				};
 			项元素.append(封面);
 		}
 		const 歌曲信息 = ce("div");
