@@ -53,6 +53,8 @@ function 选取歌词行() {
 		console.warn(e);
 		return null;
 	}
+
+	// 有副歌字段-选取副歌部分前5句
 	const 副歌起始毫秒 = 排行原始数据?.first_chorus_raw?.chorus?.[0]?.startTime;
 	if (排行原始数据?.first_chorus_raw?.code === 200 && typeof 副歌起始毫秒 === "number") {
 		// 副歌时间为毫秒，歌词行时间为秒
@@ -65,6 +67,7 @@ function 选取歌词行() {
 			if (行.length) return 行;
 		}
 	}
+	// 无副歌字段-从头开始第一组连续 5 句不含全/半角标点的歌词
 	const 所有行 = 脚本.map(行 => 行.text.trim()).filter(Boolean);
 	for (let i = 0; i + 5 <= 所有行.length; i++)
 		if (所有行.slice(i, i + 5).every(行 => !标点符号正则.test(行)))
@@ -230,14 +233,15 @@ async function 获取并渲染最近在听() {
 
 export function main() {
 	显示或隐藏进度条(false);
-	if (!已注册排行加载) {
-		已注册排行加载 = true;
-		延迟执行("关键任务完成", 获取并渲染最近在听, 3);
-	}
 	if (!location.hash && 已触发动态加载)
 		qs("main .右")?.scrollIntoView({
 			behavior: "smooth",
 		});
+
+	if (!已注册排行加载) {
+		已注册排行加载 = true;
+		延迟执行("关键任务完成", 获取并渲染最近在听, 3);
+	}
 	// 动态加载换页会重建正文，每次进入首页都需用缓存重新渲染
 	渲染最近在听();
 }
