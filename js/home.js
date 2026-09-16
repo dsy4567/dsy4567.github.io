@@ -218,10 +218,10 @@ function 渲染最近在听() {
 	if (!排行可见性观察器)
 		排行可见性观察器 = new IntersectionObserver(条目列表 => {
 			for (const 条目 of 条目列表)
-				条目.target.classList.toggle("暂停动画", !条目.isIntersecting);
+				条目.target.classList.toggle("不可见", !条目.isIntersecting);
 		});
 	排行可见性观察器.disconnect();
-	for (const 项元素 of 排行容器.children) 排行可见性观察器.observe(项元素);
+	排行可见性观察器.observe(排行容器);
 	const 定位并播放 = (/** @type {Event} */ 事件) => {
 		if (!(事件.target instanceof HTMLElement)) return;
 		const 项元素 = 事件.target.closest("[data-song-id]");
