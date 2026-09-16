@@ -60,6 +60,10 @@ type 最近聆听排行数据 = {
 		code?: number;
 		data?: {
 			type?: string;
+			/** 统计起始时间（毫秒时间戳，东八区零点） */
+			startTime?: number;
+			/** 统计结束时间（毫秒时间戳，东八区零点） */
+			endTime?: number;
 			songItems?: 排行歌曲项[];
 		};
 	};

@@ -29,6 +29,11 @@ const 大封面已加载 = new Set();
 /** 排行项不在视口内（含被排行容器滚动裁剪）时暂停其封面平移动画，回到视口恢复（懒创建，换页后逐项重新观察） */
 let /** @type {IntersectionObserver | null} */ 排行可见性观察器 = null;
 
+/** 将毫秒时间戳转为东八区日期文本（YYYY-MM-DD）；数据时间戳均为东八区整点，直接偏移计算，避免受访客本地时区影响 */
+function 毫秒转东八区日期(/** @type {number} */ 毫秒) {
+	return new Date(毫秒 + 8 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
 /** 将排行项映射为播放列表使用的歌单结构（排行数据无 mv 字段，统一置哨兵值 -0x66ccff，ncm.js 播放时会经歌曲详情接口补取真实 mv id） */
 function 排行项转歌单(/** @type {排行歌曲项} */ 项) {
 	const 歌手 = 项.artists.map(歌手信息 => 歌手信息.artistName).join(" / ");
@@ -161,6 +166,14 @@ function 渲染最近在听() {
 	/** @type {HTMLElement | null} */
 	const 排行容器 = 模块.querySelector(".播放排行");
 	if (!排行容器) return;
+	// 统计范围精确到日，写入 CSS 变量交给 .播放排行::before 文案展示（值含引号，content 可直接引用）
+	const 起始毫秒 = 排行原始数据?.rank_raw?.data?.startTime;
+	const 结束毫秒 = 排行原始数据?.rank_raw?.data?.endTime;
+	if (typeof 起始毫秒 === "number" && typeof 结束毫秒 === "number")
+		排行容器.style.setProperty(
+			"--date-range",
+			`"—— ${毫秒转东八区日期(起始毫秒)} ~ ${毫秒转东八区日期(结束毫秒)} | 双击以播放 ——"`
+		);
 	排行容器.textContent = "";
 	// 用文档片段收集后一次性插入，避免逐项写入已连接容器引发多次样式失效
 	const 排行片段 = document.createDocumentFragment();

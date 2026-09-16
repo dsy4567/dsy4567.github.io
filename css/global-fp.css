@@ -651,7 +651,8 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 	overflow: hidden;
 }
 #网易云音乐-最近在听 .播放排行::before {
-	content: "——双击以播放——";
+	/* 文案由 home.js 按统计数据起止时间（精确到日）写入 --date-range，无数据时退回操作提示 */
+	content: var(--date-range, "—— 双击以播放 ——");
 	display: block;
 	font-size: small;
 	width: 100%;
