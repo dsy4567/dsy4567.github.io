@@ -467,7 +467,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 	padding: 8px;
 	position: absolute;
 	top: 38px;
-	left: -28px;
+	left: -29px;
 	width: calc(var(--container-width));
 	height: 160px;
 	max-height: calc(25vh - 16px);
