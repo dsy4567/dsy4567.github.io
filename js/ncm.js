@@ -9,6 +9,9 @@
 // @ts-check
 "use strict";
 
+/** mv 字段哨兵值：排行数据等来源无 mv 信息时填充，真实 mv id 恒为正数（见 home.js 的 排行项转歌单） */
+const 无mv哨兵 = -0x66ccff;
+
 // @ts-ignore
 let /** @type {HTMLDivElement} */ 网易云音乐元素 = gd("网易云音乐", true),
 	// @ts-ignore
@@ -86,6 +89,7 @@ let 网易云音乐 = {
 				return 歌曲数据?.url?.replace("http://", "https://");
 			return await 网易云音乐.获取mv地址(id);
 		} catch (e) {
+			console.error(e);
 			return `/404.html?failNcmId=${id}`;
 		}
 	},
@@ -96,6 +100,10 @@ let 网易云音乐 = {
 	/** 获取歌曲对应 mv 清晰度最低一档的播放地址 */
 	async 获取mv地址(/** @type {number} */ id) {
 		let mv = 网易云音乐.歌单[网易云音乐.歌单索引[id]].mv;
+		// mv 为哨兵值（来源数据无 mv 字段）时，经歌曲详情接口补取真实 mv id
+		if (mv === 无mv哨兵)
+			mv = (await 网易云音乐.请求接口(`/song/detail?ids=${id}`))?.songs?.[0]?.mv ?? 0;
+		if (mv === 0) throw new Error("歌曲无 mv");
 		let 最小分辨率 = (await 网易云音乐.请求接口(`/mv/detail?mvid=${mv}`))?.data?.brs?.[0]?.br;
 		return (await 网易云音乐.请求接口(`/mv/url?id=${mv}&r=${最小分辨率}`))?.data?.url?.replace(
 			"http://",

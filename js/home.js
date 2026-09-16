@@ -29,7 +29,7 @@ const 大封面已加载 = new Set();
 /** 排行项不在视口内（含被排行容器滚动裁剪）时暂停其封面平移动画，回到视口恢复（懒创建，换页后逐项重新观察） */
 let /** @type {IntersectionObserver | null} */ 排行可见性观察器 = null;
 
-/** 将排行项映射为播放列表使用的歌单结构（排行数据无 mv 字段，统一置 0） */
+/** 将排行项映射为播放列表使用的歌单结构（排行数据无 mv 字段，统一置哨兵值 -0x66ccff，ncm.js 播放时会经歌曲详情接口补取真实 mv id） */
 function 排行项转歌单(/** @type {排行歌曲项} */ 项) {
 	const 歌手 = 项.artists.map(歌手信息 => 歌手信息.artistName).join(" / ");
 	return {
@@ -39,7 +39,7 @@ function 排行项转歌单(/** @type {排行歌曲项} */ 项) {
 		专辑: 项.albumName || "",
 		封面: 项.picUrl ? 项.picUrl.replace("http://", "https://") : "",
 		id: 项.songId,
-		mv: 0,
+		mv: -0x66ccff,
 	};
 }
 
