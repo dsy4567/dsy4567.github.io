@@ -381,6 +381,10 @@ hr {
 	/* margin-bottom: 0px; */
 }
 
+.暂停动画 {
+	animation-play-state: paused;
+}
+
 .横幅 {
 	background-color: var(--surface-2);
 	font-size: larger;
