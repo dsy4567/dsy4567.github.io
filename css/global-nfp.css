@@ -627,6 +627,15 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	max-height: 50vh;
 	user-select: none;
 }
+#网易云音乐-最近在听 .播放排行::before {
+	content: "——双击以播放——";
+	display: block;
+	font-size: small;
+	text-align: center;
+	width: 100%;
+	margin-top: 4px;
+	opacity: 0.7;
+}
 #网易云音乐-最近在听 .播放排行 > * {
 	/* --progress: 90%; */
 	border: 1px solid var(--accent-color-transparent);
