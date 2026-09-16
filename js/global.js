@@ -10,8 +10,8 @@
 "use strict";
 
 // for debug
-// console.time = () => {};
-// console.timeEnd = () => {};
+console.time = () => {};
+console.timeEnd = () => {};
 
 //#region 全局工具函数
 let /** @type {Record<string, HTMLElement | null>} */ gd缓存 = {},
