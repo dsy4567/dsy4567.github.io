@@ -156,6 +156,8 @@ function 渲染最近在听() {
 	const 排行容器 = 模块.querySelector(".播放排行");
 	if (!排行容器) return;
 	排行容器.textContent = "";
+	// 用文档片段收集后一次性插入，避免逐项写入已连接容器引发多次样式失效
+	const 排行片段 = document.createDocumentFragment();
 	// 第 1 名恒为 100%，靠后按播放次数等比递减
 	const 最大播放次数 = Math.max(...排行歌曲.map(项 => 项.playCount || 0), 1);
 	for (const 项 of 排行歌曲) {
@@ -187,8 +189,9 @@ function 渲染最近在听() {
 		播放次数.className = "播放次数";
 		播放次数.textContent = "" + (项.playCount ?? 0);
 		项元素.append(歌曲信息, 播放次数);
-		排行容器.append(项元素);
+		排行片段.append(项元素);
 	}
+	排行容器.append(排行片段);
 	const 定位并播放 = (/** @type {Event} */ 事件) => {
 		if (!(事件.target instanceof HTMLElement)) return;
 		const 项元素 = 事件.target.closest("[data-song-id]");
