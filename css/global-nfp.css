@@ -679,7 +679,8 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 #网易云音乐-最近在听 .播放排行 > *.暂停动画 > .封面 {
 	animation-play-state: paused !important;
 }
-#网易云音乐-最近在听 .播放排行 > *:hover > .封面 {
+#网易云音乐-最近在听 .播放排行 > *:hover > .封面,
+#网易云音乐-最近在听 .播放排行 > *:focus-visible > .封面 {
 	filter: brightness(1);
 }
 #网易云音乐-最近在听 .播放排行 > *::after {
