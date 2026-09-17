@@ -229,6 +229,9 @@ a:focus-visible {
 	text-decoration: 1px underline var(--link-color);
 	text-underline-offset: 0.2em;
 }
+a:has(img, svg) {
+	text-decoration: none !important;
+}
 a.外链::after {
 	content: "";
 }
