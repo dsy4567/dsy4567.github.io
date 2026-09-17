@@ -490,6 +490,7 @@ main > #分界线 {
 	top: 0;
 	width: 4px;
 	height: calc(100vh - 16px);
+	transition: 0.3s background-color, 0.3s border;
 }
 
 main > .右 > section:nth-child(1),

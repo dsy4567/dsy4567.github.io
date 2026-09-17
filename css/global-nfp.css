@@ -247,6 +247,14 @@ body:has(:focus-visible) spoiler {
 	color: #fff !important;
 }
 
+html,
+body,
+div,
+section,
+nav {
+	transition: 0.3s background-color;
+}
+
 /* ==================== 通用工具类 class ==================== */
 .横幅 {
 	animation-duration: 0.3s;
@@ -373,6 +381,15 @@ body.宽屏 > main .右 {
 }
 
 /* ==================== 左栏 ==================== */
+main > .左 {
+	transition:
+		0.3s background-color,
+		0.3s transform;
+}
+
+section#我 > img {
+	transition: 0.3s transform;
+}
 
 /* ==================== 页脚 ==================== */
 
@@ -410,6 +427,15 @@ div#侧边按钮容器 > .拥有更多选项:hover,
 div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) {
 	border-bottom-left-radius: 0;
 	z-index: 1;
+}
+
+div#侧边按钮容器 > *,
+div#侧边按钮容器 > .拥有更多选项,
+div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
+	transition:
+		0.3s border-radius,
+		0.3s transform,
+		0.3s opacity;
 }
 
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
@@ -699,6 +725,7 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	flex-wrap: nowrap;
 	justify-content: space-between;
 	align-items: center;
+	transition: 0.3s filter;
 }
 #网易云音乐-最近在听 .播放排行 > *:hover {
 	border: 1px solid var(--accent-color);
@@ -727,6 +754,9 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	transform: translateY(calc((var(--item-height) - 100%) / 2));
 	z-index: 0;
 	pointer-events: none;
+	transition:
+		0.3s background-color,
+		0.3s filter;
 }
 /* 封面平移动画（translateY 自上而下、再自下而上循环）由 home.js 用 Web Animations API 创建：
    绕过 CSS 动画便于按公共相位基准对齐各封面进度，并用 pause()/play() 直接随可视性暂停恢复；
@@ -740,6 +770,12 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	border-radius: var(--border-radius);
 	width: var(--progress);
 	z-index: 2;
+	transition:
+		0.3s background-color,
+		0.3s filter;
+}
+#网易云音乐-最近在听 .播放排行 > *:hover::after {
+	background-color: transparent;
 }
 #网易云音乐-最近在听 .播放排行 > * > .歌曲信息,
 #网易云音乐-最近在听 .播放排行 > * > .播放次数 {

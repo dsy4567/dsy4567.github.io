@@ -497,23 +497,6 @@ fetch("https://api.github.com/users/dsy4567")
 			});
 			//#endregion
 
-			//#region 初始化图标、事件，延后启用动画
-			let style = ce("style");
-			style.innerHTML = `a,
-    button,
-    div,
-    section,
-    img,
-    nav,
-    li,
-	.更多选项 {
-        transition: 0.3s border-radius, 0.3s backdrop-filter, 0.3s background-image,
-		0.3s transform, 0.3s box-shadow, 0.3s filter, 0.3s background-color,
-		0.3s opacity, 0.3s max-height;
-    }`;
-			document.head.append(style);
-			//#endregion
-
 			//#region 引入统计脚本
 			import("./analytics.js");
 			//#endregion
