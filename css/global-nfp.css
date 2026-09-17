@@ -721,9 +721,8 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 #网易云音乐-最近在听 .播放排行 > * > .封面 {
 	--item-height: 124px;
 	filter: brightness(0.3);
-	/* 封面按行宽等比撑开（网易云封面为正方形，高度远超 50px 行高），超出行高的部分由行内 overflow: hidden 裁剪：
-	   由上到下缓慢平移，再由下到上，循环；transform 平移走合成器，避免 object-position 逐帧重绘 */
-	animation: 封面垂直平移 15s ease-in-out infinite alternate;
+	/* 封面按行宽等比撑开（网易云封面为正方形，高度远超 50px 行高），超出行高的部分由行内 overflow: hidden 裁剪；
+	   平移动画在大图（1024px）加载完毕（.大图就绪）后才启用，占位用的 16px 小图保持居中静止 */
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -733,6 +732,13 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	transform: translateY(calc((var(--item-height) - 100%) / 2));
 	z-index: 0;
 	pointer-events: none;
+}
+/* 大图（1024px）加载完毕（.大图就绪）才启用平移动画：由上到下缓慢平移，再由下到上，循环；
+   transform 平移走合成器，避免 object-position 逐帧重绘。
+   注意与不可见检测的竞争：下方 animation 简写会隐式把 animation-play-state 重置为 running，
+   若大图恰在排行不可见时才加载完，简写会覆盖暂停声明，故 .不可见 暂停规则必须保持 !important */
+#网易云音乐-最近在听 .播放排行 > * > .封面.大图就绪 {
+	animation: 封面垂直平移 15s ease-in-out infinite alternate;
 }
 #网易云音乐-最近在听 .播放排行.不可见 > * > .封面 {
 	animation-play-state: paused !important;
