@@ -293,6 +293,15 @@
 			]
 		},
 		{
+			"source": "/json/ncm-listen-rank.json",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=3600, must-revalidate"
+				}
+			]
+		},
+		{
 			"source": "/json/theme.json",
 			"headers": [
 				{
@@ -403,6 +412,24 @@
 			]
 		},
 		{
+			"source": "/js/home.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/js/doc-start.js",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
 			"source": "/json/blog.json",
 			"headers": [
 				{
@@ -412,7 +439,16 @@
 			]
 		},
 		{
-			"source": "/css/global.css",
+			"source": "/css/global-fp.css",
+			"headers": [
+				{
+					"key": "Cache-Control",
+					"value": "public, max-age=300, must-revalidate"
+				}
+			]
+		},
+		{
+			"source": "/css/global-nfp.css",
 			"headers": [
 				{
 					"key": "Cache-Control",
