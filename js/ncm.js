@@ -103,7 +103,7 @@ let 网易云音乐 = {
 		// mv 为哨兵值（来源数据无 mv 字段）时，经歌曲详情接口补取真实 mv id
 		if (mv === 无mv哨兵)
 			mv = (await 网易云音乐.请求接口(`/song/detail?ids=${id}`))?.songs?.[0]?.mv ?? 0;
-		if (mv === 0) throw new Error("歌曲无 mv");
+		if (mv === 0) throw new Error("vip 歌曲且无 mv " + id);
 		let 最小分辨率 = (await 网易云音乐.请求接口(`/mv/detail?mvid=${mv}`))?.data?.brs?.[0]?.br;
 		return (await 网易云音乐.请求接口(`/mv/url?id=${mv}&r=${最小分辨率}`))?.data?.url?.replace(
 			"http://",
