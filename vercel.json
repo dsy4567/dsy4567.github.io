@@ -459,7 +459,7 @@
 		}
 	],
 	"framework": null,
-	"buildCommand": null,
-	"installCommand": null,
+	"buildCommand": "",
+	"installCommand": "",
 	"outputDirectory": "."
 }
