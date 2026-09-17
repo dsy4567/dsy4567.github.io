@@ -190,25 +190,23 @@ function 渲染最近在听() {
 			const 封面 = ce("img");
 			封面.className = "封面";
 			const 封面地址 = 项.picUrl.replace("http://", "https://");
-			// 封面铺满整行，16px 小图放大严重模糊：先用小图立即占位，再异步换入 1024px 大图
+			// 封面铺满整行，16px 小图放大严重模糊：小图立即占位，大图并行请求，加载完成后换入
 			封面.src = 封面地址 + "?param=16y16";
 			封面.alt = "";
 			封面.loading = "lazy";
 			封面.decoding = "async";
 			const 大图地址 = 封面地址 + "?param=1024y1024";
 			if (大封面已加载.has(大图地址)) 封面.src = 大图地址;
-			// 小图带 lazy，其加载完成即代表该行接近视口，此时才启动大图请求，避免离屏浪费带宽
-			else
-				封面.onload = () => {
-					封面.onload = null; // 避免重复触发
-					const 大图 = new Image();
-					大图.onload = () => {
-						大封面已加载.add(大图地址);
-						// 换页会重建列表，此时元素可能已脱离文档
-						if (封面.isConnected) 封面.src = 大图地址;
-					};
-					大图.src = 大图地址;
+			else {
+				const 大图 = new Image();
+				大图.decoding = "async";
+				大图.onload = () => {
+					大封面已加载.add(大图地址);
+					// 换页会重建列表，此时元素可能已脱离文档
+					if (封面.isConnected) 封面.src = 大图地址;
 				};
+				大图.src = 大图地址;
+			}
 			项元素.append(封面);
 		}
 		const 歌曲信息 = ce("div");
