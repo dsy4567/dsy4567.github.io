@@ -23,10 +23,19 @@ let /** @type {最近聆听排行数据 | null} */ 排行原始数据 = null,
 /** 全/半角标点与符号，用于无副歌数据时挑选“干净”的歌词行 */
 const 标点符号正则 = /[\p{P}\p{S}]/u;
 
-/** 已完成加载的 1024px 大封面地址缓存：换页重渲染时可直接显示大图，避免先糊后清；也是封面平移动画的启用依据 */
+/** 已完成加载的 640px 大封面地址缓存：换页重渲染时可直接显示大图，避免先糊后清 */
 const 大封面已加载 = new Set();
 
-/** 排行项不在视口内（含被排行容器滚动裁剪）时暂停其封面平移动画，回到视口恢复（懒创建，换页后逐项重新观察） */
+/** 正在加载的大图：持有强引用直至加载结束，游离的 Image 若无人引用可能被回收而中断加载，封面将永远等不到大图、动画也就无从启动 */
+const 大图加载中 = new Set();
+
+/** 封面平移动画的一个半周期时长（毫秒）：正放、倒放各一次构成一个完整往返 */
+const 封面动画半周期毫秒 = 15000;
+
+/** 封面平移动画的公共相位基准毫秒（首个动画启动时确立）：所有封面据此对齐进度 */
+let 动画基准毫秒 = 0;
+
+/** 逐项观察排行项：首次可见时才加载大图、启动封面动画；不在视口内（含被滚动裁剪）时暂停其动画，回到视口恢复（懒创建，换页后逐项重新观察） */
 let /** @type {IntersectionObserver | null} */ 排行可见性观察器 = null;
 
 /** 将毫秒时间戳转为东八区日期文本（YYYY-MM-DD）；数据时间戳均为东八区整点，直接偏移计算，避免受访客本地时区影响 */
@@ -51,15 +60,16 @@ function 排行项转歌单(/** @type {排行歌曲项} */ 项) {
 /**
  * 选取用于展示的歌词行：优先取副歌（first_chorus_raw）起始起的连续 5 句；
  * 副歌数据无效时兜底取从头开始第一组连续 5 句不含全/半角标点的歌词
- * @returns {string[] | null} 选出的歌词行，无歌词时返回 null
+ * @returns {Promise<string[] | null>} 选出的歌词行，无歌词时返回 null
  */
-function 选取歌词行() {
+async function 选取歌词行() {
 	const 歌词文本 = 排行原始数据?.first_lyric_raw?.lrc?.lyric;
 	if (typeof 歌词文本 !== "string" || !歌词文本.includes("[")) return null;
 	let 脚本;
 	try {
 		// 结尾追加哨兵行，保证最后一句歌词有结束时间（与 ncm.js 的用法一致）
 		脚本 = lrcParser(歌词文本 + "[999:59.99]\n").scripts;
+		await schedulerYield();
 	} catch (e) {
 		console.warn(e);
 		return null;
@@ -87,7 +97,7 @@ function 选取歌词行() {
 }
 
 /** 将选出的歌词渲染进容器（原占位内容被整体替换） */
-function 渲染精选歌词(/** @type {HTMLElement} */ 容器, /** @type {精选歌词} */ 歌词) {
+async function 渲染精选歌词(/** @type {HTMLElement} */ 容器, /** @type {精选歌词} */ 歌词) {
 	容器.textContent = "";
 	for (const 行 of 歌词.行) {
 		const 单句 = ce("span");
@@ -99,6 +109,8 @@ function 渲染精选歌词(/** @type {HTMLElement} */ 容器, /** @type {精选
 	歌曲信息.className = "歌曲信息";
 	歌曲信息.textContent = `—— ${歌词.歌手}《${歌词.歌名}》`;
 	容器.append(歌曲信息);
+
+	await schedulerYield();
 }
 
 /** 加载、选取并渲染精选歌词；失败或无歌词时隐藏容器 */
@@ -112,7 +124,7 @@ async function 填充精选歌词() {
 	if (精选歌词缓存) return 渲染精选歌词(容器, 精选歌词缓存);
 	try {
 		await 添加脚本("/js/lib/lrc-parser.js");
-		const 行 = 选取歌词行();
+		const 行 = await 选取歌词行();
 		if (!行) throw new Error("无可展示的歌词");
 		精选歌词缓存 = {
 			行,
@@ -125,6 +137,8 @@ async function 填充精选歌词() {
 		精选歌词缓存 = "失败";
 		容器.remove();
 	}
+
+	await schedulerYield();
 }
 
 /**
@@ -155,7 +169,72 @@ async function 处理排行点击(/** @type {number} */ 歌曲id) {
 	}
 }
 
-function 渲染最近在听() {
+/** 当前公共相位（毫秒）：相对基准已流逝的时间，按一个完整往返取模，各封面据此对齐到同一进度 */
+function 封面动画相位() {
+	if (!动画基准毫秒) 动画基准毫秒 = performance.now();
+	return (performance.now() - 动画基准毫秒) % (封面动画半周期毫秒 * 2);
+}
+
+/**
+ * 创建封面平移动画：改用 Web Animations API 而非 CSS 动画，以便用 currentTime 精确对齐公共相位、
+ * 直接控制暂停与播放（无需再权衡 animation 简写与 animation-play-state 的优先级）
+ * @returns {Animation | null} 用户偏好减少动效时返回 null，此时保持 CSS 的居中静止态
+ */
+function 创建封面动画(/** @type {HTMLImageElement} */ 封面) {
+	// WAAPI 动画不受 CSS 媒体查询约束，需在 JS 侧自行尊重该偏好
+	if (matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
+	// 行高基准从计算样式读取，保持 CSS 为唯一数据源；100% 为封面自身高度，交给浏览器按当前布局解析
+	const 行高基准 = getComputedStyle(封面).getPropertyValue("--item-height").trim();
+	return 封面.animate(
+		[{ transform: "translateY(0px)" }, { transform: `translateY(calc(${行高基准} - 100%))` }],
+		{
+			duration: 封面动画半周期毫秒,
+			easing: "ease-in-out",
+			direction: "alternate",
+			iterations: Infinity,
+		}
+	);
+}
+
+/** 将封面动画对齐到公共相位并播放（尚无动画则创建）；暂停与否一律由观察器按最新可视状态决定，这里不读任何可视状态快照 */
+function 播放封面动画(/** @type {HTMLImageElement} */ 封面) {
+	const 动画 = 封面.getAnimations().at(0) || 创建封面动画(封面);
+	if (!动画) return;
+	// 暂停期间时间照常流逝，重新对齐相位可避免恢复播放后进度落后于其他封面
+	动画.currentTime = 封面动画相位();
+	动画.play();
+}
+
+/** 首次可见后加载大图：完成后换入大图，启动动画并让观察器按最新可视状态重新判定 */
+function 加载封面大图(/** @type {HTMLImageElement} */ 封面) {
+	const 大图地址 = 封面.dataset.大图地址;
+	if (!大图地址) return;
+	delete 封面.dataset.大图地址;
+	const 大图 = new Image();
+	大图.decoding = "async";
+	大图加载中.add(大图);
+	const 结束加载 = () => 大图加载中.delete(大图);
+	大图.onerror = 结束加载;
+	大图.onload = () => {
+		结束加载();
+		大封面已加载.add(大图地址);
+		// 换页会重建列表，此时元素可能已脱离文档
+		if (!封面.isConnected) return;
+		封面.src = 大图地址;
+		封面.classList.add("大图就绪");
+		播放封面动画(封面);
+		// 重新观察该项：大图就绪可能发生在该项滚出视口之后，此时旧的可视状态已过期，
+		// 重新观察必定换来一次基于最新状态的回调，需要暂停的项由此暂停，可见的项保持播放
+		const 项元素 = 封面.parentElement;
+		if (项元素) {
+			排行可见性观察器?.unobserve(项元素);
+			排行可见性观察器?.observe(项元素);
+		}
+	};
+	大图.src = 大图地址;
+}
+
+async function 渲染最近在听() {
 	const 模块 = gd("网易云音乐-最近在听");
 	if (!模块) return;
 	if (!排行有效) {
@@ -174,12 +253,19 @@ function 渲染最近在听() {
 			"--date-range",
 			`"—— ${毫秒转东八区日期(起始毫秒)} ~ ${毫秒转东八区日期(结束毫秒)} | 双击以播放 ——"`
 		);
+	// 换页重渲染会丢弃旧列表：先取消其 WAAPI 动画，否则无限动画会继续持有已脱离文档的元素
+	for (const 封面 of 排行容器.querySelectorAll("img.封面"))
+		for (const 动画 of 封面.getAnimations()) 动画.cancel();
 	排行容器.textContent = "";
+	await schedulerYield();
+
 	// 用文档片段收集后一次性插入，避免逐项写入已连接容器引发多次样式失效
 	const 排行片段 = document.createDocumentFragment();
 	// 第 1 名恒为 100%，靠后按播放次数等比递减
 	const 最大播放次数 = Math.max(...排行歌曲.map(项 => 项.playCount || 0), 1);
-	for (const 项 of 排行歌曲) {
+	/** @type {HTMLElement[]} */
+	const 项元素列表 = [];
+	await 批量低阻塞操作(排行歌曲, 项 => {
 		const 项元素 = ce("div");
 		项元素.style.setProperty("--progress", ((项.playCount || 0) / 最大播放次数) * 100 + "%");
 		项元素.tabIndex = 0;
@@ -190,28 +276,19 @@ function 渲染最近在听() {
 			const 封面 = ce("img");
 			封面.className = "封面";
 			const 封面地址 = 项.picUrl.replace("http://", "https://");
-			// 封面铺满整行，16px 小图放大严重模糊：小图立即占位（居中静止），大图并行请求，加载完成后换入并启用平移动画
+			// 封面铺满整行，16px 小图放大严重模糊：lazy 小图立即占位（居中静止），首次可见后再并行请求大图，加载完成后换入并启用平移动画
 			封面.src = 封面地址 + "?param=16y16";
 			封面.alt = "";
 			封面.loading = "lazy";
 			封面.decoding = "async";
-			const 大图地址 = 封面地址 + "?param=1024y1024";
+			const 大图地址 = 封面地址 + "?param=640y640";
 			if (大封面已加载.has(大图地址)) {
+				// 缓存命中：立即换入大图；此刻元素还在文档片段中，动画交由可见性观察器在插入文档后启动
 				封面.src = 大图地址;
 				封面.classList.add("大图就绪");
-			} else {
-				const 大图 = new Image();
-				大图.decoding = "async";
-				大图.onload = () => {
-					大封面已加载.add(大图地址);
-					// 换页会重建列表，此时元素可能已脱离文档
-					if (封面.isConnected) {
-						封面.src = 大图地址;
-						封面.classList.add("大图就绪");
-					}
-				};
-				大图.src = 大图地址;
-			}
+			} else
+				// 暂存大图地址，交由可见性观察器在该项首次可见时发起请求
+				封面.dataset.大图地址 = 大图地址;
 			项元素.append(封面);
 		}
 		const 歌曲信息 = ce("div");
@@ -228,16 +305,28 @@ function 渲染最近在听() {
 		播放次数.textContent = "" + (项.playCount ?? 0);
 		项元素.append(歌曲信息, 播放次数);
 		排行片段.append(项元素);
-	}
+		项元素列表.push(项元素);
+	});
 	排行容器.append(排行片段);
-	// 换页会重建正文：先解除旧项的观察，再逐项观察；不在视口内的项加类暂停其封面动画
+	// 换页会重建正文：先解除旧项的观察，再逐项观察；项首次可见时开始加载大图、启动封面动画
 	if (!排行可见性观察器)
 		排行可见性观察器 = new IntersectionObserver(条目列表 => {
-			for (const 条目 of 条目列表)
-				条目.target.classList.toggle("不可见", !条目.isIntersecting);
+			for (const 条目 of 条目列表) {
+				const 项元素 = 条目.target;
+				const 封面 = 项元素.querySelector("img.封面");
+				if (!(封面 instanceof HTMLImageElement)) continue;
+				// 不可见时暂停（回调只在可视状态变化时下发，据此判定始终有效，无需另存状态快照）
+				if (!条目.isIntersecting) {
+					for (const 动画 of 封面.getAnimations()) 动画.pause();
+					continue;
+				}
+				// 首次可见才请求大图；大图就绪后（含缓存命中）对齐公共相位并播放
+				if (封面.dataset.大图地址) 加载封面大图(封面);
+				else if (封面.classList.contains("大图就绪")) 播放封面动画(封面);
+			}
 		});
 	排行可见性观察器.disconnect();
-	排行可见性观察器.observe(排行容器);
+	for (const 项元素 of 项元素列表) 排行可见性观察器.observe(项元素);
 	const 定位并播放 = (/** @type {Event} */ 事件) => {
 		if (!(事件.target instanceof HTMLElement)) return;
 		const 项元素 = 事件.target.closest("[data-song-id]");
@@ -250,6 +339,8 @@ function 渲染最近在听() {
 		if (事件.key === "Enter") 定位并播放(事件);
 	};
 	排行容器.addEventListener("keyup", 键盘定位并播放);
+
+	await schedulerYield();
 	填充精选歌词();
 }
 
@@ -289,8 +380,8 @@ export function main() {
 
 	if (!已注册排行加载) {
 		已注册排行加载 = true;
-		延迟执行("关键任务完成", 获取并渲染最近在听, 3);
+		延迟执行("DOMContentLoaded", 获取并渲染最近在听, 0);
 	}
 	// 动态加载换页会重建正文，每次进入首页都需用缓存重新渲染
-	渲染最近在听();
+	else 渲染最近在听();
 }
