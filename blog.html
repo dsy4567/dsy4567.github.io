@@ -46,7 +46,12 @@
 
 		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
 		<link rel="modulepreload" href="/js/main.js" />
-		<link rel="modulepreload" href="/js/lib/marked.min.js" />
+		<link
+			rel="preload"
+			href="/js/lib/marked.min.js"
+			as="script"
+			crossorigin="use-credentials"
+		/>
 		<link
 			rel="preload"
 			href="/js/lib/highlight.min.js"
