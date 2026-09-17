@@ -353,6 +353,9 @@ div.通知 {
 
 /* ==================== 导航栏、左右栏 ==================== */
 @media only screen and (max-width: 1000px) {
+	#导航栏{
+			width: calc(100vw - 24px) !important;
+	}
 	#导航栏 > .右 > a svg {
 		display: none;
 	}
@@ -399,8 +402,9 @@ div.通知 {
 
 /* ==================== 导航栏和进度条 ==================== */
 #导航栏 {
-	background-color: var(--surface-1);
-	border-bottom: 1px solid transparent;
+	background-color: transparent;
+	border: 1px solid var(--accent-color-transparent);
+	border-radius: var(--border-radius);
 	color: var(--text-color);
 	display: flex;
 	align-items: center;
@@ -408,8 +412,9 @@ div.通知 {
 	flex-wrap: nowrap;
 	justify-content: space-around;
 	position: sticky;
-	top: 0;
-	width: 100%;
+	top: 8px;
+	width: calc(100vw - 90px - 24px);
+	max-width: calc(1600px - 24px);
 	height: 48px;
 	z-index: 998;
 }
@@ -462,17 +467,16 @@ main > .左 {
 	overflow-y: auto;
 	position: sticky;
 	top: 0;
-	transform: translateY(48px);
+	transform: translateY(16px);
 	width: calc(25% - 5px);
-	max-height: calc(100vh - 69px);
+	max-height: calc(100vh - 21px);
 }
 body.隐藏导航栏 > main > .左 {
 	transform: translateY(0);
-	max-height: calc(100vh - 21px);
 }
 
 main > .右 {
-	margin-top: 48px;
+	margin-top: 16px;
 	width: calc(75% - 5px);
 	min-height: 100vh;
 }
@@ -565,6 +569,7 @@ span#联系方式 > * {
 	margin-bottom: 0;
 	text-align: center;
 	width: 100%;
+	z-index: 1;
 }
 
 /* ==================== 侧边按钮-通用 ==================== */

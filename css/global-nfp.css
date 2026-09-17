@@ -288,12 +288,13 @@ div.通知 {
 		0.3s transform,
 		0.3s box-shadow;
 	transform: translateY(0);
+	backdrop-filter: blur(4px);
 }
 body.顶部 #导航栏 {
-	box-shadow: none;
+	/* box-shadow: none; */
 }
 body.隐藏导航栏 #导航栏 {
-	transform: translateY(-49px);
+	transform: translateY(calc(-50px - 8px));
 	box-shadow: none;
 }
 
