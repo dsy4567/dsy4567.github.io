@@ -796,45 +796,103 @@ async function fetchNcmListenRank() {
 	}
 }
 
+// ==================== 命令行任务选择 ====================
+
+/**
+ * 可用任务表：命令行任务名 → 中文说明（同时用于生成用法提示）
+ * 任务名为英文，便于在终端直接输入
+ */
+const 任务说明 = {
+	blog: "构建博客（文章页面、聚合 JSON、RSS、站点地图与索引页）",
+	playlist: "获取网易云歌单（json/ncm.json）",
+	rank: "获取网易云听歌排行（json/ncm-listen-rank.json）",
+};
+
+/**
+ * 打印命令行用法
+ * @returns {void}
+ */
+function 打印用法() {
+	console.log("用法: node tools/build.js [任务...]");
+	console.log(
+		"不带任务参数时执行全部任务；任务名可省略前导的 - 或 --，如 --rank 与 rank 等价。\n"
+	);
+	console.log("可用任务:");
+	for (const [任务名, 说明] of Object.entries(任务说明))
+		console.log(`  ${任务名.padEnd(10)}${说明}`);
+	console.log("  -h, --help 显示本帮助");
+}
+
+/**
+ * 解析命令行参数，得出本次需要执行的任务集合
+ * @param {string[]} 参数列表 - 命令行参数（不含 node 与脚本路径）
+ * @returns {Set<string>} 待执行的任务名集合
+ */
+function 解析任务参数(参数列表) {
+	if (参数列表.includes("-h") || 参数列表.includes("--help")) {
+		打印用法();
+		process.exit(0);
+	}
+	// 不带参数时执行全部任务，保持与旧行为一致
+	if (参数列表.length === 0) return new Set(Object.keys(任务说明));
+
+	/** @type {Set<string>} */
+	const 任务集 = new Set();
+	for (const 参数 of 参数列表) {
+		const 任务名 = 参数.replace(/^--?/, "");
+		if (!Object.hasOwn(任务说明, 任务名)) {
+			console.error(`未知任务: ${参数}\n`);
+			打印用法();
+			process.exit(1);
+		}
+		任务集.add(任务名);
+	}
+	return 任务集;
+}
+
 // ==================== 主流程 ====================
 
 /**
- * 构建主流程：逐篇构建文章页面并生成聚合文件，最后拉取网易云歌单
+ * 构建主流程：按命令行参数依次执行选定的任务
+ * 不带参数时执行全部任务：构建博客 → 获取网易云歌单 → 获取网易云听歌排行
  * @returns {Promise<void>}
  */
 async function main() {
-	console.log("Syncing file states...");
-	const fileStates = syncFileStates();
+	const 任务集 = 解析任务参数(process.argv.slice(2));
 
-	const template = loadTemplate();
-	const builder = new ArticleBuilder(template);
+	if (任务集.has("blog")) {
+		console.log("Syncing file states...");
+		const fileStates = syncFileStates();
 
-	const entries = fs.readdirSync(CONFIG.blogDir);
-	/** @type {文章元数据[]} 构建完成的文章列表 */
-	const articles = [];
+		const template = loadTemplate();
+		const builder = new ArticleBuilder(template);
 
-	for (const entry of entries) {
-		const article = builder.build(entry);
-		if (!article) continue;
+		const entries = fs.readdirSync(CONFIG.blogDir);
+		/** @type {文章元数据[]} 构建完成的文章列表 */
+		const articles = [];
 
-		console.log(`Building: ${entry}`);
-		const meta = builder.renderPage(article);
-		articles.push({ ...meta, html: article.processedHtml });
+		for (const entry of entries) {
+			const article = builder.build(entry);
+			if (!article) continue;
+
+			console.log(`Building: ${entry}`);
+			const meta = builder.renderPage(article);
+			articles.push({ ...meta, html: article.processedHtml });
+		}
+
+		console.log("Generating aggregate files...");
+		const generator = new SiteGenerator(articles, fileStates);
+		generator.generateJson();
+		// blog.json 已落盘，此时才能基于它同步 blog.html 的内容状态
+		syncBlogPageState(fileStates);
+		generator.generateRss();
+		generator.generateSitemap();
+		generator.generateBlogIndex();
 	}
 
-	console.log("Generating aggregate files...");
-	const generator = new SiteGenerator(articles, fileStates);
-	generator.generateJson();
-	// blog.json 已落盘，此时才能基于它同步 blog.html 的内容状态
-	syncBlogPageState(fileStates);
-	generator.generateRss();
-	generator.generateSitemap();
-	generator.generateBlogIndex();
-
-	await fetchNeteasePlaylist();
-	await fetchNcmListenRank();
+	if (任务集.has("playlist")) await fetchNeteasePlaylist();
+	if (任务集.has("rank")) await fetchNcmListenRank();
 	console.log("Done!");
 }
 
-// main().catch(console.error);
-fetchNcmListenRank();
+main().catch(console.error);
