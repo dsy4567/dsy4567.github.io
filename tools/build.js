@@ -589,12 +589,6 @@ class SiteGenerator {
 				loc: `https://${getDomain("public")}/friends.html`,
 				lastmod: trackedLastmod("friends.html"),
 			},
-			{
-				loc: `https://${getDomain("public")}/game.html`,
-				lastmod: new Date(
-					fs.statSync(path.join(projectRoot, "game.html")).mtime
-				).toISOString(),
-			},
 		];
 		for (const p of staticPages)
 			xml += `    <url>\n        <loc>${p.loc}</loc>\n        <lastmod>${p.lastmod}</lastmod>\n    </url>\n`;
