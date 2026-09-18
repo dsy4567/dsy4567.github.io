@@ -290,12 +290,9 @@ div.通知 {
 
 /* ==================== 导航栏、左右栏 ==================== */
 #导航栏 {
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 	transition:
 		0.3s background-color,
-		0.3s transform,
-		0.3s box-shadow;
-	transform: translateY(0);
+		0.3s transform;
 	backdrop-filter: blur(4px);
 }
 body.顶部 #导航栏 {

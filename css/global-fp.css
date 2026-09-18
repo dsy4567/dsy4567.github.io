@@ -413,6 +413,7 @@ div.通知 {
 	background-color: transparent;
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 	color: var(--text-color);
 	display: flex;
 	align-items: center;
@@ -425,6 +426,7 @@ div.通知 {
 	max-width: calc(1600px - 26px);
 	height: 48px;
 	z-index: 998;
+	transform: translateY(0);
 }
 #导航栏 > .左,
 #导航栏 > .右 {
