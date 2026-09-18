@@ -3,8 +3,285 @@
     <title>博客 | dsy4567 的小站</title>
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html" />
     <link rel="self" type="application/atom+xml" href="https://dsy4567.github.io/rss.xml" />
-    <updated>2025-01-02T12:37:17.008Z</updated>
+    <updated>2026-09-18T17:47:45.128Z</updated>
     <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>
+    <entry>
+        <title>Markdown 特性测试</title>
+        <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/markdown-test/" />
+        <id>markdown-test</id>
+        <published>2026-09-18T17:42:49.000Z</published>
+        <updated>2026-09-18T17:47:45.128Z</updated>
+        <summary>这是一篇用来核对本站 Markdown 渲染效果的隐藏文章，常见的 Markdown 与 HTML 写法各来一份，改样式的时候可以进来看看有没有渲染崩。 本文章由 AI 生成。...</summary>
+        <author>
+            <name>dsy4567</name>
+            <uri>https://dsy4567.github.io/</uri>
+        </author>
+        <category term="Default" />
+        <content type="html" xml:lang="zh-cn">
+            <![CDATA[
+<h1 id="markdown-特性测试">Markdown 特性测试</h1>
+<p>这是一篇用来核对本站 Markdown 渲染效果的隐藏文章，常见的 Markdown 与 HTML 写法各来一份，改样式的时候可以进来看看有没有渲染崩。</p>
+<p>本文章由 AI 生成。</p>
+<!-- more -->
+
+<blockquote>
+<p>本文在 <code>article.json</code> 里写了 <code>"hidden": true</code>，所以不会出现在<a href="/blog.html">博客列表</a>中；
+但 RSS、站点地图与左侧标签列表并不区分隐藏文章，正文里别写见不得人的东西。</p>
+</blockquote>
+<h2 id="标题层级">标题层级</h2>
+<p>一级标题由文章标题自动生成，下面依次是二到六级标题，左侧的「目录」会按这些标题的层级自动生成，标题右侧的 🔗 可以复制锚点链接。</p>
+<h3 id="三级标题">三级标题</h3>
+<h4 id="四级标题">四级标题</h4>
+<h5 id="五级标题">五级标题</h5>
+<h6 id="六级标题">六级标题</h6>
+<h3 id="带标点、空格与-emoji-🌟-的标题">带标点、空格与 Emoji 🌟 的标题</h3>
+<p>标题里的标点、空格与 Emoji 都会被 marked 转写进 <code>id</code> 属性，例如这一节的锚点就是 <code>#带标点空格与-emoji--的标题</code> 这一类生成结果。</p>
+<h2 id="文本样式">文本样式</h2>
+<table>
+<thead>
+<tr>
+<th align="left">写法</th>
+<th align="left">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>**粗体**</code></td>
+<td align="left"><strong>粗体</strong></td>
+</tr>
+<tr>
+<td align="left"><code>*斜体*</code></td>
+<td align="left"><em>斜体</em></td>
+</tr>
+<tr>
+<td align="left"><code>***粗斜体***</code></td>
+<td align="left"><em><strong>粗斜体</strong></em></td>
+</tr>
+<tr>
+<td align="left"><code>~~删除线~~</code></td>
+<td align="left"><del>删除线</del></td>
+</tr>
+<tr>
+<td align="left"><code>==高亮==</code></td>
+<td align="left">==高亮==（不是标准 Markdown，marked 不认，原样输出）</td>
+</tr>
+<tr>
+<td align="left">*反斜杠转义*</td>
+<td align="left">*反斜杠转义*</td>
+</tr>
+<tr>
+<td align="left"><code>&lt;mark&gt;</code></td>
+<td align="left"><mark>高亮</mark></td>
+</tr>
+<tr>
+<td align="left"><code>&lt;kbd&gt;</code></td>
+<td align="left">按 <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>I</kbd> 打开开发者工具</td>
+</tr>
+<tr>
+<td align="left"><code>&lt;abbr title="…"&gt;</code></td>
+<td align="left"><abbr title="Cascading Style Sheets">CSS</abbr></td>
+</tr>
+<tr>
+<td align="left"><code>&lt;sub&gt;</code> 与 <code>&lt;sup&gt;</code></td>
+<td align="left">H<sub>2</sub>O、x<sup>2</sup></td>
+</tr>
+<tr>
+<td align="left">HTML 实体</td>
+<td align="left">©  … 😀</td>
+</tr>
+</tbody></table>
+<h2 id="链接">链接</h2>
+<ul>
+<li>行内链接：<a href="https://dsy4567.icu" title="dsy4567 的小站">本站首页</a></li>
+<li>自动链接：<a href="https://dsy4567.icu">https://dsy4567.icu</a></li>
+<li>邮箱自动链接：<a href="mailto:dsy4567@outlook.com">dsy4567@outlook.com</a></li>
+<li>引用式链接：<a href="/blog.html" title="引用式链接的 title 效果">博客列表</a></li>
+<li>站内绝对路径：<a href="/blog/how-to-improve-performance/">如何优化网站加载速度</a></li>
+<li>锚点链接：<a href="#%E6%A0%87%E9%A2%98%E5%B1%82%E7%BA%A7">跳回标题层级</a></li>
+<li>链接里带格式：<a href="https://dsy4567.icu"><strong>加粗的链接</strong></a></li>
+<li>链接里带括号：<a href="https://zh.wikipedia.org/wiki/%E6%8B%AC%E5%8F%B7">维基百科的括号条目</a></li>
+</ul>
+<h2 id="图片">图片</h2>
+<p>本站自定义了一条 alt 尺寸语法 <code>![s:宽x高 替代文本](地址)</code>，构建与前端渲染会据此写出 <code>width</code> / <code>height</code> 属性并开启懒加载，避免图片撑破布局或引起跳动。</p>
+<p><img src="/img/avatar.webp" alt="头像" width="512" height="512" loading="lazy"></p>
+<p>带 title 的图片：</p>
+<p><img src="/img/cc-by-sa-4.0.png" alt="CC BY-SA 4.0" title="知识共享署名-非商业性使用-相同方式共享 4.0" width="88" height="31" loading="lazy"></p>
+<p>图片外面套链接（点图放大）：</p>
+<p><a href="/img/bg.jpg"><img src="/img/bg.jpg" alt="站点背景图" width="1280" height="1014" loading="lazy"></a></p>
+<p>不写尺寸的图片（没有占位高度，加载完成前会跳一下）：</p>
+<p><img src="/img/cc-by-sa-4.0.png" alt="没有尺寸的图片" loading="lazy"></p>
+<h2 id="列表">列表</h2>
+<p>无序列表，嵌套用两个空格缩进：</p>
+<ul>
+<li>苹果</li>
+<li>香蕉<ul>
+<li>芭蕉</li>
+<li>大蕉<ul>
+<li>更深一层</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>樱桃</li>
+</ul>
+<p>有序列表，编号不从 1 开始时 <code>start</code> 属性会跟着变：</p>
+<ol start="3">
+<li>第三步</li>
+<li>第四步<ol>
+<li>嵌套的有序项</li>
+<li>再来一个</li>
+</ol>
+</li>
+</ol>
+<p>任务列表，marked 会渲染成禁用的复选框（本站没给 checkbox 写样式，用的是浏览器默认外观）：</p>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> 已经做完的</li>
+<li><input disabled="" type="checkbox"> 还没做的</li>
+<li>普通的条目</li>
+</ul>
+<p>宽松列表，条目之间空一行后可以塞段落与代码块：</p>
+<ul>
+<li><p>第一个条目</p>
+<p>条目里的第二段。</p>
+<pre><code class="language-js">const 结果 = 1 + 1;
+</code></pre>
+</li>
+<li><p>第二个条目</p>
+</li>
+</ul>
+<h2 id="引用">引用</h2>
+<blockquote>
+<p>单段引用，
+引用里的第二行会被并进同一段。</p>
+<p>空一行之后仍是引用里的新段落。</p>
+<blockquote>
+<p>嵌套引用。</p>
+</blockquote>
+<h3 id="引用里的标题">引用里的标题</h3>
+<ul>
+<li>引用里的列表</li>
+<li>第二项</li>
+</ul>
+<pre><code class="language-text">引用里的代码块
+</code></pre>
+</blockquote>
+<h2 id="代码">代码</h2>
+<p>行内代码：<code>const 变量 = "值";</code>；带反引号的用两个反引号包起来：<code>含 ` 反引号</code>；尖括号会被转义：<code>&lt;div&gt;</code>。</p>
+<p>带语言标注的围栏代码块，语言名会显示在左上角，双击即可复制：</p>
+<pre><code class="language-js">/**
+ * 计算平均分
+ * @param {number[]} 分数数组 分数列表
+ * @returns {number} 平均分
+ */
+function 计算平均分(分数数组) {
+    // 制表符缩进，与站点代码风格一致
+    const 总分 = 分数数组.reduce((累加, 当前) =&gt; 累加 + 当前, 0);
+    return 总分 / 分数数组.length;
+}
+
+console.log(计算平均分([90, 80, 100]));
+</code></pre>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang="zh-CN"&gt;
+    &lt;head&gt;
+        &lt;meta charset="UTF-8" /&gt;
+        &lt;title&gt;示例页面&lt;/title&gt;
+    &lt;/head&gt;
+    &lt;body&gt;
+        &lt;p&gt;你好，世界&lt;/p&gt;
+    &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<pre><code class="language-bash">#!/bin/bash
+set -e
+echo "你好，世界"
+</code></pre>
+<pre><code class="language-json">{
+    "id": "markdown-test",
+    "hidden": true,
+    "tags": ["技术"]
+}
+</code></pre>
+<p>语言标注在 highlight.js 里不存在时，左上角会显示「未知」：</p>
+<pre><code class="language-不存在的语言">这里的语言标注 highlight.js 不认识
+</code></pre>
+<p>不写语言标注时交给 highlight.js 自动识别：</p>
+<pre><code class="language-text">不写语言名也能双击复制
+</code></pre>
+<p>行首四个空格的缩进式代码块，没有语言标注，也没有复制按钮：</p>
+<pre><code>这是一段缩进式代码块
+第二行仍然在同一个代码块里
+</code></pre>
+<h2 id="表格">表格</h2>
+<table>
+<thead>
+<tr>
+<th align="left">左对齐</th>
+<th align="center">居中</th>
+<th align="right">右对齐</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">内容</td>
+<td align="center">内容</td>
+<td align="right">100</td>
+</tr>
+<tr>
+<td align="left"><strong>加粗</strong>与<code>代码</code></td>
+<td align="center"><a href="/blog.html">链接</a></td>
+<td align="right"><del>删除线</del></td>
+</tr>
+<tr>
+<td align="left">转义竖线 |</td>
+<td align="center">第二列</td>
+<td align="right">第三列</td>
+</tr>
+<tr>
+<td align="left">长内容会换行</td>
+<td align="center">单元格里的内容长了会自动折行，不会把表格撑出容器</td>
+<td align="right">0.618</td>
+</tr>
+</tbody></table>
+<h2 id="分隔线">分隔线</h2>
+<p>三种写法都会渲染成 <code>&lt;hr&gt;</code>：</p>
+<hr>
+<hr>
+<hr>
+<h2 id="换行与空格">换行与空格</h2>
+<p>单个换行不会变成 <code>&lt;br&gt;</code>：这两行在源码里分了行
+渲染后仍是同一段。</p>
+<p>行尾两个空格
+会变成硬换行。</p>
+<p>行尾一个反斜杠<br>同样会变成硬换行。</p>
+<p>需要排版缩进时可以用实体：  这就是两个全角空格的效果。</p>
+<p>也可以直接写 <br> 标签来换行。</p>
+<p>连续的空格    会被合并成一个。</p>
+<h2 id="html-与自定义标签">HTML 与自定义标签</h2>
+<p>原生折叠块：</p>
+<details>
+<summary>点击展开（里面是可以解析的 Markdown）</summary>
+
+<ul>
+<li>折叠块里的列表</li>
+<li>折叠块里的<strong>加粗</strong>与<code>代码</code></li>
+</ul>
+</details>
+
+<p>本站自定义的剧透标签 <code>&lt;spoiler&gt;</code>，鼠标悬停或键盘聚焦后才会显示：</p>
+<p><spoiler>这就是被藏起来的内容</spoiler></p>
+<p>其它 HTML 标签：<del>删除</del>、<ins>插入</ins>、<mark>高亮</mark>、<small>小字</small>、<samp>程序输出</samp>、<q>短引用</q>、<code>code 标签</code>、<span style="color: #f66">带内联样式的 span</span>、<bdo dir="rtl">反向文字</bdo>。</p>
+<p>HTML 注释不会显示：<!-- 这行注释在渲染结果里看不到 --></p>
+<h2 id="已知不支持">已知不支持</h2>
+<ul>
+<li>脚注：<code>[^1]</code> 与 <code>[^1]: 说明</code> 会被 marked 当成引用式链接的写法，渲染成一条链接，而不是脚注。</li>
+<li>高亮 <code>==文本==</code>：不是标准 Markdown，需要额外插件，本站没装。</li>
+<li>定义列表：<code>术语</code> 换行接 <code>: 解释</code> 的写法没有任何效果。</li>
+<li>任务列表以外的扩展：复选框只有浏览器默认样式，本站没有额外的 CSS。</li>
+</ul>
+<p><nocopyright value="true"></nocopyright></p>
+
+            ]]>
+        </content>
+    </entry>
     <entry>
         <title>2024 年总结——我在地址栏输入 A-Z，浏览器会补全哪些域名？</title>
         <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/2024-browser-history/" />
