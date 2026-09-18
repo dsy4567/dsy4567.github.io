@@ -553,7 +553,7 @@ span#联系方式 > * {
 }
 
 #一言 {
-	height: 3em;
+	height: calc(3em + 4px);
 	overflow-y: auto;
 	text-decoration: underline wavy var(--accent-color);
 	text-underline-offset: 4px;
