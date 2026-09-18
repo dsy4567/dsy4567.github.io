@@ -263,6 +263,23 @@ function computeNcmListenRankHash(songItems) {
 }
 
 /**
+ * 统一网易云图片 CDN 节点：递归把字符串中的 p<n>.music.126.net 替换为 p1.music.126.net。
+ * 接口返回的封面地址会在 p1~p4 节点间随机漂移，固定到 p1 可避免无意义的文件变更
+ * @param {any} value - 待处理的 JSON 值
+ * @returns {any} 处理后的新值（不修改原值）
+ */
+function normalizeNcmImageHost(value) {
+	if (typeof value === "string")
+		return value.replace(/p\d+\.music\.126\.net/g, "p1.music.126.net");
+	if (Array.isArray(value)) return value.map(normalizeNcmImageHost);
+	if (value && typeof value === "object")
+		return Object.fromEntries(
+			Object.entries(value).map(([key, item]) => [key, normalizeNcmImageHost(item)])
+		);
+	return value;
+}
+
+/**
  * 读取 file-states.json；文件不存在或解析失败时返回空状态表
  * @returns {文件状态表}
  */
@@ -667,7 +684,7 @@ async function fetchNeteasePlaylist() {
 			return;
 		}
 
-		jsonfile.writeFileSync(CONFIG.ncmOutputPath, body);
+		jsonfile.writeFileSync(CONFIG.ncmOutputPath, normalizeNcmImageHost(body));
 
 		// syncFileStates 阶段记录的仍是旧文件状态，这里同步更新
 		const states = readFileStates();
@@ -756,11 +773,14 @@ async function fetchNcmListenRank() {
 			return;
 		}
 
-		jsonfile.writeFileSync(CONFIG.ncmListenRankOutputPath, {
-			rank_raw: rankBody,
-			first_lyric_raw: lyricResult.body,
-			first_chorus_raw: chorusResult.body,
-		});
+		jsonfile.writeFileSync(
+			CONFIG.ncmListenRankOutputPath,
+			normalizeNcmImageHost({
+				rank_raw: rankBody,
+				first_lyric_raw: lyricResult.body,
+				first_chorus_raw: chorusResult.body,
+			})
+		);
 
 		// syncFileStates 阶段记录的仍是旧文件状态，这里同步更新
 		const states = readFileStates();
