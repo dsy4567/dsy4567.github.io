@@ -49,6 +49,8 @@ main、左右栏
 自动模式也会被解析为具体类，保证 hljs 等只依赖类即可跟随）。
 */
 :root {
+	--transition: 0.3s;
+	--transition-slow: 1s;
 	--bg-color: #eeeeee;
 	--surface-1: #f7f7f7;
 	--surface-2: #ffffff;
@@ -176,7 +178,7 @@ video {
 spoiler {
 	background-color: #000;
 	color: #000;
-	transition: 0.3s color;
+	transition: var(--transition) color;
 }
 
 svg[data-icon] {
@@ -240,12 +242,12 @@ pre > code {
 	padding: 0;
 }
 pre code.hljs {
-    display: block;
-    overflow-x: auto;
-    padding: 1em
+	display: block;
+	overflow-x: auto;
+	padding: 1em;
 }
 code.hljs {
-    padding: 3px 5px
+	padding: 3px 5px;
 }
 
 hr {
@@ -274,8 +276,8 @@ hr {
 	animation-iteration-count: 1;
 	animation-timing-function: linear;
 	transition:
-		0.3s color,
-		0.3s background-color;
+		var(--transition) color,
+		var(--transition) background-color;
 }
 
 .淡化 {
@@ -505,8 +507,8 @@ main > #分界线 {
 	width: 4px;
 	height: calc(100vh - 16px);
 	transition:
-		0.3s background-color,
-		0.3s border;
+		var(--transition) background-color,
+		var(--transition) border;
 }
 
 main > .右 > section:nth-child(1),

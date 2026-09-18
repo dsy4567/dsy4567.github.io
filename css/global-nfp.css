@@ -252,18 +252,18 @@ body,
 div,
 section,
 nav {
-	transition: 0.3s background-color;
+	transition: var(--transition) background-color;
 }
 
 /* ==================== 通用工具类 class ==================== */
 .横幅 {
-	animation-duration: 0.3s;
+	animation-duration: var(--transition);
 	animation-fill-mode: forwards;
 	animation-iteration-count: 1;
 	/* animation-name: 隐藏; */
 }
 div.通知 {
-	animation-duration: 0.3s;
+	animation-duration: var(--transition);
 	animation-fill-mode: forwards;
 	animation-iteration-count: 1;
 	animation-name: 显示;
@@ -291,8 +291,8 @@ div.通知 {
 /* ==================== 导航栏、左右栏 ==================== */
 #导航栏 {
 	transition:
-		0.3s background-color,
-		0.3s transform;
+		var(--transition) background-color,
+		var(--transition) transform;
 	backdrop-filter: blur(4px);
 }
 body.顶部 #导航栏 {
@@ -307,8 +307,8 @@ body.隐藏导航栏 #导航栏 {
 .进度条外面 {
 	background-color: rgba(127, 127, 127, 0);
 	transition:
-		1s opacity,
-		0.3s background-color;
+		var(--transition-slow) opacity,
+		var(--transition) background-color;
 }
 .进度条外面.显示 {
 	background-color: rgba(127, 127, 127, 0.3);
@@ -326,8 +326,8 @@ body.隐藏导航栏 #导航栏 {
 	top: 0;
 	left: 0;
 	transition:
-		1s width,
-		0.3s background-color;
+		var(--transition-slow) width,
+		var(--transition) background-color;
 	width: 100%;
 	max-width: 100%;
 	height: 2px;
@@ -355,8 +355,8 @@ main > #分界线 > svg {
 		rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
 	opacity: 0;
 	transition:
-		0.3s opacity,
-		0.3s transform;
+		var(--transition) opacity,
+		var(--transition) transform;
 }
 main > #分界线 > svg > * {
 	transform: translateX(-2px);
@@ -380,12 +380,12 @@ body.宽屏 > main .右 {
 /* ==================== 左栏 ==================== */
 main > .左 {
 	transition:
-		0.3s background-color,
-		0.3s transform;
+		var(--transition) background-color,
+		var(--transition) transform;
 }
 
 section#我 > img {
-	transition: 0.3s transform;
+	transition: var(--transition) transform;
 }
 
 /* ==================== 页脚 ==================== */
@@ -399,7 +399,7 @@ body::after {
 	height: 100%;
 	background: #000;
 	opacity: 0;
-	transition: opacity 0.3s;
+	transition: opacity var(--transition);
 	transition-delay: 0s;
 	z-index: 1006;
 	pointer-events: none;
@@ -409,7 +409,7 @@ body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible)::after {
 	content: "";
 	opacity: 0.5;
 	pointer-events: all;
-	transition-delay: 0.3s;
+	transition-delay: var(--transition);
 }
 div#侧边按钮容器 > *:hover,
 div#侧边按钮容器 > *:focus-visible,
@@ -430,9 +430,9 @@ div#侧边按钮容器 > *,
 div#侧边按钮容器 > .拥有更多选项,
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 	transition:
-		0.3s border-radius,
-		0.3s transform,
-		0.3s opacity;
+		var(--transition) border-radius,
+		var(--transition) transform,
+		var(--transition) opacity;
 }
 
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
@@ -534,13 +534,13 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	text-align: end;
 	word-wrap: break-word;
 	width: calc(100vw - 64px);
-	transition: 0.3s color;
+	transition: var(--transition) color;
 	transition-delay: 0s;
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover #歌词,
 div#侧边按钮容器 > .拥有更多选项#网易云音乐:has(*:focus-visible) #歌词 {
 	color: #fff;
-	transition-delay: 0.3s;
+	transition-delay: var(--transition);
 	width: calc(100vw - 306px);
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项 {
@@ -718,12 +718,12 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	opacity: 0.7;
 }
 #网易云音乐-最近在听 .播放排行 > * {
-	transition: 0.3s border;
+	transition: var(--transition) border;
 	display: flex;
 	flex-wrap: nowrap;
 	justify-content: space-between;
 	align-items: center;
-	transition: 0.3s filter;
+	transition: var(--transition) filter;
 }
 #网易云音乐-最近在听 .播放排行 > *:hover {
 	border: 1px solid var(--accent-color);
@@ -753,8 +753,8 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	z-index: 0;
 	pointer-events: none;
 	transition:
-		0.3s background-color,
-		0.3s filter;
+		var(--transition) background-color,
+		var(--transition) filter;
 }
 /* 封面平移动画（translateY 自上而下、再自下而上循环）由 home.js 用 Web Animations API 创建：
    绕过 CSS 动画便于按公共相位基准对齐各封面进度，并用 pause()/play() 直接随可视性暂停恢复；
@@ -769,8 +769,8 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	width: var(--progress);
 	z-index: 2;
 	transition:
-		0.3s background-color,
-		0.3s filter;
+		var(--transition) background-color,
+		var(--transition) filter;
 }
 #网易云音乐-最近在听 .播放排行 > *:hover::after {
 	background-color: transparent;
