@@ -474,3 +474,18 @@ let _global = {};
 DOMContentLoaded
 	? 触发事件("DOMContentLoaded")
 	: addEventListener("DOMContentLoaded", () => 触发事件("DOMContentLoaded"));
+
+qsa("link[data-preload='style']").forEach(元素 => {
+	if (!(元素 instanceof HTMLLinkElement)) return;
+	const 加载样式 = () => (元素.rel = "stylesheet");
+
+	const 支持预加载 = ce("link").relList.supports?.("preload");
+
+	if (!支持预加载) return 加载样式();
+	const 已加载 = Array.from(performance.getEntriesByName(元素.href)).some(
+		entry => entry.entryType === "resource"
+	);
+
+	if (已加载) 加载样式();
+	else 元素.addEventListener("load", 加载样式, { once: true });
+});
