@@ -12,6 +12,41 @@
 /** mv 字段哨兵值：排行数据等来源无 mv 信息时填充，真实 mv id 恒为正数（见 home.js 的 排行项转歌单） */
 const 无mv哨兵 = -0x66ccff;
 
+/** 匹配行首连续的 LRC 时间标签，如 `[00:10.00][01:20.00]` */
+const 行首时间标签 = /^(?:\[\d*:\d*\.?\d*\])+/;
+
+/** 匹配单个 LRC 时间标签，如 [01:23.45] */
+const 时间标签 = /\[\d*:\d*\.?\d*\]/g;
+
+/** 将 `[mm:ss.xx]` 时间标签转换为秒数（与 lrc-parser 的 convertTime 一致） */
+function 标签转秒(/** @type {string} */ 标签) {
+	let [分钟, 秒数] = 标签.slice(1, -1).split(":");
+	return +分钟 * 60 + +秒数;
+}
+
+/**
+ * 把形如 `[00:10.00][01:20.00]歌词` 的多时间戳行拆成多行，并按时间升序重排。
+ * lrc-parser 每行只取第一个时间戳，且以下一行的开始时间作为本行的结束时间，
+ * 所以这类重复段落必须在解析前展开并重排，否则 cue 的时间区间会错位甚至倒序
+ */
+function 展开多时间戳行(/** @type {string} */ 歌词文本) {
+	/** @type {{ 开始时间: number, 行: string }[]} */
+	let 待排序行 = [];
+	for (const 行 of 歌词文本.split("\n")) {
+		let 行首标签 = 行.match(行首时间标签)?.[0];
+		if (!行首标签) {
+			待排序行.push({ 开始时间: Infinity, 行 });
+			continue;
+		}
+		let 歌词 = 行.slice(行首标签.length);
+		for (const 标签 of 行首标签.match(时间标签) ?? [])
+			待排序行.push({ 开始时间: 标签转秒(标签), 行: 标签 + 歌词 });
+	}
+	// 展开后行序与时间轴无关，需按时间重排；元信息行等非时间行排到最后，会被解析器过滤
+	待排序行.sort((甲, 乙) => 甲.开始时间 - 乙.开始时间);
+	return 待排序行.map(项 => 项.行).join("\n");
+}
+
 // @ts-ignore
 let /** @type {HTMLDivElement} */ 网易云音乐元素 = gd("网易云音乐", true),
 	// @ts-ignore
@@ -46,8 +81,6 @@ let 网易云音乐 = {
 		/** 最近一次写入 Audio.src 的歌曲 id，-1 表示尚未加载过 */
 		已加载的音乐id: -1,
 		/** @type {HTMLAudioElement} */ Audio: new Audio(),
-		/** @type {VTTCue[]} */ 所有歌词: [],
-		/** @type {VTTCue[]} */ 所有歌词翻译: [],
 		/** @type {TextTrack | undefined} */ 歌词track: undefined,
 		/** @type {TextTrack | undefined} */ 翻译track: undefined,
 	},
@@ -264,18 +297,16 @@ let 网易云音乐 = {
 
 		// 歌词相关
 		歌词元素.innerText = "";
+		// 直接清空轨道自身（cues 是实时列表）：removeCue 对不属于该轨道的 cue 会抛错，
+		// 若中途抛出，后面的 cue 会漏删且再也无法回收，切歌后可能残留上一首的歌词
 		try {
-			网易云音乐.正在播放.所有歌词.forEach(歌词 =>
-				网易云音乐.正在播放.歌词track?.removeCue(歌词)
-			);
-			网易云音乐.正在播放.所有歌词翻译.forEach(歌词翻译 =>
-				网易云音乐.正在播放.翻译track?.removeCue(歌词翻译)
-			);
+			for (const 轨道 of [网易云音乐.正在播放.歌词track, 网易云音乐.正在播放.翻译track]) {
+				if (!轨道?.cues) continue;
+				while (轨道.cues.length) 轨道.removeCue(轨道.cues[0]);
+			}
 		} catch (e) {
 			console.warn(e);
 		}
-		网易云音乐.正在播放.所有歌词 = [];
-		网易云音乐.正在播放.所有歌词翻译 = [];
 		fetch(
 			`https://${网易云音乐.设置.域名}/lyric?id=${
 				网易云音乐.歌单[网易云音乐.正在播放.索引].id
@@ -293,23 +324,29 @@ let 网易云音乐 = {
 					!j.lrc.lyric.includes("[")
 				) {
 					歌词元素.innerText = "";
-					网易云音乐.正在播放.所有歌词 = [];
 					return;
 				}
 				await 添加脚本("/js/lib/lrc-parser.js");
-				let 所有歌词 = lrcParser(待解析歌词 + "[999:59.99]\n").scripts;
+				// 时间戳畸形（NaN）、重复（end === start）或倒序（end < start）的行会得到永不激活的
+				// cue，甚至让 new VTTCue 抛错中断后续歌词，因此直接跳过
+				let 所有歌词 = lrcParser(展开多时间戳行(待解析歌词) + "[999:59.99]\n").scripts;
 				所有歌词.forEach(歌词 => {
-					let c = new VTTCue(歌词.start, 歌词.end, 歌词.text);
-					网易云音乐.正在播放.所有歌词.push(c);
-					网易云音乐.正在播放.歌词track?.addCue(c);
+					if (!(Number.isFinite(歌词.start) && 歌词.end > 歌词.start)) return;
+					网易云音乐.正在播放.歌词track?.addCue(
+						new VTTCue(歌词.start, 歌词.end, 歌词.text)
+					);
 				});
 
 				if (待解析歌词翻译?.includes("[")) {
-					let 所有歌词翻译 = lrcParser(待解析歌词翻译 + "[999:59.99]\n").scripts;
+					let 所有歌词翻译 = lrcParser(
+						展开多时间戳行(待解析歌词翻译) + "[999:59.99]\n"
+					).scripts;
 					所有歌词翻译.forEach(歌词翻译 => {
-						let c = new VTTCue(歌词翻译.start, 歌词翻译.end, 歌词翻译.text);
-						网易云音乐.正在播放.所有歌词翻译.push(c);
-						网易云音乐.正在播放.翻译track?.addCue(c);
+						if (!(Number.isFinite(歌词翻译.start) && 歌词翻译.end > 歌词翻译.start))
+							return;
+						网易云音乐.正在播放.翻译track?.addCue(
+							new VTTCue(歌词翻译.start, 歌词翻译.end, 歌词翻译.text)
+						);
 					});
 				}
 			})
@@ -357,12 +394,13 @@ let 网易云音乐 = {
 			网易云音乐.正在播放.Audio.preload = "none";
 			网易云音乐.正在播放.Audio.autoplay = false;
 			网易云音乐.正在播放.Audio.volume = 网易云音乐.设置.音量;
+			// kind 用 metadata：规范中供脚本使用的轨道，不会被视为面向用户的字幕而参与渲染/用户偏好
 			网易云音乐.正在播放.歌词track = 网易云音乐.正在播放.Audio.addTextTrack(
-				"captions",
+				"metadata",
 				"歌词"
 			);
 			网易云音乐.正在播放.翻译track = 网易云音乐.正在播放.Audio.addTextTrack(
-				"subtitles",
+				"metadata",
 				"翻译",
 				"zh-CN"
 			);
@@ -375,7 +413,11 @@ let 网易云音乐 = {
 				let 歌词 = /** @type {VTTCue | undefined} */ (
 					网易云音乐.正在播放.歌词track?.activeCues?.[0]
 				);
-				if (!歌词) return;
+				if (!歌词) {
+					// 无活跃 cue 的区间（前奏、间奏等）要清空，否则上一句会一直残留
+					歌词元素.innerText = "";
+					return;
+				}
 				let 翻译 = /** @type {VTTCue | undefined} */ (
 					网易云音乐.正在播放.翻译track?.activeCues?.[0]
 				);
