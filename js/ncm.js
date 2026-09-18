@@ -366,16 +366,29 @@ let 网易云音乐 = {
 				"翻译",
 				"zh-CN"
 			);
-			网易云音乐.正在播放.歌词track.oncuechange = () => {
-				// @ts-ignore
-				let 歌词 = 网易云音乐.正在播放.歌词track?.activeCues[0]?.text;
-				if (歌词) 歌词元素.innerText = 歌词;
-			};
-			网易云音乐.正在播放.翻译track.oncuechange = () => {
-				// @ts-ignore
-				let 翻译 = 网易云音乐.正在播放.翻译track?.activeCues[0]?.text;
-				if (翻译) 歌词元素.innerText += ` (${翻译})`;
-			};
+			/**
+			 * 依据当前活跃的歌词、翻译 cue 渲染歌词文本。
+			 * 翻译 cue 的结束时间取自下一句翻译，会跨越中间没有翻译的歌词行而一直保持活跃，
+			 * 因此主歌词与翻译必须在同一次渲染中确定，避免翻译残留到无翻译的歌词行
+			 */
+			function 渲染歌词() {
+				let 歌词 = /** @type {VTTCue | undefined} */ (
+					网易云音乐.正在播放.歌词track?.activeCues?.[0]
+				);
+				if (!歌词) return;
+				let 翻译 = /** @type {VTTCue | undefined} */ (
+					网易云音乐.正在播放.翻译track?.activeCues?.[0]
+				);
+
+				// 只有开始时间落在当前歌词行内的翻译才属于当前歌词
+				歌词元素.innerText =
+					歌词.text +
+					(翻译 && 翻译.startTime >= 歌词.startTime && 翻译.startTime < 歌词.endTime
+						? ` (${翻译.text})`
+						: "");
+			}
+			网易云音乐.正在播放.歌词track.oncuechange = 渲染歌词;
+			网易云音乐.正在播放.翻译track.oncuechange = 渲染歌词;
 
 			// 使用浏览器/系统提供的控件控制音乐播放
 			// playbackState 与进度由 onplay/onpause/ontimeupdate 统一维护
