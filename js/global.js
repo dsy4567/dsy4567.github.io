@@ -231,7 +231,7 @@ async function 触发事件(事件名) {
 			await Promise.all(
 				回调列表.map(async 回调 => {
 					try {
-						const _通用计数器 = 通用计数器++;
+						const _通用计数器 = ++通用计数器;
 						console.time(`高优回调 id:${_通用计数器}`);
 						await Promise.resolve().then(() => 回调());
 						console.log(_通用计数器, 回调, 优先级);
@@ -278,7 +278,7 @@ async function 检查低优池(事件名) {
 			await Promise.all(
 				回调列表.map(async 回调 => {
 					try {
-						const _通用计数器 = 通用计数器++;
+						const _通用计数器 = ++通用计数器;
 						console.time(`低优池回调 id:${_通用计数器}`);
 						await 回调();
 						// console.log(_通用计数器, 回调, 优先级);
@@ -465,7 +465,8 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", 刷新主�
 addEventListener("storage", 刷新主题);
 
 let URL发生变化事件 = new CustomEvent("URL发生变化"),
-	已触发动态加载 = false;
+	已触发动态加载 = false,
+	动态加载自增计数器 = 0;
 
 // 方便暴露到全局变量
 let _global = {};

@@ -54,6 +54,7 @@ function 动态加载(元素) {
 		try {
 			let 右 = qs("main .右", true);
 			if (!右) return;
+			动态加载自增计数器++;
 			右.innerHTML = 正文;
 			加载模块();
 
@@ -341,10 +342,6 @@ fetch("https://api.github.com/users/dsy4567")
 			);
 			gd("分界线")?.addEventListener("click", () => {
 				document.body.classList.toggle("宽屏");
-			});
-			qsa("link[data-preload='style']").forEach(元素 => {
-				// @ts-ignore
-				元素.rel = "stylesheet";
 			});
 			//#endregion
 

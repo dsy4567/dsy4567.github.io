@@ -40,6 +40,7 @@ async function 高亮代码(目标) {
 async function 渲染文章(当前文章信息) {
 	// /blog/<id>/
 	try {
+		const 动态加载自增计数器拷贝 = 动态加载自增计数器;
 		await new Promise(
 			/** @type {() => void} */ resolve => {
 				延迟执行("DOMContentLoaded", resolve, 0);
@@ -54,6 +55,7 @@ async function 渲染文章(当前文章信息) {
 		//#region 渲染文章正文
 		if (当前文章信息.url) {
 			let t = await (await fetch(当前文章信息.url)).text();
+			if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
 
 			// 解析 Markdown、追加许可与元信息
 			let sect = ce("section"),
@@ -204,6 +206,9 @@ async function 渲染文章(当前文章信息) {
 						})
 				)
 				.then(async j => {
+					// 避免加载太晚导致评论区显示错误
+					if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
+
 					if (typeof j !== "object") j = [];
 					// prettier-ignore
 					let html = `
@@ -286,9 +291,11 @@ ${(() => {
  * @param {URL} u
  */
 async function 渲染文章列表(u) {
+	const 动态加载自增计数器拷贝 = 动态加载自增计数器;
 	// /blog.html
 	fetch("/json/blog.json")
 		.then(res => {
+			if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
 			if (!res.ok) throw new Error("状态码异常");
 			return new Promise((resolve, reject) => {
 				延迟执行(

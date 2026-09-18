@@ -348,9 +348,12 @@ async function 获取并渲染最近在听() {
 	if (排行已请求) return 渲染最近在听();
 	排行已请求 = true;
 	try {
+		const 动态加载自增计数器拷贝 = 动态加载自增计数器;
 		const j = /** @type {最近聆听排行数据} */ (
 			await (await fetch("/json/ncm-listen-rank.json")).json()
 		);
+		if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
+
 		const 原始项 = j?.rank_raw?.data?.songItems;
 		if (j?.rank_raw?.code !== 200 || !Array.isArray(原始项))
 			throw new Error("最近在听排行数据非法");
