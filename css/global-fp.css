@@ -555,6 +555,8 @@ span#联系方式 > * {
 #一言 {
 	height: 3em;
 	overflow-y: auto;
+	text-decoration: underline wavy var(--accent-color);
+	text-underline-offset: 4px;
 }
 
 .标签 > div {
