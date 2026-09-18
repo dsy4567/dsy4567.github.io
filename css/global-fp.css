@@ -413,7 +413,7 @@ div.通知 {
 /* ==================== 导航栏和进度条 ==================== */
 #导航栏 {
 	background-color: transparent;
-	border: 1px solid transparent;
+	border: 1px solid var(--overlay);
 	border-radius: var(--border-radius);
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 	color: var(--text-color);
