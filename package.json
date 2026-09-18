@@ -7,7 +7,10 @@
 	},
 	"scripts": {
 		"build": "node ./tools/handle-npm-build.js",
-		"build2": "node ./tools/build-blog.js",
+		"build2": "node ./tools/build.js",
+		"blog": "node ./tools/build.js blog",
+		"playlist": "node ./tools/build.js playlist",
+		"rank": "node ./tools/build.js rank",
 		"server": "./tools/server.sh"
 	},
 	"repository": {
