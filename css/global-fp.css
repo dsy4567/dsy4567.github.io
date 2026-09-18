@@ -353,8 +353,8 @@ div.通知 {
 
 /* ==================== 导航栏、左右栏 ==================== */
 @media only screen and (max-width: 1000px) {
-	#导航栏{
-			width: calc(100vw - 24px) !important;
+	#导航栏 {
+		width: calc(100% - 18px) !important;
 	}
 	#导航栏 > .右 > a svg {
 		display: none;
@@ -403,7 +403,7 @@ div.通知 {
 /* ==================== 导航栏和进度条 ==================== */
 #导航栏 {
 	background-color: transparent;
-	border: 1px solid var(--accent-color-transparent);
+	border: 1px solid transparent;
 	border-radius: var(--border-radius);
 	color: var(--text-color);
 	display: flex;
@@ -413,8 +413,8 @@ div.通知 {
 	justify-content: space-around;
 	position: sticky;
 	top: 8px;
-	width: calc(100vw - 90px - 24px);
-	max-width: calc(1600px - 24px);
+	width: calc(100% - 90px - 18px);
+	max-width: calc(1600px - 26px);
 	height: 48px;
 	z-index: 998;
 }
@@ -469,10 +469,14 @@ main > .左 {
 	top: 0;
 	transform: translateY(16px);
 	width: calc(25% - 5px);
-	max-height: calc(100vh - 21px);
+	max-height: calc(100vh - 24px);
+	padding-bottom: 16px;
 }
 body.隐藏导航栏 > main > .左 {
-	transform: translateY(0);
+	/* transform: translateY(0); */
+}
+body.顶部 > main > .左 {
+	/* max-height: calc(100vh - 80px); */
 }
 
 main > .右 {
@@ -490,7 +494,9 @@ main > #分界线 {
 	top: 0;
 	width: 4px;
 	height: calc(100vh - 16px);
-	transition: 0.3s background-color, 0.3s border;
+	transition:
+		0.3s background-color,
+		0.3s border;
 }
 
 main > .右 > section:nth-child(1),
