@@ -227,7 +227,7 @@ a:hover,
 a:focus-visible {
 	/* opacity: 1; */
 	text-decoration: 1px underline var(--link-color);
-	text-underline-offset: 0.2em;
+	text-underline-offset: 4px;
 }
 a:has(img, svg) {
 	text-decoration: none !important;
