@@ -556,10 +556,12 @@ fetch("/json/ncm.json")
 			let 文档片段 = document.createDocumentFragment();
 			await 批量低阻塞操作(网易云音乐.歌单, async (/** @type {歌单} */ 音乐信息) => {
 				let li = ce("li");
+				let 歌名 = ce("span");
+				歌名.textContent = 音乐信息.歌名;
 				let 歌手 = ce("span");
 				歌手.className = "淡化";
 				歌手.textContent = 音乐信息.歌手;
-				li.append(音乐信息.歌名, " ", 歌手);
+				li.append(歌名, " ", 歌手);
 				li.tabIndex = 0;
 				li.title = 音乐信息.完整歌名;
 				li.dataset.id = "" + 音乐信息.id;
