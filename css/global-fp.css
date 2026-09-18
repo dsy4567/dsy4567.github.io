@@ -499,7 +499,7 @@ main > #分界线 {
 	background-color: var(--surface-1);
 	border: 8px solid var(--bg-color);
 	border-radius: var(--border-radius);
-	margin-top: 96px;
+	margin-top: 80px;
 	position: sticky;
 	top: 0;
 	width: 4px;
