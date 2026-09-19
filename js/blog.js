@@ -34,6 +34,24 @@ async function 高亮代码(目标) {
 	});
 }
 /**
+ * 解析来自 GitHub API 的链接，只放行 https 且域名为 GitHub 的地址
+ * 解析失败或协议、域名不在白名单内时返回空字符串，调用方应跳过赋值，
+ * 避免 javascript: 等危险协议被写入 href/src
+ * @param {string} url
+ * @returns {string}
+ */
+function 解析GitHub链接(url) {
+	try {
+		const u = new URL(url);
+		return u.protocol === "https:" &&
+			/(^|\.)(github\.com|githubusercontent\.com)$/.test(u.hostname)
+			? u.href
+			: "";
+	} catch (e) {
+		return "";
+	}
+}
+/**
  *
  * @param {文章信息} 当前文章信息
  */
@@ -211,8 +229,9 @@ async function 渲染文章(当前文章信息) {
 					if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
 
 					if (typeof j !== "object") j = [];
-					// prettier-ignore
-					let html = `
+					let sect = ce("section");
+					sect.id = "评论区";
+					sect.innerHTML = `
 <h2>
 	<svg data-icon="评论" class="小尺寸"></svg>
 	<span>评论</span>
@@ -222,54 +241,67 @@ async function 渲染文章(当前文章信息) {
 		id="评论链接"
 		href="https://github.com/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}#issue-comment-box"
 	>在 GitHub 上发表评论</a>
-</section>
-${(() => {
-	let h = "";
-	for (const 评论 of (j || []))
-		h += `
-<section class="评论">
-	<div class="用户信息">
-		<a href="${评论.user.html_url}"><img
-			class="头像 小尺寸"
-			src="${评论.user.avatar_url}"
-			alt="的头像"
-		/></a>
-		<span class="用户名"><a href="${评论.user.html_url}">${评论.user.login}</a></span>
-	</div>
-	<div class="评论正文">${marked.parse(评论.body)}</div>
-	<span class="元数据">发表于: ${new Date(评论.created_at).toLocaleString()} 更新于: ${new Date(评论.updated_at).toLocaleString()}</span>
-${(() => {
-			let emojis = {
-					"+1": "👍",
-					"-1": "👎",
-					laugh: "😀",
-					hooray: "🎉",
-					confused: "😕",
-					heart: "❤️",
-					rocket: "🚀",
-					eyes: "👀",
-				},
-				s = '',
-				outerHTML_开始 = "",
-				outerHTML_结束 = "";
-			Object.keys(emojis).forEach((k,i) => {
-				if (评论.reactions[k]) {
-					!outerHTML_开始 && (outerHTML_开始 = '<span class="元数据">');
-					!outerHTML_结束 && (outerHTML_结束 = "</span>");
-					// @ts-ignore
-					s += emojis[k] + ": " + 评论.reactions[k] + " ";
-				}
-			});
-			return outerHTML_开始 + s + outerHTML_结束;
-		})()}
-	</span>
 </section>`;
-	return h;
-})()}
-`;
-					let sect = ce("section");
-					sect.id = "评论区";
-					sect.innerHTML = html;
+					// 评论数据来自 GitHub API，属不可信输入：文本一律 textContent，链接一律属性赋值，不拼接 HTML
+					for (const 评论 of j || []) {
+						const 用户主页 = 解析GitHub链接(评论.user.html_url),
+							头像地址 = 解析GitHub链接(评论.user.avatar_url),
+							评论元素 = ce("section"),
+							用户信息 = ce("div"),
+							头像链接 = ce("a"),
+							头像 = ce("img"),
+							用户名 = ce("span"),
+							用户名链接 = ce("a"),
+							正文 = ce("div"),
+							元数据 = ce("span");
+						评论元素.className = "评论";
+
+						用户信息.className = "用户信息";
+						if (用户主页) 头像链接.href = 用户主页;
+						头像.className = "头像 小尺寸";
+						头像.alt = "的头像";
+						if (头像地址) 头像.src = 头像地址;
+						头像链接.append(头像);
+						用户名.className = "用户名";
+						if (用户主页) 用户名链接.href = 用户主页;
+						用户名链接.textContent = 评论.user.login;
+						用户名.append(用户名链接);
+						用户信息.append(头像链接, 用户名);
+
+						正文.className = "评论正文";
+						正文.innerHTML = marked.parse(评论.body); // TODO: 需要过滤
+
+						元数据.className = "元数据";
+						元数据.textContent = `发表于: ${new Date(
+							评论.created_at
+						).toLocaleString()} 更新于: ${new Date(评论.updated_at).toLocaleString()}`;
+						评论元素.append(用户信息, 正文, 元数据);
+
+						// 表情反应
+						const 表情映射 = {
+							"+1": "👍",
+							"-1": "👎",
+							laugh: "😀",
+							hooray: "🎉",
+							confused: "😕",
+							heart: "❤️",
+							rocket: "🚀",
+							eyes: "👀",
+						};
+						let 反应文本 = "";
+						for (const [名称, 表情] of Object.entries(表情映射)) {
+							const 数量 = 评论.reactions[名称];
+							if (数量) 反应文本 += 表情 + ": " + 数量 + " ";
+						}
+						if (反应文本) {
+							const 反应 = ce("span");
+							反应.className = "元数据";
+							反应.textContent = 反应文本;
+							评论元素.append(反应);
+						}
+
+						sect.append(评论元素);
+					}
 
 					// 高亮
 					高亮代码(sect);
