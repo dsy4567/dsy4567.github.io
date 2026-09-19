@@ -223,6 +223,9 @@ main、左右栏
 /* ==================== ::* ==================== */
 
 /* ==================== html/body/通用元素 ==================== */
+a {
+	-webkit-tap-highlight-color: var(--accent-color-transparent);
+}
 a:hover,
 a:focus-visible {
 	/* opacity: 1; */
