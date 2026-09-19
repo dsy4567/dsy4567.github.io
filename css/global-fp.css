@@ -2,30 +2,6 @@
 
 @charset "utf-8";
 
-/*
-
-Ctrl + F 导航
-
-@keyframes
-@media
-::*
-html/body/通用元素
-通用工具类 class
-导航栏、左右栏
-导航栏和进度条
-main、左右栏
-左栏
-页脚
-侧边按钮-通用
-侧边按钮-关闭侧边按钮
-侧边按钮-关闭侧边按钮、回到顶部
-侧边按钮-网易云音乐
-侧边按钮-主题
-首页
-博客
-友链
-
-*/
 /* ==================== @keyframes ==================== */
 @keyframes 标记 {
 	0% {
@@ -43,11 +19,6 @@ main、左右栏
 }
 
 /* ==================== @media ==================== */
-/*
-主题背景变量：浅色为缺省（含无偏好）。
-深色由两处决定：@media（无 JS 时的兜底）与 html.深色 / html.浅色 类（global.js 写入，
-自动模式也会被解析为具体类，保证 hljs 等只依赖类即可跟随）。
-*/
 :root {
 	--transition: 0.3s;
 	--transition-slow: 1s;
@@ -104,10 +75,6 @@ main、左右栏
 }
 
 /* ==================== ::* ==================== */
-::selection {
-	background-color: var(--selection-bg);
-}
-
 ::-webkit-scrollbar {
 	background-color: transparent;
 	width: 8px;
@@ -117,18 +84,8 @@ main、左右栏
 	background-color: var(--overlay);
 	border-radius: var(--border-radius);
 }
-::-webkit-scrollbar-thumb:active {
-	background-color: var(--overlay-strong);
-}
 
 /* ==================== html/body/通用元素 ==================== */
-*:disabled {
-	cursor: not-allowed;
-}
-*:focus-visible {
-	outline: 2px dashed var(--link-color) !important;
-}
-
 html {
 	/* 强调色缺省（中性）：未设置时回退为文字色/叠层色，自动跟随背景深浅 */
 	--accent-color: var(--text-color);
@@ -164,11 +121,6 @@ a.无滤镜:focus-visible {
 	text-decoration: none;
 }
 
-abbr {
-	cursor: help;
-	text-decoration: dashed underline var(--accent-color);
-}
-
 img,
 video {
 	background-color: var(--bg-color);
@@ -179,6 +131,10 @@ spoiler {
 	background-color: #000;
 	color: #000;
 	transition: var(--transition) color;
+}
+spoiler:hover,
+body:has(:focus-visible) spoiler {
+	color: #fff !important;
 }
 
 svg[data-icon] {
@@ -267,12 +223,6 @@ input {
 	opacity: 0;
 	overflow: hidden;
 }
-.隐藏链接:focus-visible {
-	width: auto;
-	height: auto;
-	opacity: 1;
-	z-index: 999;
-}
 
 .标记 {
 	animation-duration: 3s;
@@ -331,10 +281,6 @@ input {
 	min-width: 256px;
 }
 
-.暂停动画 {
-	animation-play-state: paused;
-}
-
 .横幅 {
 	background-color: var(--surface-2);
 	font-size: larger;
@@ -344,17 +290,6 @@ input {
 	text-align: center;
 	width: 100%;
 	z-index: 996;
-}
-
-div.通知 {
-	opacity: 0;
-	margin: 16px;
-	padding: 8px;
-	pointer-events: none;
-	position: fixed;
-	bottom: 32px;
-	word-break: break-all;
-	z-index: 1008;
 }
 
 .fill {
@@ -391,8 +326,7 @@ div.通知 {
 		position: sticky;
 		width: calc(100% - 14px);
 		bottom: 0;
-		margin-left: 7px;
-		margin-top: 0px;
+		margin: 0 0 0 7px;
 		pointer-events: none;
 		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
 	}
@@ -440,8 +374,7 @@ div.通知 {
 }
 #导航栏 > .左 > a,
 #导航栏 > .右 > a {
-	margin-left: 8px;
-	margin-right: 8px;
+	margin: 0 8px;
 }
 #导航栏 a {
 	color: var(--text-color);
@@ -539,8 +472,7 @@ span#联系方式 {
 	justify-content: center;
 }
 span#联系方式 > * {
-	margin-left: 4px;
-	margin-right: 4px;
+	margin: 0 4px;
 }
 .rss {
 	transform: translate(-4px, 2px) rotate(45deg);
@@ -571,8 +503,7 @@ span#联系方式 > * {
 	border-radius: var(--border-radius);
 	line-height: 3;
 	margin-left: 0px;
-	padding-left: 8px;
-	padding-right: 8px;
+	padding: 0 8px;
 	white-space: nowrap;
 }
 
@@ -581,12 +512,9 @@ span#联系方式 > * {
 #copyright {
 	background-color: var(--surface-1);
 	border-top: 1px solid transparent;
-	border-top-left-radius: var(--border-radius);
-	border-top-right-radius: var(--border-radius);
-	padding-top: 16px;
-	padding-bottom: 16px;
-	margin-top: 32px;
-	margin-bottom: 0;
+	border-radius: var(--border-radius) var(--border-radius) 0 0;
+	padding: 16px 0;
+	margin: 32px 0 0;
 	text-align: center;
 	width: 100%;
 	z-index: 1;
@@ -602,14 +530,8 @@ div#侧边按钮容器 {
 }
 div#侧边按钮容器 > * {
 	background-color: var(--surface-2);
-	box-shadow:
-		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
-		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
 	border: 1px solid transparent;
-	border-bottom-left-radius: 50%;
-	border-bottom-right-radius: 50%;
-	border-top-left-radius: 50%;
-	border-top-right-radius: 50%;
+	border-radius: 50%;
 	display: flex;
 	opacity: 0.5;
 	margin-top: 5px;
@@ -684,10 +606,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 	border-radius: var(--border-radius);
 	font-size: larger;
 	color: #fff;
-	margin-top: 8px;
-	margin-bottom: 8px;
-	margin-left: 12px;
-	margin-right: 12px;
+	margin: 8px 12px;
 	padding: 36px;
 	position: relative;
 	height: 50px;

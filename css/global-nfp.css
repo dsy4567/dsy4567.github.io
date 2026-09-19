@@ -221,8 +221,21 @@ main、左右栏
 }
 
 /* ==================== ::* ==================== */
+::selection {
+	background-color: var(--selection-bg);
+}
+
+::-webkit-scrollbar-thumb:active {
+	background-color: var(--overlay-strong);
+}
 
 /* ==================== html/body/通用元素 ==================== */
+*:disabled {
+	cursor: not-allowed;
+}
+*:focus-visible {
+	outline: 2px dashed var(--link-color) !important;
+}
 a {
 	-webkit-tap-highlight-color: var(--accent-color-transparent);
 }
@@ -244,10 +257,10 @@ a.外链:has(img, svg)::after {
 a[title]::after {
 	content: "" !important;
 }
-/* 鼠标悬停，或检测到键盘导航（页面任意元素获得可见焦点）时显示内容 */
-spoiler:hover,
-body:has(:focus-visible) spoiler {
-	color: #fff !important;
+
+abbr {
+	cursor: help;
+	text-decoration: dashed underline var(--accent-color);
 }
 
 html,
@@ -259,6 +272,13 @@ nav {
 }
 
 /* ==================== 通用工具类 class ==================== */
+.隐藏链接:focus-visible {
+	width: auto;
+	height: auto;
+	opacity: 1;
+	z-index: 999;
+}
+
 .横幅 {
 	animation-duration: var(--transition);
 	animation-fill-mode: forwards;
@@ -277,6 +297,14 @@ div.通知 {
 	background-color: var(--surface-1);
 	border: 1px solid transparent;
 	border-radius: var(--border-radius);
+	opacity: 0;
+	margin: 16px;
+	padding: 8px;
+	pointer-events: none;
+	position: fixed;
+	bottom: 32px;
+	word-break: break-all;
+	z-index: 1008;
 }
 
 .悬浮卡片 {
@@ -291,6 +319,9 @@ div.通知 {
 	z-index: 997;
 }
 
+.暂停动画 {
+	animation-play-state: paused;
+}
 /* ==================== 导航栏、左右栏 ==================== */
 #导航栏 {
 	transition:
@@ -417,6 +448,12 @@ body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible)::after {
 div#侧边按钮容器 > *:hover,
 div#侧边按钮容器 > *:focus-visible,
 div#侧边按钮容器 > *:has(*:focus-visible) {
+	box-shadow:
+		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	border-radius: unset;
+	border-top-left-radius: 50%;
+	border-bottom-left-radius: 50%;
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 	opacity: 1;
