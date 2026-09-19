@@ -786,6 +786,15 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 }
 
 /* ==================== 博客 ==================== */
+article h1.可固定,
+article h2.可固定,
+article h3.可固定,
+article h4.可固定,
+article h5.可固定,
+article h6.可固定 {
+	position: relative;
+}
+
 article h1.可固定:hover::before,
 article h2.可固定:hover::before,
 article h3.可固定:hover::before,
@@ -795,7 +804,9 @@ article h6.可固定:hover::before {
 	position: absolute;
 	content: "🔗";
 	font-size: 0.5em;
-	transform: translate(-16px, 1em);
+	line-height: 1;
+	top: 50%;
+	transform: translate(-16px, -50%);
 }
 
 code.hljs::before {
