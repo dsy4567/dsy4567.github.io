@@ -72,7 +72,17 @@ function 动态加载(元素) {
 	if (缓存) return 应用正文(缓存.正文, 缓存.标题);
 
 	fetch(元素.href)
-		.then(res => res.text())
+		.then(res => {
+			// 校验响应类型：请求失败、或并非 HTML 文档（如内链图片、静态资源等）时应拒绝，
+			// 避免将非 HTML 内容当作页面正文动态加载
+			if (!res.ok || !res.headers.get("content-type")?.toLowerCase().includes("html")) {
+				// 此时只收到了响应头，正文还没下载完；对大文件（压缩包、视频等）立即取消响应体，
+				// 避免明知不是 HTML 还把整个文件拉下来
+				res.body?.cancel().catch(() => {});
+				throw new Error("动态加载失败: 响应类型非 HTML");
+			}
+			return res.text();
+		})
 		.then(html => {
 			let m = html.match(/<!-- BEGIN MAIN -->.+<!-- END MAIN -->/s),
 				mt = html.match(/<title>.+<\/title>/s);
@@ -86,8 +96,11 @@ function 动态加载(元素) {
 		})
 		.catch(e => {
 			console.error(e);
-			open(元素.href, "_self");
+			// 目标可能是浏览器直接下载的文件（页面不会跳走），需复位状态，
+			// 否则后续所有站内链接点击都会退化成整页跳转
+			正在动态加载 = false;
 			显示或隐藏进度条(false);
+			open(元素.href, "_self");
 		});
 }
 /** (图标名 + class) → 已解析的 <template> 缓存，避免同一图标的 SVG 字符串被重复 HTML 解析 */
@@ -530,6 +543,8 @@ addEventListener("click", 事件 => {
 	if (!(目标 instanceof Element)) return;
 	const a = 目标.closest("a");
 	if (!a) return;
+	// 下载链接、以及指定了非 _self 打开方式的链接交给浏览器自行处理，不发起动态加载请求
+	if (a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
 
 	const 本站 = location.host,
 		当前路径 = location.pathname;
