@@ -551,6 +551,8 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面[src*="http"] {
 	display: block;
+	object-fit: cover;
+	object-position: center;
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面[src*="http"] + svg {
 	display: none;
