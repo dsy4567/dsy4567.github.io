@@ -254,6 +254,10 @@ hr {
 	border: 1px solid var(--overlay);
 }
 
+input {
+	accent-color: var(--accent-color);
+}
+
 /* ==================== 通用工具类 class ==================== */
 .隐藏链接 {
 	position: absolute;
