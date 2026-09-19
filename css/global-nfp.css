@@ -456,6 +456,7 @@ div#侧边按钮容器 > *:has(*:focus-visible) {
 	border-bottom-left-radius: 50%;
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
+	border-right: 1px solid transparent;
 	opacity: 1;
 	transform: translateX(0);
 }
@@ -464,6 +465,7 @@ div#侧边按钮容器 > .拥有更多选项:hover,
 div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) {
 	border-bottom-left-radius: 0;
 	z-index: 1;
+	border-bottom: 1px solid transparent;
 }
 
 div#侧边按钮容器 > *,
@@ -479,6 +481,9 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 	background: var(--surface-2);
 	color: var(--text-color);
 	border: 1px solid transparent;
+	border-top: 1px solid var(--accent-color-transparent);
+	border-left: 1px solid var(--accent-color-transparent);
+	border-right: 1px solid transparent;
 	display: flex;
 	padding-right: 32px;
 	transform: translateX(28px) translateY(-5px);
@@ -504,7 +509,7 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin: 3px;
+	margin: 4px 0px 0px 4px;
 	cursor: pointer;
 	width: 24px;
 	height: 24px;
@@ -514,6 +519,13 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *.激活,
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:active {
 	background-color: var(--overlay);
+}
+
+
+div#侧边按钮容器 > .拥有更多选项 > .更多选项#播放列表,
+div#侧边按钮容器 > .拥有更多选项 > .更多选项#所有主题 {
+	border-left: 1px solid var(--accent-color-transparent);
+	border-bottom: 1px solid var(--accent-color-transparent);
 }
 /* ==================== 侧边按钮-关闭侧边按钮 ==================== */
 div#侧边按钮容器 > #关闭侧边按钮 > svg {
@@ -601,7 +613,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 	overflow-x: hidden;
 	padding: 8px;
 	position: absolute;
-	top: 38px;
+	top: 37px;
 	left: -29px;
 	width: calc(var(--container-width));
 	height: 160px;
@@ -678,7 +690,7 @@ div#侧边按钮容器 > #切换主题 > #所有主题 {
 	height: auto;
 	left: -1px;
 	padding: 3px;
-	top: 33px;
+	top: 32px;
 	transform: none;
 	width: calc(32px * 4);
 }

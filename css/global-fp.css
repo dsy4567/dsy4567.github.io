@@ -559,7 +559,7 @@ div#侧边按钮容器 {
 }
 div#侧边按钮容器 > * {
 	background-color: var(--surface-2);
-	border: 1px solid transparent;
+	border: 1px solid var(--accent-color-transparent);
 	border-radius: 50%;
 	display: flex;
 	opacity: 0.5;
