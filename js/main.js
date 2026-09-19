@@ -559,9 +559,10 @@ addEventListener("click", 事件 => {
 //#region 域名迁移
 // 域名迁移：非 .icu 域名自动跳转到新域名 dsy4567.icu
 // 流程：
-//   1. 爬虫 / 本地环境 / 已在新域名 → 不做任何处理
-//   2. 用户选择过「不跳转」（URL 参数或 localStorage 的 no-redirect）→ 仅弹横幅提示新域名
-//   3. 其余情况 → 自动跳转并在 URL 携带来源参数，供新域名页面弹「回原域名」横幅
+//   1. 爬虫 / 本地环境 / 已在新域名（且非刚从旧域名跳来）→ 不做任何处理
+//   2. 刚从旧域名跳来（URL 带 from-non-icu-tld）→ 在新域名上弹「回原域名」横幅
+//   3. 用户选择过「不跳转」（URL 参数或 localStorage 的 no-redirect）→ 仅弹横幅提示新域名
+//   4. 其余情况 → 自动跳转并在 URL 携带来源参数，供新域名页面弹「回原域名」横幅
 延迟执行(
 	"关键任务完成",
 	() => {
@@ -585,9 +586,13 @@ addEventListener("click", 事件 => {
 				});
 			};
 
-			// 已在 dsy4567.icu（含子域名）或黑名单域名上则无需处理
+			// 是否刚从旧域名跳来（URL 带 from-non-icu-tld 标记）
+			const 来自旧域名 = JSON.parse(U.searchParams.get("from-non-icu-tld") || "false");
+
+			// 已在 dsy4567.icu（含子域名）或黑名单域名上则无需处理；
+			// 例外：刚从旧域名跳来的请求需放行，否则下方情况 C 永远不会执行
 			if (
-				location.hostname.endsWith("dsy4567.icu") ||
+				(location.hostname.endsWith("dsy4567.icu") && !来自旧域名) ||
 				location.hostname.endsWith(".ts.net") || // Tailscale
 				本地域名.includes(location.hostname) ||
 				是否为纯ip(location.hostname)
@@ -595,7 +600,9 @@ addEventListener("click", 事件 => {
 				return;
 
 			// 情况 A：用户已选择「不跳转」→ 仅弹横幅提示，不强制跳转
+			// 来自旧域名时不适用：此时已在新域名上，弹「迁移至新域名」横幅没有意义
 			if (
+				!来自旧域名 &&
 				网页访问者不为爬虫 &&
 				(JSON.parse(U.searchParams.get("no-redirect") || "false") ||
 					JSON.parse(localStorage.getItem("no-redirect") || "false"))
@@ -612,7 +619,7 @@ addEventListener("click", 事件 => {
 					a.href = U.href;
 					a.hostname = "dsy4567.icu";
 				}
-			} else {
+			} else if (!来自旧域名) {
 				// 情况 B：默认自动跳转到新域名
 				if (网页访问者不为爬虫) {
 					// 在 URL 上记录来源信息，供新域名页面弹「回原域名」横幅使用
@@ -624,12 +631,9 @@ addEventListener("click", 事件 => {
 				location.href = U.href;
 			}
 
-			// 情况 C：刚从旧域名跳来（URL 带 from-hostname）→ 在新域名上弹「回原域名」横幅
+			// 情况 C：刚从旧域名跳来（URL 带 from-non-icu-tld、from-hostname）→ 在新域名上弹「回原域名」横幅
 			let 原域名 = U.searchParams.get("from-hostname");
-			if (
-				网页访问者不为爬虫 &&
-				JSON.parse(U.searchParams.get("from-non-icu-tld") || "false")
-			) {
+			if (网页访问者不为爬虫 && 来自旧域名) {
 				let 横幅 = 添加横幅('本站已迁移至新域名，您也可以<a href="#">访问原域名</a>'),
 					a = 横幅.querySelector("a");
 				删除url参数();
