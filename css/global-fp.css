@@ -362,12 +362,14 @@ div.通知 {
 }
 
 /* ==================== 导航栏、左右栏 ==================== */
-@media only screen and (max-width: 1000px) {
-	#导航栏 {
-		width: calc(100% - 18px) !important;
-	}
+@media only screen and (max-width: 480px) {
 	#导航栏 > .右 > a svg {
 		display: none;
+	}
+}
+@media only screen and (max-width: 1080px) {
+	#导航栏 {
+		width: calc(100% - 18px) !important;
 	}
 	main {
 		flex-direction: column;
@@ -376,7 +378,8 @@ div.通知 {
 		width: 100% !important;
 	}
 	main > .左 {
-		transform: translateY(48px) !important;
+		/* transform: translateY(48px) !important; */
+		height: calc(64vh) !important;
 		max-height: 420px !important;
 		scrollbar-width: none;
 	}
@@ -407,6 +410,9 @@ div.通知 {
 	}
 	main > #分界线 {
 		display: none !important;
+	}
+	main > .右 > section:nth-child(1) {
+		margin-top: 16px !important;
 	}
 }
 
