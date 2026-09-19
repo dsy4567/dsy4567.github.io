@@ -210,6 +210,31 @@ hr {
 	border: 1px solid var(--overlay);
 }
 
+table {
+	border: 1px solid var(--overlay);
+	border-collapse: separate;
+	border-radius: var(--border-radius);
+	border-spacing: 0;
+	margin: 4px 0;
+	max-width: 100%;
+	overflow: hidden;
+}
+th,
+td {
+	border-right: 1px solid var(--overlay);
+	border-bottom: 1px solid var(--overlay);
+	padding: 4px 8px;
+}
+tr > :last-child {
+	border-right: none;
+}
+tr:last-child > * {
+	border-bottom: none;
+}
+th {
+	background-color: var(--overlay);
+}
+
 input {
 	accent-color: var(--accent-color);
 }
