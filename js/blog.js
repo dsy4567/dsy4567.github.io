@@ -67,16 +67,17 @@ async function 渲染文章(当前文章信息) {
 					? ""
 					: '<hr />如无特别说明，本作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">CC BY-NC-SA 4.0</a>进行许可。<br />');
 
+			const 标签html = (() => {
+				let html = "";
+				for (const 标签 of 当前文章信息.tags || [])
+					html += `<a href="/blog.html?tag=${标签}">${标签}</a> `;
+				return html.trim();
+			})();
 			span.innerHTML = `发表于: ${new Date(
 				当前文章信息.date
 			).toLocaleString()}, 更新于: ${new Date(
 				当前文章信息.updated
-			).toLocaleString()}</br>标签: ${(() => {
-				let html = "";
-				for (const 标签 of 当前文章信息.tags)
-					html += `<a href="/blog.html?tag=${标签}">${标签}</a> `;
-				return html;
-			})()}`;
+			).toLocaleString()}${标签html ? `</br>标签: ${标签html}` : ""}`;
 			span.classList.add("元数据");
 			sect.append(span);
 			// 设置大小和懒加载
