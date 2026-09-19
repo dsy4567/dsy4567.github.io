@@ -651,6 +651,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 	top: calc(50% - var(--height) / 2);
 	left: -6px;
 	content: "";
+	pointer-events: none;
 }
 
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 li * {
