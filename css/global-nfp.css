@@ -378,7 +378,6 @@ main > #分界线 {
 	align-items: center;
 }
 body.宽屏 > main > #分界线 {
-	/* opacity: 0; */
 	margin-left: -40px;
 }
 main > #分界线 > svg {
@@ -465,7 +464,6 @@ div#侧边按钮容器 > .拥有更多选项:hover,
 div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) {
 	border-bottom-left-radius: 0;
 	z-index: 1;
-	border-bottom: 1px solid transparent;
 }
 
 div#侧边按钮容器 > *,
@@ -486,9 +484,11 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 	border-right: 1px solid transparent;
 	display: flex;
 	padding-right: 32px;
-	transform: translateX(28px) translateY(-5px);
+	transform: translateX(28px);
 	flex-direction: row;
 	flex-wrap: nowrap;
+	box-sizing: border-box;
+	height: 36px;
 }
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 + .更多选项 {
 	border-bottom-left-radius: 19px;
@@ -499,9 +499,6 @@ div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) > .更多选�
 	pointer-events: all !important;
 	opacity: 1 !important;
 }
-div#侧边按钮容器 > .拥有更多选项:hover > .更多选项 + .更多选项,
-div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) > .更多选项 + .更多选项 {
-}
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 	background-color: var(--surface-2);
 	border: 1px solid var(--overlay-strong);
@@ -509,7 +506,7 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin: 4px 0px 0px 4px;
+	margin: 5px 0px 5px 5px;
 	cursor: pointer;
 	width: 24px;
 	height: 24px;
@@ -520,7 +517,6 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *.激活,
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:active {
 	background-color: var(--overlay);
 }
-
 
 div#侧边按钮容器 > .拥有更多选项 > .更多选项#播放列表,
 div#侧边按钮容器 > .拥有更多选项 > .更多选项#所有主题 {
@@ -598,7 +594,8 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项 {
 }
 
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#音乐控件 {
-	width: calc(var(--container-width) - 49px);
+	width: calc(var(--container-width) - 14px);
+	right: calc(var(--container-width) * -1 + 42px);
 }
 
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 {
@@ -609,15 +606,15 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 	flex-wrap: nowrap;
 	font-size: 0.9em;
 	margin: 0;
-	overflow-y: auto;
-	overflow-x: hidden;
 	padding: 8px;
 	position: absolute;
-	top: 37px;
+	top: 34px;
 	left: -29px;
-	width: calc(var(--container-width));
+	width: calc(var(--container-width) + 21px);
 	height: 160px;
-	max-height: calc(25vh - 16px);
+	max-height: calc(25vh + 10px);
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 li {
 	border: 1px solid var(--overlay);
@@ -662,18 +659,23 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 }
 
 /* ==================== 侧边按钮-主题 ==================== */
-div#侧边按钮容器 > #切换主题 {
+div#侧边按钮容器 > .拥有更多选项#切换主题 {
 	z-index: 0;
+	--container-width: calc(32px * 4);
 }
-div#侧边按钮容器 > #切换主题:hover,
-div#侧边按钮容器 > #切换主题:has(*:focus-visible) {
-	transform: translateX(calc(-32px * 3 + -1px));
+div#侧边按钮容器 > .拥有更多选项#切换主题:hover,
+div#侧边按钮容器 > .拥有更多选项#切换主题:has(*:focus-visible) {
+	transform: translateX(calc(-32px * 3 - 6px));
 }
 
 /* 第一行：背景模式切换、自定义强调色调色盘 */
-div#侧边按钮容器 > #切换主题 > #主题控件 {
+div#侧边按钮容器 > .拥有更多选项#切换主题 > #主题控件 {
 	padding-right: 0;
-	width: calc(32px * 3);
+	width: calc(32px * 3 + 8px);
+	right: calc(var(--container-width) * -1 + 52px);
+}
+
+div#主题控件 {
 }
 /* 背景模式按钮：填充色反映当前生效的背景（浅色→白、深色→黑），边框提供轮廓 */
 div#侧边按钮容器 > #切换主题 > #主题控件 > button#背景模式 {
@@ -690,9 +692,13 @@ div#侧边按钮容器 > #切换主题 > #所有主题 {
 	height: auto;
 	left: -1px;
 	padding: 3px;
-	top: 32px;
+	top: 34px;
 	transform: none;
-	width: calc(32px * 4);
+	width: calc(32px * 4 - -11px);
+	padding: 6px;
+	max-height: calc(25vh - 31px);
+	overflow-y: auto;
+	overflow-x: hidden;
 }
 div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="true"] {
 	outline: 2px solid var(--text-color);
@@ -721,14 +727,6 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	content: attr(aria-label);
 }
 
-#网易云音乐-最近在听 {
-}
-#网易云音乐-最近在听 .精选歌词容器,
-#网易云音乐-最近在听 .播放排行 {
-}
-#网易云音乐-最近在听 .精选歌词容器 {
-	/* font-size: smaller; */
-}
 #网易云音乐-最近在听 .精选歌词容器::after,
 #网易云音乐-最近在听 .精选歌词容器::before {
 	padding: 0;

@@ -567,13 +567,18 @@ div#侧边按钮容器 > * {
 	padding: 4px;
 	position: relative;
 	transform: translateX(-4px);
+	align-items: center;
+	width: 36px;
+	height: 36px;
+	box-sizing: border-box;
+	justify-content: center;
 }
 
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 	opacity: 0;
 	pointer-events: none;
 	position: absolute;
-	height: 32px;
+	height: 34px;
 }
 
 /* ==================== 侧边按钮-关闭侧边按钮 ==================== */
