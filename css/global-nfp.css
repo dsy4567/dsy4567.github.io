@@ -786,6 +786,11 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 }
 
 /* ==================== 博客 ==================== */
+.左 > .目录 {
+	word-break: keep-all;
+	overflow-y: auto;
+}
+
 article h1.可固定,
 article h2.可固定,
 article h3.可固定,
