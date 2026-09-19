@@ -332,7 +332,7 @@ input {
 }
 @media only screen and (max-width: 1080px) {
 	#导航栏 {
-		width: calc(100% - 18px) !important;
+		width: calc(100% - 10px) !important;
 	}
 	main {
 		flex-direction: column;
