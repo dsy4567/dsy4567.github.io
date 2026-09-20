@@ -548,6 +548,7 @@ span#联系方式 > * {
 
 /* ==================== 侧边按钮-通用 ==================== */
 div#侧边按钮容器 {
+	--border: 1px solid var(--overlay-strong);
 	position: fixed;
 	right: 0px;
 	z-index: 1007;
@@ -555,8 +556,10 @@ div#侧边按钮容器 {
 	transition-delay: 0ms;
 }
 div#侧边按钮容器 > * {
+	box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+  rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
 	background-color: var(--surface-2);
-	border: 1px solid var(--accent-color-transparent);
+	border: var(--border);
 	border-radius: 50%;
 	display: flex;
 	opacity: 0.5;

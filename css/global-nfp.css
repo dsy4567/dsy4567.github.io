@@ -450,9 +450,6 @@ body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible)::after {
 div#侧边按钮容器 > *:hover,
 div#侧边按钮容器 > *:focus-visible,
 div#侧边按钮容器 > *:has(*:focus-visible) {
-	box-shadow:
-		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
-		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
 	border-radius: unset;
 	border-top-left-radius: 50%;
 	border-bottom-left-radius: 50%;
@@ -482,8 +479,8 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 	background: var(--surface-2);
 	color: var(--text-color);
 	border: 1px solid transparent;
-	border-top: 1px solid var(--accent-color-transparent);
-	border-left: 1px solid var(--accent-color-transparent);
+	border-top: var(--border);
+	border-left: var(--border);
 	border-right: 1px solid transparent;
 	display: flex;
 	padding-right: 32px;
@@ -492,10 +489,11 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 	flex-wrap: nowrap;
 	box-sizing: border-box;
 	height: 36px;
+	align-items: center;
 }
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 + .更多选项 {
 	border-bottom-left-radius: 19px;
-	border-top: 1px solid var(--accent-color);
+	border-top: var(--border);
 }
 div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
 div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) > .更多选项 {
@@ -523,8 +521,8 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:active {
 
 div#侧边按钮容器 > .拥有更多选项 > .更多选项#播放列表,
 div#侧边按钮容器 > .拥有更多选项 > .更多选项#所有主题 {
-	border-left: 1px solid var(--accent-color-transparent);
-	border-bottom: 1px solid var(--accent-color-transparent);
+	border-left: var(--border);
+	border-bottom: var(--border);
 }
 /* ==================== 侧边按钮-关闭侧边按钮 ==================== */
 div#侧边按钮容器 > #关闭侧边按钮 > svg {
