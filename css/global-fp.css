@@ -627,7 +627,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 }
 #网易云音乐-最近在听 .播放排行 {
 	margin-top: 8px;
-	max-height: 50vh;
+	max-height: 75vh;
 	overflow: auto;
 }
 #网易云音乐-最近在听 .播放排行 > * {
