@@ -40,14 +40,20 @@ type 歌单 = {
 	id: number;
 	mv: number;
 };
-type 排行歌曲项 = {
-	songId: number;
-	picId: number;
-	picUrl: string;
-	songName: string;
-	albumName: string;
-	artists: { artistId: number; artistName: string }[];
-	playCount: number;
+type 最近在听项 = {
+	/** 排行依据（非播放次数），越大越靠前 */
+	score: number;
+	song: {
+		id: number;
+		name: string;
+		ar: { id: number; name: string }[];
+		al: { name: string; picUrl: string };
+		mv: number;
+	};
+};
+type 最近在听响应 = {
+	code?: number;
+	weekData?: 最近在听项[];
 };
 type 副歌信息 = {
 	id: number;
@@ -55,27 +61,15 @@ type 副歌信息 = {
 	/** 毫秒 */ endTime: number;
 	ugcLocked: number;
 };
-type 最近聆听排行数据 = {
-	rank_raw?: {
-		code?: number;
-		data?: {
-			type?: string;
-			/** 统计起始时间（毫秒时间戳，东八区零点） */
-			startTime?: number;
-			/** 统计结束时间（毫秒时间戳，东八区零点） */
-			endTime?: number;
-			songItems?: 排行歌曲项[];
-		};
-	};
+type 最近在听缓存 = {
+	/** 缓存过期时间戳（东八区当天 23:59:59.999） */
+	过期时间: number;
+	/** 已按 score 降序排列并截断的排行项 */
+	排行项: 最近在听项[];
 	/** 第 1 名歌曲的原始歌词接口响应 */
-	first_lyric_raw?: {
-		lrc?: { version?: number; lyric?: string };
-	};
-	/** 第 1 名歌曲的副歌时间区间 */
-	first_chorus_raw?: {
-		code?: number;
-		chorus?: 副歌信息[];
-	};
+	歌词原始?: { lrc?: { lyric?: string } } | null;
+	/** 第 1 名歌曲的原始副歌接口响应 */
+	副歌原始?: { code?: number; chorus?: 副歌信息[] } | null;
 };
 type 精选歌词 = {
 	行: string[];

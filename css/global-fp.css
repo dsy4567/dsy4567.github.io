@@ -556,8 +556,9 @@ div#侧边按钮容器 {
 	transition-delay: 0ms;
 }
 div#侧边按钮容器 > * {
-	box-shadow: rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
-  rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	box-shadow:
+		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
 	background-color: var(--surface-2);
 	border: var(--border);
 	border-radius: 50%;
@@ -632,12 +633,14 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 	overflow: hidden;
 }
 #网易云音乐-最近在听 .播放排行::before {
-	/* 文案由 home.js 按统计数据起止时间（精确到日）写入 --date-range，无数据时退回操作提示 */
-	content: var(--date-range, "—— 双击以播放 ——");
+	/* 文案由 home.js 写入 --date-range（接口不提供统计区间，固定为「最近一周」），无数据时退回操作提示 */
+	content: var(--date-range, "—— 加载中 ——");
 	display: block;
 	font-size: small;
 	width: 100%;
 	margin-top: 4px;
+	text-align: center;
+	opacity: 0.7;
 }
 #网易云音乐-最近在听 .播放排行 > * {
 	border: 1px solid var(--accent-color-transparent);

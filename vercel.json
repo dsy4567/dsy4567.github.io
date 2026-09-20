@@ -293,15 +293,6 @@
 			]
 		},
 		{
-			"source": "/json/ncm-listen-rank.json",
-			"headers": [
-				{
-					"key": "Cache-Control",
-					"value": "public, max-age=3600, must-revalidate"
-				}
-			]
-		},
-		{
 			"source": "/json/theme.json",
 			"headers": [
 				{

@@ -29,8 +29,6 @@ const CONFIG = {
 	blogIndexPath: "./blog/index.html",
 	ncmPlaylistId: 9123680760,
 	ncmOutputPath: "./json/ncm.json",
-	ncmCookiePath: "./tools/ncmCookie.secret",
-	ncmListenRankOutputPath: "./json/ncm-listen-rank.json",
 	fileStatesPath: "./tools/file-states.json",
 	// 需追踪内容 hash 与「内容修改时间」的静态页面（相对项目根目录）
 	staticTrackedFiles: ["index.html", "blog.html", "friends.html"],
@@ -40,7 +38,6 @@ const CONFIG = {
 
 // ncm.json 在 file-states 中的键（统一为不含 "./" 前缀的相对路径）
 const ncmStateKey = path.posix.normalize(CONFIG.ncmOutputPath);
-const ncmListenRankStateKey = path.posix.normalize(CONFIG.ncmListenRankOutputPath);
 
 // ==================== 类型定义 ====================
 
@@ -238,26 +235,6 @@ function computeNcmHash(songs) {
 			name: artist.name,
 		})),
 		al: song.al?.name ?? null,
-	}));
-	return crypto.createHash("sha256").update(JSON.stringify(metadata), "utf8").digest("hex");
-}
-
-/**
- * 计算网易云听歌排行 hash：仅提取 songItems 关键元数据（songId、播放次数、歌名、歌手、专辑名），
- * 不含封面地址等易变字段，用于判断排行内容是否真正变化
- * @param {any[]} songItems - 听歌排行接口返回的 songItems 列表
- * @returns {string} SHA-256 十六进制（小写）
- */
-function computeNcmListenRankHash(songItems) {
-	const metadata = (songItems || []).map(item => ({
-		songId: item.songId,
-		playCount: item.playCount,
-		songName: item.songName,
-		albumName: item.albumName,
-		artists: (item.artists || []).map((/** @type {any} */ artist) => ({
-			artistId: artist.artistId,
-			artistName: artist.artistName,
-		})),
 	}));
 	return crypto.createHash("sha256").update(JSON.stringify(metadata), "utf8").digest("hex");
 }
@@ -625,23 +602,6 @@ class SiteGenerator {
 // ==================== 网易云歌单任务（带错误处理）====================
 
 /**
- * 读取 tools/ncmCookie.secret 作为网易云 cookie：逐行去除前导尾随空格并丢弃空行后拼接
- * @returns {string} cookie 字符串；文件缺失或为空时返回空串
- */
-function loadNcmCookie() {
-	try {
-		return fs
-			.readFileSync(CONFIG.ncmCookiePath, "utf-8")
-			.split("\n")
-			.map(line => line.trim())
-			.filter(Boolean)
-			.join("");
-	} catch (_err) {
-		return "";
-	}
-}
-
-/**
  * 拉取网易云歌单并按关键元数据 hash 与现有文件比较：
  * 一致则跳过写入（避免封面等易变字段触发无意义变更），失败时不写入，保留旧缓存
  * @returns {Promise<void>}
@@ -691,105 +651,6 @@ async function fetchNeteasePlaylist() {
 	}
 }
 
-/**
- * 拉取网易云「最近在听」数据：登录校验 → 月听歌排行 → 第一首歌的歌词与副歌，
- * 三个接口的原始响应存入 json/ncm-listen-rank.json。
- * 未登录或任一接口失败时不写入，保留旧缓存；排行 hash 一致时跳过写入
- * @returns {Promise<void>}
- */
-async function fetchNcmListenRank() {
-	console.log("Fetching Netease listen rank...");
-	const cookie = loadNcmCookie();
-	if (!cookie) {
-		console.warn("NCM cookie missing, skipping listen rank task.");
-		return;
-	}
-	try {
-		const api = /** @type {any} */ (require("@neteasecloudmusicapienhanced/api"));
-
-		// 1. 检查登录状态
-		const loginResult = await api.login_status({ cookie }).catch((/** @type {Error} */ err) => {
-			console.error("NCM login status failed:", err.message);
-			return null;
-		});
-		if (!loginResult || loginResult.body?.data?.code !== 200) {
-			console.warn("NCM not logged in, skipping listen rank task (keeping old cache).");
-			return;
-		}
-
-		// 2. 月听歌排行
-		const rankResult = await api
-			.listen_data_song_play_rank({ type: "month", cookie })
-			.catch((/** @type {Error} */ err) => {
-				console.error("NCM listen rank failed:", err.message);
-				return null;
-			});
-		if (!rankResult || rankResult.body?.code !== 200) {
-			console.warn("Skipping listen rank write due to rank API failure.");
-			return;
-		}
-		const rankBody = rankResult.body;
-
-		// 3. 排行第一首歌的歌词与副歌
-		const firstSongId = rankBody?.data?.songItems?.[0]?.songId;
-		if (typeof firstSongId !== "number") {
-			console.warn("No song in listen rank, skipping listen rank task (keeping old cache).");
-			return;
-		}
-		const [lyricResult, chorusResult] = await Promise.all([
-			api.lyric({ id: firstSongId, cookie }).catch((/** @type {Error} */ err) => {
-				console.error("NCM lyric failed:", err.message);
-				return null;
-			}),
-			api.song_chorus({ id: firstSongId, cookie }).catch((/** @type {Error} */ err) => {
-				console.error("NCM chorus failed:", err.message);
-				return null;
-			}),
-		]);
-		if (!lyricResult || !chorusResult) {
-			console.warn("Skipping listen rank write due to lyric/chorus API failure.");
-			return;
-		}
-
-		// 4. 与磁盘上的现有文件按排行关键元数据 hash 比较，一致则跳过写入
-		const newHash = computeNcmListenRankHash(rankBody?.data?.songItems || []);
-		const outputPath = path.join(projectRoot, CONFIG.ncmListenRankOutputPath);
-		let oldHash = null;
-		try {
-			oldHash = computeNcmListenRankHash(
-				jsonfile.readFileSync(outputPath)?.rank_raw?.data?.songItems || []
-			);
-		} catch (_err) {
-			// 文件不存在或损坏时视为内容变化
-		}
-		if (oldHash !== null && oldHash === newHash) {
-			console.log("Netease listen rank unchanged, skipping write.");
-			return;
-		}
-
-		jsonfile.writeFileSync(
-			CONFIG.ncmListenRankOutputPath,
-			normalizeNcmImageHost({
-				rank_raw: rankBody,
-				first_lyric_raw: lyricResult.body,
-				first_chorus_raw: chorusResult.body,
-			})
-		);
-
-		// syncFileStates 阶段记录的仍是旧文件状态，这里同步更新
-		const states = readFileStates();
-		states[ncmListenRankStateKey] = { hash: newHash, updated: new Date().toISOString() };
-		writeFileStates(states);
-		console.log("Netease listen rank saved.");
-	} catch (err) {
-		console.error(
-			"Unexpected error in NCM listen rank task:",
-			/** @type {Error} */ (err).message
-		);
-		// 不写入文件，保留旧缓存
-	}
-}
-
 // ==================== 命令行任务选择 ====================
 
 /**
@@ -799,7 +660,6 @@ async function fetchNcmListenRank() {
 const 任务说明 = {
 	blog: "构建博客（文章页面、聚合 JSON、RSS、站点地图与索引页）",
 	playlist: "获取网易云歌单（json/ncm.json）",
-	rank: "获取网易云听歌排行（json/ncm-listen-rank.json）",
 };
 
 /**
@@ -809,7 +669,7 @@ const 任务说明 = {
 function 打印用法() {
 	console.log("用法: node tools/build.js [任务...]");
 	console.log(
-		"不带任务参数时执行全部任务；任务名可省略前导的 - 或 --，如 --rank 与 rank 等价。\n"
+		"不带任务参数时执行全部任务；任务名可省略前导的 - 或 --，如 --playlist 与 playlist 等价。\n"
 	);
 	console.log("可用任务:");
 	for (const [任务名, 说明] of Object.entries(任务说明))
@@ -848,7 +708,7 @@ function 解析任务参数(参数列表) {
 
 /**
  * 构建主流程：按命令行参数依次执行选定的任务
- * 不带参数时执行全部任务：构建博客 → 获取网易云歌单 → 获取网易云听歌排行
+ * 不带参数时执行全部任务：构建博客 → 获取网易云歌单
  * @returns {Promise<void>}
  */
 async function main() {
@@ -885,7 +745,6 @@ async function main() {
 	}
 
 	if (任务集.has("playlist")) await fetchNeteasePlaylist();
-	if (任务集.has("rank")) await fetchNcmListenRank();
 	console.log("Done!");
 }
 

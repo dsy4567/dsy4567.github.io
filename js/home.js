@@ -9,12 +9,22 @@
 // @ts-check
 "use strict";
 
-let /** @type {最近聆听排行数据 | null} */ 排行原始数据 = null,
+/** 最近在听接口所在主机：接口无需登录，歌词与副歌也由该主机提供 */
+const 接口主机 = "https://ncm.vercel.dsy4567.icu";
+
+/** 最近在听接口：返回的 weekData 含 score 字段，作为排行依据 */
+const 最近在听接口 = 接口主机 + "/user/record?uid=8223493733&type=1";
+
+/** 排行展示上限：接口可能返回上百条，只展示前 100 名 */
+const 排行上限 = 100;
+
+let /** @type {最近在听项[]} */ 排行歌曲 = [],
 	/** 是否已请求过排行数据（失败/非法也算“有结论”，避免换页后重复请求） */
 	排行已请求 = false,
 	/** 排行数据是否有效（无效时隐藏整个 section） */
 	排行有效 = false,
-	/** @type {排行歌曲项[]} */ 排行歌曲 = [],
+	/** @type {{ lrc?: { lyric?: string } } | null} */ 歌词原始 = null,
+	/** @type {{ code?: number; chorus?: 副歌信息[] } | null} */ 副歌原始 = null,
 	/** @type {精选歌词 | "失败" | null} */ 精选歌词缓存 = null,
 	正在处理点击 = false,
 	/** main() 会随动态加载换页被 main.js 反复调用，延迟任务只在首次 main() 注册一次 */
@@ -38,32 +48,73 @@ let 动画基准毫秒 = 0;
 /** 逐项观察排行项：首次可见时才加载大图、启动封面动画；不在视口内（含被滚动裁剪）时暂停其动画，回到视口恢复（懒创建，换页后逐项重新观察） */
 let /** @type {IntersectionObserver | null} */ 排行可见性观察器 = null;
 
-/** 将毫秒时间戳转为东八区日期文本（YYYY-MM-DD）；数据时间戳均为东八区整点，直接偏移计算，避免受访客本地时区影响 */
-function 毫秒转东八区日期(/** @type {number} */ 毫秒) {
-	return new Date(毫秒 + 8 * 60 * 60 * 1000).toISOString().slice(0, 10);
+/** 东八区当天 23:59:59.999 的时间戳：先偏移到东八区、按 UTC 取当天末尾，再偏移回来，避免受访客本地时区影响 */
+function 今日缓存过期时间() {
+	const 东八区当天末尾 = new Date(Date.now() + 8 * 60 * 60 * 1000);
+	东八区当天末尾.setUTCHours(23, 59, 59, 999);
+	return 东八区当天末尾.getTime() - 8 * 60 * 60 * 1000;
 }
 
-/** 将排行项映射为播放列表使用的歌单结构（排行数据无 mv 字段，统一置哨兵值 -0x66ccff，ncm.js 播放时会经歌曲详情接口补取真实 mv id） */
-function 排行项转歌单(/** @type {排行歌曲项} */ 项) {
-	const 歌手 = 项.artists.map(歌手信息 => 歌手信息.artistName).join(" / ");
+/** 读取 localStorage 中的排行缓存；缺失或结构非法时返回 null */
+function 读取排行缓存() {
+	try {
+		const 原文 = localStorage.getItem("最近在听");
+		if (!原文) return null;
+		const 缓存 = JSON.parse(原文);
+		if (typeof 缓存?.过期时间 !== "number" || !Array.isArray(缓存?.排行项)) return null;
+		return /** @type {最近在听缓存} */ (缓存);
+	} catch (e) {
+		console.warn(e);
+		return null;
+	}
+}
+
+/** 写入排行缓存：排行与歌词同批存入，有效期为东八区当天 23:59:59.999；写入失败（如隐私模式）静默忽略 */
+function 写入排行缓存() {
+	try {
+		localStorage.setItem(
+			"最近在听",
+			JSON.stringify({
+				过期时间: 今日缓存过期时间(),
+				排行项: 排行歌曲,
+				歌词原始,
+				副歌原始,
+			})
+		);
+	} catch (e) {
+		console.warn(e);
+	}
+}
+
+/** 用缓存填充内存状态（命中有效缓存或请求失败兜底时调用） */
+function 应用缓存(/** @type {最近在听缓存} */ 缓存) {
+	排行歌曲 = 缓存.排行项;
+	歌词原始 = 缓存.歌词原始 ?? null;
+	副歌原始 = 缓存.副歌原始 ?? null;
+	排行有效 = 排行歌曲.length > 0;
+}
+
+/** 将排行项映射为播放列表使用的歌单结构 */
+function 排行项转歌单(/** @type {最近在听项} */ 项) {
+	const 歌手 = 项.song.ar.map(歌手信息 => 歌手信息.name).join(" / ");
 	return {
-		完整歌名: 歌手 ? 歌手 + " - " + 项.songName : 项.songName,
-		歌名: 项.songName,
+		完整歌名: 歌手 ? 歌手 + " - " + 项.song.name : 项.song.name,
+		歌名: 项.song.name,
 		歌手,
-		专辑: 项.albumName || "",
-		封面: 项.picUrl ? 项.picUrl.replace("http://", "https://") : "",
-		id: 项.songId,
-		mv: -0x66ccff,
+		专辑: 项.song.al?.name || "",
+		封面: 项.song.al?.picUrl ? 项.song.al.picUrl.replace("http://", "https://") : "",
+		id: 项.song.id,
+		mv: 项.song.mv ?? 0,
 	};
 }
 
 /**
- * 选取用于展示的歌词行：优先取副歌（first_chorus_raw）起始起的连续 5 句；
+ * 选取用于展示的歌词行：优先取副歌（chorus）起始起的连续 5 句；
  * 副歌数据无效时兜底取从头开始第一组连续 5 句不含全/半角标点的歌词
  * @returns {Promise<string[] | null>} 选出的歌词行，无歌词时返回 null
  */
 async function 选取歌词行() {
-	const 歌词文本 = 排行原始数据?.first_lyric_raw?.lrc?.lyric;
+	const 歌词文本 = 歌词原始?.lrc?.lyric;
 	if (typeof 歌词文本 !== "string" || !歌词文本.includes("[")) return null;
 	let 脚本;
 	try {
@@ -76,8 +127,8 @@ async function 选取歌词行() {
 	}
 
 	// 有副歌字段-选取副歌部分前5句
-	const 副歌起始毫秒 = 排行原始数据?.first_chorus_raw?.chorus?.[0]?.startTime;
-	if (排行原始数据?.first_chorus_raw?.code === 200 && typeof 副歌起始毫秒 === "number") {
+	const 副歌起始毫秒 = 副歌原始?.chorus?.[0]?.startTime;
+	if (副歌原始?.code === 200 && typeof 副歌起始毫秒 === "number") {
 		// 副歌时间为毫秒，歌词行时间为秒
 		const 起始 = 脚本.findIndex(行 => 行.start >= 副歌起始毫秒 / 1000 - 0.05);
 		if (起始 >= 0) {
@@ -128,8 +179,8 @@ async function 填充精选歌词() {
 		if (!行) throw new Error("无可展示的歌词");
 		精选歌词缓存 = {
 			行,
-			歌手: 排行歌曲[0].artists.map(歌手信息 => 歌手信息.artistName).join(" / "),
-			歌名: 排行歌曲[0].songName,
+			歌手: 排行歌曲[0].song.ar.map(歌手信息 => 歌手信息.name).join(" / "),
+			歌名: 排行歌曲[0].song.name,
 		};
 		渲染精选歌词(容器, 精选歌词缓存);
 	} catch (e) {
@@ -245,14 +296,10 @@ async function 渲染最近在听() {
 	/** @type {HTMLElement | null} */
 	const 排行容器 = 模块.querySelector(".播放排行");
 	if (!排行容器) return;
-	// 统计范围精确到日，写入 CSS 变量交给 .播放排行::before 文案展示（值含引号，content 可直接引用）
-	const 起始毫秒 = 排行原始数据?.rank_raw?.data?.startTime;
-	const 结束毫秒 = 排行原始数据?.rank_raw?.data?.endTime;
-	if (typeof 起始毫秒 === "number" && typeof 结束毫秒 === "number")
-		排行容器.style.setProperty(
-			"--date-range",
-			`"—— ${毫秒转东八区日期(起始毫秒)} ~ ${毫秒转东八区日期(结束毫秒)} | 双击以播放 ——"`
-		);
+	// 数据已就绪、准备操作 DOM，此时才摘掉骨架的闪烁样式
+	模块.classList.remove("加载中");
+	// 接口不提供统计区间，文案固定为「最近一周」，写入 CSS 变量交给 .播放排行::before 展示（值含引号，content 可直接引用）
+	排行容器.style.setProperty("--date-range", '"—— 最近一周 | 双击以播放 ——"');
 	// 换页重渲染会丢弃旧列表：先取消其 WAAPI 动画，否则无限动画会继续持有已脱离文档的元素
 	for (const 封面 of 排行容器.querySelectorAll("img.封面"))
 		for (const 动画 of 封面.getAnimations()) 动画.cancel();
@@ -261,21 +308,21 @@ async function 渲染最近在听() {
 
 	// 用文档片段收集后一次性插入，避免逐项写入已连接容器引发多次样式失效
 	const 排行片段 = document.createDocumentFragment();
-	// 第 1 名恒为 100%，靠后按播放次数等比递减
-	const 最大播放次数 = Math.max(...排行歌曲.map(项 => 项.playCount || 0), 1);
+	// 第 1 名恒为 100%，靠后按 score 等比递减
+	const 最大score = Math.max(...排行歌曲.map(项 => 项.score), 1);
 	/** @type {HTMLElement[]} */
 	const 项元素列表 = [];
 	await 批量低阻塞操作(排行歌曲, 项 => {
 		const 项元素 = ce("div");
-		项元素.style.setProperty("--progress", ((项.playCount || 0) / 最大播放次数) * 100 + "%");
+		项元素.style.setProperty("--progress", (项.score / 最大score) * 100 + "%");
 		项元素.tabIndex = 0;
-		项元素.dataset.songId = "" + 项.songId;
-		const 歌手 = 项.artists.map(歌手信息 => 歌手信息.artistName).join(" / ");
-		项元素.title = 歌手 ? `${歌手} - ${项.songName}` : 项.songName;
-		if (项.picUrl) {
+		项元素.dataset.songId = "" + 项.song.id;
+		const 歌手 = 项.song.ar.map(歌手信息 => 歌手信息.name).join(" / ");
+		项元素.title = 歌手 ? `${歌手} - ${项.song.name}` : 项.song.name;
+		if (项.song.al?.picUrl) {
 			const 封面 = ce("img");
 			封面.className = "封面";
-			const 封面地址 = 项.picUrl.replace("http://", "https://");
+			const 封面地址 = 项.song.al.picUrl.replace("http://", "https://");
 			// 封面铺满整行，16px 小图放大严重模糊：lazy 小图立即占位（居中静止），首次可见后再并行请求大图，加载完成后换入并启用平移动画
 			封面.src = 封面地址 + "?param=16y16";
 			封面.alt = "";
@@ -293,17 +340,17 @@ async function 渲染最近在听() {
 		}
 		const 歌曲信息 = ce("div");
 		歌曲信息.className = "歌曲信息";
-		歌曲信息.append(项.songName);
+		歌曲信息.append(项.song.name);
 		if (歌手) {
 			const 歌手元素 = ce("span");
 			歌手元素.className = "淡化";
 			歌手元素.textContent = 歌手;
 			歌曲信息.append(" ", 歌手元素);
 		}
-		const 播放次数 = ce("div");
-		播放次数.className = "播放次数";
-		播放次数.textContent = "" + (项.playCount ?? 0);
-		项元素.append(歌曲信息, 播放次数);
+		// 不展示任何数字，名次由 CSS 的 counter 输出「TOP n」
+		const 排名 = ce("div");
+		排名.className = "排名";
+		项元素.append(歌曲信息, 排名);
 		排行片段.append(项元素);
 		项元素列表.push(项元素);
 	});
@@ -347,29 +394,50 @@ async function 渲染最近在听() {
 async function 获取并渲染最近在听() {
 	if (排行已请求) return 渲染最近在听();
 	排行已请求 = true;
+	const 动态加载自增计数器拷贝 = 动态加载自增计数器;
+	const 缓存 = 读取排行缓存();
+	// 缓存仍在有效期内（东八区当天 23:59 前）时直接用缓存渲染，不再发请求
+	if (缓存 && 缓存.过期时间 > Date.now()) {
+		应用缓存(缓存);
+		return 渲染最近在听();
+	}
 	try {
-		const 动态加载自增计数器拷贝 = 动态加载自增计数器;
-		const j = /** @type {最近聆听排行数据} */ (
-			await (await fetch("/json/ncm-listen-rank.json")).json()
-		);
+		const 响应 = /** @type {最近在听响应} */ (await (await fetch(最近在听接口)).json());
 		if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
 
-		const 原始项 = j?.rank_raw?.data?.songItems;
-		if (j?.rank_raw?.code !== 200 || !Array.isArray(原始项))
-			throw new Error("最近在听排行数据非法");
+		const 原始项 = 响应?.weekData;
+		if (!Array.isArray(原始项)) throw new Error("最近在听数据非法");
 		const 有效项 = 原始项.filter(
 			项 =>
 				项 &&
-				typeof 项.songId === "number" &&
-				typeof 项.songName === "string" &&
-				Array.isArray(项.artists)
+				typeof 项.score === "number" &&
+				项.song &&
+				typeof 项.song.id === "number" &&
+				typeof 项.song.name === "string" &&
+				Array.isArray(项.song.ar)
 		);
-		if (!有效项.length) throw new Error("最近在听排行为空");
-		排行原始数据 = j;
-		排行歌曲 = 有效项;
+		if (!有效项.length) throw new Error("最近在听数据为空");
+		// score 是排行依据（不是播放次数），降序排列后只保留前 100 名；同分保持接口原顺序
+		排行歌曲 = 有效项.sort((甲, 乙) => 乙.score - 甲.score).slice(0, 排行上限);
 		排行有效 = true;
+
+		// 接口不提供歌词与副歌，由客户端为第 1 名补取；失败时留空，歌词容器会自行移除
+		const 第一名id = 排行歌曲[0].song.id;
+		const [歌词响应, 副歌响应] = await Promise.all([
+			fetch(`${接口主机}/lyric?id=${第一名id}`)
+				.then(结果 => 结果.json())
+				.catch(() => null),
+			fetch(`${接口主机}/song/chorus?id=${第一名id}`)
+				.then(结果 => 结果.json())
+				.catch(() => null),
+		]);
+		歌词原始 = 歌词响应;
+		副歌原始 = 副歌响应;
+		写入排行缓存();
 	} catch (e) {
 		console.error(e);
+		// 请求失败时用已过期的旧缓存兜底
+		if (缓存) 应用缓存(缓存);
 	}
 	渲染最近在听();
 }

@@ -10,7 +10,6 @@
 		"build2": "node ./tools/build.js",
 		"blog": "node ./tools/build.js blog",
 		"playlist": "node ./tools/build.js playlist",
-		"rank": "node ./tools/build.js rank",
 		"new-blog": "node ./tools/new-blog.js",
 		"server": "./tools/server.sh"
 	},
