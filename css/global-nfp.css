@@ -77,19 +77,19 @@ main、左右栏
 }
 @keyframes 高频闪烁 {
 	0% {
-		opacity: 0;
+		opacity: 0.5;
 	}
 	25% {
 		opacity: 1;
 	}
 	50% {
-		opacity: 0;
+		opacity: 0.5;
 	}
 	75% {
 		opacity: 1;
 	}
 	100% {
-		opacity: 0;
+		opacity: 0.5;
 	}
 }
 @keyframes 延迟不可见 {
@@ -102,6 +102,16 @@ main、左右栏
 	100% {
 		visibility: hidden;
 	}
+}
+/* 循环动画 */
+#网易云音乐-最近在听.加载中 .精选歌词容器 .单句,
+#网易云音乐-最近在听.加载中 .精选歌词容器 .歌曲信息,
+#网易云音乐-最近在听.加载中 > .播放排行 > div,
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面,
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面 + svg {
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+	animation-fill-mode: forwards;
 }
 
 /* ==================== @media ==================== */
@@ -545,9 +555,6 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 {
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面,
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面 + svg {
 	animation-duration: 5s;
-	animation-iteration-count: infinite;
-	animation-timing-function: linear;
-	animation-fill-mode: forwards;
 	user-select: none;
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面[src*="http"] {
@@ -762,6 +769,20 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 #网易云音乐-最近在听 .精选歌词容器 .歌曲信息 {
 	font-style: italic;
 }
+#网易云音乐-最近在听.加载中 .精选歌词容器 .单句 {
+}
+#网易云音乐-最近在听.加载中 .精选歌词容器 .歌曲信息 {
+}
+
+#网易云音乐-最近在听.加载中 .精选歌词容器 .单句,
+#网易云音乐-最近在听.加载中 .精选歌词容器 .歌曲信息,
+#网易云音乐-最近在听.加载中 > .播放排行 > div {
+	background-color: var(--overlay-strong);
+	color: var(--overlay-strong);
+	animation-name: 高频闪烁;
+	animation-duration: 3s;
+}
+
 #网易云音乐-最近在听 .播放排行 {
 	counter-reset: index;
 	user-select: none;

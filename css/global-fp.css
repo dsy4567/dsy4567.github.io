@@ -611,11 +611,15 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 #网易云音乐-最近在听 .精选歌词容器 {
 	position: relative;
 	padding: 32px;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
 }
 #网易云音乐-最近在听 .精选歌词容器 .单句,
 #网易云音乐-最近在听 .精选歌词容器 .歌曲信息 {
 	display: block;
 	width: 100%;
+	border-radius: var(--border-radius);
 	margin-top: 8px;
 	margin-bottom: 8px;
 }
