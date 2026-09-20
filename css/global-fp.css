@@ -490,9 +490,6 @@ section#我 > img {
 	position: relative;
 	top: -64px;
 }
-section#我 > img:hover {
-	transform: rotateY(180deg);
-}
 
 span#联系方式 {
 	display: flex;
