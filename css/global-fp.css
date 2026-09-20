@@ -610,6 +610,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 	border-radius: var(--border-radius);
 }
 #网易云音乐-最近在听 .精选歌词容器 {
+	font-size: small;
 	position: relative;
 	padding: 32px;
 	display: flex;
@@ -621,8 +622,8 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 	display: block;
 	width: 100%;
 	border-radius: var(--border-radius);
-	margin-top: 8px;
-	margin-bottom: 8px;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
 }
 #网易云音乐-最近在听 .播放排行 {
 	margin-top: 8px;
@@ -633,7 +634,6 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 	overflow: hidden;
 }
 #网易云音乐-最近在听 .播放排行::before {
-	/* 文案由 home.js 写入 --date-range（接口不提供统计区间，固定为「最近一周」），无数据时退回操作提示 */
 	content: var(--date-range, "—— 加载中 ——");
 	display: block;
 	font-size: small;

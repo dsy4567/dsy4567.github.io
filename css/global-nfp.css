@@ -785,6 +785,7 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 }
 #网易云音乐-最近在听 .播放排行 > * {
 	transition: var(--transition) border;
+	background-color: #333;
 	display: flex;
 	flex-wrap: nowrap;
 	justify-content: space-between;
