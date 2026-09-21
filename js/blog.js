@@ -58,6 +58,7 @@ function 解析GitHub链接(url) {
 async function 渲染文章(当前文章信息) {
 	// /blog/<id>/
 	try {
+		添加脚本("/js/lib/purify.min.js");
 		const 动态加载自增计数器拷贝 = 动态加载自增计数器;
 		await new Promise(
 			/** @type {() => void} */ resolve => {
@@ -269,7 +270,9 @@ async function 渲染文章(当前文章信息) {
 						用户信息.append(头像链接, 用户名);
 
 						正文.className = "评论正文";
-						正文.innerHTML = marked.parse(评论.body); // TODO: 需要过滤
+						await 添加脚本("/js/lib/purify.min.js");
+						// @ts-ignore
+						正文.innerHTML = DOMPurify.sanitize(marked.parse(评论.body)); // TODO: 需要过滤
 
 						元数据.className = "元数据";
 						元数据.textContent = `发表于: ${new Date(
