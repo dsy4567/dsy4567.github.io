@@ -18,6 +18,8 @@ const 最近在听接口 = 接口主机 + "/user/record?uid=8223493733&type=1";
 /** 排行展示上限：接口可能返回上百条，只展示前 100 名 */
 const 排行上限 = 100;
 
+const css变量_item_height = "124px";
+
 let /** @type {最近在听项[]} */ 排行歌曲 = [],
 	/** 是否已请求过排行数据（失败/非法也算“有结论”，避免换页后重复请求） */
 	排行已请求 = false,
@@ -236,7 +238,8 @@ function 创建封面动画(/** @type {HTMLImageElement} */ 封面) {
 	// WAAPI 动画不受 CSS 媒体查询约束，需在 JS 侧自行尊重该偏好
 	if (matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
 	// 行高基准从计算样式读取，保持 CSS 为唯一数据源；100% 为封面自身高度，交给浏览器按当前布局解析
-	const 行高基准 = getComputedStyle(封面).getPropertyValue("--item-height").trim();
+	// const 行高基准 = getComputedStyle(封面).getPropertyValue("--item-height").trim();
+	const 行高基准 = css变量_item_height;
 	return 封面.animate(
 		[{ transform: "translateY(0px)" }, { transform: `translateY(calc(${行高基准} - 100%))` }],
 		{
