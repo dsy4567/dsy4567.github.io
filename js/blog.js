@@ -22,14 +22,14 @@ async function 高亮代码(目标) {
 	return 添加脚本("/js/lib/highlight.min.js").then(() => {
 		const _通用计数器 = 通用计数器++;
 		批量低阻塞操作(目标.querySelectorAll("pre > code"), (元素, 索引) => {
-			console.time(`高亮代码 id:${_通用计数器}`);
+			// console.time(`高亮代码 id:${_通用计数器}`);
 
 			hljs.highlightElement(元素);
 			const s = 元素.classList[0]?.split("-")[1];
 			元素.setAttribute("data-lang", hljs.getLanguage(s)?.name || "未知");
 
-			console.log(_通用计数器, 元素);
-			console.timeEnd(`高亮代码 id:${_通用计数器}`);
+			// console.log(_通用计数器, 元素);
+			// console.timeEnd(`高亮代码 id:${_通用计数器}`);
 		});
 	});
 }
@@ -66,7 +66,7 @@ async function 渲染文章(当前文章信息) {
 			}
 		);
 		const _通用计数器 = 通用计数器++;
-		console.time(`渲染文章 id:${_通用计数器}`);
+		// console.time(`渲染文章 id:${_通用计数器}`);
 		if (!location.pathname.endsWith("/")) location.href = `/blog/${当前文章信息.id}/`;
 		const 右 = qs("main .右", true);
 		if (!右) return;
@@ -181,8 +181,8 @@ async function 渲染文章(当前文章信息) {
 		_global["main.js"]?.()?.渲染图标();
 		//#endregion
 
-		console.log(_通用计数器, 当前文章信息);
-		console.timeEnd(`渲染文章 id:${_通用计数器}`);
+		// console.log(_通用计数器, 当前文章信息);
+		// console.timeEnd(`渲染文章 id:${_通用计数器}`);
 
 		//#region 高亮
 		高亮代码(右);
@@ -354,7 +354,7 @@ async function 渲染文章列表(u) {
 				骨架屏已移除 = false;
 			for (let i = 0; i < j.length; i++) {
 				const _通用计数器 = 通用计数器++;
-				console.time(`渲染文章列表 id:${_通用计数器}`);
+				// console.time(`渲染文章列表 id:${_通用计数器}`);
 
 				const 文章 = j[i];
 				//#region 渲染文章列表
@@ -426,7 +426,7 @@ async function 渲染文章列表(u) {
 				} else 待添加.push(sect);
 
 				// console.log(_通用计数器, 文章);
-				console.timeEnd(`渲染文章列表 id:${_通用计数器}`);
+				// console.timeEnd(`渲染文章列表 id:${_通用计数器}`);
 			}
 			右.append(...待添加);
 			await schedulerYield();
