@@ -114,9 +114,7 @@ async function 渲染文章(当前文章信息) {
 			}
 			gd("正在加载文章提示")?.replaceWith(sect);
 
-			// 更新标题和 SEO 元数据
-			document.title =
-				(sect.querySelector("h1")?.innerText || "无标题") + " | " + document.title;
+			// 更新 SEO 元数据
 			qs("meta[name='description']")?.setAttribute(
 				"content",
 				sect.querySelector("p")?.innerText || "此文章无法提供描述"
