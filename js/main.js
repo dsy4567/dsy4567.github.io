@@ -276,13 +276,13 @@ fetch("/json/icon.json")
 (async () => {
 	//#region 一言
 	const 获取一言 = (/** @type {"text" | "json"} */ json类型) =>
-		fetch("https://dsy4567.icu/api/hitokoto").then(
+		fetch("https://dsy4567.icu/api/hitokoto?c=a&c=b&encode=json").then(
 			res =>
 				new Promise((resolve, reject) => {
 					延迟执行(
 						"关键任务完成",
 						() => {
-							resolve(res[json类型]());
+							resolve(/** @type {一言句子} */ res[json类型]());
 						},
 						2
 					);
@@ -291,10 +291,12 @@ fetch("/json/icon.json")
 
 	try {
 		let 一言元素 = gd("一言", true),
+			语句 = ce("span"),
+			作者 = ce("span"),
 			// @ts-ignore
-			/** @type {HTMLAnchorElement} */ 链接 = qs("#一言+a"),
+			/** @type {HTMLAnchorElement | null} */ 链接 = qs("#一言+a"),
 			缓存一言 = localStorage.getItem("缓存一言"),
-			/** @type {{hitokoto: string, uuid: string}} */ 一言json;
+			/** @type {一言句子} */ 一言json;
 		if (!一言元素 || !链接) return;
 		try {
 			if (缓存一言) 缓存一言 = JSON.parse(缓存一言);
@@ -305,7 +307,12 @@ fetch("/json/icon.json")
 		await schedulerYield();
 		一言json = 缓存一言 || (await 获取一言("json"));
 		await schedulerYield();
-		一言元素.innerText = 一言json.hitokoto;
+		语句.innerText = 一言json.hitokoto;
+		语句.classList.add("语句");
+		作者.innerText = `—— ${一言json.from_who || ""} 「${一言json.from || "未知"}」`;
+		作者.classList.add("作者");
+		一言元素.innerHTML = "";
+		一言元素.append(语句, 作者);
 		链接.href = "https://hitokoto.cn/?uuid=" + 一言json.uuid;
 
 		setTimeout(async () => {
