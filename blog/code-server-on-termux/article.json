@@ -3,5 +3,6 @@
 	"updated": "2023-10-02T04:12:07.650Z",
 	"date": "2023-07-31T13:17:09.742Z",
 	"issue": 25,
-	"tags": ["技术", "Termux", "code-server"]
+	"tags": ["技术", "Termux", "code-server"],
+	"cover": "/blog/code-server-on-termux/img/code-server.webp"
 }
