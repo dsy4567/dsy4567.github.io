@@ -11,6 +11,8 @@
 let /** @type {文章信息[]} */ 所有文章信息 = [],
 	路径 = 获取清理后的路径(true);
 
+const 默认封面 = "/img/bg.webp";
+
 添加脚本("/js/lib/highlight.min.js");
 添加样式("/css/hl.min.css");
 
@@ -373,6 +375,7 @@ async function 渲染文章列表(u) {
 					预览 = ce("div"),
 					span = ce("span"),
 					sect = ce("section"),
+					封面 = ce("img"),
 					鼠标已移动 = false;
 				a.href = `/blog/${文章.id}/`;
 				a.innerText = "阅读更多";
@@ -389,7 +392,29 @@ async function 渲染文章列表(u) {
 					return html;
 				})()}`;
 				span.classList.add("元数据");
-				sect.append(预览, a, br, span);
+
+				if (!预览.querySelector("img")) {
+					封面.decoding = "async";
+					if (i <= 1) {
+						// 首屏大图优化
+						封面.src = 默认封面;
+						if (文章.cover) {
+							const I = new Image();
+							I.decoding = "async";
+							I.src = 文章.cover;
+							I.onload = () => {
+								封面.src = 文章.cover;
+							};
+						}
+					} else {
+						封面.src = 文章.cover || 默认封面;
+						封面.loading = "lazy";
+					}
+					封面.alt = "文章封面图";
+					封面.classList.add("封面");
+					span.prepend(封面);
+					sect.append(预览, a, br, span);
+				} else sect.append(预览, a, br, span);
 				//#endregion
 
 				//#region 设置大小和懒加载、文字选中优化

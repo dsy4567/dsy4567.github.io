@@ -670,6 +670,13 @@ article#main:has(.骨架屏占位#正在加载文章提示) > .骨架屏占位 {
 	justify-content: center;
 	align-items: center;
 }
+article#main > section > .元数据 > .封面 {
+	display: block;
+	margin-top: 8px;
+	object-fit: cover;
+	height: 512px;
+	width: 100%;
+}
 
 /* ==================== 友链 ==================== */
 
