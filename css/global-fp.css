@@ -17,6 +17,23 @@
 		color: inherit;
 	}
 }
+@keyframes 高频闪烁 {
+	0% {
+		opacity: 0.5;
+	}
+	25% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+	75% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.5;
+	}
+}
 
 /* ==================== @media ==================== */
 :root {
@@ -666,11 +683,27 @@ article#main > .骨架屏占位 {
 }
 article#main:has(.骨架屏占位#正在加载文章提示) > .骨架屏占位 {
 	display: flex;
-	height: 25vh;
-	justify-content: center;
-	align-items: center;
+	flex-direction: column;
 }
-article#main > section > .元数据 > .封面 {
+.骨架屏占位 > div {
+	width: 100%;
+}
+.骨架屏占位 span {
+	animation: 高频闪烁 3s linear infinite forwards;
+	background-color: var(--overlay-strong);
+	border-radius: var(--border-radius);
+	display: block;
+	height: 1em;
+	margin-bottom: 1em;
+}
+.骨架屏占位 .骨架屏标题 {
+	height: 3em;
+}
+.骨架屏占位 .骨架屏阅读更多 span {
+	width: 4em;
+}
+article#main > section > .元数据 > .封面,
+.骨架屏占位 .骨架屏封面 {
 	display: block;
 	margin-top: 8px;
 	object-fit: cover;

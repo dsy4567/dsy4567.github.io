@@ -75,23 +75,6 @@ main、左右栏
 		opacity: 1;
 	}
 }
-@keyframes 高频闪烁 {
-	0% {
-		opacity: 0.5;
-	}
-	25% {
-		opacity: 1;
-	}
-	50% {
-		opacity: 0.5;
-	}
-	75% {
-		opacity: 1;
-	}
-	100% {
-		opacity: 0.5;
-	}
-}
 @keyframes 延迟不可见 {
 	0% {
 		visibility: visible;

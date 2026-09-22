@@ -204,15 +204,40 @@
 			</div>
 			<article class="右" id="main">
 				<!-- BEGIN MAIN -->
-				<section class="骨架屏占位" id="正在加载文章提示"></section>
-				<section class="骨架屏占位"></section>
-				<section class="骨架屏占位">
-					<img
-						fetchpriority="high"
-						src="/img/bg.webp"
-						style="width: 1px; height: 1px; opacity: 0"
-					/>
+				<section class="骨架屏占位" id="正在加载文章提示">
+					<div>
+						<span class="骨架屏标题"></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+					<div class="骨架屏阅读更多"><span></span></div>
+					<div>
+						<span class="骨架屏封面"></span>
+						<span></span>
+						<span></span>
+					</div>
 				</section>
+				<section class="骨架屏占位">
+					<div>
+						<span class="骨架屏标题"></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+					<div class="骨架屏阅读更多"><span></span></div>
+					<div>
+						<span class="骨架屏封面"></span>
+						<span></span>
+						<span></span>
+					</div>
+				</section>
+				<img
+					fetchpriority="high"
+					src="/img/bg.webp"
+					alt="preload"
+					style="width: 1px; height: 1px; opacity: 0; position: absolute"
+				/>
 				<!-- END MAIN -->
 			</article>
 		</main>
