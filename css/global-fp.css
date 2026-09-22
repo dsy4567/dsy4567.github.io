@@ -342,7 +342,7 @@ input {
 	}
 	main > .左 {
 		height: calc(64vh) !important;
-		max-height: 420px !important;
+		max-height: 430px !important;
 		scrollbar-width: none;
 	}
 	main > .左::after {
@@ -370,10 +370,6 @@ input {
 	}
 	main > .右 > section:nth-child(1) {
 		margin-top: 16px !important;
-	}
-
-	section {
-		margin: 4px;
 	}
 }
 
@@ -508,20 +504,20 @@ span#联系方式 > * {
 	font-size: smaller;
 }
 
-#一言 .语句{
+#一言 .语句 {
 	text-decoration: underline wavy var(--accent-color);
 	text-underline-offset: 4px;
 	overflow-y: auto;
 	height: 3em;
 	padding-bottom: 4px;
 }
-#一言 .作者{
+#一言 .作者 {
 	opacity: 0.7;
 	text-align: end;
 	padding-top: 4px;
 }
 #一言 .作者,
-#一言 .语句{
+#一言 .语句 {
 	display: block;
 }
 
