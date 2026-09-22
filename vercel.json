@@ -459,6 +459,11 @@
 	],
 	"redirects": [
 		{
+			"source": "/img/bg.jpg",
+			"destination": "/img/bg.webp",
+			"permanent": true
+		},
+		{
 			"source": "/b/:m*",
 			"has": [
 				{
