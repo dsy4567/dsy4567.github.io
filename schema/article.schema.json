@@ -1,0 +1,52 @@
+{
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "https://dsy4567.github.io/schema/article.schema.json",
+	"title": "博客文章元数据",
+	"description": "blog/<id>/article.json 的结构。id、title、desc、desc_text 等其余字段由构建脚本（tools/build.js）从 index.md 补全，不在此文件中出现。",
+	"type": "object",
+	"properties": {
+		"$schema": {
+			"type": "string",
+			"description": "本文件的 JSON Schema 引用，值固定为 ../../schema/article.schema.json"
+		},
+		"updated": {
+			"description": "最后更新时间（ISO 8601）。由构建脚本按 index.md 内容变化自动写回，请勿手改。",
+			"type": "string",
+			"format": "date-time"
+		},
+		"date": {
+			"description": "发表时间（ISO 8601）",
+			"type": "string",
+			"format": "date-time"
+		},
+		"issue": {
+			"description": "关联的 GitHub Issue 编号，null 表示未关联",
+			"type": ["integer", "null"],
+			"minimum": 1
+		},
+		"tags": {
+			"description": "标签列表，可为空数组",
+			"type": "array",
+			"items": {
+				"type": "string"
+			},
+			"uniqueItems": true
+		},
+		"hidden": {
+			"description": "是否隐藏（不出现在博客列表、RSS 等聚合输出中）",
+			"type": "boolean"
+		},
+		"url": {
+			"description": "外链文章地址（存在时文章页仅显示加载提示）",
+			"type": "string",
+			"format": "uri"
+		},
+		"cover": {
+			"description": "封面图 URL",
+			"type": "string",
+			"format": "uri"
+		}
+	},
+	"required": ["updated", "date", "tags"],
+	"additionalProperties": false
+}

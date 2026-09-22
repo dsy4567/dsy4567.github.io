@@ -407,7 +407,9 @@ class ArticleBuilder {
 		const parsedHtml = marked(rawMd);
 		const $ = cheerio.load(parsedHtml);
 
-		const meta = /** @type {Partial<文章元数据>} */ (jsonfile.readFileSync(metaPath));
+		// article.json 中的 $schema 引用仅供编辑器校验，不进入任何构建产物
+		const { $schema, ...原始元数据 } = jsonfile.readFileSync(metaPath);
+		const meta = /** @type {Partial<文章元数据>} */ (原始元数据);
 		meta.id = articleDir;
 		meta.title = $("h1").text() || "无标题";
 

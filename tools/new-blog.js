@@ -153,7 +153,13 @@ async function main(提问) {
 	fs.writeFileSync(path.join(文章目录, "index.md"), 生成Markdown(标题, 简介), "utf-8");
 	jsonfile.writeFileSync(
 		path.join(文章目录, "article.json"),
-		{ updated: 时间, date: 时间, issue: 编号 ? Number(编号) : null, tags: 标签 },
+		{
+			$schema: "../../schema/article.schema.json",
+			updated: 时间,
+			date: 时间,
+			issue: 编号 ? Number(编号) : null,
+			tags: 标签,
+		},
 		{ spaces: 4 }
 	);
 

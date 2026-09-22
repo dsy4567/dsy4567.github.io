@@ -1,4 +1,5 @@
 {
+    "$schema": "../../schema/article.schema.json",
     "updated": "2023-02-04T08:56:05.388Z",
     "date": "2023-02-04T08:56:05.388Z",
     "issue": 10,
