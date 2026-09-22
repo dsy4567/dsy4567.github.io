@@ -93,6 +93,14 @@ type 渲染图标选项 = {
 	要渲染图标的元素?: SVGSVGElement[] | HTMLCollectionOf<SVGSVGElement>;
 };
 
+type 一言句子 = {
+	hitokoto: string;
+	uuid: string;
+	type: string;
+	from: string;
+	from_who: string | null;
+};
+
 declare class Hljs {
 	highlightAll();
 	highlightElement(元素: Element);
