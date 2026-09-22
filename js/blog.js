@@ -463,13 +463,16 @@ async function 渲染文章列表(u) {
 			所有标签.forEach(标签 => {
 				let a = ce("a");
 				a.innerText = 标签;
-				a.href = "?tag=" + 标签;
 				if (标签 === 限定标签) {
 					a.style.border = "1px solid var(--accent-color)";
 					document.title = "标签：" + 标签 + " | " + document.title;
+					a.href = "/blog.html";
 					// 限定标签排在容器第一位
 					div.prepend(a);
-				} else div.append(a);
+				} else {
+					a.href = "?tag=" + 标签;
+					div.append(a);
+				}
 			});
 			标签元素.insertAdjacentHTML(
 				"afterbegin",
