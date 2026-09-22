@@ -351,7 +351,7 @@ async function 渲染文章列表(u) {
 			if (!右) return;
 
 			所有文章信息 = j;
-			let 所有标签 = new Set(),
+			let /** @type {Set<string>} */ 所有标签 = new Set(),
 				限定标签 = u.searchParams.get("tag"),
 				待添加 = [],
 				骨架屏已移除 = false;
@@ -460,7 +460,8 @@ async function 渲染文章列表(u) {
 			//#region 渲染标签列表
 			let 标签元素 = ce("section"),
 				div = ce("div");
-			所有标签.forEach(标签 => {
+			const 创建标签元素 = (/** @type {string} */ 标签, 是否已归档 = false) => {
+				if (标签 === "已归档" && !是否已归档) return;
 				let a = ce("a");
 				a.innerText = 标签;
 				if (标签 === 限定标签) {
@@ -473,7 +474,11 @@ async function 渲染文章列表(u) {
 					a.href = "?tag=" + 标签;
 					div.append(a);
 				}
+			};
+			所有标签.forEach(标签 => {
+				创建标签元素(标签);
 			});
+			创建标签元素("已归档", true);
 			标签元素.insertAdjacentHTML(
 				"afterbegin",
 				'<h2><svg class="小尺寸" data-icon="标签"></svg><span>标签</span></h2>'
