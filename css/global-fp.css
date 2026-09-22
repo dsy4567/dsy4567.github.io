@@ -144,7 +144,7 @@ svg[data-icon] {
 
 section {
 	background-color: var(--surface-1);
-	border: 1px solid transparent;
+	border: 1px solid var(--overlay);
 	border-radius: var(--border-radius);
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 	margin: 8px;
