@@ -232,7 +232,8 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 
 /* ==================== ::* ==================== */
 ::selection {
-	background-color: var(--selection-bg);
+	background-color: var(--accent-color);
+	color: var(--accent-text-color);
 }
 
 ::-webkit-scrollbar-thumb:active {
