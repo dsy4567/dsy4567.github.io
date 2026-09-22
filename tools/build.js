@@ -32,7 +32,7 @@ const CONFIG = {
 	fileStatesPath: "./tools/file-states.json",
 	// 需追踪内容 hash 与「内容修改时间」的静态页面（相对项目根目录）
 	staticTrackedFiles: ["index.html", "blog.html", "friends.html"],
-	defaultCover: "https://dsy4567.github.io/img/bg.jpg",
+	defaultCover: "https://dsy4567.github.io/img/bg.webp",
 	timezone: "Asia/Shanghai",
 };
 
