@@ -409,7 +409,7 @@ async function 渲染最近在听() {
 			封面.src = 封面地址 + "?param=16y16";
 			封面.alt = "";
 			封面.loading = "lazy";
-			封面.decoding = "async";
+			// 封面.decoding = "async";
 			const 大图地址 = 封面地址 + "?param=640y640";
 			if (大封面已加载.has(大图地址)) {
 				// 缓存命中：立即换入大图；此刻元素还在文档片段中，动画交由可见性观察器在插入文档后启动

@@ -394,7 +394,7 @@ async function 渲染文章列表(u) {
 				span.classList.add("元数据");
 
 				if (!预览.querySelector("img")) {
-					封面.decoding = "async";
+					// 封面.decoding = "async";
 					if (i <= 1) {
 						// 首屏大图优化
 						封面.src = 默认封面;
