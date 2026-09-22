@@ -1,7 +1,7 @@
 {
-    "$schema": "../../schema/article.schema.json",
-    "updated": "2023-02-13T09:55:45.491Z",
-    "date": "2023-02-13T09:55:45.491Z",
-    "issue": 11,
-    "tags": ["技术", "CloudFlare"]
+	"$schema": "../../schema/article.schema.json",
+	"updated": "2023-02-13T09:55:45.491Z",
+	"date": "2023-02-13T09:55:45.491Z",
+	"issue": 11,
+	"tags": ["技术", "CloudFlare", "已归档"]
 }
