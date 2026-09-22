@@ -785,7 +785,7 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 #网易云音乐-最近在听 .播放排行 > * > .封面 {
 	/* 该数值亦硬编码于 home.js */
 	--item-height: 124px;
-	filter: brightness(0.3);
+	filter: brightness(1);
 	/* 封面按行宽等比撑开（网易云封面为正方形，高度远超 50px 行高），超出行高的部分由行内 overflow: hidden 裁剪；
 	   大图（640px）加载完毕后才由 JS 启动平移动画，等待加载的 16px 小图保持居中静止 */
 	position: absolute;
@@ -806,10 +806,11 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
    transform 走合成器，动画期间不逐帧重绘 */
 #网易云音乐-最近在听 .播放排行 > *:hover > .封面,
 #网易云音乐-最近在听 .播放排行 > *:focus-visible > .封面 {
-	filter: brightness(1);
+	filter: brightness(0.3);
 }
 #网易云音乐-最近在听 .播放排行 > *::after {
-	background-color: var(--accent-color-transparent);
+	background-color: var(--accent-color);
+	opacity: 0.3;
 	border-radius: var(--border-radius);
 	width: var(--progress);
 	z-index: 2;
