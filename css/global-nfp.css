@@ -206,9 +206,8 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 	main > .左,
 	main > #分界线,
 	footer,
-	#导航栏,
-	#侧边按钮容器,
-	#评论区 {
+	body > #导航栏,
+	body > #侧边按钮容器 {
 		display: none !important;
 	}
 }
@@ -317,7 +316,7 @@ div.通知 {
 	animation-play-state: paused;
 }
 /* ==================== 导航栏、左右栏 ==================== */
-#导航栏 {
+body > #导航栏 {
 	transition:
 		var(--transition) background-color,
 		var(--transition) transform;
@@ -700,28 +699,6 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 }
 
 /* ==================== 首页 ==================== */
-#技能 {
-	display: flex;
-	flex-direction: column;
-	overflow: hidden;
-	padding: 8px;
-}
-#技能 > p {
-	margin: 4px;
-	margin-bottom: 16px;
-}
-#技能 > p > span {
-	background-color: var(--overlay);
-	border: 1px solid;
-	border-radius: var(--border-radius);
-	display: block;
-	margin-top: 8px;
-	height: 2px;
-}
-#技能 > p > span::before {
-	content: attr(aria-label);
-}
-
 #网易云音乐-最近在听 .精选歌词容器::after,
 #网易云音乐-最近在听 .精选歌词容器::before {
 	padding: 0;
@@ -881,21 +858,15 @@ code.hljs.已复制:hover::before {
 	content: attr(data-lang) " | 已复制";
 }
 
-#评论区 {
-}
-.评论 {
-}
-.评论 .用户信息 {
+section#评论区 .评论 .用户信息 {
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
 }
-.评论 .用户信息 > * {
+section#评论区 .评论 .用户信息 > * {
 	margin-left: 8px;
 }
-.评论 > * {
-}
-.评论 .评论正文 {
+section#评论区 .评论 .评论正文 {
 	margin: 4px;
 }
 
