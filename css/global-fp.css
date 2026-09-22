@@ -351,6 +351,13 @@ input {
 	body > #导航栏 {
 		width: calc(100% - 10px) !important;
 	}
+	body > #顶部大图 {
+		animation-range: 0 min(calc(64vh + 56px), 496px) !important;
+		position: absolute;
+		width: calc(100vw - 18px) !important;
+		height: calc(64vh) !important;
+		max-height: 430px !important;
+	}
 	main {
 		flex-direction: column;
 		padding-left: 0;
@@ -361,6 +368,9 @@ input {
 		height: calc(64vh) !important;
 		max-height: 430px !important;
 		scrollbar-width: none;
+	}
+	main > .左 > *:last-child {
+		margin-bottom: min(calc(64vh - 16px), 414px);
 	}
 	main > .左::after {
 		content: "";
@@ -427,6 +437,18 @@ body > #导航栏 {
 #导航栏 > .左 > .标题 {
 	font-size: x-large;
 	font-weight: 600;
+}
+
+body > #顶部大图 {
+	display: block;
+	width: calc(100vw - 116px);
+	max-width: 1574px;
+	height: 45vh;
+	z-index: -1;
+	object-fit: cover;
+	object-position: center 0%;
+	margin-top: 66px;
+	pointer-events: none;
 }
 
 .进度条外面 {

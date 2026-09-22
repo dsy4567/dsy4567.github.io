@@ -348,6 +348,38 @@ function 提示(m) {
 		}, 500);
 	}, 3000);
 }
+// @ts-ignore
+const /** @type {HTMLImageElement} */ 顶部大图 = gd("顶部大图");
+/**
+ * 更新顶部大图：根据指定 URL 加载图片并替换当前页面的顶部大图
+ * @param {string} url - 图片 URL
+ * @param {number} 动态加载自增计数器拷贝 - 用于防止竞争
+ * @returns {Promise<void>} - 图片加载完成后 resolve
+ */
+async function 更新顶部大图(url = "/img/bg.webp", 动态加载自增计数器拷贝 = 动态加载自增计数器) {
+	return new Promise((resolve, reject) => {
+		if (顶部大图.dataset.counter === String(动态加载自增计数器拷贝)) {
+			resolve();
+			return;
+		}
+
+		const 预加载封面 = new Image();
+		预加载封面.onload = () => {
+			延迟执行(
+				"DOMContentLoaded",
+				() => {
+					if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
+
+					顶部大图.src = 预加载封面.src;
+					顶部大图.dataset.counter = String(动态加载自增计数器拷贝);
+					resolve();
+				},
+				0
+			);
+		};
+		预加载封面.src = url;
+	});
+}
 /**
  * 设置 meta robots 为 noindex，阻止搜索引擎收录当前页面
  */

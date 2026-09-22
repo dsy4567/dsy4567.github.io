@@ -62,6 +62,7 @@ async function 渲染文章(当前文章信息) {
 	try {
 		添加脚本("/js/lib/purify.min.js");
 		const 动态加载自增计数器拷贝 = 动态加载自增计数器;
+		if (入口函数首次调用) 更新顶部大图(当前文章信息.cover || 默认封面, 动态加载自增计数器拷贝);
 		await new Promise(
 			/** @type {() => void} */ resolve => {
 				延迟执行("DOMContentLoaded", resolve, 0);

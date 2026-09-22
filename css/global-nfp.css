@@ -363,6 +363,22 @@ body.隐藏导航栏 #导航栏 {
 	animation-name: 进度条;
 }
 
+@supports (animation-timeline: scroll()) {
+	body > #顶部大图 {
+		animation: pan-vertical linear both;
+		animation-timeline: scroll(root);
+		animation-range: 0 calc(45vh + 108px);
+	}
+	@keyframes pan-vertical {
+		from {
+			object-position: center 0%;
+		}
+		to {
+			object-position: center 100%;
+		}
+	}
+}
+
 /* ==================== main、左右栏 ==================== */
 main > #分界线 {
 	display: flex;

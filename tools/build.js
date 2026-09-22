@@ -33,6 +33,7 @@ const CONFIG = {
 	// 需追踪内容 hash 与「内容修改时间」的静态页面（相对项目根目录）
 	staticTrackedFiles: ["index.html", "blog.html", "friends.html"],
 	defaultCover: "https://dsy4567.github.io/img/bg.webp",
+	defaultCoverPath: "/img/bg.webp",
 	timezone: "Asia/Shanghai",
 };
 
@@ -470,6 +471,12 @@ class ArticleBuilder {
 				`<meta property="og:title" content="${metaTitle}" />\n\t\t` +
 				`<meta property="og:description" content="${escapeHtml(meta.desc_text || "记录 dsy4567 的折腾经验、技术分享、编程笔记")}" />\n\t\t` +
 				`<meta property="og:image" content="${meta.cover || CONFIG.defaultCover}" />`
+		);
+
+		html = replaceTemplateBlock(
+			html,
+			"COVER",
+			`\t\t<img fetchpriority="high" src="${meta._originalCover || CONFIG.defaultCoverPath}" id="顶部大图" alt="顶部大图" />`
 		);
 
 		const hasNoCopyright = processedHtml.includes('<nocopyright value="true"></nocopyright>');
