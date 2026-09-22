@@ -51,6 +51,7 @@ const ncmStateKey = path.posix.normalize(CONFIG.ncmOutputPath);
  * @property {Date|string} date - 发表时间
  * @property {Date|string} updated - 更新时间
  * @property {string} cover - 封面图 URL
+ * @property {string} [_originalCover] - 原始封面图 URL
  * @property {string|null} issue - 关联的 GitHub Issue 链接，无则为 null
  * @property {string[]} tags - 标签列表
  * @property {string} [url] - 外链文章地址（存在时页面仅显示加载提示）
@@ -421,6 +422,7 @@ class ArticleBuilder {
 		meta.date = meta.date || new Date();
 
 		const firstImg = $("img").attr("src");
+		meta._originalCover = meta.cover || firstImg || CONFIG.defaultCover;
 		meta.cover =
 			meta.cover ||
 			new URL(firstImg || CONFIG.defaultCover, `https://${getDomain("infra")}/`).href;
@@ -483,6 +485,8 @@ class ArticleBuilder {
 			? `\t\t\t\t<section id="正在加载文章提示">\n\t\t\t\t\t正在加载文章\n\t\t\t\t\t\t<noscript>在<a href="https://github.com/dsy4567/dsy4567.github.io/tree/main/blog">GitHub</a>上阅读文章</noscript>\n\t\t\t\t</section>`
 			: `\t\t\t\t<section>\n${processedHtml}${licenseHtml}\n<span class="元数据">发表于: ${formatDate(meta.date)}, 更新于: ${formatDate(meta.updated)}</br>${tagsHtml ? `标签: ${tagsHtml}` : ""}</span>\n\t\t\t\t</section>`;
 
+		meta.cover = meta._originalCover || meta.cover;
+		delete meta._originalCover;
 		html = replaceTemplateBlock(
 			html,
 			"MAIN",

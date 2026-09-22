@@ -9,7 +9,7 @@
         "title": "Markdown 特性测试",
         "desc": "# Markdown 特性测试\n\n这是一篇用来核对本站 Markdown 渲染效果的隐藏文章，常见的 Markdown 与 HTML 写法各来一份，改样式的时候可以进来看看有没有渲染崩。\n\n本文章由 AI 生成。\n\n",
         "desc_text": "这是一篇用来核对本站 Markdown 渲染效果的隐藏文章，常见的 Markdown 与 HTML 写法各来一份，改样式的时候可以进来看看有没有渲染崩。 本文章由 AI 生成。...",
-        "cover": "https://dsy4567.github.io/img/avatar.webp"
+        "cover": "/img/avatar.webp"
     },
     {
         "updated": "2025-01-02T12:37:17.008Z",
@@ -53,7 +53,7 @@
         "title": "记一次在 Termux 上搭建 code-server 环境",
         "desc": "# 记一次在 Termux 上搭建 code-server 环境\n\n店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。\n\n",
         "desc_text": "店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是世界加钱可及的某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。...",
-        "cover": "https://dsy4567.github.io/blog/code-server-on-termux/img/repo.webp"
+        "cover": "/blog/code-server-on-termux/img/repo.webp"
     },
     {
         "updated": "2023-06-24T07:38:27.834Z",
@@ -66,7 +66,7 @@
         "title": "如何优化网站加载速度",
         "desc": "# 如何优化网站加载速度\n\n中考完了之后，闲的没事的我拿 LightHouse 测了一下自己的网站，发现分数有点低。为了拿到四个圆圈圈~~以满足我的虚荣心~~，我决定花些力气来优化网站性能。\n\n",
         "desc_text": "中考完了之后，闲的没事的我拿 LightHouse 测了一下自己的网站，发现分数有点低。为了拿到四个圆圈圈以满足我的虚荣心，我决定花些力气来优化网站性能。...",
-        "cover": "https://dsy4567.github.io/blog/how-to-improve-performance/img/before.webp"
+        "cover": "/blog/how-to-improve-performance/img/before.webp"
     },
     {
         "updated": "2023-05-21T03:19:53.502Z",
@@ -94,7 +94,7 @@
         "title": "使用 Cloudflare Workers 获取别人的 IP 地址",
         "desc": "# 使用 Cloudflare Workers 获取别人的 IP 地址\n\n本文将教你怎么顺着网线找到别人（\n\n",
         "desc_text": "本文将教你怎么顺着网线找到别人（...",
-        "cover": "https://dsy4567.github.io/blog/cf-workers-ip/img/workers.webp"
+        "cover": "/blog/cf-workers-ip/img/workers.webp"
     },
     {
         "updated": "2023-02-04T08:56:05.388Z",
@@ -135,6 +135,6 @@
         "title": "(水文)2022 €€£ €$₽ J 组第二轮游寄",
         "desc": "# (水文)2022 <abbr title=\"CCF CSP(China Computer Federation Certified Software Professional, CCF 软件能力认证)的货币符号形式, 体现了 CCF 贪财的特点\">€€£ €\\$₽</abbr> J 组第二轮游寄\n\n## 2022-10-28\n\nJ 组取消, S 组继续, 游寄结束\n\n[![s:874x370 棺方通知](/blog/2022-ccf-csp-j-you-ji/img/cover.webp)](https://www.noi.cn/gs/xw/sx1/2022-10-28/775827.shtml?province=df)\n\n> 本文可随意转载/修改, 无需注明出处\n\n<nocopyright value=\"true\"></nocopyright>\n",
         "desc_text": "2022-10-28 J 组取消, S 组继续, 游寄结束   本文可随意转载/修改, 无需注明出处...",
-        "cover": "https://dsy4567.github.io/blog/2022-ccf-csp-j-you-ji/img/cover.webp"
+        "cover": "/blog/2022-ccf-csp-j-you-ji/img/cover.webp"
     }
 ]

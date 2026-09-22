@@ -43,8 +43,7 @@
 		},
 		"cover": {
 			"description": "封面图 URL",
-			"type": "string",
-			"format": "uri"
+			"type": "string"
 		}
 	},
 	"required": ["updated", "date", "tags"],

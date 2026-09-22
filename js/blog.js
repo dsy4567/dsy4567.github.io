@@ -131,7 +131,10 @@ async function 渲染文章(当前文章信息) {
 				"content",
 				`https://dsy4567.github.io/blog/${当前文章信息.id}/`
 			);
-			qs('meta[property="og:image"]')?.setAttribute("content", 当前文章信息.cover);
+			qs('meta[property="og:image"]')?.setAttribute(
+				"content",
+				new URL(当前文章信息.cover, location.href).href
+			);
 		}
 		//#endregion
 
