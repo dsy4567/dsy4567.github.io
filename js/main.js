@@ -39,7 +39,7 @@ function 动态加载(元素) {
 		return 显示或隐藏进度条(false);
 	}
 	const 目标url = new URL(元素.href, location.href),
-		键 = 清理路径(目标url.pathname) + 目标url.search;
+		键 = 清理路径(目标url.pathname);
 	正在动态加载 = true;
 	已触发动态加载 = true;
 	显示或隐藏进度条(true);
