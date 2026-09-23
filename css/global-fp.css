@@ -759,7 +759,7 @@ article#main > section > .元数据 > .封面,
 	display: block;
 	margin: 8px 0 8px 0;
 	object-fit: cover;
-	height: 512px;
+	height: 256px;
 	width: 100%;
 }
 
