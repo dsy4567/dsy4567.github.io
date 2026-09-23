@@ -9,7 +9,7 @@
 			content="
                         upgrade-insecure-requests;
                         script-src 'self' *.googletagmanager.com www.recaptcha.net www.gstatic.cn www.gstatic.com static.cloudflareinsights.com;
-                        object-src none
+                        object-src 'none'
                     "
 		/>
 		<meta id="主题色" name="theme-color" content="#ddd" />
@@ -31,30 +31,31 @@
 		/>
 
 		<!-- 首屏资源 -->
-		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
+		<link rel="stylesheet" href="/css/global-fp.css" />
 		<script src="/js/doc-start.js"></script>
 
-		<script src="/js/global.js" defer></script>
-		<script src="/js/blog.js" type="module" defer></script>
-		<script src="/js/main.js" type="module" defer></script>
-		<script src="/js/lib/marked.min.js" defer></script>
+		<!-- BEGIN PRELOAD -->
+		<link rel="preload" href="/img/avatar.webp" as="image" fetchpriority="high" />
+		<!-- END PRELOAD -->
 
-		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
-		<link rel="modulepreload" href="/js/main.js" />
+		<script src="/js/global.js" defer></script>
+		<script src="/js/blog.js" type="module" fetchpriority="high" defer></script>
 		<link
 			rel="preload"
 			href="/js/lib/marked.min.js"
 			as="script"
 			crossorigin="use-credentials"
+			fetchpriority="high"
 		/>
+		<script src="/js/main.js" type="module" defer></script>
+
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
 		<link
 			rel="preload"
 			href="/js/lib/highlight.min.js"
 			as="script"
 			crossorigin="use-credentials"
 		/>
-		<link rel="stylesheet" href="/css/global-fp.css" />
-		<link rel="preload" href="/img/bg.webp" as="image" />
 		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="use-credentials" />
 		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
 
