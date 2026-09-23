@@ -464,12 +464,10 @@ body > #顶部大图 {
 	position: relative;
 	z-index: -1;
 	margin-top: 64px;
-	pointer-events: none;
 }
 
-/* 顶部大图的背景层：两层交替承载新旧图片，切图时交叉渐变 */
 body > #顶部大图 > .顶部大图层 {
-	background-position: center 0%;
+	background-position: center 50%;
 	background-repeat: no-repeat;
 	background-size: cover;
 	inset: 0;
