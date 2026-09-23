@@ -402,6 +402,7 @@ body.隐藏导航栏 #导航栏 {
 		animation-name: 顶部大图桌面端;
 		animation-fill-mode: both;
 		animation-timing-function: linear;
+		position: fixed;
 	}
 	body > #顶部大图,
 	main .左 {
