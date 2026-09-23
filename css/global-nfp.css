@@ -103,11 +103,9 @@ main、左右栏
 		}
 		33% {
 			opacity: 0;
-			visibility: hidden;
 		}
 		100% {
 			opacity: 0;
-			visibility: hidden;
 		}
 	}
 }
