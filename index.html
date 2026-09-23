@@ -39,6 +39,7 @@
 		<script src="/js/home.js" type="module" defer></script>
 
 		<link rel="stylesheet" href="/css/global-fp.css" />
+		<link rel="preload" href="/img/bg.webp" as="image" />
 		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
 
 		<!-- 次要资源 -->
@@ -119,7 +120,10 @@
 		<div class="进度条外面"><div class="进度条"></div></div>
 
 		<!-- BEGIN COVER -->
-		<img fetchpriority="high" src="/img/bg.webp" id="顶部大图" alt="顶部大图" />
+		<div id="顶部大图" role="img" aria-label="顶部大图">
+			<div class="顶部大图层 显示" style="background-image: url('/img/bg.webp')"></div>
+			<div class="顶部大图层"></div>
+		</div>
 		<!-- END COVER -->
 
 		<main>

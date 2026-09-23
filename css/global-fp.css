@@ -355,9 +355,18 @@ input {
 	body > #顶部大图 {
 		animation-name: 顶部大图移动端 !important;
 		animation-range: 0 min(calc(64vh + 56px), 496px) !important;
-		position: fixed !important;
+		position: absolute !important;
 		height: calc(64vh) !important;
 		max-height: calc(55px - 56px + min(calc(64vh), 430px)) !important;
+	}
+	@supports (animation-timeline: scroll()) {
+		body > #顶部大图 {
+			position: fixed !important;
+		}
+	}
+	body > #顶部大图 > .顶部大图层 {
+		animation-name: 顶部大图背景 !important;
+		animation-range: 0 min(calc(64vh + 56px), 496px) !important;
 	}
 	main {
 		flex-direction: column;
@@ -447,13 +456,29 @@ body > #顶部大图 {
 }
 
 body > #顶部大图 {
+	background-color: var(--bg-color);
+	border-radius: var(--border-radius);
 	display: block;
 	height: 45vh;
+	overflow: hidden;
+	position: relative;
 	z-index: -1;
-	object-fit: cover;
-	object-position: center 0%;
 	margin-top: 64px;
 	pointer-events: none;
+}
+
+/* 顶部大图的背景层：两层交替承载新旧图片，切图时交叉渐变 */
+body > #顶部大图 > .顶部大图层 {
+	background-position: center 0%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	inset: 0;
+	opacity: 0;
+	position: absolute;
+	transition: var(--transition-slow) opacity;
+}
+body > #顶部大图 > .顶部大图层.显示 {
+	opacity: 1;
 }
 
 .进度条外面 {

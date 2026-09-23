@@ -76,25 +76,21 @@ main、左右栏
 	}
 }
 
-@keyframes 顶部大图移动端 {
-	0% {
-		object-position: center 0%;
-	}
-	33% {
-		opacity: 1;
-	}
-	100% {
-		object-position: center 100%;
-		opacity: 0;
-	}
-}
 @supports (animation-timeline: scroll()) {
-	@keyframes 顶部大图桌面端 {
-		0% {
-			object-position: center 0%;
+	@keyframes 顶部大图移动端 {
+		33% {
+			opacity: 1;
 		}
 		100% {
-			object-position: center 100%;
+			opacity: 0;
+		}
+	}
+	@keyframes 顶部大图背景 {
+		0% {
+			background-position: center 0%;
+		}
+		100% {
+			background-position: center 100%;
 		}
 	}
 	@keyframes 左栏移动端 {
@@ -398,13 +394,18 @@ body.隐藏导航栏 #导航栏 {
 }
 
 @supports (animation-timeline: scroll()) {
-	body > #顶部大图 {
-		animation-name: 顶部大图桌面端;
+	/* fill-mode 必须放在 @supports 内：不支持滚动时间线时动画时长为 0s，
+	   若同时带上 both 会直接停在 100% 关键帧（移动端大图永久不可见） */
+	body > #顶部大图,
+	body > #顶部大图 > .顶部大图层 {
 		animation-fill-mode: both;
 		animation-timing-function: linear;
-		position: relative;
+	}
+	body > #顶部大图 > .顶部大图层 {
+		animation-name: 顶部大图背景;
 	}
 	body > #顶部大图,
+	body > #顶部大图 > .顶部大图层,
 	main .左 {
 		animation-timeline: scroll(root);
 		animation-range: 0 calc(45vh + 108px);
