@@ -60,14 +60,15 @@
 -   RSS 订阅
 -   一丢丢无障碍适配
 
-## 👖 第三方库/接口
+## 👖 第三方库/接口/资源
 
 -   [ByteDance IconPark](https://github.com/bytedance/IconPark)
 -   <https://api.github.com>
 -   [highlight.js](https://github.com/highlightjs/highlight.js/)
 -   [Marked](https://github.com/markedjs/marked)
 -   [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
--   [自托管一言接口](https://github.com/dsy4567/hitokoto-api)
+-   [自托管一言接口](https://github.com/dsy4567/dsy4567.github.io/blob/main/api/hitokoto.js)
+-   [默认封面图（Pixiv ID 63936697）](https://www.pixiv.net/artworks/63936697)
 
 ## ⚖️ 许可证
 
