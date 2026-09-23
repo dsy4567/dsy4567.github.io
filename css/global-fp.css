@@ -348,16 +348,16 @@ input {
 	}
 }
 @media only screen and (max-width: 1080px) {
-	body > #导航栏 {
-		width: calc(100% - 10px) !important;
+	body > #导航栏,
+	body > #顶部大图 {
+		width: calc(100% - 18px) !important;
 	}
 	body > #顶部大图 {
 		animation-name: 顶部大图移动端 !important;
 		animation-range: 0 min(calc(64vh + 56px), 496px) !important;
-		position: absolute;
-		width: calc(100vw - 18px) !important;
+		position: fixed !important;
 		height: calc(64vh) !important;
-		max-height: 428px !important;
+		max-height: calc(55px - 56px + min(calc(64vh), 430px)) !important;
 	}
 	main {
 		flex-direction: column;
@@ -406,6 +406,7 @@ input {
 /* ==================== 导航栏、进度条、顶部大图 ==================== */
 body > #导航栏 {
 	background-color: transparent;
+	box-sizing: border-box;
 	border: 1px solid var(--overlay);
 	border-radius: var(--border-radius);
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
@@ -416,9 +417,7 @@ body > #导航栏 {
 	flex-wrap: nowrap;
 	justify-content: space-around;
 	position: sticky;
-	top: 8px;
-	width: calc(100% - 90px - 18px);
-	max-width: calc(1600px - 26px);
+	top: 7px;
 	height: 48px;
 	z-index: 998;
 	transform: translateY(0);
@@ -441,16 +440,19 @@ body > #导航栏 {
 	font-size: x-large;
 	font-weight: 600;
 }
+body > #导航栏,
+body > #顶部大图 {
+	width: calc(100% - 90px - 18px);
+	max-width: calc(1600px - 27px);
+}
 
 body > #顶部大图 {
 	display: block;
-	width: calc(100vw - 116px);
-	max-width: 1574px;
 	height: 45vh;
 	z-index: -1;
 	object-fit: cover;
 	object-position: center 0%;
-	margin-top: 67px;
+	margin-top: 64px;
 	pointer-events: none;
 }
 
