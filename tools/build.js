@@ -462,6 +462,12 @@ class ArticleBuilder {
 				`<link rel="canonical" href="https://${getDomain("public")}/blog/${meta.id}/" />`
 		);
 
+		html = replaceTemplateBlock(
+			html,
+			"PRELOAD",
+			`\t\t<link rel="preload" href="${meta._originalCover || CONFIG.defaultCoverPath}" as="image" fetchpriority="high" />`
+		);
+
 		// Open Graph
 		html = replaceTemplateBlock(
 			html,
@@ -478,7 +484,7 @@ class ArticleBuilder {
 		html = replaceTemplateBlock(
 			html,
 			"COVER",
-				`\t\t<div id="顶部大图" role="img" aria-label="顶部大图">\n` +
+			`\t\t<div id="顶部大图" role="img" aria-label="顶部大图">\n` +
 				`\t\t\t<div class="顶部大图层 显示" style="background-image: url('${coverPath}')"></div>\n` +
 				`\t\t\t<div class="顶部大图层"></div>\n` +
 				`\t\t</div>`

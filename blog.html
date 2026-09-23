@@ -36,30 +36,38 @@
 		/>
 
 		<!-- 首屏资源 -->
-		<link rel="preload" href="/json/blog.json" as="fetch" crossorigin="anonymous" />
+		<link rel="stylesheet" href="/css/global-fp.css" />
 		<script src="/js/doc-start.js"></script>
 
-		<script src="/js/global.js" defer></script>
-		<script src="/js/blog.js" type="module" defer></script>
-		<script src="/js/main.js" type="module" defer></script>
-		<script src="/js/lib/marked.min.js" defer></script>
+		<!-- BEGIN PRELOAD -->
+		<link rel="preload" href="/img/bg.webp" as="image" fetchpriority="high" />
+		<link
+			rel="preload"
+			href="/json/blog.json"
+			as="fetch"
+			crossorigin="anonymous"
+			fetchpriority="high"
+		/>
+		<!-- END PRELOAD -->
 
-		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
-		<link rel="modulepreload" href="/js/main.js" />
+		<script src="/js/global.js" defer></script>
+		<script src="/js/blog.js" type="module" fetchpriority="high" defer></script>
 		<link
 			rel="preload"
 			href="/js/lib/marked.min.js"
 			as="script"
 			crossorigin="use-credentials"
+			fetchpriority="high"
 		/>
+		<script src="/js/main.js" type="module" defer></script>
+
+		<link rel="preload" href="/json/icon.json" as="fetch" crossorigin="anonymous" />
 		<link
 			rel="preload"
 			href="/js/lib/highlight.min.js"
 			as="script"
 			crossorigin="use-credentials"
 		/>
-		<link rel="stylesheet" href="/css/global-fp.css" />
-		<link rel="preload" href="/img/bg.webp" as="image" />
 		<link rel="preload" href="/css/hl.min.css" as="style" crossorigin="use-credentials" />
 		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
 
@@ -151,7 +159,10 @@
 
 		<!-- BEGIN COVER -->
 		<div id="顶部大图" role="img" aria-label="顶部大图">
-			<div class="顶部大图层 显示" style="background-image: url('/img/bg.webp')"></div>
+			<div
+				class="顶部大图层 显示"
+				style="background-image: url(&quot;/img/bg.webp&quot;)"
+			></div>
 			<div class="顶部大图层"></div>
 		</div>
 		<!-- END COVER -->
