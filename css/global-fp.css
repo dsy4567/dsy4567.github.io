@@ -728,7 +728,7 @@ article#main:has(.骨架屏占位#正在加载文章提示) > .骨架屏占位 {
 article#main > section > .元数据 > .封面,
 .骨架屏占位 .骨架屏封面 {
 	display: block;
-	margin-top: 8px;
+	margin: 8px 0 8px 0;
 	object-fit: cover;
 	height: 512px;
 	width: 100%;
