@@ -89,27 +89,27 @@ main、左右栏
 	}
 }
 @supports (animation-timeline: scroll()) {
-@keyframes 顶部大图桌面端 {
-	0% {
-		object-position: center 0%;
+	@keyframes 顶部大图桌面端 {
+		0% {
+			object-position: center 0%;
+		}
+		100% {
+			object-position: center 100%;
+		}
 	}
-	100% {
-		object-position: center 100%;
+	@keyframes 左栏移动端 {
+		0% {
+			opacity: 1;
+		}
+		33% {
+			opacity: 0;
+			visibility: hidden;
+		}
+		100% {
+			opacity: 0;
+			visibility: hidden;
+		}
 	}
-}
-@keyframes 左栏移动端 {
-	0% {
-		opacity: 1;
-	}
-	33% {
-		opacity: 0;
-		visibility: hidden;
-	}
-	100% {
-		opacity: 0;
-		visibility: hidden;
-	}
-}
 }
 @keyframes 延迟不可见 {
 	0% {
