@@ -772,16 +772,9 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 #网易云音乐-最近在听 .播放排行 > *:hover {
 	border: 1px solid var(--accent-color);
 }
-#网易云音乐-最近在听 .播放排行 > *::after,
-#网易云音乐-最近在听 .播放排行 > *::before {
-	content: "";
-	position: absolute;
-	inset: 0;
-}
-#网易云音乐-最近在听 .播放排行 > *::before {
-	/* background-color: var(--accent-color); */
-	z-index: 0;
-}
+/* 封面平移动画（translateY 自上而下、再自下而上循环）由 home.js 用 Web Animations API 创建：
+   绕过 CSS 动画便于按公共相位基准对齐各封面进度，并用 pause()/play() 直接随可视性暂停恢复；
+   transform 走合成器，动画期间不逐帧重绘 */
 #网易云音乐-最近在听 .播放排行 > * > .封面 {
 	/* 该数值亦硬编码于 home.js */
 	--item-height: 124px;
@@ -801,19 +794,14 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 		var(--transition) background-color,
 		var(--transition) filter;
 }
-/* 封面平移动画（translateY 自上而下、再自下而上循环）由 home.js 用 Web Animations API 创建：
-   绕过 CSS 动画便于按公共相位基准对齐各封面进度，并用 pause()/play() 直接随可视性暂停恢复；
-   transform 走合成器，动画期间不逐帧重绘 */
-#网易云音乐-最近在听 .播放排行 > *:hover > .封面,
-#网易云音乐-最近在听 .播放排行 > *:focus-visible > .封面 {
-	filter: brightness(0.3);
-}
 #网易云音乐-最近在听 .播放排行 > *::after {
+	content: "";
+	position: absolute;
+	inset: 0;
 	background-color: var(--accent-color);
-	opacity: 0.3;
+	opacity: 0.4;
 	border-radius: var(--border-radius);
-	width: var(--progress);
-	z-index: 2;
+	width: min(var(--progress), 95%);
 	transition:
 		var(--transition) background-color,
 		var(--transition) filter;
@@ -825,6 +813,14 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 #网易云音乐-最近在听 .播放排行 > * > .排名 {
 	z-index: 1;
 	position: relative;
+	background-color: #3338;
+	border-radius: 4px;
+	padding: 2px;
+	margin: 4px;
+}
+#网易云音乐-最近在听 .播放排行 > *:hover > .歌曲信息,
+#网易云音乐-最近在听 .播放排行 > *:hover > .排名{
+	background-color: #333c;
 }
 #网易云音乐-最近在听 .播放排行 > * > .排名::after {
 	content: "TOP " counter(index);
