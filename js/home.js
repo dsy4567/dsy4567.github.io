@@ -47,6 +47,9 @@ const 大图加载中 = new Set();
 /** 封面平移动画的一个半周期时长（毫秒）：正放、倒放各一次构成一个完整往返 */
 const 封面动画半周期毫秒 = 15000;
 
+/** 大图预加载提前量：观察区上下各外扩这么多像素，使排行项在真正进入视口前就被判定为可见，提前发起大图请求并启动动画，滚动到时已就绪 */
+const 预加载提前量 = "250px";
+
 /** 封面平移动画的公共相位基准毫秒（首个动画启动时确立）：所有封面据此对齐进度 */
 let 动画基准毫秒 = 0;
 
@@ -416,7 +419,7 @@ async function 渲染最近在听() {
 				封面.src = 大图地址;
 				封面.classList.add("大图就绪");
 			} else
-				// 暂存大图地址，交由可见性观察器在该项首次可见时发起请求
+				// 暂存大图地址，交由可见性观察器在该项首次可见（含预加载提前量）时发起请求
 				封面.dataset.大图地址 = 大图地址;
 			项元素.append(封面);
 		}
@@ -439,21 +442,24 @@ async function 渲染最近在听() {
 	排行容器.append(排行片段);
 	// 换页会重建正文：先解除旧项的观察，再逐项观察；项首次可见时开始加载大图、启动封面动画
 	if (!排行可见性观察器)
-		排行可见性观察器 = new IntersectionObserver(条目列表 => {
-			for (const 条目 of 条目列表) {
-				const 项元素 = 条目.target;
-				const 封面 = 项元素.querySelector("img.封面");
-				if (!(封面 instanceof HTMLImageElement)) continue;
-				// 不可见时暂停（回调只在可视状态变化时下发，据此判定始终有效，无需另存状态快照）
-				if (!条目.isIntersecting) {
-					for (const 动画 of 封面.getAnimations()) 动画.pause();
-					continue;
+		排行可见性观察器 = new IntersectionObserver(
+			条目列表 => {
+				for (const 条目 of 条目列表) {
+					const 项元素 = 条目.target;
+					const 封面 = 项元素.querySelector("img.封面");
+					if (!(封面 instanceof HTMLImageElement)) continue;
+					// 不在外扩区域内时暂停（回调只在可视状态变化时下发，据此判定始终有效，无需另存状态快照）
+					if (!条目.isIntersecting) {
+						for (const 动画 of 封面.getAnimations()) 动画.pause();
+						continue;
+					}
+					// 首次可见（含预加载提前量）才请求大图；大图就绪后（含缓存命中）对齐公共相位并播放
+					if (封面.dataset.大图地址) 加载封面大图(封面);
+					else if (封面.classList.contains("大图就绪")) 播放封面动画(封面);
 				}
-				// 首次可见才请求大图；大图就绪后（含缓存命中）对齐公共相位并播放
-				if (封面.dataset.大图地址) 加载封面大图(封面);
-				else if (封面.classList.contains("大图就绪")) 播放封面动画(封面);
-			}
-		});
+			},
+			{ rootMargin: `${预加载提前量} 0px` }
+		);
 	排行可见性观察器.disconnect();
 	for (const 项元素 of 项元素列表) 排行可见性观察器.observe(项元素);
 	const 定位并播放 = (/** @type {Event} */ 事件) => {
