@@ -75,6 +75,40 @@ main、左右栏
 		opacity: 1;
 	}
 }
+
+@keyframes 顶部大图移动端 {
+	0% {
+		object-position: center 0%;
+	}
+	33% {
+		opacity: 1;
+	}
+	100% {
+		object-position: center 100%;
+		opacity: 0;
+	}
+}
+@keyframes 顶部大图桌面端 {
+	0% {
+		object-position: center 0%;
+	}
+	100% {
+		object-position: center 100%;
+	}
+}
+@keyframes 左栏移动端 {
+	0% {
+		opacity: 1;
+	}
+	33% {
+		opacity: 0;
+		visibility: hidden;
+	}
+	100% {
+		opacity: 0;
+		visibility: hidden;
+	}
+}
 @keyframes 延迟不可见 {
 	0% {
 		visibility: visible;
@@ -365,17 +399,14 @@ body.隐藏导航栏 #导航栏 {
 
 @supports (animation-timeline: scroll()) {
 	body > #顶部大图 {
-		animation: pan-vertical linear both;
+		animation-name: 顶部大图桌面端;
+		animation-fill-mode: both;
+		animation-timing-function: linear;
+	}
+	body > #顶部大图,
+	main .左 {
 		animation-timeline: scroll(root);
 		animation-range: 0 calc(45vh + 108px);
-	}
-	@keyframes pan-vertical {
-		from {
-			object-position: center 0%;
-		}
-		to {
-			object-position: center 100%;
-		}
 	}
 }
 
@@ -819,7 +850,7 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	margin: 4px;
 }
 #网易云音乐-最近在听 .播放排行 > *:hover > .歌曲信息,
-#网易云音乐-最近在听 .播放排行 > *:hover > .排名{
+#网易云音乐-最近在听 .播放排行 > *:hover > .排名 {
 	background-color: #333c;
 }
 #网易云音乐-最近在听 .播放排行 > * > .排名::after {

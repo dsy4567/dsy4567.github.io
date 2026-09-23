@@ -352,6 +352,7 @@ input {
 		width: calc(100% - 10px) !important;
 	}
 	body > #顶部大图 {
+		animation-name: 顶部大图移动端 !important;
 		animation-range: 0 min(calc(64vh + 56px), 496px) !important;
 		position: absolute;
 		width: calc(100vw - 18px) !important;
@@ -364,13 +365,14 @@ input {
 		padding-right: 0;
 		width: 100% !important;
 	}
-	main > .左 {
+	main .左 {
+		animation: 左栏移动端 linear both;
 		height: calc(64vh) !important;
 		max-height: 430px !important;
 		scrollbar-width: none;
 	}
 	main > .左 > *:last-child {
-		margin-bottom: min(calc(64vh - 16px), 414px);
+		margin-bottom: min(calc(64vh - 32px), 398px);
 	}
 	main > .左::after {
 		content: "";
