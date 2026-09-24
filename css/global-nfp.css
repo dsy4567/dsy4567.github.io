@@ -1042,11 +1042,13 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 #网易云音乐-最近在听 .播放排行 > *::after {
 	content: "";
 	position: absolute;
-	inset: 0;
+	left: -1px;
+	top: 0;
 	background-color: var(--accent-color);
 	opacity: 0.4;
 	border-radius: var(--border-radius);
 	width: min(var(--progress), 95%);
+	height: 100%;
 	transition: var(--transition) background-color;
 }
 #网易云音乐-最近在听 .播放排行 > *:hover::after {
