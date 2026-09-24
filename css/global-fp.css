@@ -202,10 +202,11 @@ pre {
 	padding: 4px;
 }
 pre > code {
+	display: block;
 	background-color: transparent;
 	border: none;
 	margin: 0;
-	padding: 0;
+	padding: 1em;
 }
 pre code.hljs {
 	display: block;
