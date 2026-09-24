@@ -21,8 +21,6 @@ const 排行上限 = 30;
 /** 缓存文本上限（String.length）：localStorage 按 UTF-16 存储，每个码元约占 2 字节，故 1024KB 约合 1024 * 1024 / 2 个码元 */
 const 缓存文本上限 = (1024 * 1024) / 2;
 
-const css变量_item_height = "124px";
-
 let /** @type {最近在听项[]} */ 排行歌曲 = [],
 	/**
 	 * 本次渲染实际展示的排行项（全榜按档等比采样、按歌手加权的结果）：渲染时写入，点击时同样只加入这些
@@ -47,36 +45,36 @@ const 大封面已加载 = new Set();
 /** 正在加载的大图：持有强引用直至加载结束，游离的 Image 若无人引用可能被回收而中断加载，封面将永远等不到大图、动画也就无从启动 */
 const 大图加载中 = new Set();
 
-/** 封面平移动画的一个半周期时长（毫秒）：正放、倒放各一次构成一个完整往返 */
+/** 封面平移动画的一个半周期时长（毫秒）：正放、倒放各一次构成一个完整往返；该数值亦硬编码于 global-nfp.css 的 animation-duration */
 const 封面动画半周期毫秒 = 15000;
 
-/** 大图预加载提前量：观察区上下各外扩这么多像素，使排行项在真正进入视口前就被判定为可见，提前发起大图请求并启动动画，滚动到时已就绪 */
-const 预加载提前量 = "250px";
+/**
+ * 提前触发距离：section 距视口这么近就算「已接近」——立即请求数据并给 section 加 .播放中，
+ * 让全部封面动画开始播放（离开则移除该 class 统一暂停）；首屏 section 已在范围内时无需滚动即可触发
+ */
+const 提前触发距离 = "256px";
 
-/** 预播放扩展项数：视口内可见项的上下各再放行这么多项，让滚动方向上的邻近项提前加载大图、启动动画 */
-const 预播放扩展项数 = 2;
+/** 预加载邻居项数：最后一个可见项下方再提前加载这么多项的大图，使它们随可见项一同就绪 */
+const 预加载邻居项数 = 2;
 
 /** 封面平移动画的公共相位基准毫秒（首个动画启动时确立）：所有封面据此对齐进度 */
 let 动画基准毫秒 = 0;
 
 /**
- * 逐项观察排行项的可见性：只维护「视口内可见项」，需播放的范围由 更新播放范围 在其基础上向外扩展。
- * 不做容器根的观察器：嵌套滚动容器会按自身裁剪参与相交计算，其裁剪带无法被 rootMargin 扩展，
- * 提前量也就落不到容器内的项上，反不如掌握项列表后按索引扩展来得直接可控
+ * 逐项观察排行项是否与视口相交：只维护「视口内可见项」，要提前加载哪些大图由 更新加载范围 在其基础上算出。
+ * 不用 rootMargin 做提前量而按项列表向下扩展，是因为嵌套滚动容器的裁剪带不会被 rootMargin 扩展，
+ * 提前量落不到容器内的项上；掌握项列表后按索引扩展更直接可控
  */
 let /** @type {IntersectionObserver | null} */ 排行可见性观察器 = null;
 
-/** 视口（含预加载提前量）内可见的排行项：由 排行可见性观察器 维护，作为扩展播放范围的原点 */
+/** 视口内可见的排行项：由 排行可见性观察器 维护，作为决定提前加载范围的原点 */
 let /** @type {Set<HTMLElement>} */ 视口内可见项 = new Set();
 
-/** 本次渲染的排行项列表（与 DOM 顺序一致）：据此把可见项映射为索引，向上下扩展出需播放的邻居 */
+/** 本次渲染的排行项列表（与 DOM 顺序一致）：据此把可见项映射为索引，向下扩展出要提前加载的邻居 */
 let /** @type {HTMLElement[]} */ 排行项列表 = [];
 
-/** 当前需播放动画的排行项：由扩展后的范围算出，持有它才能与上次结果求差集，决定谁开始、谁暂停 */
-let /** @type {Set<HTMLElement>} */ 需播放项 = new Set();
-
-/** 观察整个 section 是否进入视口：无有效缓存时只有 section 可见才发起请求，避免访客不滚动时白白消耗流量（懒创建，换页重建 section 后重新观察） */
-let /** @type {IntersectionObserver | null} */ 模块可见性观察器 = null;
+/** 观察整个 section：进入 提前触发距离 内即请求数据并切换 .播放中（懒创建，换页重建 section 后重新观察） */
+let /** @type {IntersectionObserver | null} */ 模块观察器 = null;
 
 /** 东八区当天 23:59:59.999 的时间戳：先偏移到东八区、按 UTC 取当天末尾，再偏移回来，避免受访客本地时区影响 */
 function 今日缓存过期时间() {
@@ -330,96 +328,42 @@ function 封面动画相位() {
 	return (performance.now() - 动画基准毫秒) % (封面动画半周期毫秒 * 2);
 }
 
-/**
- * 创建封面平移动画：改用 Web Animations API 而非 CSS 动画，以便用 currentTime 精确对齐公共相位、
- * 直接控制暂停与播放（无需再权衡 animation 简写与 animation-play-state 的优先级）
- * @returns {Animation | null} 用户偏好减少动效时返回 null，此时保持 CSS 的居中静止态
- */
-function 创建封面动画(/** @type {HTMLImageElement} */ 封面) {
-	// WAAPI 动画不受 CSS 媒体查询约束，需在 JS 侧自行尊重该偏好
-	if (用户已禁用动画特效) return null;
-	// 行高基准从计算样式读取，保持 CSS 为唯一数据源；100% 为封面自身高度，交给浏览器按当前布局解析
-	// const 行高基准 = getComputedStyle(封面).getPropertyValue("--item-height").trim();
-	const 行高基准 = css变量_item_height;
-	return 封面.animate(
-		[{ transform: "translateY(0px)" }, { transform: `translateY(calc(${行高基准} - 100%))` }],
-		{
-			duration: 封面动画半周期毫秒,
-			easing: "ease-in-out",
-			direction: "alternate",
-			iterations: Infinity,
-		}
-	);
+/** 把封面动画对齐到公共相位（无动画时静默跳过）：CSS 动画同样是 Animation 实例，写入 currentTime 即可对齐 */
+function 对齐封面相位(/** @type {HTMLImageElement} */ 封面) {
+	for (const 动画 of 封面.getAnimations()) 动画.currentTime = 封面动画相位();
 }
 
-/** 将封面动画对齐到公共相位并播放（尚无动画则创建）；暂停与否一律由观察器按最新可视状态决定，这里不读任何可视状态快照 */
-function 播放封面动画(/** @type {HTMLImageElement} */ 封面) {
-	const 动画 = 封面.getAnimations().at(0) || 创建封面动画(封面);
-	if (用户已禁用动画特效 || !动画) return;
-	// 暂停期间时间照常流逝，重新对齐相位可避免恢复播放后进度落后于其他封面
-	动画.currentTime = 封面动画相位();
-	动画.play();
+/** 把模块内全部已就绪封面对齐到公共相位：容器重新进入播放范围时调用，抵消暂停期间流逝的时间 */
+function 对齐全部封面相位(/** @type {HTMLElement} */ 模块) {
+	for (const 封面 of 模块.querySelectorAll("img.封面.大图就绪"))
+		if (封面 instanceof HTMLImageElement) 对齐封面相位(封面);
 }
 
-/** 系统「减少动态效果」偏好的媒体查询（懒创建，监听只注册一次） */
-let /** @type {MediaQueryList | null} */ 减少动效偏好查询 = null;
-
-/**
- * 监听系统「减少动态效果」偏好：用户中途开启该偏好时，已创建的 WAAPI 动画不会自行停止
- * （CSS 媒体查询只能约束声明式动画），需立即暂停；重新关闭时不主动恢复，
- * 交由观察器的下一次回调按最新可视状态决定（播放封面动画会重新对齐公共相位）
- */
-function 监听减少动效偏好() {
-	if (减少动效偏好查询) return;
-	减少动效偏好查询 = matchMedia("(prefers-reduced-motion: reduce)");
-	减少动效偏好查询.addEventListener("change", 事件 => {
-		const 模块 = gd("网易云音乐-最近在听");
-		if (!模块) return;
-		for (const 封面 of 模块.querySelectorAll("img.封面"))
-			for (const 动画 of 封面.getAnimations()) 动画[事件.matches ? "pause" : "play"]();
-	});
-}
-
-/** 让一项开始播放：大图未加载则先发起加载（加载完成后自行播放），已就绪则对齐公共相位播放 */
-function 启动项动画(/** @type {HTMLElement} */ 项元素) {
-	// 首次进入播放范围才请求大图；大图就绪后（含缓存命中）由 onload 或此处对齐公共相位并播放
+/** 请求一项的封面大图；已就绪者（缓存命中或此前已加载）无图可请求，改为对齐公共相位 */
+function 请求封面大图(/** @type {HTMLElement} */ 项元素) {
 	const 封面 = 项元素.querySelector("img.封面");
 	if (!(封面 instanceof HTMLImageElement)) return;
 	if (封面.dataset.大图地址) 加载封面大图(封面);
-	else if (封面.classList.contains("大图就绪")) 播放封面动画(封面);
-}
-
-/** 暂停一项的封面动画（无动画时静默跳过） */
-function 暂停项动画(/** @type {HTMLElement} */ 项元素) {
-	const 封面 = 项元素.querySelector("img.封面");
-	if (!(封面 instanceof HTMLImageElement)) return;
-	for (const 动画 of 封面.getAnimations()) 动画.pause();
+	else 对齐封面相位(封面);
 }
 
 /**
- * 按最新可见项重算需播放范围：以视口内可见项为原点，向上下各扩展 预播放扩展项数 项（越界截断），
- * 再与上次结果求差集——新进入范围的项加载大图、播放动画，离开范围的项暂停。
- * 之所以按索引扩展而非给观察器加提前量：嵌套滚动容器的裁剪带不会被 rootMargin 扩展，
- * 提前量落不到容器内的项上，而依项列表扩展可以精确控制放行几项。
- * 观察器回调只在可见性变化时下发（容器内滚动同样会改变与视口的相交状态），故这里读到的是最新状态
+ * 按最新可见项决定要加载哪些大图：视口内可见项本身，再加上最后一个可见项下方 预加载邻居项数 项
+ * （越界截断）——后者让紧跟可见区域下沿的项先拿到大图，滚动到时已就绪。
+ * 向上不额外扩展：向上滚动时那些项会重新变为可见并随即加载
  */
-function 更新播放范围() {
-	const 新需播放项 = new Set();
-	for (const 项元素 of 视口内可见项) {
-		const 索引 = 排行项列表.indexOf(项元素);
-		if (索引 < 0) continue;
-		const 起始 = Math.max(0, 索引 - 预播放扩展项数);
-		const 结束 = Math.min(排行项列表.length - 1, 索引 + 预播放扩展项数);
-		for (let i = 起始; i <= 结束; i++) 新需播放项.add(排行项列表[i]);
-	}
-	for (const 项元素 of 需播放项) if (!新需播放项.has(项元素)) 暂停项动画(项元素);
-	for (const 项元素 of 新需播放项) if (!需播放项.has(项元素)) 启动项动画(项元素);
-	需播放项 = 新需播放项;
-	// 类名跟随扩展后的范围（牵动范围即「应播放」），作为样式兜底与调试的标记
-	for (const 项元素 of 排行项列表) 项元素.classList.toggle("播放动画", 需播放项.has(项元素));
+function 更新加载范围() {
+	let 最后可见索引 = -1;
+	排行项列表.forEach((项元素, 索引) => {
+		if (视口内可见项.has(项元素)) 最后可见索引 = 索引;
+	});
+	if (最后可见索引 < 0) return;
+	for (const 项元素 of 视口内可见项) 请求封面大图(项元素);
+	const 结束 = Math.min(排行项列表.length - 1, 最后可见索引 + 预加载邻居项数);
+	for (let i = 最后可见索引 + 1; i <= 结束; i++) 请求封面大图(排行项列表[i]);
 }
 
-/** 可见性观察器回调：把条目状态写入 视口内可见项，再按最新可见项重算需播放范围 */
+/** 可见性观察器回调：把条目状态写入 视口内可见项，再重算要提前加载的大图 */
 function 记录项可见性(/** @type {IntersectionObserverEntry[]} */ 条目列表) {
 	for (const 条目 of 条目列表) {
 		const 项元素 = 条目.target;
@@ -427,10 +371,10 @@ function 记录项可见性(/** @type {IntersectionObserverEntry[]} */ 条目列
 		if (条目.isIntersecting) 视口内可见项.add(项元素);
 		else 视口内可见项.delete(项元素);
 	}
-	更新播放范围();
+	更新加载范围();
 }
 
-/** 进入播放范围后才加载大图：完成后换入大图，若该项仍在播放范围内则播放 */
+/** 加载大图：完成后换入大图并对齐公共相位（大图就绪时 CSS 动画才成立，此刻写入相位可避免与其他封面错位） */
 function 加载封面大图(/** @type {HTMLImageElement} */ 封面) {
 	const 大图地址 = 封面.dataset.大图地址;
 	if (!大图地址) return;
@@ -447,10 +391,7 @@ function 加载封面大图(/** @type {HTMLImageElement} */ 封面) {
 		if (!封面.isConnected) return;
 		封面.src = 大图地址;
 		封面.classList.add("大图就绪");
-		// 大图就绪可能发生在该项滚出播放范围之后：只有仍在范围内才播放，
-		// 否则保持静止（下次进入范围时会重新发起加载并播放）
-		const 项元素 = 封面.parentElement;
-		if (项元素 instanceof HTMLElement && 需播放项.has(项元素)) 播放封面动画(封面);
+		对齐封面相位(封面);
 	};
 	大图.src = 大图地址;
 }
@@ -470,9 +411,7 @@ async function 渲染最近在听() {
 	模块.classList.remove("加载中");
 	// 接口不提供统计区间，文案固定为「最近一周」，写入 CSS 变量交给 .播放排行::before 展示（值含引号，content 可直接引用）
 	排行容器.style.setProperty("--date-range", '"—— 最近一周 | 双击以播放 ——"');
-	// 换页重渲染会丢弃旧列表：先取消其 WAAPI 动画，否则无限动画会继续持有已脱离文档的元素
-	for (const 封面 of 排行容器.querySelectorAll("img.封面"))
-		for (const 动画 of 封面.getAnimations()) 动画.cancel();
+	// 换页重渲染会丢弃旧列表：元素脱离文档后其 CSS 动画即随之失效，无需再逐个收尾
 	排行容器.textContent = "";
 	await schedulerYield();
 
@@ -495,18 +434,18 @@ async function 渲染最近在听() {
 			const 封面 = ce("img");
 			封面.className = "封面";
 			const 封面地址 = 项.song.al.picUrl.replace("http://", "https://");
-			// 封面铺满整行，16px 小图放大严重模糊：lazy 小图立即占位（居中静止），进入播放范围后再并行请求大图，加载完成后换入并启用平移动画
+			// 封面铺满整行，16px 小图放大严重模糊：lazy 小图立即占位（居中静止），进入加载范围后再并行请求大图，加载完成后换入并启用平移动画
 			封面.src = 封面地址 + "?param=16y16";
 			封面.alt = "";
 			封面.loading = "lazy";
 			// 封面.decoding = "async";
 			const 大图地址 = 封面地址 + "?param=640y640";
 			if (大封面已加载.has(大图地址)) {
-				// 缓存命中：立即换入大图；此刻元素还在文档片段中，动画交由观察器在插入文档后启动
+				// 缓存命中：立即换入大图；此刻元素还在文档片段中，相位对齐交给插入文档后的观察器回调
 				封面.src = 大图地址;
 				封面.classList.add("大图就绪");
 			} else
-				// 暂存大图地址，交由 更新播放范围 在该项进入播放范围时发起请求
+				// 暂存大图地址，交由 更新加载范围 在该项进入加载范围时发起请求
 				封面.dataset.大图地址 = 大图地址;
 			项元素.append(封面);
 		}
@@ -527,17 +466,13 @@ async function 渲染最近在听() {
 		项元素列表.push(项元素);
 	});
 	排行容器.append(排行片段);
-	// 换页会重建正文：先解除旧项观察并丢弃旧状态（旧元素已脱离文档，无需再暂停其动画），再逐项观察
+	// 换页会重建正文：先解除旧项观察并丢弃旧状态（旧元素已脱离文档，无需再收尾），再逐项观察
 	排行可见性观察器?.disconnect();
 	视口内可见项.clear();
-	需播放项.clear();
-	// 项列表按 DOM 顺序存下，供 更新播放范围 把可见项映射为索引并向上下扩展邻居
+	// 项列表按 DOM 顺序存下，供 更新加载范围 把可见项映射为索引并向下扩展出邻居
 	排行项列表 = 项元素列表;
-	if (!排行可见性观察器)
-		排行可见性观察器 = new IntersectionObserver(记录项可见性, {
-			// rootMargin 只用于让「可见」判定更早成立；容器内的裁剪带扩展不了，滚动方向的提前放行由 预播放扩展项数 负责
-			rootMargin: `${预加载提前量} 0px`,
-		});
+	// 观察器不带 rootMargin：「可见」即真正与视口相交，下沿的提前量由 预加载邻居项数 按项列表补足
+	if (!排行可见性观察器) 排行可见性观察器 = new IntersectionObserver(记录项可见性);
 	for (const 项元素 of 项元素列表) 排行可见性观察器.observe(项元素);
 	const 定位并播放 = (/** @type {Event} */ 事件) => {
 		if (!(事件.target instanceof HTMLElement)) return;
@@ -556,7 +491,7 @@ async function 渲染最近在听() {
 	填充精选歌词();
 }
 
-/** 请求并渲染最近在听：仅在无有效缓存、且 section 已进入视口时调用 */
+/** 请求并渲染最近在听：仅在无有效缓存、且 section 已进入 提前触发距离 时由 观察模块 调用 */
 async function 获取并渲染最近在听() {
 	if (排行已请求) return 渲染最近在听();
 	排行已请求 = true;
@@ -605,36 +540,43 @@ async function 获取并渲染最近在听() {
 }
 
 /**
- * 无有效缓存时，等整个 section 进入视口再发起请求。
- * 观察器的首次回调会带上元素当前的可视状态，因此首屏 section 已在视口时无需滚动即可立即加载；
- * 换页会重建 section，观察前需先解除对旧元素的观察
+ * 观察整个 section：进入 提前触发距离 内即请求数据（首次）并给 section 加 .播放中，
+ * 由 CSS 把全部封面动画切到 running；离开则移除该 class 统一暂停。
+ * 观察器的首次回调会带上元素当前的相交状态，因此首屏 section 已在范围内时无需滚动即可触发；
+ * 换页会重建 section，观察前需先解除对旧元素的观察。观察器常驻（不像取数那样一次即弃），以便反复切换 .播放中
  */
-function 观察模块可见性() {
+function 观察模块() {
 	const 模块 = gd("网易云音乐-最近在听");
 	if (!模块) return;
-	if (!模块可见性观察器)
-		模块可见性观察器 = new IntersectionObserver(条目列表 => {
-			for (const 条目 of 条目列表) {
-				if (!条目.isIntersecting) continue;
-				// 已开始加载，无需继续观察
-				模块可见性观察器?.disconnect();
-				获取并渲染最近在听();
-				return;
-			}
-		});
-	模块可见性观察器.disconnect();
-	模块可见性观察器.observe(模块);
+	if (!模块观察器)
+		模块观察器 = new IntersectionObserver(
+			/** @param {IntersectionObserverEntry[]} 条目列表 */
+			条目列表 => {
+				for (const 条目 of 条目列表) {
+					const 目标 = 条目.target;
+					if (!(目标 instanceof HTMLElement)) continue;
+					目标.classList.toggle("播放中", 条目.isIntersecting);
+					if (!条目.isIntersecting) continue;
+					// 重新进入播放范围：暂停期间公共相位仍在流逝，需把已就绪的封面重新对齐
+					if (排行已请求) 对齐全部封面相位(目标);
+					else 获取并渲染最近在听();
+				}
+			},
+			{ rootMargin: `${提前触发距离} 0px` }
+		);
+	模块观察器.disconnect();
+	模块观察器.observe(模块);
 }
 
 export function main() {
 	显示或隐藏进度条(false);
-	// 系统「减少动态效果」偏好可能在任意时刻变化，进入页面时确保监听已注册（懒创建，重复调用无副作用）
-	监听减少动效偏好();
 	if (!location.hash && 已触发动态加载)
 		qs("main .右")?.scrollIntoView({
 			behavior: "smooth",
 		});
 
+	// 换页会重建正文与 section，每次进入首页都重新观察：它负责请求数据，并随 near/far 切换 .播放中
+	观察模块();
 	// 动态加载换页会重建正文，每次进入首页都需重新渲染；已有结论（请求完成、失败或已用缓存渲染）时直接用内存数据重绘
 	if (排行已请求) return 渲染最近在听();
 	// 命中仍在有效期内的缓存（东八区当天 23:59 前）不产生网络请求，直接渲染
@@ -644,6 +586,5 @@ export function main() {
 		应用缓存(缓存);
 		return 渲染最近在听();
 	}
-	// 无有效缓存：整个 section 进入视口后才请求
-	观察模块可见性();
+	// 无有效缓存：section 进入 提前触发距离 后由 观察模块 注册的观察器发起请求
 }
