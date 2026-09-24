@@ -18,6 +18,9 @@ const 最近在听接口 = 接口主机 + "/user/record?uid=8223493733&type=1";
 /** 排行展示上限：接口可能返回上百条，只展示前 30 名 */
 const 排行上限 = 30;
 
+/** 缓存文本上限（String.length）：localStorage 按 UTF-16 存储，每个码元约占 2 字节，故 1024KB 约合 1024 * 1024 / 2 个码元 */
+const 缓存文本上限 = (1024 * 1024) / 2;
+
 const css变量_item_height = "124px";
 
 let /** @type {最近在听项[]} */ 排行歌曲 = [],
@@ -83,15 +86,18 @@ function 读取排行缓存() {
 /** 写入排行缓存：排行与歌词同批存入，有效期为东八区当天 23:59:59.999；写入失败（如隐私模式）静默忽略 */
 function 写入排行缓存() {
 	try {
-		localStorage.setItem(
-			"最近在听",
-			JSON.stringify({
-				过期时间: 今日缓存过期时间(),
-				排行项: 排行歌曲,
-				歌词原始,
-				副歌原始,
-			})
-		);
+		const 文本 = JSON.stringify({
+			过期时间: 今日缓存过期时间(),
+			排行项: 排行歌曲,
+			歌词原始,
+			副歌原始,
+		});
+		// 网易云歌词可能很长，超限的缓存会占满存储配额：放弃写入，只影响下次进站的加速
+		if (文本.length > 缓存文本上限) {
+			console.warn(`最近在听缓存过大（${文本.length}/${缓存文本上限} 字符），跳过写入`);
+			return;
+		}
+		localStorage.setItem("最近在听", 文本);
 	} catch (e) {
 		console.warn(e);
 	}
