@@ -321,7 +321,7 @@ function 封面动画相位() {
  */
 function 创建封面动画(/** @type {HTMLImageElement} */ 封面) {
 	// WAAPI 动画不受 CSS 媒体查询约束，需在 JS 侧自行尊重该偏好
-	if (matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
+	if (用户已禁用动画特效) return null;
 	// 行高基准从计算样式读取，保持 CSS 为唯一数据源；100% 为封面自身高度，交给浏览器按当前布局解析
 	// const 行高基准 = getComputedStyle(封面).getPropertyValue("--item-height").trim();
 	const 行高基准 = css变量_item_height;
@@ -339,10 +339,29 @@ function 创建封面动画(/** @type {HTMLImageElement} */ 封面) {
 /** 将封面动画对齐到公共相位并播放（尚无动画则创建）；暂停与否一律由观察器按最新可视状态决定，这里不读任何可视状态快照 */
 function 播放封面动画(/** @type {HTMLImageElement} */ 封面) {
 	const 动画 = 封面.getAnimations().at(0) || 创建封面动画(封面);
-	if (!动画) return;
+	if (用户已禁用动画特效 || !动画) return;
 	// 暂停期间时间照常流逝，重新对齐相位可避免恢复播放后进度落后于其他封面
 	动画.currentTime = 封面动画相位();
 	动画.play();
+}
+
+/** 系统「减少动态效果」偏好的媒体查询（懒创建，监听只注册一次） */
+let /** @type {MediaQueryList | null} */ 减少动效偏好查询 = null;
+
+/**
+ * 监听系统「减少动态效果」偏好：用户中途开启该偏好时，已创建的 WAAPI 动画不会自行停止
+ * （CSS 媒体查询只能约束声明式动画），需立即暂停；重新关闭时不主动恢复，
+ * 交由观察器的下一次回调按最新可视状态决定（播放封面动画会重新对齐公共相位）
+ */
+function 监听减少动效偏好() {
+	if (减少动效偏好查询) return;
+	减少动效偏好查询 = matchMedia("(prefers-reduced-motion: reduce)");
+	减少动效偏好查询.addEventListener("change", 事件 => {
+		const 模块 = gd("网易云音乐-最近在听");
+		if (!模块) return;
+		for (const 封面 of 模块.querySelectorAll("img.封面"))
+			for (const 动画 of 封面.getAnimations()) 动画[事件.matches ? "pause" : "play"]();
+	});
 }
 
 /** 首次可见后加载大图：完成后换入大图，启动动画并让观察器按最新可视状态重新判定 */
@@ -557,6 +576,8 @@ function 观察模块可见性() {
 
 export function main() {
 	显示或隐藏进度条(false);
+	// 系统「减少动态效果」偏好可能在任意时刻变化，进入页面时确保监听已注册（懒创建，重复调用无副作用）
+	监听减少动效偏好();
 	if (!location.hash && 已触发动态加载)
 		qs("main .右")?.scrollIntoView({
 			behavior: "smooth",
