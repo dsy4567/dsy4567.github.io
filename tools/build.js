@@ -607,7 +607,7 @@ class SiteGenerator {
 	 * @returns {void}
 	 */
 	generateBlogIndex() {
-		let html = `<!DOCTYPE html>\n<html lang="zh-CN">\n\t<head>\n\t\t<meta charset="UTF-8" />\n\t\t<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n\t\t<script>location.pathname = "/blog.html";</script>\n\t</head>\n\t<body>\n`;
+		let html = `<!DOCTYPE html>\n<html lang="zh-CN">\n\t<head>\n\t\t<meta charset="UTF-8" />\n\t\t<style>:root{color-scheme: light dark;}</style>\n\t\t<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n\t\t<script>location.pathname = "/blog.html";</script>\n\t</head>\n\t<body>\n`;
 		for (const a of this.articles) html += `\t\t<p><a href="./${a.id}/">${a.title}</a></p>\n`;
 
 		html += `\n\t\t<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，以上作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名</a>进行许可。\n\t</body>\n</html>\n`;
