@@ -6,6 +6,7 @@
 
 Ctrl + F 导航
 
+延后显示元素
 @keyframes
 @media
 ::*
@@ -26,6 +27,17 @@ main、左右栏
 友链
 
 */
+
+/* ==================== 延后显示元素 ==================== */
+main > #分界线 {
+	visibility: visible;
+}
+.进度条外面,
+div#侧边按钮容器,
+#网易云音乐-最近在听 .播放排行 > div > * {
+	display: block;
+}
+
 /* ==================== @keyframes ==================== */
 @keyframes 进度条 {
 	from {
@@ -103,6 +115,23 @@ main、左右栏
 		100% {
 			opacity: 0;
 		}
+	}
+}
+@keyframes 高频闪烁 {
+	0% {
+		opacity: 0.5;
+	}
+	25% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.5;
+	}
+	75% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.5;
 	}
 }
 @keyframes 延迟不可见 {
@@ -342,11 +371,53 @@ div.通知 {
 	z-index: 997;
 }
 
+.横幅 {
+	background-color: var(--surface-2);
+	font-size: larger;
+	padding: 2px;
+	position: fixed;
+	bottom: 0;
+	text-align: center;
+	width: 100%;
+	z-index: 996;
+}
+
 .暂停动画 {
 	animation-play-state: paused;
 }
 /* ==================== 导航栏、左右栏 ==================== */
+@media only screen and (max-width: 1080px) {
+	@supports (animation-timeline: scroll()) {
+		body > #顶部大图 {
+			animation-name: 顶部大图移动端 !important;
+			animation-range: 0 min(calc(64vh + 56px), 496px) !important;
+			position: fixed !important;
+		}
+	}
+	body > #顶部大图 > .顶部大图层 {
+		animation-name: 顶部大图背景 !important;
+		animation-range: 0 min(calc(64vh + 56px), 496px) !important;
+	}
+
+	main .左 {
+		animation: 左栏移动端 linear both;
+	}
+	main > .左 > *:last-child {
+		margin-bottom: min(calc(64vh - 32px), 398px);
+	}
+	main > .左::after {
+		content: "";
+		display: block;
+		position: sticky;
+		width: calc(100% - 14px);
+		bottom: 0;
+		margin: 0 0 0 7px;
+		pointer-events: none;
+		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
+	}
+}
 body > #导航栏 {
+	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 	transition:
 		var(--transition) background-color,
 		var(--transition) transform;
@@ -366,6 +437,14 @@ body.隐藏导航栏 #导航栏 {
 	transition:
 		var(--transition-slow) opacity,
 		var(--transition) background-color;
+	opacity: 0;
+	pointer-events: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+	z-index: 1009;
 }
 .进度条外面.显示 {
 	background-color: rgba(127, 127, 127, 0.3);
@@ -414,10 +493,16 @@ body.隐藏导航栏 #导航栏 {
 
 /* ==================== main、左右栏 ==================== */
 main > #分界线 {
+	background-color: var(--surface-1);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	height: calc(100vh - 16px);
+	transition:
+		var(--transition) background-color,
+		var(--transition) border;
+	/* transform: translateX(-4px); */
 }
 body.宽屏 > main > #分界线 {
 	margin-left: -40px;
@@ -466,9 +551,54 @@ section#我 > img:hover {
 	transform: rotate(360deg);
 }
 
+.标签 > div {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	justify-content: center;
+}
+.标签 > div > * {
+	color: var(--text-color);
+	background-color: var(--accent-color-transparent);
+	border: 1px solid transparent;
+	border-radius: var(--border-radius);
+	line-height: 3;
+	margin-left: 0px;
+	padding: 0 8px;
+	white-space: nowrap;
+}
+
 /* ==================== 页脚 ==================== */
 
 /* ==================== 侧边按钮-通用 ==================== */
+div#侧边按钮容器 {
+	--border: 1px solid var(--overlay-strong);
+	position: fixed;
+	right: 0px;
+	z-index: 1007;
+	top: calc(75vh - 33px * 4);
+	transition-delay: 0ms;
+}
+div#侧边按钮容器 > * {
+	box-shadow:
+		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
+		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	background-color: var(--surface-2);
+	border: var(--border);
+	border-radius: 50%;
+	display: flex;
+	opacity: 0.5;
+	margin-top: 5px;
+	padding: 4px;
+	position: relative;
+	transform: translateX(-4px);
+	align-items: center;
+	width: 36px;
+	height: 36px;
+	box-sizing: border-box;
+	justify-content: center;
+}
+
 body::after {
 	content: "";
 	position: fixed;
@@ -532,6 +662,9 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 	box-sizing: border-box;
 	height: 36px;
 	align-items: center;
+	opacity: 0;
+	pointer-events: none;
+	position: absolute;
 }
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 + .更多选项 {
 	border-bottom-left-radius: 19px;
@@ -573,6 +706,14 @@ div#侧边按钮容器 > #关闭侧边按钮 > svg {
 /* see: @media */
 
 /* ==================== 侧边按钮-关闭侧边按钮、回到顶部 ==================== */
+body.顶部 div#侧边按钮容器 > #回到顶部,
+div#侧边按钮容器 > #关闭侧边按钮 {
+	animation-name: 延迟不可见;
+	animation-duration: 3s;
+	animation-fill-mode: forwards;
+	opacity: 0;
+	pointer-events: none;
+}
 div#侧边按钮容器 > #回到顶部,
 body:has(#侧边按钮容器 > .拥有更多选项:hover) #侧边按钮容器 > #关闭侧边按钮,
 body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible) #侧边按钮容器 > #关闭侧边按钮 {
@@ -588,6 +729,10 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面 + svg {
 	animation-duration: 5s;
 	user-select: none;
+}
+div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面 {
+	border-radius: 50%;
+	display: none;
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面[src*="http"] {
 	display: block;
@@ -606,6 +751,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 .网易云封面旋转#网易云音乐封面 {
 	animation-name: 匀速转;
+	border-radius: 50%;
 }
 
 div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover,
@@ -734,7 +880,6 @@ div#侧边按钮容器 > #切换主题 > #所有主题 {
 	flex-wrap: wrap;
 	height: auto;
 	left: -1px;
-	padding: 3px;
 	top: 34px;
 	transform: none;
 	width: calc(32px * 4 - -11px);
@@ -794,13 +939,16 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	user-select: none;
 }
 #网易云音乐-最近在听 .播放排行 > * {
-	transition: var(--transition) border;
+	color: #fff;
 	background-color: #333;
+	font-size: smaller;
+	font-weight: 600;
 	display: flex;
 	flex-wrap: nowrap;
 	justify-content: space-between;
 	align-items: center;
-	transition: var(--transition) filter;
+	position: relative;
+	transition: var(--transition) border;
 }
 #网易云音乐-最近在听 .播放排行 > *:hover {
 	border: 1px solid var(--accent-color);
@@ -811,21 +959,16 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 #网易云音乐-最近在听 .播放排行 > * > .封面 {
 	/* 该数值亦硬编码于 home.js */
 	--item-height: 124px;
-	filter: brightness(1);
-	/* 封面按行宽等比撑开（网易云封面为正方形，高度远超 50px 行高），超出行高的部分由行内 overflow: hidden 裁剪；
-	   大图（640px）加载完毕后才由 JS 启动平移动画，等待加载的 16px 小图保持居中静止 */
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: auto;
-	/* 未启动动画（大图未就绪，或用户偏好减少动效）时默认居中显示 */
-	transform: translateY(calc((var(--item-height) - 100%) / 2));
 	z-index: 0;
 	pointer-events: none;
-	transition:
-		var(--transition) background-color,
-		var(--transition) filter;
+	/* 未启动动画（大图未就绪，或用户偏好减少动效）时默认居中显示 */
+	transform: translateY(calc((var(--item-height) - 100%) / 2));
+	transition: var(--transition) background-color;
 }
 #网易云音乐-最近在听 .播放排行 > *::after {
 	content: "";
@@ -835,9 +978,7 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	opacity: 0.4;
 	border-radius: var(--border-radius);
 	width: min(var(--progress), 95%);
-	transition:
-		var(--transition) background-color,
-		var(--transition) filter;
+	transition: var(--transition) background-color;
 }
 #网易云音乐-最近在听 .播放排行 > *:hover::after {
 	background-color: transparent;
