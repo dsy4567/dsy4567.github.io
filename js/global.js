@@ -538,6 +538,12 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", 刷新主�
 // 跨标签页同步主题设置
 addEventListener("storage", 刷新主题);
 
+/** 用户是否禁用了动画特效：跟随系统「减少动态效果」偏好（prefers-reduced-motion: reduce）实时更新 */
+let 用户已禁用动画特效 = matchMedia("(prefers-reduced-motion: reduce)").matches;
+matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", 事件 => {
+	用户已禁用动画特效 = 事件.matches;
+});
+
 let URL发生变化事件 = new CustomEvent("URL发生变化"),
 	已触发动态加载 = false,
 	动态加载自增计数器 = 0;
