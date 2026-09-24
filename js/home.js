@@ -53,11 +53,27 @@ const 封面动画半周期毫秒 = 15000;
 /** 大图预加载提前量：观察区上下各外扩这么多像素，使排行项在真正进入视口前就被判定为可见，提前发起大图请求并启动动画，滚动到时已就绪 */
 const 预加载提前量 = "250px";
 
+/** 预播放扩展项数：视口内可见项的上下各再放行这么多项，让滚动方向上的邻近项提前加载大图、启动动画 */
+const 预播放扩展项数 = 2;
+
 /** 封面平移动画的公共相位基准毫秒（首个动画启动时确立）：所有封面据此对齐进度 */
 let 动画基准毫秒 = 0;
 
-/** 逐项观察排行项：首次可见时才加载大图、启动封面动画；不在视口内（含被滚动裁剪）时暂停其动画，回到视口恢复（懒创建，换页后逐项重新观察） */
+/**
+ * 逐项观察排行项的可见性：只维护「视口内可见项」，需播放的范围由 更新播放范围 在其基础上向外扩展。
+ * 不做容器根的观察器：嵌套滚动容器会按自身裁剪参与相交计算，其裁剪带无法被 rootMargin 扩展，
+ * 提前量也就落不到容器内的项上，反不如掌握项列表后按索引扩展来得直接可控
+ */
 let /** @type {IntersectionObserver | null} */ 排行可见性观察器 = null;
+
+/** 视口（含预加载提前量）内可见的排行项：由 排行可见性观察器 维护，作为扩展播放范围的原点 */
+let /** @type {Set<HTMLElement>} */ 视口内可见项 = new Set();
+
+/** 本次渲染的排行项列表（与 DOM 顺序一致）：据此把可见项映射为索引，向上下扩展出需播放的邻居 */
+let /** @type {HTMLElement[]} */ 排行项列表 = [];
+
+/** 当前需播放动画的排行项：由扩展后的范围算出，持有它才能与上次结果求差集，决定谁开始、谁暂停 */
+let /** @type {Set<HTMLElement>} */ 需播放项 = new Set();
 
 /** 观察整个 section 是否进入视口：无有效缓存时只有 section 可见才发起请求，避免访客不滚动时白白消耗流量（懒创建，换页重建 section 后重新观察） */
 let /** @type {IntersectionObserver | null} */ 模块可见性观察器 = null;
@@ -364,7 +380,57 @@ function 监听减少动效偏好() {
 	});
 }
 
-/** 首次可见后加载大图：完成后换入大图，启动动画并让观察器按最新可视状态重新判定 */
+/** 让一项开始播放：大图未加载则先发起加载（加载完成后自行播放），已就绪则对齐公共相位播放 */
+function 启动项动画(/** @type {HTMLElement} */ 项元素) {
+	// 首次进入播放范围才请求大图；大图就绪后（含缓存命中）由 onload 或此处对齐公共相位并播放
+	const 封面 = 项元素.querySelector("img.封面");
+	if (!(封面 instanceof HTMLImageElement)) return;
+	if (封面.dataset.大图地址) 加载封面大图(封面);
+	else if (封面.classList.contains("大图就绪")) 播放封面动画(封面);
+}
+
+/** 暂停一项的封面动画（无动画时静默跳过） */
+function 暂停项动画(/** @type {HTMLElement} */ 项元素) {
+	const 封面 = 项元素.querySelector("img.封面");
+	if (!(封面 instanceof HTMLImageElement)) return;
+	for (const 动画 of 封面.getAnimations()) 动画.pause();
+}
+
+/**
+ * 按最新可见项重算需播放范围：以视口内可见项为原点，向上下各扩展 预播放扩展项数 项（越界截断），
+ * 再与上次结果求差集——新进入范围的项加载大图、播放动画，离开范围的项暂停。
+ * 之所以按索引扩展而非给观察器加提前量：嵌套滚动容器的裁剪带不会被 rootMargin 扩展，
+ * 提前量落不到容器内的项上，而依项列表扩展可以精确控制放行几项。
+ * 观察器回调只在可见性变化时下发（容器内滚动同样会改变与视口的相交状态），故这里读到的是最新状态
+ */
+function 更新播放范围() {
+	const 新需播放项 = new Set();
+	for (const 项元素 of 视口内可见项) {
+		const 索引 = 排行项列表.indexOf(项元素);
+		if (索引 < 0) continue;
+		const 起始 = Math.max(0, 索引 - 预播放扩展项数);
+		const 结束 = Math.min(排行项列表.length - 1, 索引 + 预播放扩展项数);
+		for (let i = 起始; i <= 结束; i++) 新需播放项.add(排行项列表[i]);
+	}
+	for (const 项元素 of 需播放项) if (!新需播放项.has(项元素)) 暂停项动画(项元素);
+	for (const 项元素 of 新需播放项) if (!需播放项.has(项元素)) 启动项动画(项元素);
+	需播放项 = 新需播放项;
+	// 类名跟随扩展后的范围（牵动范围即「应播放」），作为样式兜底与调试的标记
+	for (const 项元素 of 排行项列表) 项元素.classList.toggle("播放动画", 需播放项.has(项元素));
+}
+
+/** 可见性观察器回调：把条目状态写入 视口内可见项，再按最新可见项重算需播放范围 */
+function 记录项可见性(/** @type {IntersectionObserverEntry[]} */ 条目列表) {
+	for (const 条目 of 条目列表) {
+		const 项元素 = 条目.target;
+		if (!(项元素 instanceof HTMLElement)) continue;
+		if (条目.isIntersecting) 视口内可见项.add(项元素);
+		else 视口内可见项.delete(项元素);
+	}
+	更新播放范围();
+}
+
+/** 进入播放范围后才加载大图：完成后换入大图，若该项仍在播放范围内则播放 */
 function 加载封面大图(/** @type {HTMLImageElement} */ 封面) {
 	const 大图地址 = 封面.dataset.大图地址;
 	if (!大图地址) return;
@@ -381,14 +447,10 @@ function 加载封面大图(/** @type {HTMLImageElement} */ 封面) {
 		if (!封面.isConnected) return;
 		封面.src = 大图地址;
 		封面.classList.add("大图就绪");
-		播放封面动画(封面);
-		// 重新观察该项：大图就绪可能发生在该项滚出视口之后，此时旧的可视状态已过期，
-		// 重新观察必定换来一次基于最新状态的回调，需要暂停的项由此暂停，可见的项保持播放
+		// 大图就绪可能发生在该项滚出播放范围之后：只有仍在范围内才播放，
+		// 否则保持静止（下次进入范围时会重新发起加载并播放）
 		const 项元素 = 封面.parentElement;
-		if (项元素) {
-			排行可见性观察器?.unobserve(项元素);
-			排行可见性观察器?.observe(项元素);
-		}
+		if (项元素 instanceof HTMLElement && 需播放项.has(项元素)) 播放封面动画(封面);
 	};
 	大图.src = 大图地址;
 }
@@ -433,18 +495,18 @@ async function 渲染最近在听() {
 			const 封面 = ce("img");
 			封面.className = "封面";
 			const 封面地址 = 项.song.al.picUrl.replace("http://", "https://");
-			// 封面铺满整行，16px 小图放大严重模糊：lazy 小图立即占位（居中静止），首次可见后再并行请求大图，加载完成后换入并启用平移动画
+			// 封面铺满整行，16px 小图放大严重模糊：lazy 小图立即占位（居中静止），进入播放范围后再并行请求大图，加载完成后换入并启用平移动画
 			封面.src = 封面地址 + "?param=16y16";
 			封面.alt = "";
 			封面.loading = "lazy";
 			// 封面.decoding = "async";
 			const 大图地址 = 封面地址 + "?param=640y640";
 			if (大封面已加载.has(大图地址)) {
-				// 缓存命中：立即换入大图；此刻元素还在文档片段中，动画交由可见性观察器在插入文档后启动
+				// 缓存命中：立即换入大图；此刻元素还在文档片段中，动画交由观察器在插入文档后启动
 				封面.src = 大图地址;
 				封面.classList.add("大图就绪");
 			} else
-				// 暂存大图地址，交由可见性观察器在该项首次可见（含预加载提前量）时发起请求
+				// 暂存大图地址，交由 更新播放范围 在该项进入播放范围时发起请求
 				封面.dataset.大图地址 = 大图地址;
 			项元素.append(封面);
 		}
@@ -465,27 +527,17 @@ async function 渲染最近在听() {
 		项元素列表.push(项元素);
 	});
 	排行容器.append(排行片段);
-	// 换页会重建正文：先解除旧项的观察，再逐项观察；项首次可见时开始加载大图、启动封面动画
+	// 换页会重建正文：先解除旧项观察并丢弃旧状态（旧元素已脱离文档，无需再暂停其动画），再逐项观察
+	排行可见性观察器?.disconnect();
+	视口内可见项.clear();
+	需播放项.clear();
+	// 项列表按 DOM 顺序存下，供 更新播放范围 把可见项映射为索引并向上下扩展邻居
+	排行项列表 = 项元素列表;
 	if (!排行可见性观察器)
-		排行可见性观察器 = new IntersectionObserver(
-			条目列表 => {
-				for (const 条目 of 条目列表) {
-					const 项元素 = 条目.target;
-					const 封面 = 项元素.querySelector("img.封面");
-					if (!(封面 instanceof HTMLImageElement)) continue;
-					// 不在外扩区域内时暂停（回调只在可视状态变化时下发，据此判定始终有效，无需另存状态快照）
-					if (!条目.isIntersecting) {
-						for (const 动画 of 封面.getAnimations()) 动画.pause();
-						continue;
-					}
-					// 首次可见（含预加载提前量）才请求大图；大图就绪后（含缓存命中）对齐公共相位并播放
-					if (封面.dataset.大图地址) 加载封面大图(封面);
-					else if (封面.classList.contains("大图就绪")) 播放封面动画(封面);
-				}
-			},
-			{ rootMargin: `${预加载提前量} 0px` }
-		);
-	排行可见性观察器.disconnect();
+		排行可见性观察器 = new IntersectionObserver(记录项可见性, {
+			// rootMargin 只用于让「可见」判定更早成立；容器内的裁剪带扩展不了，滚动方向的提前放行由 预播放扩展项数 负责
+			rootMargin: `${预加载提前量} 0px`,
+		});
 	for (const 项元素 of 项元素列表) 排行可见性观察器.observe(项元素);
 	const 定位并播放 = (/** @type {Event} */ 事件) => {
 		if (!(事件.target instanceof HTMLElement)) return;
