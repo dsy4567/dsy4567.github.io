@@ -331,12 +331,13 @@ input {
 	}
 }
 @media only screen and (max-width: 1080px) {
-	body > #导航栏,
-	body > #顶部大图 {
+	body > #导航栏 {
 		width: calc(100% - 18px) !important;
 	}
 	body > #顶部大图 {
+		/* margin-top: 0 !important; */
 		position: absolute !important;
+		width: 100% !important;
 		height: calc(64vh) !important;
 		max-height: calc(55px - 56px + min(calc(64vh), 430px)) !important;
 	}
@@ -350,6 +351,7 @@ input {
 		height: calc(64vh) !important;
 		max-height: 430px !important;
 		scrollbar-width: none;
+		position: unset !important;
 	}
 	main > .左::-webkit-scrollbar {
 		display: none;
@@ -359,7 +361,6 @@ input {
 	main > .右 {
 		display: block !important;
 		padding: 0 !important;
-		position: unset !important;
 		width: 100% !important;
 	}
 	main > #分界线 {
@@ -492,10 +493,9 @@ main > .分界线 {
 
 main > .左 > section#我 {
 	display: flex;
-	align-items: center;
 	flex-direction: column;
-	justify-content: center;
 	margin-top: 64px;
+	align-items: center;
 }
 section#我 > img {
 	margin-bottom: -64px;

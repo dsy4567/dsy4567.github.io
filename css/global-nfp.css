@@ -90,11 +90,18 @@ div#侧边按钮容器,
 
 @supports (animation-timeline: scroll()) {
 	@keyframes 顶部大图移动端 {
-		33% {
+		0% {
+			border-radius: var(--border-radius) var(--border-radius) var(--border-radius) var(--border-radius);
+		}
+		16% {
+			border-radius: 0 0 var(--border-radius) var(--border-radius);
+		}
+		66% {
 			opacity: 1;
 		}
 		100% {
 			opacity: 0;
+			border-radius: 0 0 var(--border-radius) var(--border-radius);
 		}
 	}
 	@keyframes 顶部大图背景 {
@@ -105,11 +112,22 @@ div#侧边按钮容器,
 			background-position: center 100%;
 		}
 	}
+	@keyframes 左栏阴影移动端 {
+		0% {
+			opacity: 1;
+		}
+		16% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
 	@keyframes 左栏移动端 {
 		0% {
 			opacity: 1;
 		}
-		33% {
+		66% {
 			opacity: 0;
 		}
 		100% {
@@ -391,7 +409,12 @@ div.通知 {
 		body > #顶部大图 {
 			animation-name: 顶部大图移动端 !important;
 			animation-range: 0 min(calc(64vh + 56px), 496px) !important;
-			position: fixed !important;
+			top: 0;
+			position: sticky !important;
+		}
+		main .左 {
+			position: absolute !important;
+			top: 46px;
 		}
 	}
 	body > #顶部大图 > .顶部大图层 {
@@ -405,15 +428,21 @@ div.通知 {
 	main > .左 > *:last-child {
 		margin-bottom: min(calc(64vh - 32px), 398px);
 	}
+	main > .左::before,
 	main > .左::after {
 		content: "";
 		display: block;
 		position: sticky;
 		width: calc(100% - 14px);
-		bottom: 0;
 		margin: 0 0 0 7px;
 		pointer-events: none;
 		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
+	}
+	main > .左::before {
+		top: 0;
+	}
+	main > .左::after {
+		bottom: 0;
 	}
 }
 body > #导航栏 {
@@ -473,6 +502,9 @@ body.隐藏导航栏 #导航栏 {
 }
 
 @supports (animation-timeline: scroll()) {
+	body > #顶部大图 {
+		margin-top: 14px;
+	}
 	/* fill-mode 必须放在 @supports 内：不支持滚动时间线时动画时长为 0s，
 	   若同时带上 both 会直接停在 100% 关键帧（移动端大图永久不可见） */
 	body > #顶部大图,
@@ -483,9 +515,14 @@ body.隐藏导航栏 #导航栏 {
 	body > #顶部大图 > .顶部大图层 {
 		animation-name: 顶部大图背景;
 	}
+	main > .左::before,
+	main > .左::after {
+		animation-name: 左栏阴影移动端;
+	}
 	body > #顶部大图,
 	body > #顶部大图 > .顶部大图层,
-	main .左 {
+	main .左,
+	main > .左::after {
 		animation-timeline: scroll(root);
 		animation-range: 0 calc(45vh + 108px);
 	}
