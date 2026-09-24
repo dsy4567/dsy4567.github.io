@@ -499,6 +499,38 @@ function 应用强调色(hex) {
 	localStorage.setItem("强调色", hex);
 	写入强调色变量(hex);
 }
+/** 图标数据：图标名 → SVG 字符串，由 main.js 拉取 /json/icon.json 后赋值 @type {Record<string, string | undefined>} */
+let 图标 = {};
+/** (图标名 + class) → 已解析的 <template> 缓存，避免同一图标的 SVG 字符串被重复 HTML 解析 */
+const 图标模板 = /** @type {Record<string, HTMLTemplateElement>} */ ({});
+/** 匹配图标模板字符串中的尺寸类（小尺寸 / 特小尺寸），用于替换为元素自己的 class */
+const 尺寸类正则 = /特?小尺寸/;
+/** 在新增元素时调用，以确保图标正常显示、点击事件正常触发 @param {渲染图标选项} 选项 */
+function 渲染图标(选项 = {}) {
+	const 全部元素 = /** @type {ArrayLike<SVGSVGElement>} */ (
+		选项.要渲染图标的元素?.[0] ? 选项.要渲染图标的元素 : qsa("svg[data-icon]")
+	);
+	批量低阻塞操作(全部元素, 元素 => {
+		if (!元素.dataset.icon) return;
+		// 批量处理是异步分批的，期间元素可能已被并发的其他“渲染图标”调用替换或移出文档，
+		// 对游离元素克隆替换纯属浪费，直接跳过
+		if (!元素.isConnected) return;
+		const 名 = 元素.dataset.icon,
+			c = 元素.getAttribute("class") || "",
+			键 = 名 + "|" + c;
+		let 模板 = 图标模板[键];
+		if (!模板) {
+			const h = c ? 图标[名]?.replace(尺寸类正则, c) : 图标[名];
+			if (!h) return;
+			模板 = ce("template");
+			模板.innerHTML = h;
+			图标模板[键] = 模板;
+		}
+		// cloneNode 走原生结构克隆，比 outerHTML 的“字符串 → HTML 解析 → 重建子树”快得多；
+		// replaceWith 对游离节点是静默无操作，不会像 outerHTML 那样抛 DOMException
+		元素.replaceWith(模板.content.cloneNode(true));
+	});
+}
 //#endregion
 
 // 自动模式下跟随系统深浅色变化

@@ -182,7 +182,7 @@ async function 渲染文章(当前文章信息) {
 		目录.classList.add("目录");
 		目录.append(根列表);
 		qs("main > .左", true)?.append(目录);
-		_global["main.js"]?.()?.渲染图标();
+		渲染图标();
 		//#endregion
 
 		// console.log(_通用计数器, 当前文章信息);
@@ -313,7 +313,7 @@ async function 渲染文章(当前文章信息) {
 					// 高亮
 					高亮代码(sect);
 					右.append(sect);
-					_global["main.js"]?.()?.渲染图标();
+					渲染图标();
 				});
 		//#endregion
 	} catch (e) {
@@ -491,7 +491,7 @@ async function 渲染文章列表(u) {
 			标签元素.classList.add("标签");
 			标签元素.append(div);
 			qs("main > .左", true)?.append(标签元素);
-			_global["main.js"]?.()?.渲染图标();
+			渲染图标();
 			//#endregion
 
 			//#region 收尾、滚动视图、高亮
