@@ -629,7 +629,17 @@ div#侧边按钮容器 > *:has(*:focus-visible) {
 	border-bottom-right-radius: 0;
 	border-right: 1px solid transparent;
 	opacity: 1;
-	transform: translateX(0);
+	transform: translateX(1px);
+}
+div#侧边按钮容器 > *:hover::before {
+	content: "";
+	border-radius: 50%;
+	display: block;
+	width: calc(100% + 2px);
+	height: calc(100% + 2px);
+	position: absolute;
+	left: -6px;
+	/* background: rebeccapurple; */
 }
 
 div#侧边按钮容器 > .拥有更多选项:hover,
