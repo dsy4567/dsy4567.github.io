@@ -98,7 +98,8 @@ div#侧边按钮容器,
 @supports (animation-timeline: scroll()) {
 	@keyframes 顶部大图移动端 {
 		0% {
-			border-radius: var(--border-radius) var(--border-radius) var(--border-radius) var(--border-radius);
+			border-radius: var(--border-radius) var(--border-radius) var(--border-radius)
+				var(--border-radius);
 		}
 		16% {
 			border-radius: 0 0 var(--border-radius) var(--border-radius);
@@ -416,8 +417,9 @@ div.通知 {
 		body > #顶部大图 {
 			animation-name: 顶部大图移动端 !important;
 			animation-range: 0 min(calc(64vh + 56px), 496px) !important;
-			top: 0;
 			position: sticky !important;
+			top: 0;
+			margin-top: 14px;
 		}
 		main .左 {
 			position: absolute !important;
@@ -509,9 +511,6 @@ body.隐藏导航栏 #导航栏 {
 }
 
 @supports (animation-timeline: scroll()) {
-	body > #顶部大图 {
-		margin-top: 14px;
-	}
 	/* fill-mode 必须放在 @supports 内：不支持滚动时间线时动画时长为 0s，
 	   若同时带上 both 会直接停在 100% 关键帧（移动端大图永久不可见） */
 	body > #顶部大图,
