@@ -435,10 +435,11 @@ body > #顶部大图 > .顶部大图层 {
 }
 body > #顶部大图 > .顶部大图层 > img {
 	display: block;
+	object-fit: cover;
+	user-select: none;
 	height: auto;
 	/* 图片按宽度缩放后不足一屏（横图）时退化为铺满容器，等价于原来的 background-size: cover */
 	min-height: 100%;
-	object-fit: cover;
 	width: 100%;
 }
 body > #顶部大图 > .顶部大图层.显示 {

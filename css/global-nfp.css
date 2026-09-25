@@ -1012,7 +1012,6 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 
 #网易云音乐-最近在听 .播放排行 {
 	counter-reset: index;
-	user-select: none;
 }
 #网易云音乐-最近在听 .播放排行 > * {
 	--item-height: 100cqh;
@@ -1044,6 +1043,7 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	z-index: 0;
 	pointer-events: none;
 	/* 大图未就绪（或用户偏好减少动效）时不动画，默认居中显示 */
+	user-select: none;
 	transform: translateY(calc((var(--item-height) - 100%) / 2));
 	transition: var(--transition) background-color;
 }
