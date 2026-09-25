@@ -98,27 +98,33 @@ div#侧边按钮容器,
 @supports (animation-timeline: scroll()) {
 	@keyframes 顶部大图移动端 {
 		0% {
-			border-radius: var(--border-radius) var(--border-radius) var(--border-radius)
-				var(--border-radius);
+			border-radius: var(--border-radius);
 		}
 		16% {
-			border-radius: 0 0 var(--border-radius) var(--border-radius);
+			border-radius: 0;
 		}
 		83% {
 			opacity: 1;
 		}
 		100% {
 			opacity: 0;
-			border-radius: 0 0 var(--border-radius) var(--border-radius);
+			border-radius: 0;
 		}
 	}
 	@keyframes 顶部大图背景 {
 		0% {
-			transform: translateY(0);
+			border-radius: var(--border-radius);
+			/* 平移窗口围绕图片中线对称：起点在中线前 平移量/2 处，横图平移量为 0，此处即 0 */
+			transform: translateY(calc((var(--cover-travel) - var(--cover-overflow)) / 2));
+		}
+		16% {
+			border-radius: 0;
 		}
 		100% {
-			/* 向上平移「图片高度 - 容器高度」，即 cqh 减去图片自身高度（100%） */
-			transform: translateY(calc(100cqh - 100%));
+			border-radius: 0;
+			/* transform: translateY(max(calc(var(--cover-scroll-range) * -1), calc(100cqh - 100%))); */
+			/* 终点在中线后 平移量/2 处；平移量取溢出量与一个滚动范围中的较小者，横图为 0 */
+			transform: translateY(calc((0px - var(--cover-overflow) - var(--cover-travel)) / 2));
 		}
 	}
 	@keyframes 左栏阴影移动端 {
@@ -136,7 +142,10 @@ div#侧边按钮容器,
 		0% {
 			opacity: 1;
 		}
-		66% {
+		4% {
+			opacity: 1;
+		}
+		28% {
 			opacity: 0;
 		}
 		100% {
@@ -436,10 +445,6 @@ div.通知 {
 			top: 46px;
 		}
 	}
-	body > #顶部大图 > .顶部大图层 > img {
-		animation-name: 顶部大图背景 !important;
-		animation-range: 0 var(--cover-scroll-range);
-	}
 
 	main .左 {
 		animation: 左栏移动端 linear both;
@@ -533,6 +538,10 @@ body.隐藏导航栏 #导航栏 {
 		animation-timing-function: linear;
 	}
 	body > #顶部大图 > .顶部大图层 > img {
+		/* 溢出量 = 图片渲染高度 - 容器高度；横图由 object-fit: cover 只裁左右，溢出为 0 */
+		--cover-overflow: calc(100% - 100cqh);
+		/* 实际平移量，不超过一个滚动范围；溢出更小时即为溢出量 */
+		--cover-travel: min(var(--cover-overflow), var(--cover-scroll-range));
 		animation-name: 顶部大图背景;
 	}
 	main > .左::before,
@@ -1006,6 +1015,7 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	user-select: none;
 }
 #网易云音乐-最近在听 .播放排行 > * {
+	--item-height: 100cqh;
 	color: #fff;
 	background-color: #333;
 	font-size: smaller;
@@ -1026,7 +1036,6 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
    animation 简写隐含 animation-play-state: running，写在一条里会互相覆盖。
    transform 走合成器，动画期间不逐帧重绘 */
 #网易云音乐-最近在听 .播放排行 > * > .封面 {
-	--item-height: 124px;
 	position: absolute;
 	top: 0;
 	left: 0;
