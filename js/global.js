@@ -386,11 +386,9 @@ async function 更新顶部大图(url = "__default__", 动态加载自增计数�
 	顶部大图已被覆盖 = 指定覆盖;
 
 	return new Promise((resolve, reject) => {
-		if (
-			!顶部大图 ||
-			顶部大图.dataset.counter === String(动态加载自增计数器拷贝) ||
-			目标src === 当前顶部大图src
-		) {
+		// 只用「目标图是否已在显示」去重：动态加载自增计数器在同一代内不变，
+		// 而同一代内可能反复调用来更新默认封面（如网易云切歌），不能用作去重键
+		if (!顶部大图 || 目标src === 当前顶部大图src) {
 			resolve();
 			return;
 		}
@@ -409,7 +407,6 @@ async function 更新顶部大图(url = "__default__", 动态加载自增计数�
 					顶部大图当前层 = (顶部大图当前层 + 1) % 顶部大图背景层.length;
 
 					当前顶部大图src = 目标src;
-					顶部大图.dataset.counter = String(动态加载自增计数器拷贝);
 					resolve();
 				},
 				0
@@ -584,6 +581,12 @@ matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", 事件
 
 let URL发生变化事件 = new CustomEvent("URL发生变化"),
 	已触发动态加载 = false,
+	/**
+	 * 动态加载自增计数器：每次 动态加载（main.js 中换页）时自增。
+	 * 仅用于异步任务判断自己所属的「代次」是否已过期——异步任务（如 fetch、图片 onload）
+	 * 开始时拷贝当前值，回调里与最新值比较，不等则说明期间已切换页面，应放弃执行以免污染新页面。
+	 * 注意它不是「是否会变化」的判据：同一次页面停留期间该值恒定不变。
+	 */
 	动态加载自增计数器 = 0;
 
 // 方便暴露到全局变量
