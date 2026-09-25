@@ -80,12 +80,12 @@ type 文章信息 = {
 	updated: string;
 	date: string;
 	issue?: number;
-	tags: string[];
+	tags?: string[];
 	id: string;
 	title: string;
-	desc: string;
+	desc?: string;
 	desc_text?: string;
-	cover: string;
+	cover?: string;
 	url?: string;
 	hidden?: boolean;
 };

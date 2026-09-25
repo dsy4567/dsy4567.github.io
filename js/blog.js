@@ -134,7 +134,7 @@ async function 渲染文章(当前文章信息) {
 			);
 			qs('meta[property="og:image"]')?.setAttribute(
 				"content",
-				new URL(当前文章信息.cover, location.href).href
+				new URL(当前文章信息.cover || 默认封面, location.href).href
 			);
 		}
 		//#endregion
@@ -361,15 +361,17 @@ async function 渲染文章列表(u) {
 				const _通用计数器 = 通用计数器++;
 				// console.time(`渲染文章列表 id:${_通用计数器}`);
 
-				const 文章 = j[i];
+				const 文章 = j[i],
+					// tags 可选, 缺失时按无标签处理
+					文章标签 = 文章.tags || [];
 				//#region 渲染文章列表
 				// hidden 文章始终跳过, 已归档文章仅在"已归档"筛选下显示
-				文章.tags.forEach(标签 => 所有标签.add(标签));
+				文章标签.forEach(标签 => 所有标签.add(标签));
 				if (文章.hidden) continue;
-				const 是已归档 = 文章.tags.includes("已归档");
+				const 是已归档 = 文章标签.includes("已归档");
 				if (限定标签 === "已归档") {
 					if (!是已归档) continue;
-				} else if (是已归档 || (限定标签 && !文章.tags.includes(限定标签))) continue;
+				} else if (是已归档 || (限定标签 && !文章标签.includes(限定标签))) continue;
 				let a = ce("a"),
 					br = ce("br"),
 					预览 = ce("div"),
@@ -386,7 +388,7 @@ async function 渲染文章列表(u) {
 					文章.updated
 				).toLocaleString()}</br>标签: ${(() => {
 					let html = "";
-					文章.tags.forEach(标签 => {
+					文章标签.forEach(标签 => {
 						html += `<a href="/blog.html?tag=${标签}">${标签}</a> `;
 					});
 					return html;
@@ -398,12 +400,13 @@ async function 渲染文章列表(u) {
 					if (i <= 1) {
 						// 首屏大图优化
 						封面.src = 默认封面;
-						if (文章.cover) {
+						const 封面地址 = 文章.cover;
+						if (封面地址) {
 							const I = new Image();
 							I.decoding = "async";
-							I.src = 文章.cover;
+							I.src = 封面地址;
 							I.onload = () => {
-								封面.src = 文章.cover;
+								封面.src = 封面地址;
 							};
 						}
 					} else {
