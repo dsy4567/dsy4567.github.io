@@ -271,12 +271,13 @@ let 网易云音乐 = {
 		}
 	},
 	更新歌曲信息(/** @type {number} */ 令牌) {
-		gd("播放列表", true)?.scrollTo({
-			behavior: "smooth",
-			top:
-				qs("li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']")
-					?.offsetTop || 0,
-		});
+		// gd("播放列表", true)?.scrollTo({
+		// 	behavior: "smooth",
+		// 	top:
+		// 		qs("li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']")
+		// 			?.offsetTop || 0,
+		// });
+		滚动到可见区域("li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']");
 
 		let 封面 = "";
 		navigator.mediaSession &&
@@ -490,6 +491,14 @@ let 网易云音乐 = {
 			};
 			网易云音乐元素.title =
 				"网易云音乐 - 正在播放: " + 网易云音乐.歌单[网易云音乐.正在播放.索引].完整歌名;
+
+			const f = () => {
+				滚动到可见区域(
+					"li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']"
+				);
+			};
+			网易云音乐元素.addEventListener("mouseenter", f);
+			网易云音乐元素.addEventListener("dblclick", f);
 		} catch (e) {
 			提示("播放失败");
 			console.error(e);
