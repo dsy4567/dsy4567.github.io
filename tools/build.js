@@ -479,14 +479,14 @@ class ArticleBuilder {
 				`<meta property="og:image" content="${meta.cover || CONFIG.defaultCover}" />`
 		);
 
-		// 顶部大图为双层背景容器，首层直接写入封面，避免首屏多一次无效切图（见 global.js 的 更新顶部大图）
+		// 顶部大图为双层容器，首层的 <img> 直接写入封面，避免首屏多一次无效切图（见 global.js 的 更新顶部大图）
 		const coverPath = meta._originalCover || CONFIG.defaultCoverPath;
 		html = replaceTemplateBlock(
 			html,
 			"COVER",
 			`\t\t<div id="顶部大图" role="img" aria-label="顶部大图">\n` +
-				`\t\t\t<div class="顶部大图层 显示" style="background-image: url('${coverPath}')"></div>\n` +
-				`\t\t\t<div class="顶部大图层"></div>\n` +
+				`\t\t\t<div class="顶部大图层 显示"><img alt="" src="${coverPath}" /></div>\n` +
+				`\t\t\t<div class="顶部大图层"><img alt="" /></div>\n` +
 				`\t\t</div>`
 		);
 

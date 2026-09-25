@@ -114,10 +114,11 @@ div#侧边按钮容器,
 	}
 	@keyframes 顶部大图背景 {
 		0% {
-			background-position: center 0%;
+			transform: translateY(0);
 		}
 		100% {
-			background-position: center 100%;
+			/* 向上平移「图片高度 - 容器高度」，即 cqh 减去图片自身高度（100%） */
+			transform: translateY(calc(100cqh - 100%));
 		}
 	}
 	@keyframes 左栏阴影移动端 {
@@ -435,7 +436,7 @@ div.通知 {
 			top: 46px;
 		}
 	}
-	body > #顶部大图 > .顶部大图层 {
+	body > #顶部大图 > .顶部大图层 > img {
 		animation-name: 顶部大图背景 !important;
 		animation-range: 0 var(--cover-scroll-range);
 	}
@@ -520,14 +521,18 @@ body.隐藏导航栏 #导航栏 {
 }
 
 @supports (animation-timeline: scroll()) {
+	/* 封面平移动画落在 .顶部大图层 > img 上：图片按自身高度溢出容器，平移量用 cqh 引用容器高度 */
+	body > #顶部大图 {
+		container-type: size;
+	}
 	/* fill-mode 必须放在 @supports 内：不支持滚动时间线时动画时长为 0s，
 	   若同时带上 both 会直接停在 100% 关键帧（移动端大图永久不可见） */
 	body > #顶部大图,
-	body > #顶部大图 > .顶部大图层 {
+	body > #顶部大图 > .顶部大图层 > img {
 		animation-fill-mode: both;
 		animation-timing-function: linear;
 	}
-	body > #顶部大图 > .顶部大图层 {
+	body > #顶部大图 > .顶部大图层 > img {
 		animation-name: 顶部大图背景;
 	}
 	main > .左::before,
@@ -535,7 +540,7 @@ body.隐藏导航栏 #导航栏 {
 		animation-name: 左栏阴影移动端;
 	}
 	body > #顶部大图,
-	body > #顶部大图 > .顶部大图层,
+	body > #顶部大图 > .顶部大图层 > img,
 	main .左,
 	main > .左::after {
 		animation-timeline: scroll(root);

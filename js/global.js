@@ -362,7 +362,7 @@ function 提示(m) {
 	}, 3000);
 }
 const /** @type {HTMLElement | null} */ 顶部大图 = gd("顶部大图"),
-	/** 顶部大图的背景层：新图片始终写入另一层，由 CSS 过渡交叉渐变（见 global-fp.css） */
+	/** 顶部大图的封面层：新图片始终写入另一层内的 img，由 CSS 过渡交叉渐变（见 global-fp.css） */
 	顶部大图背景层 = /** @type {HTMLElement[]} */ (
 		顶部大图 ? Array.from(顶部大图.querySelectorAll(".顶部大图层")) : []
 	);
@@ -373,7 +373,7 @@ let 顶部大图当前层 = 0,
 	/** 当前大图是否被调用方指定的封面覆盖：为 true 时默认封面的变化不应打断它 */
 	顶部大图已被覆盖 = false;
 /**
- * 更新顶部大图：预加载图片后写入另一背景层，由 CSS 过渡交叉渐变
+ * 更新顶部大图：预加载图片后写入另一层内的 img，由 CSS 过渡交叉渐变
  * @param {string} url - 图片 URL；传哨兵值 "__default__"（默认）表示使用全局默认封面，传其他值表示调用方指定的封面
  * @param {number} 动态加载自增计数器拷贝 - 用于防止竞争
  * @returns {Promise<void>} - 图片加载完成后 resolve
@@ -400,8 +400,9 @@ async function 更新顶部大图(url = "__default__", 动态加载自增计数�
 				() => {
 					if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
 
-					const 新层 = 顶部大图背景层[(顶部大图当前层 + 1) % 顶部大图背景层.length];
-					新层.style.backgroundImage = `url("${预加载封面.src}")`;
+					const 新层 = 顶部大图背景层[(顶部大图当前层 + 1) % 顶部大图背景层.length],
+						新层图片 = /** @type {HTMLImageElement} */ (新层.querySelector("img"));
+					新层图片.src = 预加载封面.src;
 					新层.classList.add("显示");
 					顶部大图背景层[顶部大图当前层].classList.remove("显示");
 					顶部大图当前层 = (顶部大图当前层 + 1) % 顶部大图背景层.length;

@@ -428,18 +428,18 @@ body > #顶部大图 {
 }
 
 body > #顶部大图 > .顶部大图层 {
-	background-position: center 50%;
-	background-repeat: no-repeat;
-	background-size: cover;
 	inset: 0;
 	opacity: 0;
 	position: absolute;
 	transition: var(--transition-slow) opacity;
 }
-@supports (animation-timeline: scroll()) {
-	body > #顶部大图 > .顶部大图层 {
-		background-position: center 0%;
-	}
+body > #顶部大图 > .顶部大图层 > img {
+	display: block;
+	height: auto;
+	/* 图片按宽度缩放后不足一屏（横图）时退化为铺满容器，等价于原来的 background-size: cover */
+	min-height: 100%;
+	object-fit: cover;
+	width: 100%;
 }
 body > #顶部大图 > .顶部大图层.显示 {
 	opacity: 1;
