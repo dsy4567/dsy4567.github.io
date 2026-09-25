@@ -412,11 +412,20 @@ div.通知 {
 	animation-play-state: paused;
 }
 /* ==================== 导航栏、左右栏 ==================== */
+/* 封面滚动动画的滚动范围：封面、封面背景层、左栏及其阴影共用同一段进度，完成时刻才会一致。
+   桌面端封面随页面滚出视口即播放完毕，故取「封面高度 + 顶部偏移」 */
+:root {
+	--cover-scroll-range: calc(45vh + 108px);
+}
 @media only screen and (max-width: 1080px) {
+	/* 移动端封面为 sticky，高度 64vh（上限 430px），同样取「封面高度 + 顶部偏移」 */
+	:root {
+		--cover-scroll-range: min(calc(64vh + 56px), 496px);
+	}
 	@supports (animation-timeline: scroll()) {
 		body > #顶部大图 {
 			animation-name: 顶部大图移动端 !important;
-			animation-range: 0 min(calc(64vh + 56px), 496px) !important;
+			animation-range: 0 var(--cover-scroll-range);
 			position: sticky !important;
 			top: 0;
 			margin-top: 14px;
@@ -428,7 +437,7 @@ div.通知 {
 	}
 	body > #顶部大图 > .顶部大图层 {
 		animation-name: 顶部大图背景 !important;
-		animation-range: 0 min(calc(64vh + 56px), 496px) !important;
+		animation-range: 0 var(--cover-scroll-range);
 	}
 
 	main .左 {
@@ -530,7 +539,7 @@ body.隐藏导航栏 #导航栏 {
 	main .左,
 	main > .左::after {
 		animation-timeline: scroll(root);
-		animation-range: 0 calc(45vh + 108px);
+		animation-range: 0 var(--cover-scroll-range);
 	}
 }
 
