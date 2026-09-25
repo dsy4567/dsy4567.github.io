@@ -206,10 +206,11 @@ async function 渲染文章(当前文章信息) {
 					behavior: "smooth",
 				});
 			} catch (e) {}
-		else if (已触发动态加载)
-			右.scrollIntoView({
-				behavior: "smooth",
-			});
+		else if (已触发动态加载) {
+			// 右.scrollIntoView({
+			// 	behavior: "smooth",
+			// });
+		}
 		//#endregion
 
 		//#region 评论区
@@ -496,10 +497,10 @@ async function 渲染文章列表(u) {
 
 			//#region 收尾、滚动视图、高亮
 			显示或隐藏进度条(false);
-			if (!location.hash && 已触发动态加载)
-				右.scrollIntoView({
-					behavior: "smooth",
-				});
+			// if (!location.hash && 已触发动态加载)
+			// 	右.scrollIntoView({
+			// 		behavior: "smooth",
+			// 	});
 
 			高亮代码(右);
 			//#endregion

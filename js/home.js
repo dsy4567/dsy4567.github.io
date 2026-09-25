@@ -570,10 +570,10 @@ function 观察模块() {
 
 export function main() {
 	显示或隐藏进度条(false);
-	if (!location.hash && 已触发动态加载)
-		qs("main .右")?.scrollIntoView({
-			behavior: "smooth",
-		});
+	// if (!location.hash && 已触发动态加载)
+	// 	qs("main .右")?.scrollIntoView({
+	// 		behavior: "smooth",
+	// 	});
 
 	// 换页会重建正文与 section，每次进入首页都重新观察：它负责请求数据，并随 near/far 切换 .播放中
 	观察模块();

@@ -53,6 +53,7 @@ function 动态加载(元素) {
 		try {
 			let 右 = qs("main .右", true);
 			if (!右) return;
+			滚动到可见区域("body", true);
 			动态加载自增计数器++;
 			右.innerHTML = 正文;
 			加载模块();
@@ -326,9 +327,9 @@ fetch("https://api.github.com/users/dsy4567")
 	() => {
 		try {
 			//#region 核心元素、事件、字体css等
-			gd("回到顶部")?.addEventListener("click", () =>
-				document.body.scrollIntoView({ behavior: "smooth" })
-			);
+			gd("回到顶部")?.addEventListener("click", () => {
+				滚动到可见区域("body", true);
+			});
 			gd("分界线")?.addEventListener("click", () => {
 				document.body.classList.toggle("宽屏");
 			});
