@@ -68,6 +68,19 @@ const ce = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
 	return document.createElement(s);
 };
 /**
+ * 传入 selector，使元素滚动到可见区域
+ * @param {string} s - 选择器
+ * @param {boolean} 缓存 - 是否使用缓存，默认 false
+ * @param {ScrollIntoViewOptions} 选项 - 其他滚动到可见区域的选项，参考 ScrollIntoViewOptions 选项
+ * @returns {void}
+ */
+function 滚动到可见区域(s, 缓存 = false, 选项 = {}) {
+	qs(s, 缓存)?.scrollIntoView({
+		behavior: 用户已禁用动画特效 ? "instant" : "smooth",
+		...选项,
+	});
+}
+/**
  * 显示或隐藏页面顶部的进度条
  * @param {boolean} 状态 - true 显示，false 隐藏
  */
