@@ -15,13 +15,13 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
 		"/friends": ["friends"],
 	},
 	gr_sitekey = "6Ldo1dIkAAAAAM_2VtEneT3l7AE25HdWU45x03ng";
-let 路径 = 获取清理后的路径(true),
+let 路径 = 获取清理后当前路径(),
 	正在动态加载 = false;
 
 //#region 加载模块、动态加载
 async function 加载模块() {
-	路径 = 获取清理后的路径();
-	let 路径2 = 获取清理后的路径(true);
+	路径 = 获取清理后一级路径();
+	let 路径2 = 获取清理后当前路径();
 	for (const s of 加载清单[路径] || []) {
 		const i = import(`/js/${s}.js`);
 		await schedulerYield();
@@ -507,7 +507,7 @@ addEventListener("copy", () => {
 });
 addEventListener("popstate", 事件 => {
 	// hash 变化执行默认行为
-	if (获取清理后的路径(true) === 路径 || 事件.state?.路径 === 路径) return 事件.preventDefault();
+	if (获取清理后当前路径() === 路径 || 事件.state?.路径 === 路径) return 事件.preventDefault();
 	动态加载({
 		href: location.pathname,
 		popstate: true,

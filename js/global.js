@@ -446,15 +446,21 @@ function 清理路径(路径) {
 	return 路径.replace(re1, "/").replace(re2, "").replace(re3, "/");
 }
 /**
- * 获取清理后的路径：基于 location.pathname 的清理结果
- * @param {boolean} [包含search=false] - 是否在结果末尾附加 location.search
- * @returns {string} 包含search 为 true 时返回完整清理路径加查询字符串；为 false 时只返回一级路径（如 "/blog/xxx/" → "/blog"），用于匹配加载清单
+ * 获取清理后的一级路径：基于 location.pathname 的清理结果取第一级（如 "/blog/xxx/" → "/blog"），用于匹配加载清单
+ * @returns {string} 一级路径，如 "/blog"
  */
-function 获取清理后的路径(包含search = false) {
+function 获取清理后一级路径() {
+	const pn = location.pathname;
+	return "/" + (清理后的路径缓存[pn] ??= 清理路径(pn)).split("/")[1];
+}
+/**
+ * 获取清理后的当前路径：基于 location.pathname 的清理结果，末尾附加 location.search
+ * @returns {string} 清理后的完整路径加查询字符串
+ */
+function 获取清理后当前路径() {
 	// 缓存只存依赖 pathname 的清理结果；search 每次现读，避免同路径不同查询参数时读到过期缓存
 	const pn = location.pathname;
-	let 已清理路径 = (清理后的路径缓存[pn] ??= 清理路径(pn));
-	return 包含search ? 已清理路径 + location.search : "/" + 已清理路径.split("/")[1];
+	return (清理后的路径缓存[pn] ??= 清理路径(pn)) + location.search;
 }
 /**
  * 生成一个包含 0 的随机自然数，范围为 [0, 最大]

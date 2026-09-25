@@ -9,7 +9,7 @@
 "use strict";
 
 let /** @type {文章信息[]} */ 所有文章信息 = [],
-	路径 = 获取清理后的路径(true);
+	路径 = 获取清理后当前路径();
 
 const 博客默认封面 = "/img/bg.webp";
 
@@ -556,14 +556,14 @@ async function _main() {
 	gd("当前文章信息")?.remove();
 
 	if (当前文章信息) 渲染文章(当前文章信息);
-	else if (获取清理后的路径() === "/blog" && !旧版id) 渲染文章列表(U);
+	else if (获取清理后一级路径() === "/blog" && !旧版id) 渲染文章列表(U);
 }
 _main();
 
 // 判断是否仅hash变化，如果不是则移除目录和标签元素
 addEventListener("URL发生变化", () => {
-	if (路径 !== 获取清理后的路径(true)) {
-		路径 = 获取清理后的路径(true);
+	if (路径 !== 获取清理后当前路径()) {
+		路径 = 获取清理后当前路径();
 		[
 			...(document.getElementsByClassName("目录") || []),
 			...(document.getElementsByClassName("标签") || []),
