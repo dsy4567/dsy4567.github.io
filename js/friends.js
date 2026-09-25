@@ -11,6 +11,7 @@
 
 export async function main(/** @type {String} */ 路径) {
 	显示或隐藏进度条(false);
+	更新顶部大图();
 	qsa("#友链 ~ section")?.forEach(元素 => {
 		let a = 元素.querySelector("a"),
 			img = 元素.querySelector("img");

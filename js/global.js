@@ -367,16 +367,30 @@ const /** @type {HTMLElement | null} */ 顶部大图 = gd("顶部大图"),
 		顶部大图 ? Array.from(顶部大图.querySelectorAll(".顶部大图层")) : []
 	);
 /** 当前显示的背景层在 顶部大图背景层 中的索引 */
-let 顶部大图当前层 = 0;
+let 顶部大图当前层 = 0,
+	全局默认顶部大图src = "/img/bg.webp",
+	当前顶部大图src = 全局默认顶部大图src,
+	/** 当前大图是否被调用方指定的封面覆盖：为 true 时默认封面的变化不应打断它 */
+	顶部大图已被覆盖 = false;
 /**
  * 更新顶部大图：预加载图片后写入另一背景层，由 CSS 过渡交叉渐变
- * @param {string} url - 图片 URL
+ * @param {string} url - 图片 URL；传哨兵值 "__default__"（默认）表示使用全局默认封面，传其他值表示调用方指定的封面
  * @param {number} 动态加载自增计数器拷贝 - 用于防止竞争
  * @returns {Promise<void>} - 图片加载完成后 resolve
  */
-async function 更新顶部大图(url = "/img/bg.webp", 动态加载自增计数器拷贝 = 动态加载自增计数器) {
+async function 更新顶部大图(url = "__default__", 动态加载自增计数器拷贝 = 动态加载自增计数器) {
+	// 传入具体 url 一律视为覆盖，即使该 url 恰好等于默认封面（文章可以把 "/img/bg.webp" 当封面），
+	// 这样之后更新默认封面时也不会把它顶掉
+	const 指定覆盖 = url !== "__default__",
+		目标src = 指定覆盖 ? url : 全局默认顶部大图src;
+	顶部大图已被覆盖 = 指定覆盖;
+
 	return new Promise((resolve, reject) => {
-		if (!顶部大图 || 顶部大图.dataset.counter === String(动态加载自增计数器拷贝)) {
+		if (
+			!顶部大图 ||
+			顶部大图.dataset.counter === String(动态加载自增计数器拷贝) ||
+			目标src === 当前顶部大图src
+		) {
 			resolve();
 			return;
 		}
@@ -394,14 +408,25 @@ async function 更新顶部大图(url = "/img/bg.webp", 动态加载自增计数
 					顶部大图背景层[顶部大图当前层].classList.remove("显示");
 					顶部大图当前层 = (顶部大图当前层 + 1) % 顶部大图背景层.length;
 
+					当前顶部大图src = 目标src;
 					顶部大图.dataset.counter = String(动态加载自增计数器拷贝);
 					resolve();
 				},
 				0
 			);
 		};
-		预加载封面.src = url;
+		预加载封面.src = 目标src;
 	});
+}
+/**
+ * 设置全局默认封面
+ * @param {string} url - 新的默认封面 URL
+ */
+function 设置全局默认封面(url) {
+	全局默认顶部大图src = url;
+	// 当前大图正被调用方指定的封面覆盖（如文章封面）时，不打断它；
+	// 等调用方用 更新顶部大图() 解除覆盖后，自然会切到新的默认封面
+	if (!顶部大图已被覆盖) 更新顶部大图();
 }
 /**
  * 设置 meta robots 为 noindex，阻止搜索引擎收录当前页面

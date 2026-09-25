@@ -11,7 +11,7 @@
 let /** @type {文章信息[]} */ 所有文章信息 = [],
 	路径 = 获取清理后的路径(true);
 
-const 默认封面 = "/img/bg.webp";
+const 博客默认封面 = "/img/bg.webp";
 
 添加脚本("/js/lib/highlight.min.js");
 添加样式("/css/hl.min.css");
@@ -62,7 +62,7 @@ async function 渲染文章(当前文章信息) {
 	try {
 		添加脚本("/js/lib/purify.min.js");
 		const 动态加载自增计数器拷贝 = 动态加载自增计数器;
-		if (入口函数首次调用) 更新顶部大图(当前文章信息.cover || 默认封面, 动态加载自增计数器拷贝);
+		if (入口函数首次调用) 更新顶部大图(当前文章信息.cover, 动态加载自增计数器拷贝);
 		await new Promise(
 			/** @type {() => void} */ resolve => {
 				延迟执行("DOMContentLoaded", resolve, 0);
@@ -134,7 +134,7 @@ async function 渲染文章(当前文章信息) {
 			);
 			qs('meta[property="og:image"]')?.setAttribute(
 				"content",
-				new URL(当前文章信息.cover || 默认封面, location.href).href
+				new URL(当前文章信息.cover || 博客默认封面, location.href).href
 			);
 		}
 		//#endregion
@@ -352,6 +352,8 @@ async function 渲染文章列表(u) {
 			const 右 = qs("main .右", true);
 			if (!右) return;
 
+			更新顶部大图();
+
 			所有文章信息 = j;
 			let /** @type {Set<string>} */ 所有标签 = new Set(),
 				限定标签 = u.searchParams.get("tag"),
@@ -399,7 +401,7 @@ async function 渲染文章列表(u) {
 					// 封面.decoding = "async";
 					if (i <= 1) {
 						// 首屏大图优化
-						封面.src = 默认封面;
+						封面.src = 博客默认封面;
 						const 封面地址 = 文章.cover;
 						if (封面地址) {
 							const I = new Image();
@@ -410,7 +412,7 @@ async function 渲染文章列表(u) {
 							};
 						}
 					} else {
-						封面.src = 文章.cover || 默认封面;
+						封面.src = 文章.cover || 博客默认封面;
 						封面.loading = "lazy";
 					}
 					封面.alt = "文章封面图";

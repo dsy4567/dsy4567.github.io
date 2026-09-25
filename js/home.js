@@ -570,6 +570,7 @@ function 观察模块() {
 
 export function main() {
 	显示或隐藏进度条(false);
+	更新顶部大图();
 	// if (!location.hash && 已触发动态加载)
 	// 	qs("main .右")?.scrollIntoView({
 	// 		behavior: "smooth",

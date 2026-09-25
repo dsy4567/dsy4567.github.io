@@ -60,7 +60,6 @@ function 动态加载(元素) {
 
 			正在动态加载 = false;
 			渲染图标();
-			更新顶部大图();
 		} catch (e) {
 			console.error(e);
 			open(元素.href, "_self");
