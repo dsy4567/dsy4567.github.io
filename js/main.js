@@ -42,6 +42,7 @@ function 动态加载(元素) {
 	正在动态加载 = true;
 	已触发动态加载 = true;
 	显示或隐藏进度条(true);
+
 	gd("robots", true)?.setAttribute("content", "");
 
 	/** 将取得的页面正文应用到当前页面：更新历史状态、标题、正文并加载模块 @param {string} 正文 @param {string} 标题 */
@@ -54,6 +55,10 @@ function 动态加载(元素) {
 			let 右 = qs("main .右", true);
 			if (!右) return;
 			滚动到可见区域("body", true);
+			qs("main > .左")?.scrollTo({
+				top: 0,
+				behavior: 用户已禁用动画特效 ? "auto" : "smooth",
+			});
 			动态加载自增计数器++;
 			右.innerHTML = 正文;
 			加载模块();
