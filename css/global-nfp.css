@@ -129,12 +129,20 @@ div#侧边按钮容器,
 	}
 	@keyframes 左栏阴影移动端 {
 		0% {
+			border-top: 0 solid transparent;
 			opacity: 1;
 		}
 		16% {
 			opacity: 0;
 		}
+		28% {
+			border-top: 0 solid transparent;
+		}
+		28.1% {
+			border-top: 100cqh solid transparent;
+		}
 		100% {
+			border-top: 100cqh solid transparent;
 			opacity: 0;
 		}
 	}
@@ -444,6 +452,11 @@ div.通知 {
 			position: absolute !important;
 			top: 46px;
 		}
+		main > .左::before,
+		main > .左::after {
+			animation-name: 左栏阴影移动端;
+			pointer-events: all;
+		}
 	}
 
 	main .左 {
@@ -459,7 +472,7 @@ div.通知 {
 		position: sticky;
 		width: calc(100% - 14px);
 		margin: 0 0 0 7px;
-		pointer-events: none;
+		pointer-events: all;
 		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
 	}
 	main > .左::before {
@@ -543,10 +556,6 @@ body.隐藏导航栏 #导航栏 {
 		/* 实际平移量，不超过一个滚动范围；溢出更小时即为溢出量 */
 		--cover-travel: min(var(--cover-overflow), var(--cover-scroll-range));
 		animation-name: 顶部大图背景;
-	}
-	main > .左::before,
-	main > .左::after {
-		animation-name: 左栏阴影移动端;
 	}
 	body > #顶部大图,
 	body > #顶部大图 > .顶部大图层 > img,
