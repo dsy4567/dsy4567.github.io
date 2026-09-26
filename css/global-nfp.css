@@ -1014,7 +1014,7 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	counter-reset: index;
 }
 #网易云音乐-最近在听 .播放排行 > * {
-	--item-height: 100cqh;
+	--item-height: 124px;
 	color: #fff;
 	background-color: #333;
 	font-size: smaller;
