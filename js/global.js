@@ -361,70 +361,212 @@ function 提示(m) {
 		}, 500);
 	}, 3000);
 }
-const /** @type {HTMLElement | null} */ 顶部大图 = gd("顶部大图"),
-	/** 顶部大图的封面层：新图片始终写入另一层内的 img，由 CSS 过渡交叉渐变（见 global-fp.css） */
-	顶部大图背景层 = /** @type {HTMLElement[]} */ (
-		顶部大图 ? Array.from(顶部大图.querySelectorAll(".顶部大图层")) : []
-	);
-/** 当前显示的背景层在 顶部大图背景层 中的索引 */
-let 顶部大图当前层 = 0,
-	全局默认顶部大图src = "/img/bg.webp",
-	当前顶部大图src = 全局默认顶部大图src,
-	/** 当前大图是否被调用方指定的封面覆盖：为 true 时默认封面的变化不应打断它 */
-	顶部大图已被覆盖 = false;
 /**
- * 更新顶部大图：预加载图片后写入另一层内的 img，由 CSS 过渡交叉渐变
- * @param {string} url - 图片 URL；传哨兵值 "__default__"（默认）表示使用全局默认封面，传其他值表示调用方指定的封面
- * @param {number} 动态加载自增计数器拷贝 - 用于防止竞争
- * @returns {Promise<void>} - 图片加载完成后 resolve
+ * 顶部大图容器：#顶部大图 下的每个 .顶部大图层 都是一条封面注册项，
+ * 注册信息一律写在 data-* 属性上，构建产物可据此在首屏直接声明好封面与优先级
  */
-async function 更新顶部大图(url = "__default__", 动态加载自增计数器拷贝 = 动态加载自增计数器) {
-	// 传入具体 url 一律视为覆盖，即使该 url 恰好等于默认封面（文章可以把 "/img/bg.webp" 当封面），
-	// 这样之后更新默认封面时也不会把它顶掉
-	const 指定覆盖 = url !== "__default__",
-		目标src = 指定覆盖 ? url : 全局默认顶部大图src;
-	顶部大图已被覆盖 = 指定覆盖;
+const /** @type {HTMLElement | null} */ 顶部大图 = gd("顶部大图");
+/** 顶部大图默认优先级：数值越小越优先，未声明 data-优先级 的层按此值处理 */
+const 顶部大图默认优先级 = 9999;
+/** 顶部大图生命周期：永久，不随导航失效，直到被同优先级顶掉或被 撤销顶部大图 撤销 */
+const 顶部大图永久 = "永久";
+/** 顶部大图生命周期：仅当前页，离开注册时所在的路径后由 清理过期顶部大图层 回收 */
+const 顶部大图仅当前页 = "仅当前页";
+/** 顶部大图优先级梯度：数值越小越优先，调用方与构建产物共用同一套取值 */
+const 顶部大图优先级 = {
+	/** 文章自带的封面 */
+	文章封面: 100,
+	/** 网易云音乐正在播放的歌曲封面 */
+	网易云封面: 1000,
+	/** 无封面文章随机挑出的默认封面 */
+	文章随机封面: 1001,
+	/** HTML 里写死的基线图，始终兜底 */
+	基线: 顶部大图默认优先级,
+};
+/** 等待层淡出动画结束的兜底超时（毫秒），需大于 CSS 的 --transition-slow */
+const 顶部大图层淡出超时 = 1200;
 
-	return new Promise((resolve, reject) => {
-		// 只用「目标图是否已在显示」去重：动态加载自增计数器在同一代内不变，
-		// 而同一代内可能反复调用来更新默认封面（如网易云切歌），不能用作去重键
-		if (!顶部大图 || 目标src === 当前顶部大图src) {
-			resolve();
-			return;
-		}
-
-		const 预加载封面 = new Image();
-		预加载封面.onload = () => {
-			延迟执行(
-				"DOMContentLoaded",
-				() => {
-					if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
-
-					const 新层 = 顶部大图背景层[(顶部大图当前层 + 1) % 顶部大图背景层.length],
-						新层图片 = /** @type {HTMLImageElement} */ (新层.querySelector("img"));
-					新层图片.src = 预加载封面.src;
-					新层.classList.add("显示");
-					顶部大图背景层[顶部大图当前层].classList.remove("显示");
-					顶部大图当前层 = (顶部大图当前层 + 1) % 顶部大图背景层.length;
-
-					当前顶部大图src = 目标src;
-					resolve();
-				},
-				0
-			);
-		};
-		预加载封面.src = 目标src;
-	});
+/**
+ * 取得顶部大图的全部层（含正在淡出的层）
+ * @returns {HTMLElement[]}
+ */
+function 取顶部大图层() {
+	return 顶部大图
+		? /** @type {HTMLElement[]} */ (Array.from(顶部大图.querySelectorAll(".顶部大图层")))
+		: [];
 }
 /**
- * 设置全局默认封面
- * @param {string} url - 新的默认封面 URL
+ * 读取一个层的注册信息，属性缺失时按默认值处理
+ * @param {HTMLElement} 层
+ * @returns {{ 优先级: number, 生命周期: string, 注册路径: string }} 注册信息
  */
-function 设置全局默认封面(url) {
-	全局默认顶部大图src = url;
-	// 当前大图正被调用方指定的封面覆盖（如文章封面）时，不打断它；
-	// 等调用方用 更新顶部大图() 解除覆盖后，自然会切到新的默认封面
-	if (!顶部大图已被覆盖) 更新顶部大图();
+function 读取顶部大图信息(层) {
+	const 声明值 = 层.getAttribute("data-优先级"),
+		声明优先级 = 声明值 === null ? Number.NaN : Number(声明值);
+	return {
+		优先级: Number.isFinite(声明优先级) ? 声明优先级 : 顶部大图默认优先级,
+		生命周期:
+			层.getAttribute("data-生命周期") === 顶部大图永久 ? 顶部大图永久 : 顶部大图仅当前页,
+		注册路径: 层.getAttribute("data-注册路径") || "",
+	};
+}
+/**
+ * 选出应当显示的层：优先级数值最小者胜出，同优先级时 DOM 中靠前者胜出
+ * （同优先级的重复注册由 写入顶部大图层 顶掉，此处的先后次序只用于异常情况下也有图可显示）；
+ * 正在淡出的层不参与评选
+ * @returns {HTMLElement | null} 胜出的层，没有可显示的层时为 null
+ */
+function 选出顶部大图赢家() {
+	let 赢家 = null,
+		赢家优先级 = Number.POSITIVE_INFINITY;
+	for (const 层 of 取顶部大图层()) {
+		if (层.classList.contains("淡出中")) continue;
+		const 优先级 = 读取顶部大图信息(层).优先级;
+		if (优先级 < 赢家优先级) {
+			赢家优先级 = 优先级;
+			赢家 = 层;
+		}
+	}
+	return 赢家;
+}
+/**
+ * 让最优层显示：仅赢家持有 .显示，其余层由 CSS 过渡淡出（多层叠放与渐变见 global-fp.css）
+ * @returns {void}
+ */
+function 应用顶部大图赢家() {
+	const 赢家 = 选出顶部大图赢家();
+	for (const 层 of 取顶部大图层()) 层.classList.toggle("显示", 层 === 赢家);
+}
+/**
+ * 移除一个层：显示中的层先淡出再移除，其余立即移除；移除后立刻结算赢家，让下层接管
+ * @param {HTMLElement} 层
+ * @returns {void}
+ */
+function 移除顶部大图层(层) {
+	if (!层.isConnected) return;
+	const 需要淡出 = 层.classList.contains("显示") && !用户已禁用动画特效;
+	// 打上标记立刻退出赢家评选，下层随即淡入，与本次淡出形成交叉渐变
+	层.classList.add("淡出中");
+	层.classList.remove("显示");
+	应用顶部大图赢家();
+	if (!需要淡出) {
+		层.remove();
+		return;
+	}
+	let 已移除 = false,
+		/** @type {ReturnType<typeof setTimeout> | undefined} */ 超时定时器;
+	const 清理 = () => {
+		if (已移除) return;
+		已移除 = true;
+		clearTimeout(超时定时器);
+		层.remove();
+	};
+	层.addEventListener("transitionend", 清理, { once: true });
+	超时定时器 = setTimeout(清理, 顶部大图层淡出超时);
+}
+/**
+ * 写入一个新层并接管显示：同优先级的旧层被顶掉
+ * @param {HTMLImageElement} 图片 - 已预加载完成的图片
+ * @param {number} 优先级
+ * @param {string} 生命周期
+ * @param {string} 注册路径
+ * @returns {void}
+ */
+function 写入顶部大图层(图片, 优先级, 生命周期, 注册路径) {
+	if (!顶部大图) return;
+	const 层 = ce("div");
+	层.className = "顶部大图层";
+	层.setAttribute("data-优先级", String(优先级));
+	层.setAttribute("data-生命周期", 生命周期);
+	if (注册路径) 层.setAttribute("data-注册路径", 注册路径);
+	层.append(图片);
+	顶部大图.append(层);
+	// 先撑出 opacity: 0 的初始样式，再加 .显示，新层才是淡入而非瞬现
+	层.offsetHeight;
+	应用顶部大图赢家();
+	for (const 旧层 of 取顶部大图层())
+		if (旧层 !== 层 && 读取顶部大图信息(旧层).优先级 === 优先级) 移除顶部大图层(旧层);
+}
+/**
+ * 更新顶部大图：注册一张封面，由优先级决定显示哪一层
+ * - 不同优先级：优先级数值最小者显示，其余层留在 DOM 中，待高优层失效后自动接管
+ * - 同优先级：后注册者顶掉先注册者
+ * 图片预加载失败时不会写入任何层，当前显示保持不变
+ * @param {Object} 选项 - 选项
+ * @param {string} [选项.url] - 封面图片 URL
+ * @param {number} [选项.优先级=顶部大图默认优先级] - 优先级，数值越小越优先
+ * @param {string} [选项.生命周期=顶部大图仅当前页] - 顶部大图永久 或 顶部大图仅当前页
+ * @returns {void}
+ */
+function 更新顶部大图(
+	{ url, 优先级 = 顶部大图默认优先级, 生命周期 = 顶部大图仅当前页 } = { url: "" }
+) {
+	if (!顶部大图 || !url) return;
+	const 目标url = new URL(url, location.href).href,
+		// 仅当前页 的层记下注册时的路径，导航离开后由 清理过期顶部大图层 回收
+		注册路径 = 生命周期 === 顶部大图永久 ? "" : 获取清理后当前路径();
+
+	// 已有同优先级、同一张图的层：无需重复注册，避免无谓的交叉渐变
+	if (
+		取顶部大图层().some(
+			层 => 读取顶部大图信息(层).优先级 === 优先级 && 层.querySelector("img")?.src === 目标url
+		)
+	)
+		return;
+
+	const 预加载图片 = new Image();
+	预加载图片.alt = "";
+	预加载图片.onload = () => {
+		// 竞态：预加载期间已经导航到别的路径，仅当前页 的封面不再有意义
+		if (生命周期 === 顶部大图仅当前页 && 注册路径 !== 获取清理后当前路径()) return;
+		写入顶部大图层(预加载图片, 优先级, 生命周期, 注册路径);
+	};
+	预加载图片.src = 目标url;
+}
+/**
+ * 撤销顶部大图：移除指定优先级的全部层（显示中的先淡出），随后由更低优先级的层接管
+ * @param {number} 优先级 - 要撤销的优先级
+ * @returns {void}
+ */
+function 撤销顶部大图(优先级) {
+	for (const 层 of 取顶部大图层()) if (读取顶部大图信息(层).优先级 === 优先级) 移除顶部大图层(层);
+}
+/**
+ * 接管 HTML 里声明的层：补全缺省的注册信息、兜住首屏封面加载失败，并结算初始赢家
+ * @returns {void}
+ */
+function 初始化顶部大图() {
+	if (!顶部大图) return;
+	const 当前路径 = 获取清理后当前路径();
+	for (const 层 of 取顶部大图层()) {
+		const 信息 = 读取顶部大图信息(层);
+		// 构建产物里的 仅当前页 层不写 data-注册路径，此处按下直接访问时的路径补全
+		if (信息.生命周期 === 顶部大图仅当前页 && !信息.注册路径)
+			层.setAttribute("data-注册路径", 当前路径);
+
+		const 图片 = /** @type {HTMLImageElement | null} */ (层.querySelector("img"));
+		if (!图片?.getAttribute("src")) continue;
+		// 首屏封面加载失败（含在脚本执行前就已失败）时回收该层，回落到优先级更低的层
+		if (图片.complete && !图片.naturalWidth) {
+			移除顶部大图层(层);
+			continue;
+		}
+		图片.addEventListener("error", () => 移除顶部大图层(层), { once: true });
+	}
+	应用顶部大图赢家();
+}
+/**
+ * 回收过期层：移除 仅当前页 且注册路径不是当前路径的层，永久 层不受影响
+ * @returns {void}
+ */
+function 清理过期顶部大图层() {
+	if (!顶部大图) return;
+	const 当前路径 = 获取清理后当前路径();
+	for (const 层 of 取顶部大图层()) {
+		const 信息 = 读取顶部大图信息(层);
+		if (信息.生命周期 === 顶部大图永久 || 信息.注册路径 === 当前路径) continue;
+		移除顶部大图层(层);
+	}
 }
 /**
  * 设置 meta robots 为 noindex，阻止搜索引擎收录当前页面
@@ -585,6 +727,10 @@ let 用户已禁用动画特效 = matchMedia("(prefers-reduced-motion: reduce)")
 matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", 事件 => {
 	用户已禁用动画特效 = 事件.matches;
 });
+
+// 顶部大图：接管 HTML 里声明的层，并在导航（pushState 与 popstate 都会派发该事件）后回收过期层
+初始化顶部大图();
+addEventListener("URL发生变化", 清理过期顶部大图层);
 
 let URL发生变化事件 = new CustomEvent("URL发生变化"),
 	已触发动态加载 = false,

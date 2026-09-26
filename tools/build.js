@@ -32,13 +32,25 @@ const CONFIG = {
 	fileStatesPath: "./tools/file-states.json",
 	// 需追踪内容 hash 与「内容修改时间」的静态页面（相对项目根目录）
 	staticTrackedFiles: ["index.html", "blog.html", "friends.html"],
-	defaultCover: "https://dsy4567.github.io/img/bg.webp",
-	defaultCoverPath: "/img/bg.webp",
+	// 顶部大图基线图：HTML 里写死的兜底层（优先级见 js/global.js 的 顶部大图优先级）
+	baselineCoverPath: "/img/bg.webp",
+	// 无封面文章的默认封面池：以文章 id 为种子稳定挑选（需与 js/blog.js 的 博客默认封面 保持同步）
+	defaultCovers: ["/img/bg.webp"],
 	timezone: "Asia/Shanghai",
 };
 
 // ncm.json 在 file-states 中的键（统一为不含 "./" 前缀的相对路径）
 const ncmStateKey = path.posix.normalize(CONFIG.ncmOutputPath);
+
+// 顶部大图优先级梯度：数值越小越优先，需与 js/global.js 的 顶部大图优先级 保持同步
+const 顶部大图优先级 = {
+	/** 文章自带的封面 */
+	文章封面: 100,
+	/** 无封面文章随机挑出的默认封面 */
+	文章随机封面: 1001,
+	/** 基线图，始终兜底 */
+	基线: 9999,
+};
 
 // ==================== 类型定义 ====================
 
@@ -100,6 +112,18 @@ function escapeHtml(str) {
 	/** @type {Record<string, string>} HTML 实体映射表 */
 	const map = { "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;" };
 	return str.replace(/[<>&"]/g, c => map[c]);
+}
+
+/**
+ * 以文章 id 为种子挑选默认封面：同一篇文章始终得到同一张图，不同文章尽量落在不同的图上
+ * 与 js/blog.js 的 获取默认封面 保持同步（两边改动需一致）
+ * @param {string} 文章id - 文章 id
+ * @returns {string} 默认封面地址
+ */
+function 获取默认封面(文章id) {
+	let 哈希 = 0;
+	for (let i = 0; i < 文章id.length; i++) 哈希 = (哈希 * 31 + 文章id.charCodeAt(i)) >>> 0;
+	return CONFIG.defaultCovers[哈希 % CONFIG.defaultCovers.length];
 }
 
 /**
@@ -423,10 +447,9 @@ class ArticleBuilder {
 		meta.date = meta.date || new Date();
 
 		const firstImg = $("img").attr("src");
+		// 文章自带的封面：article.json 的 cover 或正文首图，两者都没有时留空，
+		// 随机默认封面留到渲染时按 id 挑选（见 获取默认封面）
 		meta._originalCover = meta.cover || firstImg;
-		meta.cover =
-			meta.cover ||
-			new URL(firstImg || CONFIG.defaultCover, `https://${getDomain("infra")}/`).href;
 
 		meta.issue = meta.issue || null;
 		meta.tags = meta.tags || [];
@@ -462,11 +485,12 @@ class ArticleBuilder {
 				`<link rel="canonical" href="https://${getDomain("public")}/blog/${meta.id}/" />`
 		);
 
-		html = replaceTemplateBlock(
-			html,
-			"PRELOAD",
-			`\t\t<link rel="preload" href="${meta._originalCover || CONFIG.defaultCoverPath}" as="image" fetchpriority="high" />`
-		);
+		// 封面：优先文章自带封面，否则按 id 稳定挑一张默认封面（与 js/blog.js 的 获取默认封面 保持同步）
+		const 封面src = meta._originalCover || 获取默认封面(meta.id);
+
+		// 封面不在此处预加载：COVER 里实际显示的 <img> 自带 fetchpriority="high"，
+		// 由 HTML 预扫描器在解析时按高优先级抓取，无需再重复声明一份 preload
+		html = replaceTemplateBlock(html, "PRELOAD", "");
 
 		// Open Graph
 		html = replaceTemplateBlock(
@@ -476,17 +500,21 @@ class ArticleBuilder {
 				`<meta property="og:type" content="article" />\n\t\t` +
 				`<meta property="og:title" content="${metaTitle}" />\n\t\t` +
 				`<meta property="og:description" content="${escapeHtml(meta.desc_text || "记录 dsy4567 的折腾经验、技术分享、编程笔记")}" />\n\t\t` +
-				`<meta property="og:image" content="${meta.cover || CONFIG.defaultCover}" />`
+				`<meta property="og:image" content="${new URL(封面src, `https://${getDomain("infra")}/`).href}" />`
 		);
 
-		// 顶部大图为双层容器，首层的 <img> 直接写入封面，避免首屏多一次无效切图（见 global.js 的 更新顶部大图）
-		const coverPath = meta._originalCover || CONFIG.defaultCoverPath;
+		// 顶部大图按优先级显示最优层（见 js/global.js 的 更新顶部大图）：
+		// 基线层永久兜底，文章层让首屏直接显示正确封面而无需等 JS 切换；文章层是 仅当前页 的，导航后会被回收
+		// 只有首屏可见的文章层抢优先级，初始不可见的基线层保持默认优先级
+		const 封面优先级 = meta._originalCover
+			? 顶部大图优先级.文章封面
+			: 顶部大图优先级.文章随机封面;
 		html = replaceTemplateBlock(
 			html,
 			"COVER",
 			`\t\t<div id="顶部大图" role="img" aria-label="顶部大图">\n` +
-				`\t\t\t<div class="顶部大图层 显示"><img alt="" src="${coverPath}" /></div>\n` +
-				`\t\t\t<div class="顶部大图层"><img alt="" /></div>\n` +
+				`\t\t\t<div class="顶部大图层" data-优先级="${顶部大图优先级.基线}" data-生命周期="永久"><img alt="" src="${CONFIG.baselineCoverPath}" /></div>\n` +
+				`\t\t\t<div class="顶部大图层 显示" data-优先级="${封面优先级}" data-生命周期="仅当前页"><img alt="" src="${封面src}" fetchpriority="high" /></div>\n` +
 				`\t\t</div>`
 		);
 
