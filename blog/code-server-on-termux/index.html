@@ -35,7 +35,7 @@
 		<script src="/js/doc-start.js"></script>
 
 		<!-- BEGIN PRELOAD -->
-		<link rel="preload" href="/blog/code-server-on-termux/img/code-server.webp" as="image" fetchpriority="high" />
+
 		<!-- END PRELOAD -->
 
 		<script src="/js/global.js" defer></script>
@@ -96,7 +96,7 @@
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="记一次在 Termux 上搭建 code-server 环境 | 博客 | dsy4567 的小站" />
 		<meta property="og:description" content="店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是世界加钱可及的某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。..." />
-		<meta property="og:image" content="/blog/code-server-on-termux/img/code-server.webp" />
+		<meta property="og:image" content="https://dsy4567.github.io/blog/code-server-on-termux/img/code-server.webp" />
 		<!-- END OG -->
 	</head>
 	<body>
@@ -147,8 +147,8 @@
 
 		<!-- BEGIN COVER -->
 		<div id="顶部大图" role="img" aria-label="顶部大图">
-			<div class="顶部大图层 显示" style="background-image: url('/blog/code-server-on-termux/img/code-server.webp')"></div>
-			<div class="顶部大图层"></div>
+			<div class="顶部大图层" data-优先级="9999" data-生命周期="永久"><img alt="" src="/img/bg.webp" /></div>
+			<div class="顶部大图层 显示" data-优先级="100" data-生命周期="仅当前页"><img alt="" src="/blog/code-server-on-termux/img/code-server.webp" fetchpriority="high" /></div>
 		</div>
 		<!-- END COVER -->
 
