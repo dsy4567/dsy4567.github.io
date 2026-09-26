@@ -11,7 +11,17 @@
 let /** @type {文章信息[]} */ 所有文章信息 = [],
 	路径 = 获取清理后当前路径();
 
-const 博客默认封面 = "/img/bg.webp";
+const 博客默认封面 = ["/img/bg.webp"];
+/**
+ * 以文章 id 为种子挑选默认封面：同一篇文章始终得到同一张图，不同文章尽量落在不同的图上
+ * @param {string} 文章id - 文章 id
+ * @returns {string} 默认封面地址
+ */
+function 获取默认封面(文章id) {
+	let 哈希 = 0;
+	for (let i = 0; i < 文章id.length; i++) 哈希 = (哈希 * 31 + 文章id.charCodeAt(i)) >>> 0;
+	return 博客默认封面[哈希 % 博客默认封面.length];
+}
 
 添加脚本("/js/lib/highlight.min.js");
 添加样式("/css/hl.min.css");
