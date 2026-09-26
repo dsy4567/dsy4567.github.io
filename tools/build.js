@@ -35,7 +35,12 @@ const CONFIG = {
 	// 顶部大图基线图：HTML 里写死的兜底层（优先级见 js/global.js 的 顶部大图优先级）
 	baselineCoverPath: "/img/bg.webp",
 	// 无封面文章的默认封面池：以文章 id 为种子稳定挑选（需与 js/blog.js 的 博客默认封面 保持同步）
-	defaultCovers: ["/img/bg.webp"],
+	defaultCovers: [
+		"/img/bg.webp",
+		"https://qwq.dsy4567.icu/files-2/%E6%9D%9F%E8%8A%B1%E7%BA%BF_cover.webp",
+		"https://qwq.dsy4567.icu/files-2/95681846.webp",
+		"https://qwq.dsy4567.icu/files-2/90904448_p0.webp",
+	],
 	timezone: "Asia/Shanghai",
 };
 

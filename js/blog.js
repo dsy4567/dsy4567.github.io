@@ -11,7 +11,12 @@
 let /** @type {文章信息[]} */ 所有文章信息 = [],
 	路径 = 获取清理后当前路径();
 
-const 博客默认封面 = ["/img/bg.webp"];
+const 博客默认封面 = [
+	"/img/bg.webp",
+	"https://qwq.dsy4567.icu/files-2/%E6%9D%9F%E8%8A%B1%E7%BA%BF_cover.webp",
+	"https://qwq.dsy4567.icu/files-2/95681846.webp",
+	"https://qwq.dsy4567.icu/files-2/90904448_p0.webp",
+];
 /**
  * 以文章 id 为种子挑选默认封面：同一篇文章始终得到同一张图，不同文章尽量落在不同的图上
  * @param {string} 文章id - 文章 id
