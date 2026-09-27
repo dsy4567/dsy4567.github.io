@@ -111,9 +111,9 @@ div#侧边按钮容器,
 			/* border-radius: var(--border-radius); */
 			transform: translateY(0);
 		}
-		16% {
-			/* border-radius: 0; */
-		}
+		/* 16% {
+			border-radius: 0;
+		} */
 		66% {
 			opacity: 1;
 		}
@@ -125,15 +125,15 @@ div#侧边按钮容器,
 	}
 	@keyframes 顶部大图背景 {
 		0% {
-			border-radius: var(--border-radius);
+			/* border-radius: var(--border-radius); */
 			/* 平移窗口围绕图片中线对称：起点在中线前 平移量/2 处，横图平移量为 0，此处即 0 */
 			transform: translateY(calc((var(--cover-travel) - var(--cover-overflow)) / 2));
 		}
-		16% {
+		/* 16% {
 			border-radius: 0;
-		}
+		} */
 		100% {
-			border-radius: 0;
+			/* border-radius: 0; */
 			/* transform: translateY(max(calc(var(--cover-scroll-range) * -1), calc(100cqh - 100%))); */
 			/* 终点在中线后 平移量/2 处；平移量取溢出量与一个滚动范围中的较小者，横图为 0 */
 			transform: translateY(calc((0px - var(--cover-overflow) - var(--cover-travel)) / 2));
@@ -144,7 +144,7 @@ div#侧边按钮容器,
 			border-top: 0 solid transparent;
 			opacity: 1;
 		}
-		16% {
+		4% {
 			opacity: 0;
 		}
 		28% {
@@ -576,6 +576,7 @@ body.隐藏导航栏 #导航栏 {
 	body > #顶部大图,
 	body > #顶部大图 > .顶部大图层 > img,
 	main .左,
+	main > .左::before,
 	main > .左::after {
 		animation-timeline: scroll(root);
 		animation-range: 0 var(--cover-scroll-range);
