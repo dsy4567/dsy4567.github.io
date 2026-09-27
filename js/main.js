@@ -305,6 +305,25 @@ fetch("/json/icon.json")
 })();
 
 //#region 关注被关注码龄
+/** 将 GitHub 个人信息渲染到「关注被关注码龄」元素 @param {{ following: number, followers: number, created_at: string }} 个人信息 */
+const 渲染个人信息 = 个人信息 => {
+	const 关注被关注码龄 = gd("关注被关注码龄");
+	if (!关注被关注码龄) return;
+	关注被关注码龄.innerText = ` 关注: ${个人信息.following} | 被关注: ${
+		个人信息.followers
+	} | 码龄: ${new Date().getFullYear() - new Date(个人信息.created_at).getFullYear()}年 `;
+};
+
+// 缓存键：GitHub 个人信息，命中时先立即渲染，再后台静默拉取最新数据覆盖
+const 个人信息缓存键 = "缓存个人信息";
+try {
+	const 缓存个人信息 = JSON.parse(localStorage.getItem(个人信息缓存键) || "null");
+	if (缓存个人信息) 渲染个人信息(缓存个人信息);
+} catch (e) {
+	// 缓存损坏（如手动改坏）时忽略，等待下面的拉取结果
+	console.error(e);
+}
+
 fetch("https://api.github.com/users/dsy4567")
 	.then(
 		res =>
@@ -319,11 +338,13 @@ fetch("https://api.github.com/users/dsy4567")
 			})
 	)
 	.then(个人信息 => {
-		const 关注被关注码龄 = gd("关注被关注码龄");
-		if (!关注被关注码龄) return;
-		关注被关注码龄.innerText = ` 关注: ${个人信息.following} | 被关注: ${
-			个人信息.followers
-		} | 码龄: ${new Date().getFullYear() - new Date(个人信息.created_at).getFullYear()}年 `;
+		// 拉取成功即写入缓存并立即更新页面；拉取失败时保留缓存内容，继续展示旧数据
+		try {
+			localStorage.setItem(个人信息缓存键, JSON.stringify(个人信息));
+		} catch (e) {
+			console.error(e);
+		}
+		渲染个人信息(个人信息);
 	})
 	.catch(e => console.error(e));
 //#endregion
