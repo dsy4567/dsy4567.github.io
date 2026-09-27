@@ -18,6 +18,12 @@ const 行首时间标签 = /^(?:\[\d*:\d*\.?\d*\])+/;
 /** 匹配单个 LRC 时间标签，如 [01:23.45] */
 const 时间标签 = /\[\d*:\d*\.?\d*\]/g;
 
+/** 触发下一首预加载的剩余播放时长（秒） */
+const 预加载剩余秒数 = 10;
+
+/** 预加载结果的有效期（毫秒），超过后播放时不再复用 */
+const 预加载有效期 = 2 * 60 * 1000;
+
 /** 将 `[mm:ss.xx]` 时间标签转换为秒数（与 lrc-parser 的 convertTime 一致） */
 function 标签转秒(/** @type {string} */ 标签) {
 	let [分钟, 秒数] = 标签.slice(1, -1).split(":");
@@ -65,6 +71,10 @@ let 网易云音乐 = {
 	/** @type {Record<string, HTMLButtonElement>} */ 按钮: {},
 	/** @type {歌单[]} */ 歌单: [],
 	/** @type {Record<number, number>} */ 歌单索引: {},
+	/** 预加载下一首用的共享 Audio：只预载元数据与必要数据 @type {HTMLAudioElement} */
+	预加载音频: new Audio(),
+	/** 预加载得到的音乐地址缓存：歌曲 id → 地址与写入时间，播放时命中可省去一次请求 @type {Map<number, { 地址: string, 时间戳: number }>} */
+	预加载缓存: new Map(),
 	/** @type {number[]} */ 洗牌后的索引: [],
 	洗牌位置: 0,
 	连续失败次数: 0,
@@ -84,6 +94,8 @@ let 网易云音乐 = {
 		已加载的音乐id: -1,
 		/** 写入当前 src 的播放请求令牌，用于识别 error 事件是否来自已被替换的旧音频 */
 		已加载的音乐令牌: -1,
+		/** 已触发下一首预加载的歌曲 id，-1 表示尚未触发；ontimeupdate 高频回调据此保证每首歌只预加载一次 */
+		已预加载的歌曲id: -1,
 		/** @type {HTMLAudioElement} */ Audio: new Audio(),
 		/** @type {TextTrack | undefined} */ 歌词track: undefined,
 		/** @type {TextTrack | undefined} */ 翻译track: undefined,
@@ -115,20 +127,49 @@ let 网易云音乐 = {
 			网易云音乐封面元素.classList[启用 ? "remove" : "add"]("暂停动画");
 		}
 	},
-	/** 免费歌曲返回音频地址，其余（vip 等）降级为播放对应 mv 清晰度最低的一档 */
-	async 获取音乐地址(/** @type {number} */ id) {
+	/**
+	 * 免费歌曲返回音频地址，其余（vip 等）降级为播放对应 mv 清晰度最低的一档。
+	 * 预加载时用临时 Audio 预载部分数据并缓存结果（有效期见 预加载有效期），
+	 * 非预加载时优先复用未过期的缓存，避免重复请求
+	 */
+	async 获取音乐地址(/** @type {number} */ id, 预加载 = false) {
+		/** @type {string} */
+		let 音乐地址 = `/404.html?failNcmId=${id}`;
+
+		if (!预加载) {
+			let 缓存 = 网易云音乐.预加载缓存.get(id);
+			// 命中即消费，避免同一预加载结果被反复复用；过期的项留待下次预加载统一清理
+			if (缓存) 网易云音乐.预加载缓存.delete(id);
+			if (缓存 && Date.now() - 缓存.时间戳 < 预加载有效期) return 缓存.地址 || 音乐地址;
+		}
 		try {
-			if (网易云音乐.已首次播放) 网易云音乐.设置闪烁动画(true);
+			// 预加载在后台进行，不应触发加载闪烁动画
+			if (!预加载 && 网易云音乐.已首次播放) 网易云音乐.设置闪烁动画(true);
 			let 歌曲数据 = (await 网易云音乐.请求接口(`/song/url?id=${id}&realIP=116.25.146.177`))
 				?.data[0];
 			// vip 歌曲尝试获取 mv
 			if (歌曲数据?.fee === 0 || 歌曲数据?.fee === 8)
-				return 歌曲数据?.url?.replace("http://", "https://");
-			return await 网易云音乐.获取mv地址(id);
+				音乐地址 = 歌曲数据?.url?.replace("http://", "https://");
+			else 音乐地址 = await 网易云音乐.获取mv地址(id);
+
+			// 用共享的临时 Audio 预载部分数据，预热网络缓存，实际播放时能更快出声
+			if (预加载) 网易云音乐.预加载音频.src = 音乐地址;
 		} catch (e) {
 			console.error(e);
-			return `/404.html?failNcmId=${id}`;
+			音乐地址 = `/404.html?failNcmId=${id}`;
 		}
+		if (预加载) {
+			// 每次预加载顺带清理过期项，避免缓存项无限累积
+			网易云音乐.清理过期预加载缓存();
+			网易云音乐.预加载缓存.set(id, { 地址: 音乐地址, 时间戳: Date.now() });
+		}
+		return 音乐地址;
+	},
+	/** 清理过期的预加载结果，避免缓存项无限累积（共享的预加载 Audio 会在下次预加载时被新地址替换） */
+	清理过期预加载缓存() {
+		let 现在 = Date.now();
+		for (const [id, 缓存] of 网易云音乐.预加载缓存)
+			if (现在 - 缓存.时间戳 >= 预加载有效期) 网易云音乐.预加载缓存.delete(id);
 	},
 	/** 请求网易云音乐接口并解析为 json，网络等异常会抛出，由调用方统一兜底 */
 	async 请求接口(/** @type {string} */ 路径) {
@@ -282,6 +323,30 @@ let 网易云音乐 = {
 			console.error(e);
 		}
 	},
+	/** 当前歌曲剩余时长进入 预加载剩余秒数 以内时预加载下一首：命中缓存的地址能让切歌立即开始，同一首歌只触发一次 */
+	预加载下一首() {
+		let { Audio, 索引 } = 网易云音乐.正在播放;
+		let 音乐信息 = 网易云音乐.歌单[索引];
+		// ontimeupdate 触发频繁，按歌曲 id 去重，保证每首歌只预加载一次
+		if (!音乐信息 || 网易云音乐.正在播放.已预加载的歌曲id === 音乐信息.id) return;
+		// 元数据未就绪时 duration 为 NaN，无法判断剩余时长
+		if (!Number.isFinite(Audio.duration) || Audio.duration - Audio.currentTime > 预加载剩余秒数)
+			return;
+
+		let /** @type {number | undefined} */ 下一首索引;
+		if (网易云音乐.设置.随机播放) {
+			// 洗牌顺序未生成或即将越过末尾重新洗牌时无法预判下一首，只能放弃。
+			// 此处不得推进 洗牌位置：真正的 下一首 还会再推进一次，否则会跳歌
+			if (网易云音乐.洗牌后的索引.length !== 网易云音乐.歌单.length) return;
+			let 位置 = 网易云音乐.洗牌位置 + 1;
+			if (位置 >= 网易云音乐.歌单.length) return;
+			下一首索引 = 网易云音乐.洗牌后的索引[位置];
+		} else 下一首索引 = (索引 + 1) % 网易云音乐.歌单.length;
+		if (typeof 下一首索引 === "undefined") return;
+
+		网易云音乐.正在播放.已预加载的歌曲id = 音乐信息.id;
+		网易云音乐.获取音乐地址(网易云音乐.歌单[下一首索引].id, true);
+	},
 	更新歌曲信息(/** @type {number} */ 令牌) {
 		// gd("播放列表", true)?.scrollTo({
 		// 	behavior: "smooth",
@@ -413,6 +478,8 @@ let 网易云音乐 = {
 			网易云音乐.正在播放.Audio.preload = "none";
 			网易云音乐.正在播放.Audio.autoplay = false;
 			网易云音乐.正在播放.Audio.volume = 网易云音乐.设置.音量;
+			// 预加载用的共享 Audio 只预载元数据等必要数据（见 获取音乐地址 的 预加载）
+			网易云音乐.预加载音频.preload = "metadata";
 			// 轨道与 mouseenter 监听属于一次性副作用：初始化失败会重置 已初始化 以便重试，
 			// 若不加守卫，重试会重复 addTextTrack（泄漏旧轨道）并重复挂载 mouseenter 等监听
 			if (!网易云音乐.已注册一次性副作用) {
@@ -503,7 +570,9 @@ let 网易云音乐 = {
 				网易云音乐.设置封面旋转动画(false);
 				if (navigator.mediaSession) navigator.mediaSession.playbackState = "paused";
 			};
-			网易云音乐.正在播放.Audio.ontimeupdate = () => {};
+			网易云音乐.正在播放.Audio.ontimeupdate = () => {
+				网易云音乐.预加载下一首();
+			};
 			网易云音乐.正在播放.Audio.onerror = e => {
 				// error 可能来自已被新请求替换的旧音频，此时不应计入失败或触发自动切歌
 				if (网易云音乐.正在播放.已加载的音乐令牌 !== 网易云音乐.播放请求令牌) return;
