@@ -343,24 +343,7 @@ async function 延迟执行(事件名, 回调, 优先级 = 0) {
 		启动低优池定时器(事件名);
 	}
 }
-/**
- * 显示一个临时的通知消息，3 秒后自动隐藏
- * @param {string} m - 要显示的 HTML 内容
- */
-function 提示(m) {
-	let 元素 = ce("div");
-	元素.innerHTML = m;
-	元素.classList.add("通知");
-	元素.ariaLive = "assertive";
-	元素.role = "alert";
-	document.body.append(元素);
-	setTimeout(function () {
-		元素.style.animationName = "隐藏";
-		setTimeout(function () {
-			元素.remove();
-		}, 500);
-	}, 3000);
-}
+
 /**
  * 顶部大图容器：#顶部大图 下的每个 .顶部大图层 都是一条封面注册项，
  * 注册信息一律写在 data-* 属性上，构建产物可据此在首屏直接声明好封面与优先级
@@ -665,6 +648,24 @@ function 添加横幅(/** @type {string} */ html) {
 		}, 500);
 	}, 10000);
 	return div;
+}
+/**
+ * 显示一个临时的通知消息，3 秒后自动隐藏
+ * @param {string} m - 要显示的 HTML 内容
+ */
+function 提示(m) {
+	let 元素 = ce("div");
+	元素.innerHTML = m;
+	元素.classList.add("通知");
+	元素.ariaLive = "assertive";
+	元素.role = "alert";
+	document.body.append(元素);
+	setTimeout(function () {
+		元素.style.animationName = "隐藏";
+		setTimeout(function () {
+			元素.remove();
+		}, 500);
+	}, 3000);
 }
 
 /**
