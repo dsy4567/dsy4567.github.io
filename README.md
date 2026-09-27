@@ -84,5 +84,5 @@ MIT & CC BY-NC-SA 4.0
 > ```
 >
 > ```js
-> /* Copyright (c) 2023 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
+> /* Copyright (c) 2022-2026 dsy4567, view license at <https://github.com/dsy4567/dsy4567.github.io/blob/main/LICENSE.md> */
 > ```

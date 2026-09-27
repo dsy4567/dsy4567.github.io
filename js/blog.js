@@ -2,9 +2,10 @@
  * @fileoverview 为 /blog.html 渲染博客相关元素
  * @author dsy4567
  * @license
- * Copyright (c) 2026 dsy4567
+ * Copyright (c) 2022-2026 dsy4567
  * SPDX-License-Identifier: MIT
  */
+
 // @ts-check
 "use strict";
 

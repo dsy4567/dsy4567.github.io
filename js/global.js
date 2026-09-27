@@ -1,8 +1,8 @@
 /**
- * @fileoverview 适用于所有页面的全局脚本，包含一些通用的函数和变量，还负责域名迁移、SW管理等任务
+ * @fileoverview 适用于所有页面的全局脚本，提供 DOM 快捷方式、延迟执行、顶部大图、主题与图标渲染等通用能力
  * @author dsy4567
  * @license
- * Copyright (c) 2026 dsy4567
+ * Copyright (c) 2022-2026 dsy4567
  * SPDX-License-Identifier: MIT
  */
 

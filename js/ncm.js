@@ -2,7 +2,7 @@
  * @fileoverview 网易云音乐组件
  * @author dsy4567
  * @license
- * Copyright (c) 2026 dsy4567
+ * Copyright (c) 2022-2026 dsy4567
  * SPDX-License-Identifier: MIT
  */
 

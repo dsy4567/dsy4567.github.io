@@ -1,8 +1,8 @@
 /**
- * @fileoverview 核心脚本，负责加载其他模块、图标渲染、处理页面事件等任务
+ * @fileoverview 核心脚本，负责加载子模块与动态换页、拉取图标数据并触发渲染、主题控件与一言渲染，以及域名迁移、SW 移除等任务
  * @author dsy4567
  * @license
- * Copyright (c) 2026 dsy4567
+ * Copyright (c) 2022-2026 dsy4567
  * SPDX-License-Identifier: MIT
  */
 

@@ -2,7 +2,7 @@
  * @fileoverview 文档开始时执行的代码，负责初始化主题、事件状态等
  * @author dsy4567
  * @license
- * Copyright (c) 2026 dsy4567
+ * Copyright (c) 2022-2026 dsy4567
  * SPDX-License-Identifier: MIT
  */
 
