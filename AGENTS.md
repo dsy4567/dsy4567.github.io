@@ -40,7 +40,7 @@
 ├── js/                         # js脚本
     ├── lib/                    # 第三方库
     ├── main.js                 # 核心脚本
-    ├── global.js               # 工具函数和变量，还负责域名迁移、SW管理等任务
+    ├── global.js               # 工具函数和变量
     ├── blog.js                 # 博客页
     ├── friends.js              # 友链页
     ├── analytics.js            # 第三方统计
