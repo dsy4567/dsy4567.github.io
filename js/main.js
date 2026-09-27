@@ -448,41 +448,51 @@ fetch("https://api.github.com/users/dsy4567")
 
 			const 类列表 = document.body.classList;
 
-			// 监听页面滚动事件（passive: 声明不调用 preventDefault，浏览器无需等待本监听器即可滚动）
-			addEventListener(
-				"scroll",
-				() => {
-					const 当前滚动位置 = scrollY;
+			/**
+			 * 首次监听滚动前的延迟时长（毫秒）：首屏（含动态换页重建正文）期间浏览器可能派发滚动事件，
+			 * 此时读取 scrollY 会强制同步布局而引发重排，故延迟注册监听器，期间的滚动事件一律忽略
+			 */
+			const 滚动监听延迟 = 3000;
 
-					// 情况一：滚动到页面最顶部（scrollTop 为 0）且当前状态不是“顶部”
-					if (当前滚动位置 === 0) {
-						if (状态 !== 0) {
-							类列表.add("顶部");
-							类列表.remove("隐藏导航栏");
-							状态 = 0;
+			setTimeout(() => {
+				// 监听页面滚动事件（passive: 声明不调用 preventDefault，浏览器无需等待本监听器即可滚动）
+				addEventListener(
+					"scroll",
+					() => {
+						console.log("onscroll");
+
+						const 当前滚动位置 = scrollY;
+
+						// 情况一：滚动到页面最顶部（scrollTop 为 0）且当前状态不是“顶部”
+						if (当前滚动位置 === 0) {
+							if (状态 !== 0) {
+								类列表.add("顶部");
+								类列表.remove("隐藏导航栏");
+								状态 = 0;
+							}
+							scrollTop = 0;
 						}
-						scrollTop = 0;
-					}
-					// 情况二：向下滚动且累计幅度超过阈值，状态不是“隐藏导航栏”
-					else if (当前滚动位置 - scrollTop > 滚动阈值) {
-						if (状态 !== 1) {
-							类列表.remove("顶部");
-							类列表.add("隐藏导航栏");
-							状态 = 1;
+						// 情况二：向下滚动且累计幅度超过阈值，状态不是“隐藏导航栏”
+						else if (当前滚动位置 - scrollTop > 滚动阈值) {
+							if (状态 !== 1) {
+								类列表.remove("顶部");
+								类列表.add("隐藏导航栏");
+								状态 = 1;
+							}
+							scrollTop = 当前滚动位置;
 						}
-						scrollTop = 当前滚动位置;
-					}
-					// 情况三：向上滚动且累计幅度超过阈值，状态不是“显示导航栏”
-					else if (scrollTop - 当前滚动位置 > 滚动阈值) {
-						if (状态 !== 2) {
-							类列表.remove("顶部", "隐藏导航栏");
-							状态 = 2;
+						// 情况三：向上滚动且累计幅度超过阈值，状态不是“显示导航栏”
+						else if (scrollTop - 当前滚动位置 > 滚动阈值) {
+							if (状态 !== 2) {
+								类列表.remove("顶部", "隐藏导航栏");
+								状态 = 2;
+							}
+							scrollTop = 当前滚动位置;
 						}
-						scrollTop = 当前滚动位置;
-					}
-				},
-				{ passive: true }
-			);
+					},
+					{ passive: true }
+				);
+			}, 滚动监听延迟);
 			//#endregion
 
 			//#region 双击打开图片/复制代码
