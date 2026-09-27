@@ -10,7 +10,13 @@
 "use strict";
 
 let /** @type {文章信息[]} */ 所有文章信息 = [],
-	路径 = 获取清理后当前路径();
+	路径 = 获取清理后当前路径(),
+	/**
+	 * 文章列表内存缓存：保存本次会话最近一次拉取到的 /json/blog.json，
+	 * 再次进入 /blog.html 时先渲染缓存，同时后台静默拉取最新列表（见 静默更新文章列表）
+	 * @type {文章信息[] | null}
+	 */
+	文章列表缓存 = null;
 
 const 博客默认封面 = [
 	"/img/bg.webp",
@@ -350,29 +356,67 @@ async function 渲染文章(当前文章信息) {
 }
 
 /**
+ * 文章列表加载或渲染失败时的兜底：阻止搜索引擎收录、隐藏进度条并提示重试
+ * @param {unknown} e
+ */
+function 处理文章列表加载失败(e) {
+	console.error(e);
+	阻止搜索引擎收录();
+	显示或隐藏进度条(false);
+	const 正在加载文章提示 = gd("正在加载文章提示");
+	if (正在加载文章提示)
+		正在加载文章提示.innerHTML = "<div>加载失败，<a href=''>点击重试</a></div>";
+}
+/**
+ * 请求文章列表数据：拉取 /json/blog.json，并把 json 解析推迟到 DOMContentLoaded 高优任务之后
+ * @returns {Promise<Array<文章信息>>} 文章列表
+ */
+async function 请求文章列表() {
+	const res = await fetch("/json/blog.json");
+	if (!res.ok) throw new Error("状态码异常");
+	return /** @type {Array<文章信息>} */ (
+		await new Promise(resolve => {
+			延迟执行("DOMContentLoaded", () => resolve(res.json()), 0);
+		})
+	);
+}
+/**
+ * 后台静默拉取最新文章列表：成功则更新内存缓存；若出现了缓存中没有的新文章，弹横幅提示刷新
+ * @param {number} 动态加载自增计数器拷贝
+ */
+async function 静默更新文章列表(动态加载自增计数器拷贝) {
+	try {
+		const res = await fetch("/json/blog.json");
+		if (!res.ok) throw new Error("状态码异常");
+		const 最新文章列表 = /** @type {Array<文章信息>} */ (await res.json());
+		// 拉取期间已切换页面，结果不再属于当前页面，直接丢弃
+		if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
+		// 先读后写，避免并发调用时误判出新文章
+		const 缓存文章id = new Set((文章列表缓存 || []).map(文章 => 文章.id));
+		文章列表缓存 = 最新文章列表;
+		// hidden 文章不对外展示，不计入新博文
+		if (最新文章列表.some(文章 => !文章.hidden && !缓存文章id.has(文章.id)))
+			添加横幅('刚刚有新博文发布，<a href="/blog.html">点击这里</a>刷新');
+	} catch (e) {
+		console.error(e);
+	}
+}
+/**
  * @param {URL} u
  */
 async function 渲染文章列表(u) {
 	const 动态加载自增计数器拷贝 = 动态加载自增计数器;
 	// /blog.html
-	fetch("/json/blog.json")
-		.then(res => {
-			if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
-			if (!res.ok) throw new Error("状态码异常");
-			return new Promise((resolve, reject) => {
-				延迟执行(
-					"DOMContentLoaded",
-					() => {
-						resolve(res.json());
-					},
-					0
-				);
-			});
-		})
+	// 命中内存缓存：先用缓存渲染，同时后台静默拉取最新列表；无缓存时等网络返回
+	const 缓存数据 = 文章列表缓存;
+	if (缓存数据) 静默更新文章列表(动态加载自增计数器拷贝);
+	(缓存数据 ? Promise.resolve(缓存数据) : 请求文章列表())
 		.then(async (/** @type {Array<文章信息>} */ j) => {
 			const 右 = qs("main .右", true);
-			if (!右) return;
+			// 请求期间已切换页面则放弃渲染，避免此前的请求污染新页面
+			if (!右 || 动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
 
+			文章列表缓存 = j;
 			所有文章信息 = j;
 			let /** @type {Set<string>} */ 所有标签 = new Set(),
 				限定标签 = u.searchParams.get("tag"),
@@ -529,13 +573,7 @@ async function 渲染文章列表(u) {
 			高亮代码(右);
 			//#endregion
 		})
-		.catch(e => {
-			console.error(e);
-			阻止搜索引擎收录();
-			显示或隐藏进度条(false);
-			const 正在加载文章提示 = gd("正在加载文章提示");
-			if (正在加载文章提示) 正在加载文章提示.innerHTML = "加载失败，<a href=''>点击重试</a>";
-		});
+		.catch(处理文章列表加载失败);
 }
 function 重定向到博文() {
 	//#region 旧版 ?id= 参数重定向到新路径
@@ -594,6 +632,7 @@ addEventListener("URL发生变化", () => {
 
 _global["blog.js"] = () => ({
 	所有文章信息,
+	文章列表缓存,
 	路径,
 	main,
 	重定向到博文,
