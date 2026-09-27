@@ -54,7 +54,9 @@ function 动态加载(元素) {
 		try {
 			let 右 = qs("main .右", true);
 			if (!右) return;
-			滚动到可见区域("body", true);
+			// 前进/后退导航时，滚动位置由浏览器按历史条目自行恢复，这里不再干预，否则会把已恢复的位置顶回顶部；
+			// 但带 hash 时浏览器无法定位动态换入后才出现的锚点，仍需自行处理
+			if (!元素.popstate || location.hash) 滚动到可见区域("body", true);
 			qs("main > .左")?.scrollTo({
 				top: 0,
 				behavior: 用户已禁用动画特效 ? "auto" : "smooth",
