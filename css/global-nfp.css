@@ -391,7 +391,7 @@ nav {
 	animation-duration: var(--transition);
 	animation-fill-mode: forwards;
 	animation-iteration-count: 1;
-	/* animation-name: 隐藏; */
+	animation-name: 显示;
 }
 div.通知 {
 	animation-duration: var(--transition);
@@ -429,6 +429,7 @@ div.通知 {
 
 .横幅 {
 	background-color: var(--surface-2);
+	box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 0px;
 	font-size: larger;
 	padding: 2px;
 	position: fixed;
@@ -436,6 +437,7 @@ div.通知 {
 	text-align: center;
 	width: 100%;
 	z-index: 996;
+	cursor: pointer;
 }
 
 .暂停动画 {

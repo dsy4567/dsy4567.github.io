@@ -641,12 +641,15 @@ function 添加横幅(/** @type {string} */ html) {
 	div.innerHTML = `<span>${html}</span>`;
 	div.role = "alert";
 	document.body.append(div);
-	setTimeout(() => {
+	/** 播放隐藏动画后移除横幅 */
+	function 隐藏() {
 		div.style.animationName = "隐藏";
 		setTimeout(() => {
 			div.remove();
 		}, 500);
-	}, 10000);
+	}
+	div.addEventListener("click", 隐藏);
+	setTimeout(隐藏, 10000);
 	return div;
 }
 /**
