@@ -18,9 +18,10 @@ let /** @type {文章信息[]} */ 所有文章信息 = [],
 	 */
 	文章列表缓存 = null;
 
+/** 注意同步修改 [/tools/build.js](../tools/build.js) */
 const 博客默认封面 = [
+	"https://qwq.dsy4567.icu/files-2/63936697_p0.webp",
 	"/img/bg.webp",
-	"https://qwq.dsy4567.icu/files-2/%E6%9D%9F%E8%8A%B1%E7%BA%BF_cover.webp",
 	"https://qwq.dsy4567.icu/files-2/95681846.webp",
 	"https://qwq.dsy4567.icu/files-2/90904448_p0.webp",
 ];
