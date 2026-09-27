@@ -94,7 +94,7 @@ let 网易云音乐 = {
 		已加载的音乐id: -1,
 		/** 写入当前 src 的播放请求令牌，用于识别 error 事件是否来自已被替换的旧音频 */
 		已加载的音乐令牌: -1,
-		/** 已触发下一首预加载的歌曲 id，-1 表示尚未触发；ontimeupdate 高频回调据此保证每首歌只预加载一次 */
+		/** 本次进入预加载窗口后已触发预加载的歌曲 id，-1 表示尚未触发；离开窗口会被重置，ontimeupdate 高频回调据此保证每次进入窗口只预加载一次 */
 		已预加载的歌曲id: -1,
 		/** @type {HTMLAudioElement} */ Audio: new Audio(),
 		/** @type {TextTrack | undefined} */ 歌词track: undefined,
@@ -323,15 +323,22 @@ let 网易云音乐 = {
 			console.error(e);
 		}
 	},
-	/** 当前歌曲剩余时长进入 预加载剩余秒数 以内时预加载下一首：命中缓存的地址能让切歌立即开始，同一首歌只触发一次 */
+	/** 当前歌曲剩余时长进入 预加载剩余秒数 以内时预加载下一首：命中缓存的地址能让切歌立即开始，每次进入预加载窗口只触发一次 */
 	预加载下一首() {
 		let { Audio, 索引 } = 网易云音乐.正在播放;
 		let 音乐信息 = 网易云音乐.歌单[索引];
-		// ontimeupdate 触发频繁，按歌曲 id 去重，保证每首歌只预加载一次
-		if (!音乐信息 || 网易云音乐.正在播放.已预加载的歌曲id === 音乐信息.id) return;
-		// 元数据未就绪时 duration 为 NaN，无法判断剩余时长
-		if (!Number.isFinite(Audio.duration) || Audio.duration - Audio.currentTime > 预加载剩余秒数)
+		if (!音乐信息) return;
+		// 元数据未就绪时 duration 为 NaN，无法判断剩余时长；此时以及尚未进入预加载窗口时都清除去重标记，
+		// 使拖回开头重听、重播同一首后再次临近结尾仍能重新预加载（原缓存可能已被消费或过期）
+		if (
+			!Number.isFinite(Audio.duration) ||
+			Audio.duration - Audio.currentTime > 预加载剩余秒数
+		) {
+			网易云音乐.正在播放.已预加载的歌曲id = -1;
 			return;
+		}
+		// ontimeupdate 触发频繁，按歌曲 id 去重，保证每次进入预加载窗口只预加载一次
+		if (网易云音乐.正在播放.已预加载的歌曲id === 音乐信息.id) return;
 
 		let /** @type {number | undefined} */ 下一首索引;
 		if (网易云音乐.设置.随机播放) {
