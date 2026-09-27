@@ -57,6 +57,8 @@ let /** @type {(value?: any) => void} */ 歌单加载完成Resolve = () => {};
 let 网易云音乐 = {
 	重试timeout: -1,
 	已初始化: false,
+	/** 轨道与事件监听等一次性副作用是否已注册（初始化失败重试时避免重复注册） */
+	已注册一次性副作用: false,
 	已首次播放: false,
 	立即播放: false,
 	设置: { 音量: 50 / 100, 随机播放: false, 域名: "ncm.vercel.dsy4567.icu" },
@@ -80,6 +82,8 @@ let 网易云音乐 = {
 		索引: 0,
 		/** 最近一次写入 Audio.src 的歌曲 id，-1 表示尚未加载过 */
 		已加载的音乐id: -1,
+		/** 写入当前 src 的播放请求令牌，用于识别 error 事件是否来自已被替换的旧音频 */
+		已加载的音乐令牌: -1,
 		/** @type {HTMLAudioElement} */ Audio: new Audio(),
 		/** @type {TextTrack | undefined} */ 歌词track: undefined,
 		/** @type {TextTrack | undefined} */ 翻译track: undefined,
@@ -163,8 +167,11 @@ let 网易云音乐 = {
 		return 网易云音乐.洗牌后的索引[网易云音乐.洗牌位置];
 	},
 	async 切换音乐(/** @type {number} */ 欲播放的音乐id, 立即播放 = false) {
-		if (typeof 网易云音乐.歌单索引[欲播放的音乐id] !== "undefined")
-			网易云音乐.正在播放.索引 = 网易云音乐.歌单索引[欲播放的音乐id];
+		// 捕获本次点击对应的索引：初始化等 await 期间可能被其他点击改写 正在播放.索引，
+		// 若之后重新读取会播成别人的歌
+		let 目标索引 = 网易云音乐.歌单索引[欲播放的音乐id];
+		if (typeof 目标索引 === "undefined") 目标索引 = 网易云音乐.正在播放.索引;
+		网易云音乐.正在播放.索引 = 目标索引;
 		if (!立即播放) return;
 
 		// 点击的就是已加载的当前歌曲（且未出错）：不重新获取资源，直接从头播放
@@ -185,7 +192,7 @@ let 网易云音乐 = {
 		try {
 			clearTimeout(网易云音乐.重试timeout);
 			await 网易云音乐.初始化();
-			await 网易云音乐.播放第几首(网易云音乐.正在播放.索引);
+			await 网易云音乐.播放第几首(目标索引);
 		} catch (e) {
 			提示("播放失败");
 			console.error(e);
@@ -203,14 +210,17 @@ let 网易云音乐 = {
 		网易云音乐.正在播放.Audio.currentTime = 0;
 
 		网易云音乐.更新歌曲信息(令牌);
-		网易云音乐.正在播放.Audio.src = await 网易云音乐.获取音乐地址(网易云音乐.歌单[索引].id);
-		网易云音乐.正在播放.已加载的音乐id = 网易云音乐.歌单[索引].id;
+		// 先取地址并校验令牌，再写入 src：否则过期请求返回时会覆盖新请求已写入的 src
+		let 音乐信息 = 网易云音乐.歌单[索引];
+		let 音乐地址 = await 网易云音乐.获取音乐地址(音乐信息.id);
 		if (令牌 !== 网易云音乐.播放请求令牌) return;
 
+		网易云音乐.正在播放.Audio.src = 音乐地址;
+		网易云音乐.正在播放.已加载的音乐id = 音乐信息.id;
+		网易云音乐.正在播放.已加载的音乐令牌 = 令牌;
 		网易云音乐.正在播放.Audio.autoplay = true;
-		网易云音乐元素 &&
-			(网易云音乐元素.title = "网易云音乐 - 正在播放: " + 网易云音乐.歌单[索引].完整歌名);
-		localStorage.setItem("上次播放", "" + 网易云音乐.歌单[索引].id);
+		网易云音乐元素 && (网易云音乐元素.title = "网易云音乐 - 正在播放: " + 音乐信息.完整歌名);
+		localStorage.setItem("上次播放", "" + 音乐信息.id);
 	},
 	async 播放暂停() {
 		try {
@@ -223,11 +233,13 @@ let 网易云音乐 = {
 				// 令牌用于丢弃过期的播放请求，防止快速切歌时旧请求覆盖新请求
 				let 令牌 = ++网易云音乐.播放请求令牌;
 				网易云音乐.更新歌曲信息(令牌);
-				网易云音乐.正在播放.Audio.src = await 网易云音乐.获取音乐地址(
-					网易云音乐.歌单[网易云音乐.正在播放.索引].id
-				);
-				网易云音乐.正在播放.已加载的音乐id = 网易云音乐.歌单[网易云音乐.正在播放.索引].id;
+				// 先取地址并校验令牌，再写入 src，避免过期请求覆盖新请求已写入的 src
+				let 音乐信息 = 网易云音乐.歌单[网易云音乐.正在播放.索引];
+				let 音乐地址 = await 网易云音乐.获取音乐地址(音乐信息.id);
 				if (令牌 !== 网易云音乐.播放请求令牌) return;
+				网易云音乐.正在播放.Audio.src = 音乐地址;
+				网易云音乐.正在播放.已加载的音乐id = 音乐信息.id;
+				网易云音乐.正在播放.已加载的音乐令牌 = 令牌;
 			}
 
 			if (网易云音乐.正在播放.Audio.paused) 网易云音乐.正在播放.Audio.play();
@@ -401,43 +413,56 @@ let 网易云音乐 = {
 			网易云音乐.正在播放.Audio.preload = "none";
 			网易云音乐.正在播放.Audio.autoplay = false;
 			网易云音乐.正在播放.Audio.volume = 网易云音乐.设置.音量;
-			// kind 用 metadata：规范中供脚本使用的轨道，不会被视为面向用户的字幕而参与渲染/用户偏好
-			网易云音乐.正在播放.歌词track = 网易云音乐.正在播放.Audio.addTextTrack(
-				"metadata",
-				"歌词"
-			);
-			网易云音乐.正在播放.翻译track = 网易云音乐.正在播放.Audio.addTextTrack(
-				"metadata",
-				"翻译",
-				"zh-CN"
-			);
-			/**
-			 * 依据当前活跃的歌词、翻译 cue 渲染歌词文本。
-			 * 翻译 cue 的结束时间取自下一句翻译，会跨越中间没有翻译的歌词行而一直保持活跃，
-			 * 因此主歌词与翻译必须在同一次渲染中确定，避免翻译残留到无翻译的歌词行
-			 */
-			function 渲染歌词() {
-				let 歌词 = /** @type {VTTCue | undefined} */ (
-					网易云音乐.正在播放.歌词track?.activeCues?.[0]
+			// 轨道与 mouseenter 监听属于一次性副作用：初始化失败会重置 已初始化 以便重试，
+			// 若不加守卫，重试会重复 addTextTrack（泄漏旧轨道）并重复挂载 mouseenter 等监听
+			if (!网易云音乐.已注册一次性副作用) {
+				// kind 用 metadata：规范中供脚本使用的轨道，不会被视为面向用户的字幕而参与渲染/用户偏好
+				网易云音乐.正在播放.歌词track = 网易云音乐.正在播放.Audio.addTextTrack(
+					"metadata",
+					"歌词"
 				);
-				if (!歌词) {
-					// 无活跃 cue 的区间（前奏、间奏等）要清空，否则上一句会一直残留
-					歌词元素.innerText = "";
-					return;
-				}
-				let 翻译 = /** @type {VTTCue | undefined} */ (
-					网易云音乐.正在播放.翻译track?.activeCues?.[0]
+				网易云音乐.正在播放.翻译track = 网易云音乐.正在播放.Audio.addTextTrack(
+					"metadata",
+					"翻译",
+					"zh-CN"
 				);
+				// 紧邻轨道创建处绑定监听，此时类型收窄为已定义（渲染歌词为函数声明，已提升）
+				网易云音乐.正在播放.歌词track.oncuechange = 渲染歌词;
+				网易云音乐.正在播放.翻译track.oncuechange = 渲染歌词;
+				/**
+				 * 依据当前活跃的歌词、翻译 cue 渲染歌词文本。
+				 * 翻译 cue 的结束时间取自下一句翻译，会跨越中间没有翻译的歌词行而一直保持活跃，
+				 * 因此主歌词与翻译必须在同一次渲染中确定，避免翻译残留到无翻译的歌词行
+				 */
+				function 渲染歌词() {
+					let 歌词 = /** @type {VTTCue | undefined} */ (
+						网易云音乐.正在播放.歌词track?.activeCues?.[0]
+					);
+					if (!歌词) {
+						// 无活跃 cue 的区间（前奏、间奏等）要清空，否则上一句会一直残留
+						歌词元素.innerText = "";
+						return;
+					}
+					let 翻译 = /** @type {VTTCue | undefined} */ (
+						网易云音乐.正在播放.翻译track?.activeCues?.[0]
+					);
 
-				// 只有开始时间落在当前歌词行内的翻译才属于当前歌词
-				歌词元素.innerText =
-					歌词.text +
-					(翻译 && 翻译.startTime >= 歌词.startTime && 翻译.startTime < 歌词.endTime
-						? ` (${翻译.text})`
-						: "");
+					// 只有开始时间落在当前歌词行内的翻译才属于当前歌词
+					歌词元素.innerText =
+						歌词.text +
+						(翻译 && 翻译.startTime >= 歌词.startTime && 翻译.startTime < 歌词.endTime
+							? ` (${翻译.text})`
+							: "");
+				}
+				const f = () => {
+					滚动到可见区域(
+						"li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']"
+					);
+				};
+				网易云音乐元素.addEventListener("mouseenter", f);
+				网易云音乐元素.addEventListener("dblclick", f);
+				网易云音乐.已注册一次性副作用 = true;
 			}
-			网易云音乐.正在播放.歌词track.oncuechange = 渲染歌词;
-			网易云音乐.正在播放.翻译track.oncuechange = 渲染歌词;
 
 			// 使用浏览器/系统提供的控件控制音乐播放
 			// playbackState 与进度由 onplay/onpause/ontimeupdate 统一维护
@@ -480,6 +505,8 @@ let 网易云音乐 = {
 			};
 			网易云音乐.正在播放.Audio.ontimeupdate = () => {};
 			网易云音乐.正在播放.Audio.onerror = e => {
+				// error 可能来自已被新请求替换的旧音频，此时不应计入失败或触发自动切歌
+				if (网易云音乐.正在播放.已加载的音乐令牌 !== 网易云音乐.播放请求令牌) return;
 				// 连续失败达到歌单长度时停止自动切换，成功播放一次即清零（见 onplaying）
 				网易云音乐.连续失败次数++;
 				console.error(e);
@@ -497,14 +524,6 @@ let 网易云音乐 = {
 			};
 			网易云音乐元素.title =
 				"网易云音乐 - 正在播放: " + 网易云音乐.歌单[网易云音乐.正在播放.索引].完整歌名;
-
-			const f = () => {
-				滚动到可见区域(
-					"li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']"
-				);
-			};
-			网易云音乐元素.addEventListener("mouseenter", f);
-			网易云音乐元素.addEventListener("dblclick", f);
 		} catch (e) {
 			提示("播放失败");
 			console.error(e);
