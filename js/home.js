@@ -429,7 +429,6 @@ async function 渲染最近在听() {
 		项元素.tabIndex = 0;
 		项元素.dataset.songId = "" + 项.song.id;
 		const 歌手 = 项.song.ar.map(歌手信息 => 歌手信息.name).join(" / ");
-		项元素.title = 歌手 ? `${歌手} - ${项.song.name}` : 项.song.name;
 		if (项.song.al?.picUrl) {
 			const 封面 = ce("img");
 			封面.className = "封面";
