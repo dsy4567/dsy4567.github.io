@@ -96,19 +96,31 @@ div#侧边按钮容器,
 	}
 }
 @supports (animation-timeline: scroll()) {
-	@keyframes 顶部大图移动端 {
+	@keyframes 顶部大图桌面端 {
 		0% {
-			border-radius: var(--border-radius);
 		}
 		16% {
-			border-radius: 0;
+			transform: translateY(0);
 		}
-		83% {
+		100% {
+			transform: translateY(32px);
+		}
+	}
+	@keyframes 顶部大图移动端 {
+		0% {
+			/* border-radius: var(--border-radius); */
+			transform: translateY(0);
+		}
+		16% {
+			/* border-radius: 0; */
+		}
+		66% {
 			opacity: 1;
 		}
 		100% {
 			opacity: 0;
-			border-radius: 0;
+			/* border-radius: 0; */
+			transform: translateY(-64px);
 		}
 	}
 	@keyframes 顶部大图背景 {
@@ -138,7 +150,7 @@ div#侧边按钮容器,
 		28% {
 			border-top: 0 solid transparent;
 		}
-		28.1% {
+		28.01% {
 			border-top: 100cqh solid transparent;
 		}
 		100% {
@@ -542,6 +554,7 @@ body.隐藏导航栏 #导航栏 {
 @supports (animation-timeline: scroll()) {
 	/* 封面平移动画落在 .顶部大图层 > img 上：图片按自身高度溢出容器，平移量用 cqh 引用容器高度 */
 	body > #顶部大图 {
+		animation-name: 顶部大图桌面端;
 		container-type: size;
 	}
 	/* fill-mode 必须放在 @supports 内：不支持滚动时间线时动画时长为 0s，

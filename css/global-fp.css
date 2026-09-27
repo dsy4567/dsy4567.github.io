@@ -343,6 +343,7 @@ input {
 		width: 100% !important;
 		height: calc(64vh) !important;
 		max-height: calc(55px - 56px + min(calc(64vh), 430px)) !important;
+		z-index: -1 !important;
 	}
 	main {
 		flex-direction: column;
@@ -423,7 +424,7 @@ body > #顶部大图 {
 	height: 45vh;
 	overflow: hidden;
 	position: relative;
-	z-index: -1;
+	z-index: 1;
 	margin-top: 64px;
 }
 
