@@ -308,7 +308,13 @@ fetch("/json/icon.json")
 /** 将 GitHub 个人信息渲染到「关注被关注码龄」元素 @param {{ following: number, followers: number, created_at: string }} 个人信息 */
 const 渲染个人信息 = 个人信息 => {
 	const 关注被关注码龄 = gd("关注被关注码龄");
-	if (!关注被关注码龄) return;
+	if (
+		!关注被关注码龄 ||
+		typeof 个人信息.following !== "number" ||
+		typeof 个人信息.followers !== "number" ||
+		typeof 个人信息.created_at !== "string"
+	)
+		return;
 	关注被关注码龄.innerText = ` 关注: ${个人信息.following} | 被关注: ${
 		个人信息.followers
 	} | 码龄: ${new Date().getFullYear() - new Date(个人信息.created_at).getFullYear()}年 `;
@@ -459,7 +465,7 @@ fetch("https://api.github.com/users/dsy4567")
 				addEventListener(
 					"scroll",
 					() => {
-						console.log("onscroll");
+						// console.log("onscroll");
 
 						const 当前滚动位置 = scrollY;
 
