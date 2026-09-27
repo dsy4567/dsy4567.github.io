@@ -352,8 +352,8 @@ input {
 		width: 100% !important;
 	}
 	main .左 {
-		height: calc(64vh) !important;
-		max-height: 430px !important;
+		--height: calc(64vh);
+		--maxh: calc(430px) !important;
 		scrollbar-width: none;
 		position: unset !important;
 	}
@@ -462,6 +462,7 @@ main > .右 {
 }
 
 main > .左 {
+	--maxh: calc(100vh - 24px);
 	border-radius: var(--border-radius);
 	overflow-y: auto;
 	scrollbar-gutter: stable;
@@ -469,7 +470,7 @@ main > .左 {
 	top: 0;
 	transform: translateY(16px);
 	width: calc(25% - 5px);
-	max-height: calc(100vh - 24px);
+	max-height: var(--maxh);
 	padding-bottom: 16px;
 	padding-right: 0px;
 }

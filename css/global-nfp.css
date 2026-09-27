@@ -97,8 +97,8 @@ div#侧边按钮容器,
 }
 @supports (animation-timeline: scroll()) {
 	@keyframes 顶部大图桌面端 {
-		0% {
-		}
+		/* 0% {
+		} */
 		16% {
 			transform: translateY(0);
 		}
@@ -139,7 +139,18 @@ div#侧边按钮容器,
 			transform: translateY(calc((0px - var(--cover-overflow) - var(--cover-travel)) / 2));
 		}
 	}
-	@keyframes 左栏阴影移动端 {
+	@keyframes 左栏阴影上移动端 {
+		0% {
+			opacity: 1;
+		}
+		4% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+	@keyframes 左栏阴影下移动端 {
 		0% {
 			border-top: 0 solid transparent;
 			opacity: 1;
@@ -151,10 +162,10 @@ div#侧边按钮容器,
 			border-top: 0 solid transparent;
 		}
 		28.01% {
-			border-top: 100cqh solid transparent;
+			border-top: min(var(--height), var(--maxh)) solid transparent;
 		}
 		100% {
-			border-top: 100cqh solid transparent;
+			border-top: min(var(--height), var(--maxh)) solid transparent;
 			opacity: 0;
 		}
 	}
@@ -466,9 +477,12 @@ div.通知 {
 			position: absolute !important;
 			top: 46px;
 		}
-		main > .左::before,
+		main > .左::before {
+			animation-name: 左栏阴影上移动端;
+			pointer-events: all;
+		}
 		main > .左::after {
-			animation-name: 左栏阴影移动端;
+			animation-name: 左栏阴影下移动端;
 			pointer-events: all;
 		}
 	}
