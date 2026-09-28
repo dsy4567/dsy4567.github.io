@@ -483,6 +483,10 @@ section#我 span#联系方式 > * {
 
 section#我 #关注被关注码龄 {
 	font-size: smaller;
+	margin-bottom: 2em;
+}
+section#我 > br {
+	display: none;
 }
 
 #一言 .语句 {
