@@ -499,6 +499,10 @@
 			"destination": "https://doh.pub/dns-query"
 		},
 		{
+			"source": "/google-fonts",
+			"destination": "https://fonts.googleapis.com/css2"
+		},
+		{
 			"source": "/b/:m*",
 			"destination": "/api/blog-og?id=:m"
 		}
