@@ -20,15 +20,29 @@ async function f(/** @type {Request} */ req) {
 	const 查询参数 = new URL(req.url).searchParams,
 		/** 请求的分类代号，支持 ?c=a&c=b 传入多个 */
 		请求分类 = 查询参数.getAll("c"),
-		/** 未传 c 时随机取一个分类，与旧版行为一致 */
+		/** 未传 c 时默认取 a、b 两个分类 */
 		命中分类 = 请求分类.length
 			? 请求分类.filter(代号 => 分类代号列表.includes(代号))
-			: [随机取(分类代号列表)];
-	if (!命中分类.length)
-		return new Response(JSON.stringify({ status: 400, message: "分类代号无效", data: [] }), {
-			status: 400,
-			headers: { "content-type": "application/json;charset=utf-8" },
-		});
+			: ["a", "b"],
+		// 只放行白名单内的参数：未知参数会打散 CDN 缓存键，也能被用来绕过速率限制
+		未知参数 = [...new Set(查询参数.keys())].filter(
+			参数名 => !["c", "encode"].includes(参数名)
+		),
+		/** 未传 encode 时默认返回 json */
+		编码 = 查询参数.get("encode") ?? "json";
+	if (
+		请求分类.length >= 3 ||
+		未知参数.length ||
+		!命中分类.length ||
+		!["text", "json"].includes(编码)
+	)
+		return new Response(
+			JSON.stringify({ status: 400, message: "非法参数：" + 未知参数.join("、"), data: [] }),
+			{
+				status: 400,
+				headers: { "content-type": "application/json;charset=utf-8" },
+			}
+		);
 
 	// 并行请求命中分类的句子文件后合并，使各分类的句子都有机会被抽中
 	/** @type {一言句子[]} */
@@ -42,7 +56,7 @@ async function f(/** @type {Request} */ req) {
 	const 句子 = 随机取(句子列表);
 
 	// encode=text 返回纯文本，其余（含默认的 json）返回完整的句子对象
-	if (查询参数.get("encode") === "text")
+	if (编码 === "text")
 		return new Response(句子.hitokoto, {
 			headers: { "content-type": "text/plain;charset=utf-8" },
 		});

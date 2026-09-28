@@ -5,7 +5,9 @@ function html2Escape(/** @type {string} */ sHtml) {
 }
 async function f(/** @type {Request} */ req) {
 	const /** @type {文章信息[]} */ 所有文章信息 = await (
-			await fetch("https://raw.githubusercontent.com/dsy4567/dsy4567.github.io/refs/heads/main/json/blog.json")
+			await fetch(
+				"https://dsy4567.icu/refs/heads/main/json/blog.json"
+			)
 		).json();
 	let /** @type {文章信息} */ 当前文章信息;
 	for (const 文章信息 of 所有文章信息)
@@ -31,7 +33,11 @@ async function f(/** @type {Request} */ req) {
 </head>
 </html>`,
 		{
-			headers: { "content-type": "text/html;charset=utf-8" },
+			// 该接口经 /b/:m* 重写访问，路径级配置匹配不到原路径，故在函数内声明 CDN 与浏览器缓存
+			headers: {
+				"content-type": "text/html;charset=utf-8",
+				"cache-control": "public, max-age=21600, s-maxage=21600",
+			},
 		}
 	);
 }
