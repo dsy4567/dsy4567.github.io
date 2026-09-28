@@ -25,6 +25,7 @@ main、左右栏
 首页
 博客
 友链
+移动端
 
 */
 
@@ -459,56 +460,6 @@ div.通知 {
    桌面端封面随页面滚出视口即播放完毕，故取「封面高度 + 顶部偏移」 */
 :root {
 	--cover-scroll-range: calc(45vh + 108px);
-}
-@media only screen and (max-width: 1080px) {
-	/* 移动端封面为 sticky，高度 64vh（上限 430px），同样取「封面高度 + 顶部偏移」 */
-	:root {
-		--cover-scroll-range: min(calc(64vh + 56px), 496px);
-	}
-	@supports (animation-timeline: scroll()) {
-		body > #顶部大图 {
-			animation-name: 顶部大图移动端 !important;
-			animation-range: 0 var(--cover-scroll-range);
-			position: sticky !important;
-			top: 0;
-			margin-top: 14px;
-		}
-		main .左 {
-			position: absolute !important;
-			top: 46px;
-		}
-		main > .左::before {
-			animation-name: 左栏阴影上移动端;
-			pointer-events: all;
-		}
-		main > .左::after {
-			animation-name: 左栏阴影下移动端;
-			pointer-events: all;
-		}
-	}
-
-	main .左 {
-		animation: 左栏移动端 linear both;
-	}
-	main > .左 > *:last-child {
-		margin-bottom: min(calc(64vh - 32px), 398px);
-	}
-	main > .左::before,
-	main > .左::after {
-		content: "";
-		display: block;
-		position: sticky;
-		width: calc(100% - 14px);
-		margin: 0 0 0 7px;
-		pointer-events: all;
-		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
-	}
-	main > .左::before {
-		top: 0;
-	}
-	main > .左::after {
-		bottom: 0;
-	}
 }
 body > #导航栏 {
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
@@ -1209,3 +1160,51 @@ section#评论区 .评论 .评论正文 {
 }
 
 /* ==================== 友链 ==================== */
+
+/* ==================== 移动端 ==================== */
+@media only screen and (max-width: 1080px) {
+	/* 移动端封面为 sticky，高度 64vh（上限 430px），同样取「封面高度 + 顶部偏移」 */
+	:root {
+		--cover-scroll-range: min(calc(64vh + 56px), 496px);
+	}
+
+	main > .左 > *:last-child {
+		margin-bottom: min(calc(64vh - 32px), 398px);
+	}
+	main > .左::before,
+	main > .左::after {
+		content: "";
+		display: block;
+		position: sticky;
+		width: calc(100% - 14px);
+		margin: 0 0 0 7px;
+		pointer-events: all;
+		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
+	}
+	main > .左::before {
+		top: 0;
+	}
+	main > .左::after {
+		bottom: 0;
+	}
+
+	@supports (animation-timeline: scroll()) {
+		body > #顶部大图 {
+			animation-name: 顶部大图移动端;
+			animation-range: 0 var(--cover-scroll-range);
+		}
+		main > .左::before {
+			animation-name: 左栏阴影上移动端;
+			pointer-events: all;
+		}
+		main > .左::after {
+			animation-name: 左栏阴影下移动端;
+			pointer-events: all;
+		}
+		main .左 {
+			animation: 左栏移动端 linear both;
+			animation-timeline: scroll(root);
+			animation-range: 0 var(--cover-scroll-range);
+		}
+	}
+}

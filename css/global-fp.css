@@ -333,47 +333,6 @@ input {
 		display: none;
 	}
 }
-@media only screen and (max-width: 1080px) {
-	body > #导航栏 {
-		width: calc(100% - 18px) !important;
-	}
-	body > #顶部大图 {
-		/* margin-top: 0 !important; */
-		position: absolute !important;
-		width: 100% !important;
-		height: calc(64vh) !important;
-		max-height: calc(55px - 56px + min(calc(64vh), 430px)) !important;
-		z-index: -1 !important;
-	}
-	main {
-		flex-direction: column;
-		padding-left: 0;
-		padding-right: 0;
-		width: 100% !important;
-	}
-	main .左 {
-		--height: calc(64vh);
-		--maxh: calc(430px) !important;
-		scrollbar-width: none;
-		position: unset !important;
-	}
-	main > .左::-webkit-scrollbar {
-		display: none;
-		width: 0;
-	}
-	main > .左,
-	main > .右 {
-		display: block !important;
-		padding: 0 !important;
-		width: 100% !important;
-	}
-	main > #分界线 {
-		display: none !important;
-	}
-	main > .右 > section:nth-child(1) {
-		margin-top: 16px !important;
-	}
-}
 
 /* ==================== 导航栏、进度条、顶部大图 ==================== */
 body > #导航栏 {
@@ -659,4 +618,58 @@ article#main > section > .元数据 > .封面,
 	border-radius: 50%;
 	width: 16px;
 	height: 16px;
+}
+
+/* ==================== 移动端 ==================== */
+@media only screen and (max-width: 1080px) {
+	body > #导航栏 {
+		width: calc(100% - 18px);
+	}
+	body > #顶部大图 {
+		position: absolute;
+		width: 100%;
+		height: calc(64vh);
+		max-height: calc(55px - 56px + min(calc(64vh), 430px));
+		z-index: -1;
+	}
+	main {
+		flex-direction: column;
+		padding-left: 0;
+		padding-right: 0;
+		width: 100%;
+	}
+	main .左 {
+		--height: calc(64vh);
+		--maxh: calc(430px);
+		scrollbar-width: none;
+		position: unset;
+	}
+	main > .左::-webkit-scrollbar {
+		display: none;
+		width: 0;
+	}
+	main > .左,
+	main > .右 {
+		display: block;
+		padding: 0;
+		width: 100%;
+	}
+	main > #分界线 {
+		display: none !important;
+	}
+	main > .右 > section:nth-child(1) {
+		margin-top: 16px;
+	}
+
+	@supports (animation-timeline: scroll()) {
+		body > #顶部大图 {
+			position: sticky;
+			top: 0;
+			margin-top: 14px;
+		}
+		main .左 {
+			position: absolute;
+			top: 46px;
+		}
+	}
 }
