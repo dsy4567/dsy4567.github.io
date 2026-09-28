@@ -127,7 +127,7 @@ _global["main.js"] = () => ({
 //#endregion
 
 //#region 网易云音乐
-!navigator.userAgent.match(/bot|spider/gi) && import("./ncm.js");
+网页访问者不为爬虫 && import("./ncm.js");
 //#endregion
 
 //#region 主题
@@ -587,8 +587,6 @@ addEventListener("click", 事件 => {
 	"关键任务完成",
 	() => {
 		try {
-			const 网页访问者不为爬虫 =
-				!navigator.userAgent.includes("bot") && !navigator.userAgent.includes("spider");
 			// 所有改写先在 URL 副本上进行，最后统一生效
 			let U = new URL(location.href);
 			// 删除迁移流程专用的 URL 参数：

@@ -759,6 +759,9 @@ DOMContentLoaded
 	? 触发事件("DOMContentLoaded")
 	: addEventListener("DOMContentLoaded", () => 触发事件("DOMContentLoaded"));
 
+const 网页访问者不为爬虫 =
+	!navigator.userAgent.includes("bot") && !navigator.userAgent.includes("spider");
+
 const /** @type {NodeListOf<HTMLLinkElement>} */ 样式链接 = qsa("link[data-preload='style']");
 const 支持预加载 = 样式链接[0]?.relList.supports?.("preload") ?? false;
 样式链接.forEach(元素 => {
