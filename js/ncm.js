@@ -128,6 +128,18 @@ let 网易云音乐 = {
 		}
 	},
 	/**
+	 * 请求网易云音乐接口并解析为 json，网络等异常会抛出，由调用方统一兜底。
+	 * 查询参数默认带上 randomCNIP=true，交由服务端随机选用中国大陆 IP 请求网易云音乐
+	 */
+	async 请求接口(
+		/** @type {string} */ 路径,
+		/** @type {Record<string, string | number>} */ 查询参数 = {}
+	) {
+		let 参数 = new URLSearchParams({ randomCNIP: "true" });
+		for (const [键, 值] of Object.entries(查询参数)) 参数.set(键, "" + 值);
+		return await (await fetch(`https://${网易云音乐.设置.域名}${路径}?${参数}`)).json();
+	},
+	/**
 	 * 免费歌曲返回音频地址，其余（vip 等）降级为播放对应 mv 清晰度最低的一档。
 	 * 预加载时用临时 Audio 预载部分数据并缓存结果（有效期见 预加载有效期），
 	 * 非预加载时优先复用未过期的缓存，避免重复请求
@@ -145,8 +157,7 @@ let 网易云音乐 = {
 		try {
 			// 预加载在后台进行，不应触发加载闪烁动画
 			if (!预加载 && 网易云音乐.已首次播放) 网易云音乐.设置闪烁动画(true);
-			let 歌曲数据 = (await 网易云音乐.请求接口(`/song/url?id=${id}&realIP=116.25.146.177`))
-				?.data[0];
+			let 歌曲数据 = (await 网易云音乐.请求接口("/song/url", { id }))?.data[0];
 			// vip 歌曲尝试获取 mv
 			if (歌曲数据?.fee === 0 || 歌曲数据?.fee === 8)
 				音乐地址 = 歌曲数据?.url?.replace("http://", "https://");
@@ -171,22 +182,18 @@ let 网易云音乐 = {
 		for (const [id, 缓存] of 网易云音乐.预加载缓存)
 			if (现在 - 缓存.时间戳 >= 预加载有效期) 网易云音乐.预加载缓存.delete(id);
 	},
-	/** 请求网易云音乐接口并解析为 json，网络等异常会抛出，由调用方统一兜底 */
-	async 请求接口(/** @type {string} */ 路径) {
-		return await (await fetch(`https://${网易云音乐.设置.域名}${路径}`)).json();
-	},
 	/** 获取歌曲对应 mv 清晰度最低一档的播放地址 */
 	async 获取mv地址(/** @type {number} */ id) {
 		let mv = 网易云音乐.歌单[网易云音乐.歌单索引[id]].mv;
 		// mv 为哨兵值（来源数据无 mv 字段）时，经歌曲详情接口补取真实 mv id
 		if (mv === 无mv哨兵)
-			mv = (await 网易云音乐.请求接口(`/song/detail?ids=${id}`))?.songs?.[0]?.mv ?? 0;
+			mv = (await 网易云音乐.请求接口("/song/detail", { ids: id }))?.songs?.[0]?.mv ?? 0;
 		if (mv === 0) throw new Error("vip 歌曲且无 mv " + id);
-		let 最小分辨率 = (await 网易云音乐.请求接口(`/mv/detail?mvid=${mv}`))?.data?.brs?.[0]?.br;
-		return (await 网易云音乐.请求接口(`/mv/url?id=${mv}&r=${最小分辨率}`))?.data?.url?.replace(
-			"http://",
-			"https://"
-		);
+		let 最小分辨率 = (await 网易云音乐.请求接口("/mv/detail", { mvid: mv }))?.data?.brs?.[0]
+			?.br;
+		return (
+			await 网易云音乐.请求接口("/mv/url", { id: mv, r: 最小分辨率 })
+		)?.data?.url?.replace("http://", "https://");
 	},
 	/** 随机播放时按洗牌顺序取下一首（方向 1）或上一首（方向 -1）的歌单索引 */
 	洗牌取索引(/** @type {number} */ 方向) {
@@ -398,12 +405,10 @@ let 网易云音乐 = {
 		} catch (e) {
 			console.warn(e);
 		}
-		fetch(
-			`https://${网易云音乐.设置.域名}/lyric?id=${
-				网易云音乐.歌单[网易云音乐.正在播放.索引].id
-			}&realIP=111.18.65.162`
-		)
-			.then(res => res.json())
+		网易云音乐
+			.请求接口("/lyric", {
+				id: 网易云音乐.歌单[网易云音乐.正在播放.索引].id,
+			})
 			.then(async j => {
 				if (令牌 !== 网易云音乐.播放请求令牌) return;
 
