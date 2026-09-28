@@ -759,11 +759,11 @@ DOMContentLoaded
 	? 触发事件("DOMContentLoaded")
 	: addEventListener("DOMContentLoaded", () => 触发事件("DOMContentLoaded"));
 
-qsa("link[data-preload='style']").forEach(元素 => {
+const /** @type {NodeListOf<HTMLLinkElement>} */ 样式链接 = qsa("link[data-preload='style']");
+const 支持预加载 = 样式链接[0]?.relList.supports?.("preload") ?? false;
+样式链接.forEach(元素 => {
 	if (!(元素 instanceof HTMLLinkElement)) return;
 	const 加载样式 = () => (元素.rel = "stylesheet");
-
-	const 支持预加载 = ce("link").relList.supports?.("preload");
 
 	if (!支持预加载) return 加载样式();
 	const 已加载 = Array.from(performance.getEntriesByName(元素.href)).some(
