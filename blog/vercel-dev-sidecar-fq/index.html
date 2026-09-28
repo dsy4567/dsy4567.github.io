@@ -32,6 +32,13 @@
 
 		<!-- 首屏资源 -->
 		<link rel="stylesheet" href="/css/global-fp.css" />
+		<link rel="preconnect" href="https://fonts.gstatic.cn" />
+		<link
+			rel="stylesheet"
+			as="style"
+			crossorigin="anonymous"
+			href="https://dsy4567.icu/google-fonts?family=ZCOOL+KuaiLe&display=swap"
+		/>
 		<script src="/js/doc-start.js"></script>
 
 		<!-- BEGIN PRELOAD -->
@@ -60,36 +67,41 @@
 		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
 
 		<!-- 次要资源 -->
-		<link rel="preconnect" href="https://fonts.gstatic.cn" />
-		<link
-			rel="preload"
-			as="style"
-			crossorigin="anonymous"
-			data-preload="style"
-			href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400&family=Source+Code+Pro:wght@400&display=swap"
-		/>
 		<link
 			rel="preload"
 			href="https://dsy4567.icu/api/hitokoto?c=a&c=b&encode=json"
 			as="fetch"
+			fetchpriority="low"
 			crossorigin="anonymous"
 		/>
 		<link
 			rel="preload"
 			href="https://api.github.com/users/dsy4567"
 			as="fetch"
+			fetchpriority="low"
 			crossorigin="anonymous"
 		/>
 
 		<!-- 最次资源 -->
+		<link
+			rel="preload"
+			href="/json/ncm.json"
+			as="fetch"
+			crossorigin="anonymous"
+			fetchpriority="low"
+		/>
+		<link rel="modulepreload" href="/js/ncm.js" fetchpriority="low" />
 
-		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
-		<link rel="modulepreload" href="/js/ncm.js" />
-
-		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link
+			rel="preload"
+			href="/json/theme.json"
+			as="fetch"
+			crossorigin="anonymous"
+			fetchpriority="low"
+		/>
 
 		<link rel="preconnect" href="https://www.googletagmanager.com" />
-		<link rel="modulepreload" href="/js/analytics.js" />
+		<link rel="modulepreload" href="/js/analytics.js" fetchpriority="low" />
 
 		<!-- BEGIN OG -->
 		<meta property="og:url" content="https://dsy4567.icu/blog/vercel-dev-sidecar-fq/" />

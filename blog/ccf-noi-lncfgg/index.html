@@ -32,6 +32,13 @@
 
 		<!-- 首屏资源 -->
 		<link rel="stylesheet" href="/css/global-fp.css" />
+		<link rel="preconnect" href="https://fonts.gstatic.cn" />
+		<link
+			rel="stylesheet"
+			as="style"
+			crossorigin="anonymous"
+			href="https://dsy4567.icu/google-fonts?family=ZCOOL+KuaiLe&display=swap"
+		/>
 		<script src="/js/doc-start.js"></script>
 
 		<!-- BEGIN PRELOAD -->
@@ -60,43 +67,48 @@
 		<link rel="preload" as="style" data-preload="style" href="/css/global-nfp.css" />
 
 		<!-- 次要资源 -->
-		<link rel="preconnect" href="https://fonts.gstatic.cn" />
-		<link
-			rel="preload"
-			as="style"
-			crossorigin="anonymous"
-			data-preload="style"
-			href="https://fonts.googleapis.cn/css2?family=Noto+Sans+SC:wght@400&family=Source+Code+Pro:wght@400&display=swap"
-		/>
 		<link
 			rel="preload"
 			href="https://dsy4567.icu/api/hitokoto?c=a&c=b&encode=json"
 			as="fetch"
+			fetchpriority="low"
 			crossorigin="anonymous"
 		/>
 		<link
 			rel="preload"
 			href="https://api.github.com/users/dsy4567"
 			as="fetch"
+			fetchpriority="low"
 			crossorigin="anonymous"
 		/>
 
 		<!-- 最次资源 -->
+		<link
+			rel="preload"
+			href="/json/ncm.json"
+			as="fetch"
+			crossorigin="anonymous"
+			fetchpriority="low"
+		/>
+		<link rel="modulepreload" href="/js/ncm.js" fetchpriority="low" />
 
-		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
-		<link rel="modulepreload" href="/js/ncm.js" />
-
-		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link
+			rel="preload"
+			href="/json/theme.json"
+			as="fetch"
+			crossorigin="anonymous"
+			fetchpriority="low"
+		/>
 
 		<link rel="preconnect" href="https://www.googletagmanager.com" />
-		<link rel="modulepreload" href="/js/analytics.js" />
+		<link rel="modulepreload" href="/js/analytics.js" fetchpriority="low" />
 
 		<!-- BEGIN OG -->
 		<meta property="og:url" content="https://dsy4567.icu/blog/ccf-noi-lncfgg/" />
 		<meta property="og:type" content="article" />
 		<meta property="og:title" content="(转) CCF NOI 历年处罚公告 | 博客 | dsy4567 的小站" />
 		<meta property="og:description" content="转自 https://fucksc.cf/penalties/  前言 本文旨在让各位选手/监考老师/特派员在历次处罚中引以为戒, 请各位读者理性看待以下事件, 不要对当事人/CCF做出不恰当的行为..." />
-		<meta property="og:image" content="https://qwq.dsy4567.icu/files-2/%E6%9D%9F%E8%8A%B1%E7%BA%BF_cover.webp" />
+		<meta property="og:image" content="https://dsy4567.github.io/img/bg.webp" />
 		<!-- END OG -->
 	</head>
 	<body>
@@ -148,7 +160,7 @@
 		<!-- BEGIN COVER -->
 		<div id="顶部大图" role="img" aria-label="顶部大图">
 			<div class="顶部大图层" data-优先级="9999" data-生命周期="永久"><img alt="" src="/img/bg.webp" /></div>
-			<div class="顶部大图层 显示" data-优先级="1001" data-生命周期="仅当前页"><img alt="" src="https://qwq.dsy4567.icu/files-2/%E6%9D%9F%E8%8A%B1%E7%BA%BF_cover.webp" fetchpriority="high" /></div>
+			<div class="顶部大图层 显示" data-优先级="1001" data-生命周期="仅当前页"><img alt="" src="/img/bg.webp" fetchpriority="high" /></div>
 		</div>
 		<!-- END COVER -->
 
