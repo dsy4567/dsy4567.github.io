@@ -54,23 +54,37 @@
 			rel="preload"
 			href="https://dsy4567.icu/api/hitokoto?c=a&c=b&encode=json"
 			as="fetch"
+			fetchpriority="low"
 			crossorigin="anonymous"
 		/>
 		<link
 			rel="preload"
 			href="https://api.github.com/users/dsy4567"
 			as="fetch"
+			fetchpriority="low"
 			crossorigin="anonymous"
 		/>
+
 		<!-- 最次资源 -->
+		<link
+			rel="preload"
+			href="/json/ncm.json"
+			as="fetch"
+			crossorigin="anonymous"
+			fetchpriority="low"
+		/>
+		<link rel="modulepreload" href="/js/ncm.js" fetchpriority="low" />
 
-		<link rel="preload" href="/json/ncm.json" as="fetch" crossorigin="anonymous" />
-		<link rel="modulepreload" href="/js/ncm.js" />
-
-		<link rel="preload" href="/json/theme.json" as="fetch" crossorigin="anonymous" />
+		<link
+			rel="preload"
+			href="/json/theme.json"
+			as="fetch"
+			crossorigin="anonymous"
+			fetchpriority="low"
+		/>
 
 		<link rel="preconnect" href="https://www.googletagmanager.com" />
-		<link rel="modulepreload" href="/js/analytics.js" />
+		<link rel="modulepreload" href="/js/analytics.js" fetchpriority="low" />
 	</head>
 	<body>
 		<a href="#main" class="隐藏链接">转到正文</a>
