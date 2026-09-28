@@ -141,19 +141,49 @@ function 调整亮度以满足对比度(前景hex, 背景hex, 目标对比度 = 
 	return hsl转hex(h, s, 最终亮度);
 }
 /**
+ * 主题设置缓存：把「背景模式、强调色」两个键合并成一次读取后缓存，
+ * 避免刷新主题、控件渲染等路径反复访问同步阻塞的 localStorage。
+ * 本标签页写入或跨标签页变更（storage 事件）时用 更新主题设置缓存 同步。
+ * @type {{背景模式: "自动" | "浅色" | "深色", 强调色: string} | null}
+ */
+let 主题设置缓存 = null;
+/**
+ * 批量读取主题相关设置，命中缓存时不再访问 localStorage
+ * @returns {{背景模式: "自动" | "浅色" | "深色", 强调色: string}}
+ */
+function 读取主题设置() {
+	if (主题设置缓存) return 主题设置缓存;
+	const 模式 = localStorage.getItem("主题背景"),
+		颜色 = localStorage.getItem("强调色");
+	return (主题设置缓存 = {
+		背景模式: 模式 === "浅色" || 模式 === "深色" ? 模式 : "自动",
+		强调色: 颜色 || 默认强调色,
+	});
+}
+/**
+ * 就地更新主题设置缓存中的一项，供本标签页写入与跨标签页变更后同步，
+ * 使刷新主题无需回读 localStorage
+ * @param {"主题背景" | "强调色"} 键 - localStorage 键名
+ * @param {string | null} 值 - storage 事件被删除时为 null
+ */
+function 更新主题设置缓存(键, 值) {
+	const 设置 = 读取主题设置();
+	if (键 === "主题背景") 设置.背景模式 = 值 === "浅色" || 值 === "深色" ? 值 : "自动";
+	else 设置.强调色 = 值 || 默认强调色;
+}
+/**
  * 读取背景模式设置
  * @returns {"自动" | "浅色" | "深色"}
  */
 function 读取背景模式() {
-	const 模式 = localStorage.getItem("主题背景");
-	return 模式 === "浅色" || 模式 === "深色" ? 模式 : "自动";
+	return 读取主题设置().背景模式;
 }
 /**
  * 读取强调色设置
  * @returns {string} 强调色的 hex 值，如 "#66ccff"
  */
 function 读取强调色() {
-	return localStorage.getItem("强调色") || 默认强调色;
+	return 读取主题设置().强调色;
 }
 /**
  * 判断当前生效的背景是否为深色（自动模式跟随系统偏好）

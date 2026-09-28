@@ -677,6 +677,8 @@ function 提示(m) {
  */
 function 应用背景模式(模式) {
 	localStorage.setItem("主题背景", 模式);
+	// 同步缓存，避免 刷新主题 回读刚写入的值
+	更新主题设置缓存("主题背景", 模式);
 	刷新主题();
 }
 /**
@@ -685,6 +687,7 @@ function 应用背景模式(模式) {
  */
 function 应用强调色(hex) {
 	localStorage.setItem("强调色", hex);
+	更新主题设置缓存("强调色", hex);
 	写入强调色变量(hex);
 }
 /** 图标数据：图标名 → SVG 字符串，由 main.js 拉取 /json/icon.json 后赋值 @type {Record<string, string | undefined>} */
@@ -723,8 +726,11 @@ function 渲染图标(选项 = {}) {
 
 // 自动模式下跟随系统深浅色变化
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", 刷新主题);
-// 跨标签页同步主题设置
-addEventListener("storage", 刷新主题);
+// 跨标签页同步主题设置：事件已携带新值，直接同步缓存，无需回读 localStorage
+addEventListener("storage", 事件 => {
+	if (事件.key === "主题背景" || 事件.key === "强调色") 更新主题设置缓存(事件.key, 事件.newValue);
+	刷新主题();
+});
 
 /** 用户是否禁用了动画特效：跟随系统「减少动态效果」偏好（prefers-reduced-motion: reduce）实时更新 */
 let 用户已禁用动画特效 = matchMedia("(prefers-reduced-motion: reduce)").matches;
