@@ -15,6 +15,13 @@ const 接口主机 = "https://ncm.vercel.dsy4567.icu";
 /** 最近在听接口：返回的 weekData 含 score 字段，作为排行依据 */
 const 最近在听接口 = 接口主机 + "/user/record?uid=8223493733&type=1";
 
+/**
+ * 是否请求 /song/chorus 取副歌（高潮）时间：写死为关，一律走 选取歌词行 自带的筛选算法
+ * （从头开始第一组连续 5 句不含标点的歌词），不再依赖接口给出的副歌起点
+ * @type {boolean}
+ */
+const 启用副歌时间 = false;
+
 /** 排行展示上限：接口可能返回上百条，只展示前 30 名 */
 const 排行上限 = 30;
 
@@ -211,8 +218,8 @@ function 排行项转歌单(/** @type {最近在听项} */ 项) {
 }
 
 /**
- * 选取用于展示的歌词行：优先取副歌（chorus）起始起的连续 5 句；
- * 副歌数据无效时兜底取从头开始第一组连续 5 句不含全/半角标点的歌词
+ * 选取用于展示的歌词行：启用副歌时间 时优先取副歌（chorus）起始起的连续 5 句；
+ * 关闭或副歌数据无效时，取从头开始第一组连续 5 句不含全/半角标点的歌词
  * @returns {Promise<string[] | null>} 选出的歌词行，无歌词时返回 null
  */
 async function 选取歌词行() {
@@ -228,9 +235,9 @@ async function 选取歌词行() {
 		return null;
 	}
 
-	// 有副歌字段-选取副歌部分前5句
-	const 副歌起始毫秒 = 副歌原始?.chorus?.[0]?.startTime;
-	if (副歌原始?.code === 200 && typeof 副歌起始毫秒 === "number") {
+	// 启用副歌时间 且有副歌字段-选取副歌部分前5句
+	const 副歌起始毫秒 = 启用副歌时间 ? 副歌原始?.chorus?.[0]?.startTime : undefined;
+	if (启用副歌时间 && 副歌原始?.code === 200 && typeof 副歌起始毫秒 === "number") {
 		// 副歌时间为毫秒，歌词行时间为秒
 		const 起始 = 脚本.findIndex(行 => 行.start >= 副歌起始毫秒 / 1000 - 0.05);
 		if (起始 >= 0) {
@@ -514,15 +521,17 @@ async function 获取并渲染最近在听() {
 		排行歌曲 = 有效项.sort((甲, 乙) => 乙.score - 甲.score);
 		排行有效 = true;
 
-		// 接口不提供歌词与副歌，由客户端为第 1 名补取；失败时留空，歌词容器会自行移除
+		// 接口不提供歌词，由客户端为第 1 名补取；副歌接口只在 启用副歌时间 时请求
 		const 第一名id = 排行歌曲[0].song.id;
 		const [歌词响应, 副歌响应] = await Promise.all([
 			fetch(`${接口主机}/lyric?id=${第一名id}`)
 				.then(结果 => 结果.json())
 				.catch(() => null),
-			fetch(`${接口主机}/song/chorus?id=${第一名id}`)
-				.then(结果 => 结果.json())
-				.catch(() => null),
+			启用副歌时间
+				? fetch(`${接口主机}/song/chorus?id=${第一名id}`)
+						.then(结果 => 结果.json())
+						.catch(() => null)
+				: Promise.resolve(null),
 		]);
 		歌词原始 = 歌词响应;
 		副歌原始 = 副歌响应;
