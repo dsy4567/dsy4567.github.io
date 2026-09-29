@@ -27,6 +27,9 @@ const 预加载src剩余秒数 = 10;
 /** 预加载结果的有效期（毫秒），超过后播放时不再复用 */
 const 预加载有效期 = 2 * 60 * 1000;
 
+/** 播放进度条的最小写入间隔（毫秒）：进度只是视觉反馈，1s 一次足够，避免高频样式写入 */
+const 进度更新间隔 = 1000;
+
 /** 将 `[mm:ss.xx]` 时间标签转换为秒数（与 lrc-parser 的 convertTime 一致） */
 function 标签转秒(/** @type {string} */ 标签) {
 	let [分钟, 秒数] = 标签.slice(1, -1).split(":");
@@ -81,6 +84,10 @@ let 网易云音乐 = {
 	/** @type {number[]} */ 洗牌后的索引: [],
 	洗牌位置: 0,
 	连续失败次数: 0,
+	/** 上次写入 --progress 的时间戳（毫秒），用于把进度更新频率限制在 进度更新间隔 一次 */
+	上次进度更新时间: 0,
+	/** 播放列表面板是否展开：由 刷新面板展开状态 在鼠标/焦点事件中维护，供 timeupdate 廉价判断进度条是否可见 */
+	面板已展开: false,
 	/**
 	 * 每次调用“播放第几首”时自增，用于标识最新的播放请求，
 	 * 旧请求完成时可通过对比令牌来忽略，避免频繁操作导致的竞争
@@ -431,6 +438,35 @@ let 网易云音乐 = {
 		网易云音乐.预加载音频.src = 缓存.地址;
 		网易云音乐.正在播放.预加载src已设置 = true;
 	},
+	/**
+	 * 同步播放列表面板的展开状态。面板的展开由 CSS 的 :hover 与 :has(*:focus-visible) 决定，
+	 * 这里在鼠标移入移出、焦点进出时重算一次并缓存，timeupdate 便只需读一个布尔值，
+	 * 无需每个 tick 都做选择器匹配；展开瞬间强制刷新一次，避免沿用收起期间的旧进度
+	 */
+	刷新面板展开状态() {
+		网易云音乐.面板已展开 = 网易云音乐元素?.matches(":hover, :has(*:focus-visible)") ?? false;
+		if (网易云音乐.面板已展开) 网易云音乐.更新播放进度(true);
+	},
+	/**
+	 * 把当前播放进度写入正在播放项的 --progress，驱动列表项 ::after 的进度填充。
+	 * 面板收起或标签页不可见时进度条根本看不到，直接跳过；
+	 * 两次写入至少间隔 进度更新间隔，强制为 true 时（开始播放等）跳过节流立即写入
+	 */
+	更新播放进度(强制 = false) {
+		if (document.visibilityState !== "visible" || !网易云音乐.面板已展开) return;
+		let 现在 = Date.now();
+		if (!强制 && 现在 - 网易云音乐.上次进度更新时间 < 进度更新间隔) return;
+		网易云音乐.上次进度更新时间 = 现在;
+
+		let { Audio } = 网易云音乐.正在播放;
+		// 元数据未就绪时 duration 为 NaN，已切歌时为 0，都无法换算百分比，一律按 0 处理，避免写入 NaN%
+		let 百分比 =
+			Number.isFinite(Audio.duration) && Audio.duration > 0
+				? (Audio.currentTime / Audio.duration) * 100
+				: 0;
+		// 类 正在播放 在 onplay 时挂到目标项上，::after 也只在该状态下渲染，故只更新这一项
+		qs("li.正在播放")?.style.setProperty("--progress", 百分比 + "%");
+	},
 	更新歌曲信息(/** @type {number} */ 令牌) {
 		// gd("播放列表", true)?.scrollTo({
 		// 	behavior: "smooth",
@@ -614,6 +650,11 @@ let 网易云音乐 = {
 				};
 				网易云音乐元素.addEventListener("mouseenter", f);
 				网易云音乐元素.addEventListener("dblclick", f);
+				// 面板展开/收起（含键盘聚焦展开）时同步状态，并立即刷新一次进度条
+				网易云音乐元素.addEventListener("mouseenter", 网易云音乐.刷新面板展开状态);
+				网易云音乐元素.addEventListener("mouseleave", 网易云音乐.刷新面板展开状态);
+				网易云音乐元素.addEventListener("focusin", 网易云音乐.刷新面板展开状态);
+				网易云音乐元素.addEventListener("focusout", 网易云音乐.刷新面板展开状态);
 				网易云音乐.已注册一次性副作用 = true;
 			}
 
@@ -645,6 +686,8 @@ let 网易云音乐 = {
 				qs(
 					"li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']"
 				)?.classList.add("正在播放");
+				// 强制刷新一次：切歌后立即归零、暂停恢复后立即显示已播进度，都不必等下一次 timeupdate
+				网易云音乐.更新播放进度(true);
 			};
 			网易云音乐.正在播放.Audio.onplaying = () => {
 				网易云音乐.设置闪烁动画(false);
@@ -658,6 +701,7 @@ let 网易云音乐 = {
 			};
 			网易云音乐.正在播放.Audio.ontimeupdate = () => {
 				网易云音乐.预加载下一首();
+				网易云音乐.更新播放进度();
 			};
 			网易云音乐.正在播放.Audio.onerror = e => {
 				// error 可能来自已被新请求替换的旧音频，此时不应计入失败或触发自动切歌
