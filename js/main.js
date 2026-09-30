@@ -14,7 +14,8 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
 		"/blog": ["blog"],
 		"/friends": ["friends"],
 	},
-	gr_sitekey = "6Ldo1dIkAAAAAM_2VtEneT3l7AE25HdWU45x03ng";
+	gr_sitekey = "6Ldo1dIkAAAAAM_2VtEneT3l7AE25HdWU45x03ng",
+	移动端界面最大宽度 = 1080;
 let 路径 = 获取清理后当前路径(),
 	正在动态加载 = false;
 
@@ -463,10 +464,10 @@ fetch("https://api.github.com/users/dsy4567")
 				 *  -  2：向上滚动（显示导航栏，但不含顶部样式）
 				 */
 				状态 = -1;
+			let 顶部一定范围不隐藏阈值 = 494;
 
 			/** 触发样式切换所需的最小滚动幅度（px），避免小幅滚动频繁切换导致导航栏抖动 */
 			const 滚动阈值 = 25;
-
 			const 类列表 = document.body.classList;
 
 			/**
@@ -476,6 +477,14 @@ fetch("https://api.github.com/users/dsy4567")
 			const 滚动监听延迟 = 3000;
 
 			setTimeout(() => {
+				const 窗口尺寸变化 = () => {
+					if (document.body.clientWidth <= 移动端界面最大宽度)
+						顶部一定范围不隐藏阈值 =
+							qs("main > .右")?.offsetTop || 顶部一定范围不隐藏阈值;
+				};
+				addEventListener("resize", 窗口尺寸变化);
+				窗口尺寸变化();
+
 				// 监听页面滚动事件（passive: 声明不调用 preventDefault，浏览器无需等待本监听器即可滚动）
 				addEventListener(
 					"scroll",
@@ -484,8 +493,8 @@ fetch("https://api.github.com/users/dsy4567")
 
 						const 当前滚动位置 = scrollY;
 
-						// 情况一：滚动到页面最顶部（scrollTop 为 0）且当前状态不是“顶部”
-						if (当前滚动位置 === 0) {
+						// 情况一：滚动到页面顶部（scrollTop <= 顶部一定范围不隐藏阈值 - 64）且当前状态不是“顶部”
+						if (当前滚动位置 <= 顶部一定范围不隐藏阈值 - 64) {
 							if (状态 !== 0) {
 								类列表.add("顶部");
 								类列表.remove("隐藏导航栏");
