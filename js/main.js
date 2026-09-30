@@ -56,17 +56,34 @@ function 动态加载(元素) {
 			if (!右) return;
 			// 前进/后退导航时，滚动位置由浏览器按历史条目自行恢复，这里不再干预，否则会把已恢复的位置顶回顶部；
 			// 但带 hash 时浏览器无法定位动态换入后才出现的锚点，仍需自行处理
-			if (!元素.popstate || location.hash) 滚动到可见区域("body", true);
-			qs("main > .左")?.scrollTo({
-				top: 0,
-				behavior: 用户已禁用动画特效 ? "auto" : "smooth",
-			});
+			if (!元素.popstate && !location.hash) 回到顶部();
 			动态加载自增计数器++;
 			右.innerHTML = 正文;
-			加载模块();
+			加载模块().finally(() => {
+				正在动态加载 = false;
 
-			正在动态加载 = false;
-			渲染图标();
+				if (location.hash) {
+					schedulerYield();
+
+					let /** @type {Element | null} */ 目标 = null,
+						选择器 = `[id="${decodeURI(location.hash.substring(1))}"]`;
+					// 滚动到hash位置
+					// 不能通过赋值 location.hash（置空再恢复）触发滚动：赋值 hash 属于 fragment 导航，
+					// 会 push 新历史条目，既污染后退栈，也会清空前进栈（导致后退后前进按钮变灰）
+					try {
+						目标 = qs(选择器);
+						目标?.nextElementSibling?.classList.add("标记");
+						目标?.scrollIntoView({
+							behavior: "smooth",
+						});
+					} catch (e) {
+						console.error(e);
+					}
+					if (!目标) console.warn("找不到元素", 选择器);
+				}
+
+				渲染图标();
+			});
 		} catch (e) {
 			console.error(e);
 			open(元素.href, "_self");
@@ -360,9 +377,7 @@ fetch("https://api.github.com/users/dsy4567")
 	() => {
 		try {
 			//#region 核心元素、事件、字体css等
-			gd("回到顶部")?.addEventListener("click", () => {
-				滚动到可见区域("body", true);
-			});
+			gd("回到顶部")?.addEventListener("click", 回到顶部);
 			gd("分界线")?.addEventListener("click", () => {
 				document.body.classList.toggle("宽屏");
 			});
