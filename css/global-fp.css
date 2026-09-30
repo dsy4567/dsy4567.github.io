@@ -32,9 +32,9 @@ main > #分界线 {
 :root {
 	--transition: 0.3s;
 	--transition-slow: 1s;
-	--bg-color: #eeeeee;
-	--surface-1: #f7f7f7;
-	--surface-2: #ffffff;
+	--bg-color: #f7f7f7;
+	--surface-1: #ffffff;
+	--surface-2: #f2f2f2;
 	--text-color: #222;
 	--overlay: #8885;
 	--overlay-strong: #888;
@@ -65,9 +65,9 @@ main > #分界线 {
 	color-scheme: dark;
 }
 :root.浅色 {
-	--bg-color: #eeeeee;
-	--surface-1: #f7f7f7;
-	--surface-2: #ffffff;
+	--bg-color: #f7f7f7;
+	--surface-1: #ffffff;
+	--surface-2: #f2f2f2;
 	--text-color: #222;
 	--overlay: #8885;
 	--overlay-strong: #888;
@@ -167,7 +167,7 @@ section {
 	word-break: break-word;
 }
 section section {
-	background-color: var(--surface-2);
+	/* background-color: var(--surface-2); */
 }
 section h2 {
 	display: flex;
@@ -201,7 +201,7 @@ code {
 pre {
 	background-color: transparent;
 	color: var(--text-color);
-	border: 1px solid transparent;
+	border: 1px solid var(--overlay);
 	border-radius: var(--border-radius);
 	overflow: auto;
 	padding: 4px;
@@ -662,7 +662,7 @@ article#main > section > .元数据 > .封面,
 	main > .左 > section {
 	}
 	body > #顶部大图 > .顶部大图层 > img,
-	main .左{
+	main .左 {
 		border-radius: var(--border-radius) var(--border-radius) 0 0;
 	}
 	main > .左,
