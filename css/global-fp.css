@@ -196,7 +196,6 @@ code {
 	border: 1px solid transparent;
 	border-radius: 6px;
 	font-family: "Source Code Pro", monospace;
-	padding: 2px;
 }
 pre {
 	background-color: transparent;
@@ -204,7 +203,7 @@ pre {
 	border: 1px solid var(--overlay);
 	border-radius: var(--border-radius);
 	overflow: auto;
-	padding: 4px;
+	padding: 0;
 }
 pre > code {
 	display: block;
