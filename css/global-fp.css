@@ -40,6 +40,7 @@ main > #分界线 {
 	--overlay-strong: #888;
 	--selection-bg: #0006;
 	color-scheme: light;
+	--footer-blank-height: 50vh;
 }
 @media (prefers-color-scheme: dark) {
 	:root {
@@ -329,7 +330,7 @@ input {
 }
 
 /* ==================== 导航栏、左右栏 ==================== */
-@media only screen and (max-width: 480px) {
+@media only screen and (max-width: 430px) {
 	#导航栏 > .右 > a svg {
 		display: none;
 	}
@@ -631,10 +632,12 @@ article#main > section > .元数据 > .封面,
 		width: calc(100% - 18px);
 	}
 	body > #顶部大图 {
-		position: absolute;
+		border-radius: 0;
+		margin-top: 66px;
+		position: fixed;
 		width: 100%;
-		height: calc(64vh);
-		max-height: calc(55px - 56px + min(calc(64vh), 430px));
+		/* height: calc(64vh); */
+		height: calc(64px + min(calc(64vh), 430px));
 		z-index: -1;
 	}
 	main {
@@ -646,12 +649,20 @@ article#main > section > .元数据 > .封面,
 	main .左 {
 		--height: calc(64vh);
 		--maxh: calc(430px);
+		height: var(--height);
 		scrollbar-width: none;
-		position: unset;
+		z-index: 0;
+		top: 50px;
 	}
 	main > .左::-webkit-scrollbar {
 		display: none;
 		width: 0;
+	}
+	main > .左 > section {
+	}
+	body > #顶部大图 > .顶部大图层 > img,
+	main .左{
+		border-radius: var(--border-radius) var(--border-radius) 0 0;
 	}
 	main > .左,
 	main > .右 {
@@ -662,19 +673,28 @@ article#main > section > .元数据 > .封面,
 	main > #分界线 {
 		display: none !important;
 	}
+	main > .右 {
+		background-color: var(--bg-color);
+		border-radius: var(--border-radius) var(--border-radius) 0 0;
+		box-shadow: 0px -4px 16px 0px rgba(0, 0, 0, 0.5);
+		z-index: 1;
+	}
+	main > .右::after {
+		content: "";
+		background-color: var(--bg-color);
+		position: relative;
+		bottom: -12px;
+		display: block;
+		width: 100%;
+		height: 16px;
+	}
 	main > .右 > section:nth-child(1) {
 		margin-top: 16px;
 	}
 
 	@supports (animation-timeline: scroll()) {
 		body > #顶部大图 {
-			position: sticky;
-			top: 0;
-			margin-top: 14px;
-		}
-		main .左 {
-			position: absolute;
-			top: 46px;
+			border-radius: var(--border-radius) var(--border-radius) 0 0;
 		}
 	}
 }

@@ -97,6 +97,18 @@ div#侧边按钮容器,
 	}
 }
 @supports (animation-timeline: scroll()) {
+	@keyframes 顶部大图背景 {
+		0% {
+			/* border-radius: var(--border-radius); */
+			/* 平移窗口围绕图片中线对称：起点在中线前 平移量/2 处，横图平移量为 0，此处即 0 */
+			transform: translateY(calc((var(--cover-travel) - var(--cover-overflow)) / 2));
+		}
+		100% {
+			/* transform: translateY(max(calc(var(--cover-scroll-range) * -1), calc(100cqh - 100%))); */
+			/* 终点在中线后 平移量/2 处；平移量取溢出量与一个滚动范围中的较小者，横图为 0 */
+			transform: translateY(calc((0px - var(--cover-overflow) - var(--cover-travel)) / 2));
+		}
+	}
 	@keyframes 顶部大图桌面端 {
 		/* 0% {
 		} */
@@ -109,55 +121,48 @@ div#侧边按钮容器,
 	}
 	@keyframes 顶部大图移动端 {
 		0% {
+			transform: translateY(0);
 			/* border-radius: var(--border-radius); */
+		}
+		28% {
 			transform: translateY(0);
 		}
-		/* 16% {
-			border-radius: 0;
-		} */
+		50% {
+			transform: translateY(-79px);
+		}
 		66% {
 			opacity: 1;
 		}
 		100% {
 			opacity: 0;
-			/* border-radius: 0; */
-			transform: translateY(-64px);
+			transform: translateY(-158px);
 		}
 	}
-	@keyframes 顶部大图背景 {
+	@keyframes 左栏移动端 {
 		0% {
-			/* border-radius: var(--border-radius); */
-			/* 平移窗口围绕图片中线对称：起点在中线前 平移量/2 处，横图平移量为 0，此处即 0 */
-			transform: translateY(calc((var(--cover-travel) - var(--cover-overflow)) / 2));
+			opacity: 1;
 		}
-		/* 16% {
-			border-radius: 0;
-		} */
+		28% {
+			opacity: 0;
+		}
 		100% {
-			/* border-radius: 0; */
-			/* transform: translateY(max(calc(var(--cover-scroll-range) * -1), calc(100cqh - 100%))); */
-			/* 终点在中线后 平移量/2 处；平移量取溢出量与一个滚动范围中的较小者，横图为 0 */
-			transform: translateY(calc((0px - var(--cover-overflow) - var(--cover-travel)) / 2));
+			opacity: 0;
 		}
 	}
 	@keyframes 左栏阴影上移动端 {
 		0% {
 			opacity: 1;
 		}
-		4% {
+		28% {
 			opacity: 0;
 		}
 		100% {
 			opacity: 0;
 		}
 	}
-	@keyframes 左栏阴影下移动端 {
+	@keyframes 左栏下透明遮罩移动端 {
 		0% {
 			border-top: 0 solid transparent;
-			opacity: 1;
-		}
-		4% {
-			opacity: 0;
 		}
 		28% {
 			border-top: 0 solid transparent;
@@ -167,21 +172,6 @@ div#侧边按钮容器,
 		}
 		100% {
 			border-top: min(var(--height), var(--maxh)) solid transparent;
-			opacity: 0;
-		}
-	}
-	@keyframes 左栏移动端 {
-		0% {
-			opacity: 1;
-		}
-		4% {
-			opacity: 1;
-		}
-		28% {
-			opacity: 0;
-		}
-		100% {
-			opacity: 0;
 		}
 	}
 }
@@ -387,7 +377,7 @@ html,
 body,
 div,
 section,
-nav {
+nav,main > .右::after {
 	transition: var(--transition) background-color;
 }
 
@@ -1184,9 +1174,10 @@ section#评论区 .评论 .评论正文 {
 		width: calc(100% - 14px);
 		margin: 0 0 0 7px;
 		pointer-events: all;
-		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
+		z-index: 9;
 	}
 	main > .左::before {
+		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
 		top: 0;
 	}
 	main > .左::after {
@@ -1203,13 +1194,13 @@ section#评论区 .评论 .评论正文 {
 			pointer-events: all;
 		}
 		main > .左::after {
-			animation-name: 左栏阴影下移动端;
+			animation-name: 左栏下透明遮罩移动端;
 			pointer-events: all;
 		}
 		main .左 {
 			animation: 左栏移动端 linear both;
 			animation-timeline: scroll(root);
-			animation-range: 0 var(--cover-scroll-range);
+			animation-range: 1px var(--cover-scroll-range);
 		}
 	}
 }
