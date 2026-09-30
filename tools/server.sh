@@ -9,41 +9,19 @@ key="$ssl_dir/server.key"
 
 # 检查命令
 missing=()
-for cmd in authbind http-server openssl; do
+for cmd in caddy openssl setcap getcap; do
     command -v "$cmd" >/dev/null 2>&1 || missing+=("$cmd")
 done
 if ((${#missing[@]})); then
     echo "错误：缺少以下命令，请先安装：" >&2
     for cmd in "${missing[@]}"; do
         case $cmd in
-        http-server) echo "  $cmd  （npm install -g http-server）" >&2 ;;
+        caddy) echo "  $cmd  （sudo apt install caddy）" >&2 ;;
+        setcap | getcap) echo "  $cmd  （sudo apt install libcap2-bin）" >&2 ;;
         *) echo "  $cmd  （请通过你的包管理器安装）" >&2 ;;
         esac
     done
     exit 1
-fi
-
-# authbind 配置（Linux 特有）
-current_user="$(id -un)"
-port_file="/etc/authbind/byport/$port"
-
-if [[ ! -e $port_file ]]; then
-    echo "authbind 未配置 $port 端口，正在创建 $port_file ..."
-    sudo mkdir -p /etc/authbind/byport
-    sudo touch "$port_file"
-fi
-
-# 获取文件属主（兼容 GNU 和 BSD）
-if stat -c '%U' /dev/null >/dev/null 2>&1; then
-    owner="$(stat -c '%U' "$port_file")"
-else
-    owner="$(stat -f '%Su' "$port_file")"
-fi
-
-if [[ $owner != "$current_user" || ! -x $port_file ]]; then
-    echo "修正 $port_file 的属主与权限 ..."
-    sudo chown "$current_user" "$port_file"
-    sudo chmod 700 "$port_file"   # 更安全的权限
 fi
 
 # 生成证书（检查是否存在且非空）
@@ -56,6 +34,18 @@ if [[ ! -s $cert || ! -s $key ]]; then
         -addext "subjectAltName=DNS:localhost,DNS:dev.dsy4567.icu,IP:127.0.0.1"
 fi
 
-# 启动服务器（仅监听本地回环地址）
+# caddy 是 Go 程序, 不做 libc 的 socket 封装, authbind 的 LD_PRELOAD 对它无效,
+# 只能给二进制授予 CAP_NET_BIND_SERVICE, 才能以普通用户身份监听 $port
+caddy_real="$(readlink -f "$(command -v caddy)")"
+if ! getcap "$caddy_real" 2>/dev/null | grep -q cap_net_bind_service; then
+    echo "为 $caddy_real 授予绑定 $port 端口的权限 ..."
+    sudo setcap cap_net_bind_service=+ep "$caddy_real"
+fi
+
+export SITE_ROOT="$repo_root"
+export SSL_CERT_FILE="$cert"
+export SSL_KEY_FILE="$key"
+
+# 启动服务器
 cd "$repo_root"
-authbind --deep http-server -p "$port" -c10 -S -C "$cert" -K "$key"
+exec caddy run --config tools/Caddyfile --adapter caddyfile

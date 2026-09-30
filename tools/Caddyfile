@@ -1,0 +1,34 @@
+# 本地开发服务器配置, 由 tools/server.sh 启动 (caddy run --config tools/Caddyfile --adapter caddyfile)
+# 路径类参数由 server.sh 通过环境变量注入: SITE_ROOT / SSL_CERT_FILE / SSL_KEY_FILE
+{
+	admin off
+	# 本地域名不做 ACME 申请, 证书由 server.sh 用 .ssl 下的自签证书提供
+	auto_https off
+	log {
+		level ERROR
+	}
+}
+
+# 监听所有网卡的 443 端口, 接受任意 Host / IP 访问
+# 注意: 证书 SAN 只覆盖 localhost / dev.dsy4567.icu / 127.0.0.1, 用其他域名或 IP 访问会有证书名称不匹配告警
+:443 {
+	tls {$SSL_CERT_FILE} {$SSL_KEY_FILE}
+	root * {$SITE_ROOT}
+
+	# 开发优先: 不设强缓存, 由 ETag / Last-Modified 走 304 协商, 改完文件刷新即生效
+	header Cache-Control "no-cache"
+
+	# 压缩: 优先 zstd, 不支持时回落 gzip; 仅对文本类响应启用, 图片/字体等已压缩格式不重复压缩
+	# 注意: 响应头匹配器一行只接受一个值, 每个类型需单独占一行 (同一字段的多行取或)
+	encode zstd gzip {
+		match {
+			header Content-Type text/*
+			header Content-Type application/javascript*
+			header Content-Type application/json*
+			header Content-Type application/xml*
+			header Content-Type image/svg+xml*
+		}
+	}
+
+	file_server
+}
