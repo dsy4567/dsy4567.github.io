@@ -52,7 +52,7 @@ function 动态加载(元素) {
 		document.title = 标题 || "dsy4567 的小站";
 		dispatchEvent(URL发生变化事件);
 		try {
-			let 右 = qs("main .右", true);
+			let 右 = qs("main > .右", true);
 			if (!右) return;
 			// 前进/后退导航时，滚动位置由浏览器按历史条目自行恢复，这里不再干预，否则会把已恢复的位置顶回顶部；
 			// 但带 hash 时浏览器无法定位动态换入后才出现的锚点，仍需自行处理

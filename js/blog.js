@@ -99,7 +99,7 @@ async function 渲染文章(当前文章信息) {
 		const _通用计数器 = 通用计数器++;
 		// console.time(`渲染文章 id:${_通用计数器}`);
 		if (!location.pathname.endsWith("/")) location.href = `/blog/${当前文章信息.id}/`;
-		const 右 = qs("main .右", true);
+		const 右 = qs("main > .右", true);
 		if (!右) return;
 
 		//#region 渲染文章正文
@@ -413,7 +413,7 @@ async function 渲染文章列表(u) {
 	if (缓存数据) 静默更新文章列表(动态加载自增计数器拷贝);
 	(缓存数据 ? Promise.resolve(缓存数据) : 请求文章列表())
 		.then(async (/** @type {Array<文章信息>} */ j) => {
-			const 右 = qs("main .右", true);
+			const 右 = qs("main > .右", true);
 			// 请求期间已切换页面则放弃渲染，避免此前的请求污染新页面
 			if (!右 || 动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
 
@@ -607,9 +607,10 @@ async function _main() {
 	// 必须在首个 await 前同步读取，重定向的 replaceState 执行后该参数即被移除
 	const 旧版id = U.searchParams.get("id");
 	await 添加脚本("/js/lib/marked.min.js");
-	let /** @type {文章信息 | null} */ 当前文章信息 = gd("当前文章信息")
+	const 当前文章信息script = qs("script#当前文章信息");
+	let /** @type {文章信息 | null} */ 当前文章信息 = 当前文章信息script
 			? // @ts-ignore
-				JSON.parse(gd("当前文章信息")?.text)
+				JSON.parse(当前文章信息script?.text)
 			: null;
 	gd("当前文章信息")?.remove();
 
