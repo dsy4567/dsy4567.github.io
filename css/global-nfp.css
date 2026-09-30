@@ -899,26 +899,31 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 > li.正在播放::after,
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 > li.正在播放::before {
 	content: "";
-	background-color: var(--accent-color);
 	display: block;
 	position: absolute;
 	pointer-events: none;
 }
+/* 左侧竖条：落在 li 外侧的面板内边距里，因此 li 不能靠 overflow 裁剪圆角 */
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 > li.正在播放::before {
-	--height: 36px;
+	background-color: var(--accent-color);
 	border-radius: var(--border-radius);
-	top: calc(50% - var(--height) / 2);
-	left: -6px;
+	top: calc(50% - 18px);
+	left: -8px;
 	width: 3px;
-	height: var(--height);
+	height: 36px;
 }
+/* 播放进度填充：元素铺满内边距盒、尺寸恒定，圆角便不会被浏览器按比例压缩，
+   进度再小也不会从 li 的圆角处溢出；进度改用 background-size 表达，才能参与过渡。
+   时长需与 ncm.js 的 进度更新间隔 一致，否则两次采样之间会先走完再停顿 */
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 > li.正在播放::after {
+	inset: 0;
+	background-color: transparent;
+	background-image: linear-gradient(var(--accent-color), var(--accent-color));
+	background-repeat: no-repeat;
+	background-size: var(--progress) 100%;
 	opacity: 0.2;
 	border-radius: calc(var(--border-radius) - 1px);
-	top: 0;
-	left: 0px;
-	width: min(var(--progress), 100%);
-	height: 100%;
+	transition: var(--transition-slow) linear background-size;
 }
 
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项#播放列表 li * {
