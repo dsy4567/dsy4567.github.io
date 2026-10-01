@@ -13,7 +13,7 @@
 const 接口主机 = "https://ncm.vercel.dsy4567.icu";
 
 /** 最近在听接口：返回的 weekData 含 score 字段，作为排行依据 */
-const 最近在听接口 = 接口主机 + "/user/record?uid=8223493733&type=1";
+const 最近在听接口 = 接口主机 + "/user/record?uid=8223493733&type=1&randomCNIP=true";
 
 let 最近在听已渲染 = false;
 
