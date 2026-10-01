@@ -678,15 +678,30 @@ div#侧边按钮容器 > *:has(*:focus-visible) {
 	opacity: 1;
 	transform: translateX(1px);
 }
-div#侧边按钮容器 > *:hover::before {
-	content: "";
-	border-radius: 50%;
+
+/* 防动画期间误触 */
+div#侧边按钮容器 > *::before {
+	background-color: transparent;
 	display: block;
+	position: absolute;
 	width: calc(100% + 2px);
 	height: calc(100% + 2px);
-	position: absolute;
+	z-index: 1;
+}
+div#侧边按钮容器 > button:hover::before {
+	content: "";
+	border-radius: 50%;
 	left: -6px;
-	/* background: rebeccapurple; */
+}
+div#侧边按钮容器 > div::before {
+	content: "";
+	left: 0;
+	width: var(--container-width);
+	visibility: visible;
+	transition: var(--transition) visibility;
+}
+div#侧边按钮容器 > div:hover::before {
+	visibility: hidden;
 }
 
 div#侧边按钮容器 > .拥有更多选项:hover,
@@ -749,8 +764,6 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 	height: 24px;
 	-webkit-tap-highlight-color: transparent;
 	-webkit-touch-callout: none;
-	align-items: center;
-	justify-content: center;
 }
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *.激活,
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:active {
