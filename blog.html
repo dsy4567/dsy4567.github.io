@@ -247,6 +247,40 @@
 						<span></span>
 					</div>
 				</section>
+				<style>
+					article#main > .骨架屏占位 {
+						display: none;
+					}
+					article#main:has(.骨架屏占位#正在加载文章提示) > .骨架屏占位 {
+						display: flex;
+						flex-direction: column;
+					}
+					.骨架屏占位 > div {
+						width: 100%;
+					}
+					.骨架屏占位 span {
+						animation: 高频闪烁 3s linear infinite forwards;
+						background-color: var(--overlay-strong);
+						border-radius: var(--border-radius);
+						display: block;
+						height: 1em;
+						margin-bottom: 1em;
+					}
+					.骨架屏占位 .骨架屏标题 {
+						height: 3em;
+					}
+					.骨架屏占位 .骨架屏阅读更多 span {
+						width: 4em;
+					}
+					article#main > section > .元数据 > .封面,
+					.骨架屏占位 .骨架屏封面 {
+						display: block;
+						margin: 8px 0 8px 0;
+						object-fit: cover;
+						height: 256px;
+						width: 100%;
+					}
+				</style>
 				<section class="骨架屏占位">
 					<div>
 						<span class="骨架屏标题"></span>
