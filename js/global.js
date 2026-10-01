@@ -610,6 +610,12 @@ const 顶部大图优先级 = {
 /** 等待层淡出动画结束的兜底超时（毫秒），需大于 CSS 的 --transition-slow */
 const 顶部大图层淡出超时 = 1200;
 /**
+ * 备用图属性名：主图加载失败时改用的地址（如浏览器不支持 avif 时回退 webp）。
+ * 读一次即删，保证只回退一次；只有顶部大图层的 img 才需要声明——og:image 等场景
+ * 拿不到这里的回退能力，其地址必须选各方都支持的格式（如 webp）
+ */
+const 顶部大图回退属性 = "data-回退src";
+/**
  * 接管 HTML 里声明的层：补全缺省的注册信息、兜住首屏封面加载失败，并结算初始赢家
  * @returns {void}
  */
@@ -624,12 +630,10 @@ function _初始化顶部大图() {
 
 		const 图片 = /** @type {HTMLImageElement | null} */ (层.querySelector("img"));
 		if (!图片?.getAttribute("src")) continue;
-		// 首屏封面加载失败（含在脚本执行前就已失败）时回收该层，回落到优先级更低的层
-		if (图片.complete && !图片.naturalWidth) {
-			_移除顶部大图层(层);
-			continue;
-		}
-		图片.addEventListener("error", () => _移除顶部大图层(层), { once: true });
+		// 封面加载失败（含在脚本执行前就已失败）时先回退到 data-回退src 声明的备用图，
+		// 备用图也失败才回收该层，回落到优先级更低的层
+		图片.addEventListener("error", () => _顶部大图图片出错(层, 图片));
+		if (图片.complete && !图片.naturalWidth) _顶部大图图片出错(层, 图片);
 	}
 	_应用顶部大图赢家();
 }
@@ -724,6 +728,27 @@ function _移除顶部大图层(层) {
 	};
 	层.addEventListener("transitionend", 清理, { once: true });
 	超时定时器 = setTimeout(清理, 顶部大图层淡出超时);
+}
+/**
+ * 把图片换成 data-回退src 声明的备用图，并删除该属性，使备用图再失败时不会无限回退
+ * @param {HTMLImageElement} 图片
+ * @returns {boolean} 是否已改用备用图；false 表示没有可用的备用图
+ */
+function _应用顶部大图回退(图片) {
+	const 备用图 = 图片.getAttribute(顶部大图回退属性);
+	if (!备用图) return false;
+	图片.removeAttribute(顶部大图回退属性);
+	图片.src = 备用图;
+	return true;
+}
+/**
+ * 顶部大图层的图片加载失败：先改用备用图，备用图也失败才回收该层，让优先级更低的层接管
+ * @param {HTMLElement} 层
+ * @param {HTMLImageElement} 图片
+ * @returns {void}
+ */
+function _顶部大图图片出错(层, 图片) {
+	if (!_应用顶部大图回退(图片)) _移除顶部大图层(层);
 }
 /**
  * 更新顶部大图：注册一张封面，由优先级决定显示哪一层

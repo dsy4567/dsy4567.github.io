@@ -33,7 +33,11 @@ const CONFIG = {
 	// 需追踪内容 hash 与「内容修改时间」的静态页面（相对项目根目录）
 	staticTrackedFiles: ["index.html", "blog.html", "friends.html"],
 	// 顶部大图基线图：HTML 里写死的兜底层（优先级见 js/global.js 的 顶部大图优先级）
-	baselineCoverPath: "/img/bg.webp",
+	// 只有顶部大图能用 avif：它是 <img>，加载失败可由 js/global.js 按 data-回退src 换用备用图；
+	// og:image、列表封面等其余场景拿不到该回退（爬虫与社交平台的 avif 支持不可靠），必须继续用 webp
+	baselineCoverPath: "/img/bg.avif",
+	// 基线图备用图：浏览器不支持 avif 时由 js/global.js 换用，写入基线层的 data-回退src
+	baselineCoverFallbackPath: "/img/bg.webp",
 	/** 无封面文章的默认封面池：以文章 id 为种子稳定挑选（需与 [/js/blog.js](../js/blog.js) 的 博客默认封面 保持同步） */
 	defaultCovers: [
 		"https://qwq.dsy4567.icu/files-2/63936697_p0.webp",
@@ -491,6 +495,7 @@ class ArticleBuilder {
 		);
 
 		// 封面：优先文章自带封面，否则按 id 稳定挑一张默认封面（与 js/blog.js 的 获取默认封面 保持同步）
+		// 该地址同时用于 og:image 与顶部大图层的 <img>，两者共用 webp：og:image 不能是 avif（见 CONFIG.baselineCoverPath 处的说明）
 		const 封面src = meta._originalCover || 获取默认封面(meta.id);
 
 		// 封面不在此处预加载：COVER 里实际显示的 <img> 自带 fetchpriority="high"，
@@ -518,7 +523,7 @@ class ArticleBuilder {
 			html,
 			"COVER",
 			`\t\t<div id="顶部大图" role="img" aria-label="顶部大图">\n` +
-				`\t\t\t<div class="顶部大图层" data-优先级="${顶部大图优先级.基线}" data-生命周期="永久"><img alt="" src="${CONFIG.baselineCoverPath}" /></div>\n` +
+				`\t\t\t<div class="顶部大图层" data-优先级="${顶部大图优先级.基线}" data-生命周期="永久"><img alt="" src="${CONFIG.baselineCoverPath}" data-回退src="${CONFIG.baselineCoverFallbackPath}" /></div>\n` +
 				`\t\t\t<div class="顶部大图层 显示" data-优先级="${封面优先级}" data-生命周期="仅当前页"><img alt="" src="${封面src}" fetchpriority="high" /></div>\n` +
 				`\t\t</div>`
 		);
