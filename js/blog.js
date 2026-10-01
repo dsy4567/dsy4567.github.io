@@ -38,6 +38,10 @@ function 获取默认封面(文章id) {
 
 添加脚本("/js/lib/highlight.min.js");
 添加样式("/css/hl.min.css");
+添加样式(
+	"https://dsy4567.icu/google-fonts?family=Source+Code+Pro:wght@400&display=swap",
+	"anonymous"
+);
 
 /**
  * 高亮目标元素中的代码
