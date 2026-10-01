@@ -465,6 +465,7 @@ let 网易云音乐 = {
 				? (Audio.currentTime / Audio.duration) * 100
 				: 0;
 		// 类 正在播放 在 onplay 时挂到目标项上，::after 也只在该状态下渲染，故只更新这一项
+		await 立即渲染网易云音乐组件();
 		qs("li.正在播放")?.style.setProperty("--progress", 百分比 + "%");
 	},
 	更新歌曲信息(/** @type {number} */ 令牌) {
@@ -558,6 +559,7 @@ let 网易云音乐 = {
 	},
 	/** 动态批量添加歌曲到播放列表：跳过已在歌单中的 id（含本批次内的重复），写入歌单与歌单索引、创建列表元素，并重置随机播放的洗牌顺序 */
 	async 添加歌曲到播放列表(/** @type {歌单[]} */ 待添加歌单) {
+		await 立即渲染网易云音乐组件();
 		if (!待添加歌单?.length) return;
 		let 播放列表 = gd("播放列表", true);
 		let 文档片段 = document.createDocumentFragment();
@@ -731,6 +733,94 @@ let 网易云音乐 = {
 	},
 };
 
+let 染网易云音乐组件已渲染 = false;
+async function 立即渲染网易云音乐组件() {
+	if (染网易云音乐组件已渲染) return;
+	染网易云音乐组件已渲染 = true;
+
+	/** @type {HTMLButtonElement[]} */
+	let 待添加按钮 = [];
+	/**
+	 * @param {string} 名称 - 按钮索引，也是 data-icon 图标名
+	 * @param {(元素: HTMLButtonElement) => void} onclick
+	 * @param {string} title
+	 * @param {string} [role]
+	 */
+	function 创建按钮(名称, onclick, title, role = "button") {
+		let /** @type {HTMLButtonElement} */ btn = ce("button");
+		btn.innerHTML = `<svg class="特小尺寸" data-icon="${名称}"></svg>`;
+		btn.onclick = () => onclick(btn); // 播放类按钮内部会自行初始化
+		btn.type = "button";
+		btn.title = title;
+		btn.setAttribute("role", role);
+		if (role === "checkbox") btn.setAttribute("aria-checked", "false");
+		网易云音乐.按钮[名称] = btn;
+		待添加按钮.push(btn);
+	}
+
+	创建按钮("上一首", 网易云音乐.上一首, "上一首");
+	创建按钮("播放暂停", 网易云音乐.播放暂停, "播放/暂停");
+	创建按钮("下一首", 网易云音乐.下一首, "下一首");
+	创建按钮(
+		"在网易云音乐中查看",
+		() => {
+			网易云音乐.歌单[网易云音乐.正在播放.索引].id &&
+				open(
+					"https://music.163.com/#/song?id=" +
+						网易云音乐.歌单[网易云音乐.正在播放.索引].id
+				);
+		},
+		"在网易云音乐中查看"
+	);
+	创建按钮(
+		"随机播放",
+		网易云音乐.启用或禁用随机播放,
+		"随机播放: " + (网易云音乐.设置.随机播放 ? "开" : "关"),
+		"checkbox"
+	);
+	创建按钮("音量", 网易云音乐.更改音量, "音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%");
+	await schedulerYield();
+	gd("音乐控件", true)?.append(...待添加按钮);
+	gd("音乐控件", true)?.insertAdjacentHTML(
+		"beforeend",
+		`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a>`
+	);
+
+	let 播放列表 = gd("播放列表", true);
+
+	if (播放列表) {
+		// 事件委托：整个列表只挂 2 个监听器，靠 dataset.id 定位歌曲
+		let 定位并播放 = (/** @type {Event} */ 事件) => {
+			if (!(事件.target instanceof HTMLElement)) return;
+			let li = 事件.target.closest("li");
+			if (li instanceof HTMLElement && li.dataset.id)
+				网易云音乐.切换音乐(+li.dataset.id, true);
+		};
+		播放列表.addEventListener("click", 定位并播放);
+		播放列表.addEventListener("keyup", 事件 => {
+			if (事件.key === "Enter") 定位并播放(事件);
+		});
+
+		let 文档片段 = document.createDocumentFragment();
+		await 批量低阻塞操作(网易云音乐.歌单, async (/** @type {歌单} */ 音乐信息) => {
+			let li = ce("li");
+			let 歌名 = ce("span");
+			歌名.textContent = 音乐信息.歌名;
+			let 歌手 = ce("span");
+			歌手.className = "淡化";
+			歌手.textContent = 音乐信息.歌手;
+			li.append(歌名, " ", 歌手);
+			li.tabIndex = 0;
+			li.title = 音乐信息.完整歌名;
+			li.dataset.id = "" + 音乐信息.id;
+			文档片段.append(li);
+		});
+		播放列表.append(文档片段);
+	}
+
+	渲染图标();
+}
+
 fetch("/json/ncm.json")
 	.then(
 		res =>
@@ -764,89 +854,7 @@ fetch("/json/ncm.json")
 			网易云音乐.歌单索引[音乐信息.id] = 网易云音乐.歌单.push(歌曲) - 1;
 		});
 
-		/** @type {HTMLButtonElement[]} */
-		let 待添加按钮 = [];
-		/**
-		 * @param {string} 名称 - 按钮索引，也是 data-icon 图标名
-		 * @param {(元素: HTMLButtonElement) => void} onclick
-		 * @param {string} title
-		 * @param {string} [role]
-		 */
-		function 创建按钮(名称, onclick, title, role = "button") {
-			let /** @type {HTMLButtonElement} */ btn = ce("button");
-			btn.innerHTML = `<svg class="特小尺寸" data-icon="${名称}"></svg>`;
-			btn.onclick = () => onclick(btn); // 播放类按钮内部会自行初始化
-			btn.type = "button";
-			btn.title = title;
-			btn.setAttribute("role", role);
-			if (role === "checkbox") btn.setAttribute("aria-checked", "false");
-			网易云音乐.按钮[名称] = btn;
-			待添加按钮.push(btn);
-		}
-
-		创建按钮("上一首", 网易云音乐.上一首, "上一首");
-		创建按钮("播放暂停", 网易云音乐.播放暂停, "播放/暂停");
-		创建按钮("下一首", 网易云音乐.下一首, "下一首");
-		创建按钮(
-			"在网易云音乐中查看",
-			() => {
-				网易云音乐.歌单[网易云音乐.正在播放.索引].id &&
-					open(
-						"https://music.163.com/#/song?id=" +
-							网易云音乐.歌单[网易云音乐.正在播放.索引].id
-					);
-			},
-			"在网易云音乐中查看"
-		);
-		创建按钮(
-			"随机播放",
-			网易云音乐.启用或禁用随机播放,
-			"随机播放: " + (网易云音乐.设置.随机播放 ? "开" : "关"),
-			"checkbox"
-		);
-		创建按钮(
-			"音量",
-			网易云音乐.更改音量,
-			"音量: " + Math.round(网易云音乐.设置.音量 * 100) + "%"
-		);
-		await schedulerYield();
-		gd("音乐控件", true)?.append(...待添加按钮);
-		gd("音乐控件", true)?.insertAdjacentHTML(
-			"beforeend",
-			`<a style="background:#000;color:#fff;" href="#切换主题" class="隐藏链接">跳过播放列表</a>`
-		);
-
-		let 播放列表 = gd("播放列表", true);
-		if (播放列表) {
-			// 事件委托：整个列表只挂 2 个监听器，靠 dataset.id 定位歌曲
-			let 定位并播放 = (/** @type {Event} */ 事件) => {
-				if (!(事件.target instanceof HTMLElement)) return;
-				let li = 事件.target.closest("li");
-				if (li instanceof HTMLElement && li.dataset.id)
-					网易云音乐.切换音乐(+li.dataset.id, true);
-			};
-			播放列表.addEventListener("click", 定位并播放);
-			播放列表.addEventListener("keyup", 事件 => {
-				if (事件.key === "Enter") 定位并播放(事件);
-			});
-
-			let 文档片段 = document.createDocumentFragment();
-			await 批量低阻塞操作(网易云音乐.歌单, async (/** @type {歌单} */ 音乐信息) => {
-				let li = ce("li");
-				let 歌名 = ce("span");
-				歌名.textContent = 音乐信息.歌名;
-				let 歌手 = ce("span");
-				歌手.className = "淡化";
-				歌手.textContent = 音乐信息.歌手;
-				li.append(歌名, " ", 歌手);
-				li.tabIndex = 0;
-				li.title = 音乐信息.完整歌名;
-				li.dataset.id = "" + 音乐信息.id;
-				文档片段.append(li);
-			});
-			播放列表.append(文档片段);
-		}
-		渲染图标();
+		网易云音乐元素.addEventListener("mousemove", 立即渲染网易云音乐组件, { once: true });
 
 		延迟执行("关键任务完成", 网易云音乐.初始化, 3);
 		歌单加载完成Resolve();

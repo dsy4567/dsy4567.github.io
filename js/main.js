@@ -176,71 +176,73 @@ fetch("/json/theme.json")
 				const 下一个 = 列表[(列表.indexOf(读取背景模式()) + 1) % 列表.length];
 				应用背景模式(下一个);
 				更新模式按钮();
-				提示("背景模式: " + 下一个);
-			};
-			更新模式按钮();
-			控件容器.append(模式按钮);
-
-			/** @type {HTMLButtonElement} */
-			let 调色盘按钮 = ce("button");
-			调色盘按钮.title = "自定义强调色";
-			调色盘按钮.role = "radio";
-			调色盘按钮.ariaChecked = "false";
-			调色盘按钮.innerHTML =
-				"<svg class='特小尺寸' data-icon='调色盘'></svg><input aria-label='自定义强调色调色盘' style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0' tabindex='-1' id='自定义强调色' type='color' />";
-			调色盘按钮.onclick = () => {
-				let 输入 = /** @type {HTMLInputElement} */ (gd("自定义强调色", true));
-				if (!输入) return;
-				输入.value = 读取强调色().toLowerCase();
-				输入.click();
-				输入.onchange = () => {
-					应用强调色(输入.value);
-					同步选中态();
-					提示("已切换自定义强调色");
+					提示("背景模式: " + 下一个);
 				};
-			};
-			控件容器.append(调色盘按钮);
-			//#endregion
+				更新模式按钮();
+				控件容器.append(模式按钮);
 
-			//#region 下方：预设强调色色板
-			/** 根据当前强调色高亮对应色板，为自定义色时高亮调色盘 */
-			const 同步选中态 = () => {
-				const 当前 = 读取强调色();
-				let 命中预设 = false;
-				主题容器.querySelectorAll("button").forEach(元素 => {
-					const 命中 = 元素.dataset.hex === 当前;
-					元素.ariaChecked = "" + 命中;
-					if (命中) 命中预设 = true;
-				});
-				调色盘按钮.ariaChecked = "" + !命中预设;
-			};
-			/** @type {HTMLButtonElement[]} */
-			let 待添加元素 = [];
-			Object.entries(主题表).forEach(([名字, hex]) => {
 				/** @type {HTMLButtonElement} */
-				let btn = ce("button");
-				btn.dataset.hex = hex;
-				btn.style.backgroundColor = hex;
-				btn.title = "强调色: " + 名字;
-				btn.role = "radio";
-				btn.ariaChecked = "false";
-				btn.onclick = () => {
-					应用强调色(hex);
-					同步选中态();
-					提示("已切换强调色: " + 名字);
+				let 调色盘按钮 = ce("button");
+				调色盘按钮.title = "自定义强调色";
+				调色盘按钮.role = "radio";
+				调色盘按钮.ariaChecked = "false";
+				调色盘按钮.innerHTML =
+					"<svg class='特小尺寸' data-icon='调色盘'></svg><input aria-label='自定义强调色调色盘' style='opacity:0;pointer-events:none;position:absolute;top:0;width:0;height:0' tabindex='-1' id='自定义强调色' type='color' />";
+				调色盘按钮.onclick = () => {
+					let 输入 = /** @type {HTMLInputElement} */ (gd("自定义强调色", true));
+					if (!输入) return;
+					输入.value = 读取强调色().toLowerCase();
+					输入.click();
+					输入.onchange = () => {
+						应用强调色(输入.value);
+						同步选中态();
+						提示("已切换自定义强调色");
+					};
 				};
-				待添加元素.push(btn);
-			});
-			主题容器.append(...待添加元素);
-			同步选中态();
-			//#endregion
+				控件容器.append(调色盘按钮);
+				//#endregion
 
-			// 渲染图标();
-			// 此前指定元素渲染报“没有父节点”，根因是多个“渲染图标”调用并发时，
-			// 异步分批处理会处理到已被替换而脱离文档的元素，现已在“渲染图标”内跳过
-			渲染图标({
-				要渲染图标的元素: 调色盘按钮.getElementsByTagName("svg"),
-			});
+				//#region 下方：预设强调色色板
+				/** 根据当前强调色高亮对应色板，为自定义色时高亮调色盘 */
+				const 同步选中态 = () => {
+					const 当前 = 读取强调色();
+					let 命中预设 = false;
+					主题容器.querySelectorAll("button").forEach(元素 => {
+						const 命中 = 元素.dataset.hex === 当前;
+						元素.ariaChecked = "" + 命中;
+						if (命中) 命中预设 = true;
+					});
+					调色盘按钮.ariaChecked = "" + !命中预设;
+				};
+				/** @type {HTMLButtonElement[]} */
+				let 待添加元素 = [];
+				Object.entries(主题表).forEach(([名字, hex]) => {
+					/** @type {HTMLButtonElement} */
+					let btn = ce("button");
+					btn.dataset.hex = hex;
+					btn.style.backgroundColor = hex;
+					btn.title = "强调色: " + 名字;
+					btn.role = "radio";
+					btn.ariaChecked = "false";
+					btn.onclick = () => {
+						应用强调色(hex);
+						同步选中态();
+						提示("已切换强调色: " + 名字);
+					};
+					待添加元素.push(btn);
+				});
+				主题容器.append(...待添加元素);
+				同步选中态();
+				//#endregion
+
+				// 渲染图标();
+				// 此前指定元素渲染报“没有父节点”，根因是多个“渲染图标”调用并发时，
+				// 异步分批处理会处理到已被替换而脱离文档的元素，现已在“渲染图标”内跳过
+				渲染图标({
+					要渲染图标的元素: 调色盘按钮.getElementsByTagName("svg"),
+				});
+			};
+			gd("切换主题")?.addEventListener("mousemove", f, { once: true });
 		}
 	)
 	.catch(e => console.error(e));
