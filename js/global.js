@@ -591,7 +591,7 @@ function 渲染图标(选项 = {}) {
  */
 const /** @type {HTMLElement | null} */ 顶部大图 = gd("顶部大图");
 /** 顶部大图默认优先级：数值越小越优先，未声明 data-优先级 的层按此值处理 */
-const 顶部大图默认优先级 = -1;
+const 顶部大图默认优先级 = 9000;
 /** 顶部大图生命周期：永久，不随导航失效，直到被同优先级顶掉或被 撤销顶部大图 撤销 */
 const 顶部大图永久 = "永久";
 /** 顶部大图生命周期：仅当前页，离开注册时所在的路径后由 清理过期顶部大图层 回收 */
@@ -733,7 +733,7 @@ function _移除顶部大图层(层) {
  * @param {Object} 选项 - 选项
  * @param {string} [选项.url] - 封面图片 URL
  * @param {number} [选项.优先级=顶部大图默认优先级] - 优先级，数值越小越优先
- * @param {string} [选项.生命周期=顶部大图仅当前页] - 顶部大图永久 或 顶部大图仅当前页
+ * @param {"永久" | "仅当前页"} [选项.生命周期="仅当前页"] - 永久 或 仅当前页
  * @returns {void}
  */
 function 更新顶部大图(
@@ -745,9 +745,9 @@ function 更新顶部大图(
 	 * @param {number} 优先级
 	 * @param {string} 生命周期
 	 * @param {string} 注册路径
-	 * @returns {void}
+	 * @returns {Promise<void>}
 	 */
-	function _写入顶部大图层(图片, 优先级, 生命周期, 注册路径) {
+	async function _写入顶部大图层(图片, 优先级, 生命周期, 注册路径) {
 		if (!顶部大图) return;
 		const 层 = ce("div");
 		层.className = "顶部大图层";
@@ -755,6 +755,7 @@ function 更新顶部大图(
 		层.setAttribute("data-生命周期", 生命周期);
 		if (注册路径) 层.setAttribute("data-注册路径", 注册路径);
 		层.append(图片);
+		await schedulerYield();
 		顶部大图.append(层);
 		// 先撑出 opacity: 0 的初始样式，再加 .显示，新层才是淡入而非瞬现
 		层.offsetHeight;
@@ -779,6 +780,7 @@ function 更新顶部大图(
 
 	const 预加载图片 = new Image();
 	预加载图片.alt = "";
+	预加载图片.decoding = "async";
 	预加载图片.onload = () => {
 		// 竞态：预加载期间已经导航到别的路径，仅当前页 的封面不再有意义
 		if (生命周期 === 顶部大图仅当前页 && 注册路径 !== 获取清理后当前路径()) return;
@@ -796,7 +798,7 @@ function 撤销顶部大图(优先级) {
 		if (_读取顶部大图信息(层).优先级 === 优先级) _移除顶部大图层(层);
 }
 // 顶部大图：接管 HTML 里声明的层，并在导航（pushState 与 popstate 都会派发该事件）后回收过期层
-_初始化顶部大图();
+延迟执行("DOMContentLoaded", _初始化顶部大图, 0);
 addEventListener("URL发生变化", _清理过期顶部大图层);
 //#endregion
 
