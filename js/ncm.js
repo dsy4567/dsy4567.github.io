@@ -452,7 +452,7 @@ let 网易云音乐 = {
 	 * 面板收起或标签页不可见时进度条根本看不到，直接跳过；
 	 * 两次写入至少间隔 进度更新间隔，强制为 true 时（开始播放等）跳过节流立即写入
 	 */
-	更新播放进度(强制 = false) {
+	async 更新播放进度(强制 = false) {
 		if (document.visibilityState !== "visible" || !网易云音乐.面板已展开) return;
 		let 现在 = Date.now();
 		if (!强制 && 现在 - 网易云音乐.上次进度更新时间 < 进度更新间隔) return;
@@ -468,14 +468,12 @@ let 网易云音乐 = {
 		await 立即渲染网易云音乐组件();
 		qs("li.正在播放")?.style.setProperty("--progress", 百分比 + "%");
 	},
-	更新歌曲信息(/** @type {number} */ 令牌) {
-		// gd("播放列表", true)?.scrollTo({
-		// 	behavior: "smooth",
-		// 	top:
-		// 		qs("li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']")
-		// 			?.offsetTop || 0,
-		// });
-		滚动到可见区域("li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']");
+	async 更新歌曲信息(/** @type {number} */ 令牌) {
+		await 立即渲染网易云音乐组件();
+		垂直滚动到容器内可见区域(
+			"li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']",
+			true
+		);
 
 		let 封面 = 网易云音乐.歌单[网易云音乐.正在播放.索引].封面;
 		navigator.mediaSession &&
@@ -593,10 +591,6 @@ let 网易云音乐 = {
 				let 上次播放 = localStorage.getItem("上次播放");
 				// 没有上次播放时，设置一个无效id
 				网易云音乐.切换音乐(+(上次播放 || -1));
-				// gd("播放列表", true)?.scrollTo({
-				// 	behavior: "smooth",
-				// 	top: qs("li[data-id='" + 上次播放 + "']")?.offsetTop || 0,
-				// });
 			}
 
 			网易云音乐.正在播放.Audio.preload = "none";
@@ -645,9 +639,11 @@ let 网易云音乐 = {
 							? ` (${翻译.text})`
 							: "");
 				}
-				const f = () => {
-					滚动到可见区域(
-						"li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']"
+				const f = async () => {
+					await 立即渲染网易云音乐组件();
+					垂直滚动到容器内可见区域(
+						"li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']",
+						true
 					);
 				};
 				网易云音乐元素.addEventListener("mouseenter", f);

@@ -151,13 +151,14 @@ const ce = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
 //#endregion
 
 //#region 常用工具类 DOM 操作
-function 回到顶部() {
+// chrome 150+ 返回 Promise
+async function 回到顶部() {
 	const 行为 = 用户已禁用动画特效 ? "auto" : "smooth";
-	document.documentElement.scrollTo({
+	await document.documentElement.scrollTo({
 		top: 0,
 		behavior: 行为,
 	});
-	qs("main > .左")?.scrollTo({
+	await qs("main > .左")?.scrollTo({
 		top: 0,
 		behavior: 行为,
 	});
@@ -167,12 +168,27 @@ function 回到顶部() {
  * @param {string} s - 选择器
  * @param {boolean} 缓存 - 是否使用缓存，默认 false
  * @param {ScrollIntoViewOptions} 选项 - 其他滚动到可见区域的选项，参考 ScrollIntoViewOptions 选项
- * @returns {void}
+ * @returns {Promise<void>}
  */
-function 滚动到可见区域(s, 缓存 = false, 选项 = { inline: "start", block: "start" }) {
-	qs(s, 缓存)?.scrollIntoView({
+async function 滚动到可见区域(s, 缓存 = false, 选项 = { inline: "start", block: "start" }) {
+	await qs(s, 缓存)?.scrollIntoView({
 		behavior: 用户已禁用动画特效 ? "instant" : "smooth",
 		...选项,
+	});
+}
+/**
+ * 传入 selector，使父容器垂直滚动到指定元素所在位置
+ * @param {string} s - 选择器
+ * @param {boolean} 缓存 - 是否使用缓存，默认 false
+ * @returns {Promise<void>}
+ */
+async function 垂直滚动到容器内可见区域(s, 缓存 = false) {
+	const 目标元素 = qs(s, 缓存);
+	const 父容器 = 目标元素?.parentElement;
+	if (!父容器 || !目标元素) return;
+	await 父容器.scrollTo({
+		behavior: 用户已禁用动画特效 ? "instant" : "smooth",
+		top: 目标元素?.offsetTop || 0,
 	});
 }
 /**
