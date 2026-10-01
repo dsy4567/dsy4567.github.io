@@ -840,7 +840,11 @@ const /** @type {NodeListOf<HTMLLinkElement>} */ 样式链接 = qsa("link[data-p
 const 支持预加载 = 样式链接[0]?.relList.supports?.("preload") ?? false;
 样式链接.forEach(元素 => {
 	if (!(元素 instanceof HTMLLinkElement)) return;
-	const 加载样式 = () => (元素.rel = "stylesheet");
+	const 加载样式 = () => {
+		// 页面中已存在同 href 的样式表时忽略，避免重复应用
+		if (qs(`link[rel='stylesheet'][href='${元素.getAttribute("href")}']`)) return;
+		元素.rel = "stylesheet";
+	};
 
 	if (!支持预加载) return 加载样式();
 	const 已加载 = Array.from(performance.getEntriesByName(元素.href)).some(
