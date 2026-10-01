@@ -136,6 +136,16 @@ a.无滤镜:focus-visible {
 	text-decoration: none;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: 400;
+	position: relative;
+}
+
 img,
 video {
 	background-color: var(--bg-color);
@@ -166,14 +176,7 @@ section {
 	padding: 12px;
 	word-break: break-word;
 }
-section section {
-	/* background-color: var(--surface-2); */
-}
-section h2 {
-	display: flex;
-	align-items: stretch;
-	justify-content: flex-start;
-}
+
 section h2 svg {
 	margin-right: 8px;
 }
@@ -181,6 +184,34 @@ section img,
 section video {
 	max-width: 100%;
 	height: auto;
+}
+
+section h2:has(svg) {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+	position: relative;
+}
+section h2:has(svg)::before,
+main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg))::before {
+	content: "";
+	border-radius: var(--border-radius);
+	display: block;
+	position: absolute;
+}
+section h2:has(svg)::before {
+	background: linear-gradient(to right, var(--accent-color), var(--accent-color-transparent));
+	width: 4em;
+	max-width: 50%;
+	height: 4px;
+	bottom: -0.3em;
+}
+main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg))::before {
+	background-color: var(--accent-color-transparent);
+	width: 4px;
+	height: 100%;
+	left: -4px;
+	transition: background-color var(--transition);
 }
 
 blockquote {
@@ -579,8 +610,6 @@ div#侧边按钮容器 {
 	main > .左::-webkit-scrollbar {
 		display: none;
 		width: 0;
-	}
-	main > .左 > section {
 	}
 	body > #顶部大图 > .顶部大图层 > img,
 	main .左 {

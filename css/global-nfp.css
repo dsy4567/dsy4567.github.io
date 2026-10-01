@@ -377,8 +377,14 @@ html,
 body,
 div,
 section,
-nav,main > .右::after {
+nav,
+main > .右::after {
 	transition: var(--transition) background-color;
+}
+
+main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg)):hover::before,
+main > .右 .高亮:is(h1, h2, h3, h4, h5, h6):not(:has(svg))::before {
+	background-color: var(--accent-color);
 }
 
 /* ==================== 通用工具类 class ==================== */

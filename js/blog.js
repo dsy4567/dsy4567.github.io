@@ -165,6 +165,7 @@ async function 渲染文章(当前文章信息) {
 				new URL(当前文章信息.cover || 获取默认封面(当前文章信息.id), location.href).href
 			);
 		}
+		qs("main > .右 > section")?.classList.add("博客正文");
 		//#endregion
 
 		//#region 目录
