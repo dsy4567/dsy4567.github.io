@@ -402,9 +402,15 @@ body > #顶部大图 > .顶部大图层 {
 	inset: 0;
 	opacity: 0;
 	position: absolute;
-	transition: var(--transition-slow) opacity;
+	transition: var(--transition) opacity;
 }
-body > #顶部大图 > .顶部大图层 > img {
+/* 最底下的基线层：无变化。始终不透明且不参与过渡，作为兜底与背景，新层直接在其上淡入，
+   避免首屏就存在的 .显示 层被重新赋值为透明；:first-child 即 DOM 中最底层的一条封面 */
+body > #顶部大图 > .顶部大图层:first-child {
+	opacity: 1;
+	transition: none;
+}
+body > #顶部大图 > .顶部大图层 > :is(img, svg, picture) {
 	display: block;
 	object-fit: cover;
 	user-select: none;
@@ -413,6 +419,7 @@ body > #顶部大图 > .顶部大图层 > img {
 	min-height: 100%;
 	width: 100%;
 }
+/* 最顶层的显示层：由透明变不透明 */
 body > #顶部大图 > .顶部大图层.显示 {
 	opacity: 1;
 }
