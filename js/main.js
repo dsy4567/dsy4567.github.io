@@ -459,7 +459,7 @@ fetch("https://api.github.com/users/dsy4567")
 					] || "\u4f60\u5988";
 			//#endregion
 
-			//#region 导航栏
+			//#region 导航栏、标题高亮
 
 			/** 记录上一次触发样式切换时的滚动位置，作为累计滚动幅度的基准（不在每次滚动时更新） */
 			let scrollTop = 0,
@@ -483,6 +483,50 @@ fetch("https://api.github.com/users/dsy4567")
 			 */
 			const 滚动监听延迟 = 3000;
 
+			/**
+			 * 标题高亮判定线所在的视口高度百分比：标题顶端超过该线即视为“已滚过”，
+			 * 取最后一个已滚过的标题作为当前阅读位置（可视需要调整）
+			 */
+			const 滚动高亮视口百分比 = 0.65;
+			/** 参与高亮的标题选择器，与 global-nfp.css 中 ::before 的样式规则保持一致 */
+			const 标题选择器 = ":is(h1, h2, h3, h4, h5, h6):not(:has(svg))";
+
+			// 滚动与鼠标各自维护一个高亮类，互不干扰，因此无需在两者之间做竞争仲裁
+			/** 上一次被滚动逻辑高亮的标题 @type {Element | null} */
+			let 上次滚动高亮标题 = null;
+			/** 上一次被鼠标逻辑高亮的标题 @type {Element | null} */
+			let 上次鼠标高亮标题 = null;
+			/** 参与高亮的标题元素列表缓存 @type {Element[]} */
+			let 标题元素列表 = [];
+			/** 标题元素列表对应的正文代次，与 动态加载自增计数器 不一致时说明正文已被重建 */
+			let 标题列表代次 = -1;
+
+			/** 当前正文内参与高亮的标题元素列表，正文被动态换页重建后自动刷新 @returns {Element[]} */
+			const 取标题元素列表 = () => {
+				if (标题列表代次 === 动态加载自增计数器) return 标题元素列表;
+				标题列表代次 = 动态加载自增计数器;
+				标题元素列表 = Array.from(
+					qs("main > .右", true)?.querySelectorAll(标题选择器) || []
+				);
+				// 正文已重建，指向旧节点的高亮引用一并作废
+				上次滚动高亮标题 = 上次鼠标高亮标题 = null;
+				return 标题元素列表;
+			};
+
+			/**
+			 * 把某个高亮类从旧目标迁移到新目标，新旧相同时不做任何事
+			 * @param {"高亮-滚动" | "高亮-鼠标"} 类名
+			 * @param {Element | null} 旧目标
+			 * @param {Element | null} 新目标
+			 * @returns {Element | null} 新目标
+			 */
+			const 切换标题高亮 = (类名, 旧目标, 新目标) => {
+				if (旧目标 === 新目标) return 新目标;
+				旧目标?.classList.remove(类名);
+				新目标?.classList.add(类名);
+				return 新目标;
+			};
+
 			setTimeout(() => {
 				const 窗口尺寸变化 = () => {
 					if (document.body.clientWidth <= 移动端界面最大宽度)
@@ -492,40 +536,93 @@ fetch("https://api.github.com/users/dsy4567")
 				addEventListener("resize", 窗口尺寸变化);
 				窗口尺寸变化();
 
-				// 监听页面滚动事件（passive: 声明不调用 preventDefault，浏览器无需等待本监听器即可滚动）
+				/** 根据当前滚动位置更新导航栏的显示模式 */
+				const 更新导航栏 = () => {
+					const 当前滚动位置 = scrollY;
+
+					// 情况一：滚动到页面顶部（scrollTop <= 顶部一定范围不隐藏阈值 - 64）且当前状态不是“顶部”
+					if (当前滚动位置 <= 顶部一定范围不隐藏阈值 - 64) {
+						if (状态 !== 0) {
+							类列表.add("顶部");
+							类列表.remove("隐藏导航栏");
+							状态 = 0;
+						}
+						scrollTop = 0;
+					}
+					// 情况二：向下滚动且累计幅度超过阈值，状态不是“隐藏导航栏”
+					else if (当前滚动位置 - scrollTop > 滚动阈值) {
+						if (状态 !== 1) {
+							类列表.remove("顶部");
+							类列表.add("隐藏导航栏");
+							状态 = 1;
+						}
+						scrollTop = 当前滚动位置;
+					}
+					// 情况三：向上滚动且累计幅度超过阈值，状态不是“显示导航栏”
+					else if (scrollTop - 当前滚动位置 > 滚动阈值) {
+						if (状态 !== 2) {
+							类列表.remove("顶部", "隐藏导航栏");
+							状态 = 2;
+						}
+						scrollTop = 当前滚动位置;
+					}
+				};
+
+				/** 高亮判定线上方最后一个标题，作为当前阅读位置 */
+				const 更新滚动高亮 = () => {
+					const 判定线 = innerHeight * 滚动高亮视口百分比;
+					/** @type {Element | null} */
+					let 命中 = null;
+					// 标题在文档中自上而下排列，顺序读取坐标即可；getBoundingClientRect 只读不写，
+					// 统一读完再改类名，避免逐元素读写交替造成的布局抖动
+					for (const 标题 of 取标题元素列表()) {
+						if (标题.getBoundingClientRect().top > 判定线) break;
+						命中 = 标题;
+					}
+					上次滚动高亮标题 = 切换标题高亮("高亮-滚动", 上次滚动高亮标题, 命中);
+				};
+
+				/** 高亮光标上方最近的标题；光标位于所有标题之上时清除高亮 @param {number} 光标Y */
+				const 更新鼠标高亮 = 光标Y => {
+					/** @type {Element | null} */
+					let 命中 = null;
+					for (const 标题 of 取标题元素列表()) {
+						if (标题.getBoundingClientRect().top > 光标Y) break;
+						命中 = 标题;
+					}
+					// 命中为 null（光标在所有标题之上）时，切换标题高亮 会顺带移除旧目标的高亮
+					上次鼠标高亮标题 = 切换标题高亮("高亮-鼠标", 上次鼠标高亮标题, 命中);
+				};
+
+				// rAF 节流：一帧内多次触发只执行一次，导航栏与标题高亮共用同一次帧回调
+				let 已排队 = false;
 				addEventListener(
 					"scroll",
 					() => {
 						// console.log("onscroll");
+						if (已排队) return;
+						已排队 = true;
+						requestAnimationFrame(() => {
+							已排队 = false;
+							更新导航栏();
+							更新滚动高亮();
+						});
+					},
+					{ passive: true }
+				);
 
-						const 当前滚动位置 = scrollY;
-
-						// 情况一：滚动到页面顶部（scrollTop <= 顶部一定范围不隐藏阈值 - 64）且当前状态不是“顶部”
-						if (当前滚动位置 <= 顶部一定范围不隐藏阈值 - 64) {
-							if (状态 !== 0) {
-								类列表.add("顶部");
-								类列表.remove("隐藏导航栏");
-								状态 = 0;
-							}
-							scrollTop = 0;
-						}
-						// 情况二：向下滚动且累计幅度超过阈值，状态不是“隐藏导航栏”
-						else if (当前滚动位置 - scrollTop > 滚动阈值) {
-							if (状态 !== 1) {
-								类列表.remove("顶部");
-								类列表.add("隐藏导航栏");
-								状态 = 1;
-							}
-							scrollTop = 当前滚动位置;
-						}
-						// 情况三：向上滚动且累计幅度超过阈值，状态不是“显示导航栏”
-						else if (scrollTop - 当前滚动位置 > 滚动阈值) {
-							if (状态 !== 2) {
-								类列表.remove("顶部", "隐藏导航栏");
-								状态 = 2;
-							}
-							scrollTop = 当前滚动位置;
-						}
+				let 鼠标已排队 = false,
+					光标Y = 0;
+				addEventListener(
+					"mousemove",
+					事件 => {
+						光标Y = 事件.clientY;
+						if (鼠标已排队) return;
+						鼠标已排队 = true;
+						requestAnimationFrame(() => {
+							鼠标已排队 = false;
+							更新鼠标高亮(光标Y);
+						});
 					},
 					{ passive: true }
 				);
