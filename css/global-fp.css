@@ -291,21 +291,30 @@ input {
 	border-radius: 50%;
 }
 
+.特小尺寸,
+.小尺寸,
+.中尺寸,
+.大尺寸 {
+	width: var(--width);
+	height: var(--height);
+	max-width: 100%;
+	max-height: 100%;
+}
 .特小尺寸 {
-	width: 24px;
-	height: 24px;
+	--width: 24px;
+	--height: 24px;
 }
 .小尺寸 {
-	width: 32px;
-	height: 32px;
+	--width: 32px;
+	--height: 32px;
 }
 .中尺寸 {
-	width: 48px;
-	height: 48px;
+	--width: 48px;
+	--height: 48px;
 }
 .大尺寸 {
-	width: 128px;
-	height: 128px;
+	--width: 128px;
+	--height: 128px;
 }
 
 .组 {

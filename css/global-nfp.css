@@ -734,17 +734,23 @@ div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) > .更多选�
 }
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 	background-color: var(--surface-2);
+	box-sizing: border-box;
 	border: 1px solid var(--overlay-strong);
 	border-radius: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	margin: 5px 0px 5px 5px;
+	padding: 5px;
+	padding-block: 5px;
+	padding-inline: 5px;
 	cursor: pointer;
 	width: 24px;
 	height: 24px;
 	-webkit-tap-highlight-color: transparent;
 	-webkit-touch-callout: none;
+	align-items: center;
+	justify-content: center;
 }
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *.激活,
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > *:active {
