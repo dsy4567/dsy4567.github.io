@@ -25,3 +25,5 @@ export async function main(/** @type {String} */ 路径) {
 	// 		behavior: "smooth",
 	// 	});
 }
+
+_global["friends.js"] = () => ({});
