@@ -186,7 +186,7 @@ section video {
 blockquote {
 	background-color: var(--surface-2);
 	border: 1px solid var(--accent-color-transparent);
-	border-left: 8px solid var(--accent-color-transparent);
+	border-left: 4px solid var(--accent-color-transparent);
 	border-radius: var(--border-radius);
 	margin: 4px 0;
 	padding: 4px;
