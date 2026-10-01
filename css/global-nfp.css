@@ -405,7 +405,7 @@ div.通知 {
 		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
 		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
 	background-color: var(--surface-1);
-	border: 1px solid var(--accent-color-transparent);
+	border: 1px solid var(--overlay);
 	border-radius: var(--border-radius);
 	opacity: 0;
 	margin: 16px;
