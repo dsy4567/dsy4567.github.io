@@ -573,21 +573,13 @@ let 网易云音乐 = {
 		let 播放列表 = gd("播放列表", true);
 		let 文档片段 = document.createDocumentFragment();
 		let 已添加数量 = 0;
-		await 批量低阻塞操作(待添加歌单, async (/** @type {歌单} */ 音乐信息) => {
+		await 批量低阻塞操作(待添加歌单, (/** @type {歌单} */ 音乐信息) => {
 			// 已在基础歌单或先前添加进歌单的 id 直接跳过；同一批次内的重复由前面迭代写入的索引挡下
 			if (typeof 网易云音乐.歌单索引[音乐信息.id] !== "undefined") return;
 			// 数据与元素在同一迭代内写入，保证列表元素可见时其数据已可播放
 			网易云音乐.歌单索引[音乐信息.id] = 网易云音乐.歌单.push(音乐信息) - 1;
 			已添加数量++;
-			let li = ce("li");
-			let 歌手 = ce("span");
-			歌手.className = "淡化";
-			歌手.textContent = 音乐信息.歌手;
-			li.append(音乐信息.歌名, " ", 歌手);
-			li.tabIndex = 0;
-			li.title = 音乐信息.完整歌名;
-			li.dataset.id = "" + 音乐信息.id;
-			文档片段.append(li);
+			文档片段.append(创建歌单项(音乐信息));
 		});
 		播放列表?.append(文档片段);
 		// 歌单确有变化才重置洗牌顺序，下次随机切换时重新洗牌并定位到当前歌曲（见 洗牌取索引）
@@ -740,6 +732,25 @@ let 网易云音乐 = {
 	},
 };
 
+/**
+ * 创建播放列表项：歌名与淡化歌手，并写入事件委托定位播放所需的 id 与完整歌名
+ * @param {歌单} 音乐信息
+ * @returns {HTMLLIElement}
+ */
+function 创建歌单项(/** @type {歌单} */ 音乐信息) {
+	let li = ce("li");
+	let 歌名 = ce("span");
+	歌名.textContent = 音乐信息.歌名;
+	let 歌手 = ce("span");
+	歌手.className = "淡化";
+	歌手.textContent = 音乐信息.歌手;
+	li.append(歌名, " ", 歌手);
+	li.tabIndex = 0;
+	li.title = 音乐信息.完整歌名;
+	li.dataset.id = "" + 音乐信息.id;
+	return li;
+}
+
 let 染网易云音乐组件已渲染 = false;
 async function 立即渲染网易云音乐组件() {
 	if (染网易云音乐组件已渲染) return;
@@ -806,19 +817,9 @@ async function 立即渲染网易云音乐组件() {
 		});
 
 		let 文档片段 = document.createDocumentFragment();
-		await 批量低阻塞操作(网易云音乐.歌单, async (/** @type {歌单} */ 音乐信息) => {
-			let li = ce("li");
-			let 歌名 = ce("span");
-			歌名.textContent = 音乐信息.歌名;
-			let 歌手 = ce("span");
-			歌手.className = "淡化";
-			歌手.textContent = 音乐信息.歌手;
-			li.append(歌名, " ", 歌手);
-			li.tabIndex = 0;
-			li.title = 音乐信息.完整歌名;
-			li.dataset.id = "" + 音乐信息.id;
-			文档片段.append(li);
-		});
+		await 批量低阻塞操作(网易云音乐.歌单, (/** @type {歌单} */ 音乐信息) =>
+			文档片段.append(创建歌单项(音乐信息))
+		);
 		播放列表.append(文档片段);
 	}
 
