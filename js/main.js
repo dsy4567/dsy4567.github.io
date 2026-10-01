@@ -72,7 +72,7 @@ function 动态加载(元素) {
 					// 不能通过赋值 location.hash（置空再恢复）触发滚动：赋值 hash 属于 fragment 导航，
 					// 会 push 新历史条目，既污染后退栈，也会清空前进栈（导致后退后前进按钮变灰）
 					try {
-						目标 = qs(选择器);
+						目标 = 右.querySelector(选择器);
 						目标?.nextElementSibling?.classList.add("标记");
 						目标?.scrollIntoView({
 							behavior: "smooth",
