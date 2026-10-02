@@ -498,18 +498,23 @@ fetch("https://api.github.com/users/dsy4567")
 			let 上次鼠标高亮标题 = null;
 			/** 参与高亮的标题元素列表缓存 @type {Element[]} */
 			let 标题元素列表 = [];
-			/** 标题元素列表对应的正文代次，与 动态加载自增计数器 不一致时说明正文已被重建 */
-			let 标题列表代次 = -1;
+			/** 标题元素列表是否仍与正文一致，正文子节点变化后置否 */
+			let 标题列表有效 = false;
 
-			/** 当前正文内参与高亮的标题元素列表，正文被动态换页重建后自动刷新 @returns {Element[]} */
+			/**
+			 * 当前正文内参与高亮的标题元素列表，正文变化后自动重新获取
+			 * 正文常由其他模块异步写入（如 blog.js 拉取完文章后才替换加载提示），
+			 * 换页计数器无法预知这种迟到写入，故由观察正文子节点变化的 MutationObserver 置否
+			 * @returns {Element[]}
+			 */
 			const 取标题元素列表 = () => {
-				if (标题列表代次 === 动态加载自增计数器) return 标题元素列表;
-				标题列表代次 = 动态加载自增计数器;
+				if (标题列表有效) return 标题元素列表;
+				标题列表有效 = true;
 				标题元素列表 = Array.from(
 					qs("main > .右", true)?.querySelectorAll(标题选择器) || []
 				);
-				// 正文已重建，指向旧节点的高亮引用一并作废
-				上次滚动高亮标题 = 上次鼠标高亮标题 = null;
+				// 不重置 上次滚动高亮标题/上次鼠标高亮标题：正文局部增删时旧高亮节点可能仍在文档中，
+				// 保留引用才能让 切换标题高亮 从它身上移除高亮类
 				return 标题元素列表;
 			};
 
@@ -596,20 +601,35 @@ fetch("https://api.github.com/users/dsy4567")
 
 				// rAF 节流：一帧内多次触发只执行一次，导航栏与标题高亮共用同一次帧回调
 				let 已排队 = false;
+				/** 把导航栏与滚动高亮的更新合并到同一帧执行 */
+				const 排队更新 = () => {
+					if (已排队) return;
+					已排队 = true;
+					requestAnimationFrame(() => {
+						已排队 = false;
+						更新导航栏();
+						更新滚动高亮();
+					});
+				};
 				addEventListener(
 					"scroll",
 					() => {
 						// console.log("onscroll");
-						if (已排队) return;
-						已排队 = true;
-						requestAnimationFrame(() => {
-							已排队 = false;
-							更新导航栏();
-							更新滚动高亮();
-						});
+						排队更新();
 					},
 					{ passive: true }
 				);
+
+				// 观察正文子节点增删，覆盖换页以外的写入（含其他模块的异步写入与局部追加）；
+				// 正文元素自身不随换页替换（动态换页只替换其 innerHTML），故可长期观察，
+				// 且只观察子节点、不观察属性，避免高亮类名的增删反过来触发观察器
+				const 正文元素 = qs("main > .右", true);
+				if (正文元素)
+					new MutationObserver(() => {
+						标题列表有效 = false;
+						// 正文写入时用户未必会滚动或移动鼠标，这里补一次更新，避免高亮长时间缺席
+						排队更新();
+					}).observe(正文元素, { childList: true, subtree: true });
 
 				let 鼠标已排队 = false,
 					光标Y = 0;
