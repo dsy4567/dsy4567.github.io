@@ -581,7 +581,10 @@ async function 渲染文章列表(u) {
 		})
 		.catch(处理文章列表加载失败);
 }
-function 重定向到博文() {
+/**
+ * @param {(value: void | PromiseLike<void>) => void} resolve
+ */
+function 重定向到博文(resolve) {
 	//#region 旧版 ?id= 参数重定向到新路径
 	const u = new URL(location.href),
 		id = u.searchParams.get("id"),
@@ -589,20 +592,27 @@ function 重定向到博文() {
 
 	if (id) {
 		const 需要重定向到 = `/blog/${id}/`;
-		if (动态加载) 动态加载({ href: 需要重定向到, replaceState: true });
-		else location.href = 需要重定向到;
+		if (动态加载) {
+			resolve();
+			setTimeout(() => 动态加载({ href: 需要重定向到, replaceState: true }), 500);
+		} else location.href = 需要重定向到;
+		return true;
 	}
+	return false;
 	//#endregion
 }
 
 let 入口函数首次调用 = false;
+/** @returns {Promise<void>} */
 export async function main(/** @type {String} */ 路径) {
-	重定向到博文();
-	if (!入口函数首次调用) {
-		入口函数首次调用 = true;
-		return;
-	}
-	await _main();
+	return new Promise(async (resolve, reject) => {
+		if (重定向到博文(resolve)) return resolve();
+		if (!入口函数首次调用) {
+			入口函数首次调用 = true;
+			return resolve();
+		}
+		_main().finally(resolve);
+	});
 }
 
 // 绕过 main.js，尽快渲染文章列表或文章页
