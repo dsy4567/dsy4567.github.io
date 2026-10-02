@@ -30,7 +30,7 @@ async function 加载模块() {
 	}
 	路径 = 路径2;
 }
-/** 动态加载内容缓存：键为「清理后的路径 + 查询字符串」，值为匹配到的正文与标题；仅存于内存，页面关闭时随会话销毁 */
+/** 动态加载内容缓存：键为「清理后的路径不含查询字符串」，值为匹配到的正文与标题；仅存于内存，页面关闭时随会话销毁 */
 const 动态加载缓存 = /** @type {Map<string, { 正文: string, 标题: string }>} */ (new Map());
 /** @param {{ href: string; popstate?: boolean, replaceState?: boolean }} 元素 */
 function 动态加载(元素) {
@@ -704,7 +704,7 @@ addEventListener("popstate", 事件 => {
 	// hash 变化执行默认行为
 	if (获取清理后当前路径() === 路径 || 事件.state?.路径 === 路径) return 事件.preventDefault();
 	动态加载({
-		href: location.pathname,
+		href: location.href,
 		popstate: true,
 	});
 });
