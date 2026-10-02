@@ -382,7 +382,6 @@ main > .右::after {
 	transition: var(--transition) background-color;
 }
 
-main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg)):hover::before,
 main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg)):target::before,
 main > .右 :is(.高亮-滚动, .高亮-鼠标):is(h1, h2, h3, h4, h5, h6):not(:has(svg))::before {
 	background-color: var(--accent-color);

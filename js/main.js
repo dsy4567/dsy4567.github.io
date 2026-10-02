@@ -633,9 +633,12 @@ fetch("https://api.github.com/users/dsy4567")
 
 				let 鼠标已排队 = false,
 					光标Y = 0;
+				// 用 pointermove 而非 mousemove：除鼠标外还能覆盖手写笔的悬浮；
+				// 过滤 pointerType 排除触摸，触摸拖动不参与高亮（触摸也没有真正的「悬浮」）
 				addEventListener(
-					"mousemove",
+					"pointermove",
 					事件 => {
+						if (事件.pointerType !== "mouse" && 事件.pointerType !== "pen") return;
 						光标Y = 事件.clientY;
 						if (鼠标已排队) return;
 						鼠标已排队 = true;
