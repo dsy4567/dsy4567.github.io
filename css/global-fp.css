@@ -601,7 +601,7 @@ div#侧边按钮容器 {
 	}
 	main .左 {
 		--height: calc(64vh);
-		--maxh: calc(430px);
+		--maxh: calc(438px);
 		height: var(--height);
 		scrollbar-width: none;
 		z-index: 0;
