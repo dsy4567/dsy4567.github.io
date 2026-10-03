@@ -196,9 +196,7 @@ async function 垂直滚动到容器内可见区域(s, 缓存 = false) {
  * @param {boolean} 状态 - true 显示，false 隐藏
  */
 function 显示或隐藏进度条(状态) {
-	状态
-		? qs(".进度条外面", true)?.classList.add("显示")
-		: qs(".进度条外面", true)?.classList.remove("显示");
+	qs(".进度条外面", true)?.classList.toggle("显示", 状态);
 }
 /**
  * 设置 meta robots 为 noindex，阻止搜索引擎收录当前页面

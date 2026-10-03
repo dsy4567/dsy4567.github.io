@@ -594,7 +594,7 @@ function 重定向到博文(resolve) {
 		const 需要重定向到 = `/blog/${id}/`;
 		if (动态加载) {
 			resolve();
-			setTimeout(() => 动态加载({ href: 需要重定向到, replaceState: true }), 500);
+			setTimeout(() => 动态加载({ href: 需要重定向到, replaceState: true }), 0);
 		} else location.href = 需要重定向到;
 		return true;
 	}
@@ -606,11 +606,10 @@ let 入口函数首次调用 = false;
 /** @returns {Promise<void>} */
 export async function main(/** @type {String} */ 路径) {
 	return new Promise(async (resolve, reject) => {
+		入口函数首次调用 = true;
 		if (重定向到博文(resolve)) return resolve();
-		if (!入口函数首次调用) {
-			入口函数首次调用 = true;
-			return resolve();
-		}
+		if (!入口函数首次调用) return resolve();
+
 		_main().finally(resolve);
 	});
 }
