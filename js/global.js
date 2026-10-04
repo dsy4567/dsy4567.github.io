@@ -116,10 +116,10 @@ function gd(s, 缓存 = false) {
 }
 /**
  * document.querySelector 的快捷方式，支持缓存
- * @param {string} s
- * @param {boolean} 缓存
- * @param {Document | Element} [目标=document] - 搜索范围，默认 document
- * @returns {HTMLElement | null}
+ * @param {string} s - CSS 选择器
+ * @param {boolean} [缓存=false] - 是否启用缓存，仅当 目标 为 document 时生效；缓存以选择器为键，命中后不会失效，查询不到结果时不会写入缓存
+ * @param {ParentNode} [目标=document] - 搜索范围，默认 document，可传 Document / Element / DocumentFragment
+ * @returns {HTMLElement | null} 匹配到的第一个元素，未匹配到时为 null；querySelector 语义上可能返回 SVGElement 等其他 Element，此处按 HTMLElement 收窄，必要时在调用处断言
  */
 function qs(s, 缓存 = false, 目标 = document) {
 	if (缓存 && 目标 === document) {
@@ -129,18 +129,27 @@ function qs(s, 缓存 = false, 目标 = document) {
 	return 目标.querySelector(s);
 }
 /**
- * document.querySelectorAll 的快捷方式
- * @type {typeof document.querySelectorAll}
+ * document.querySelectorAll 的快捷方式，可在 目标 内查询
+ * 传标签名时按标签推导元素类型，传其他选择器时返回 NodeListOf<Element>；返回的是静态快照，不随 DOM 变化更新
+ * @type {{
+ *   <K extends keyof HTMLElementTagNameMap>(s: K, 目标?: ParentNode): NodeListOf<HTMLElementTagNameMap[K]>;
+ *   <E extends Element = Element>(s: string, 目标?: ParentNode): NodeListOf<E>;
+ * }}
  */
-const qsa = (/** @type {keyof HTMLElementTagNameMap} */ s, 目标 = document) => {
+const qsa = (/** @type {string} */ s, /** @type {ParentNode} */ 目标 = document) => {
 	return 目标.querySelectorAll(s);
 };
 /**
- * document.getElementsByTagName 的快捷方式
- * @type {typeof document.getElementsByTagName}
+ * document.getElementsByTagName 的快捷方式，可在 目标 内查询
+ * 传标签名时按标签推导元素类型；返回的是随 DOM 变化自动更新的实时集合
+ * @type {{
+ *   <K extends keyof HTMLElementTagNameMap>(s: K, 目标?: Document | Element): HTMLCollectionOf<HTMLElementTagNameMap[K]>;
+ *   <E extends Element = Element>(s: string, 目标?: Document | Element): HTMLCollectionOf<E>;
+ * }}
  */
-const ge = (/** @type {keyof HTMLElementTagNameMap} */ s, 目标 = document) => {
-	return 目标.getElementsByTagName(s);
+const ge = (/** @type {string} */ s, /** @type {Document | Element} */ 目标 = document) => {
+	// 元素类型交由上面的重载签名决定，此处断言 any 以避免实现签名与重载签名冲突
+	return /** @type {any} */ (目标.getElementsByTagName(s));
 };
 /**
  * document.createElement 的快捷方式
