@@ -303,7 +303,7 @@ function 添加脚本(url, crossOrigin = "use-credentials", 使用缓存 = true)
  * 添加一个悬浮卡片到页面
  * @param {string} html - 要显示的 HTML 内容
  * @param {number} [x=0] - 水平位置（像素）
- * @param {number} [y=0] - 垂直位置（像素）
+ * @param {number} [y=0] - 垂直位置（像素），超过视口高度的 67% 时会被限制到 67% 处
  * @param {boolean} [失去焦点时隐藏=true] - 是否失去焦点时隐藏卡片
  * @returns {HTMLDivElement} 卡片元素
  */
@@ -312,14 +312,16 @@ function 添加悬浮卡片(/** @type {string} */ html, x = 0, y = 0, 失去焦�
 	div.className = "悬浮卡片";
 	div.innerHTML = html;
 	div.style.left = x + "px";
-	div.style.top = y + "px";
+	// 卡片最大高度为 33vh，顶部最靠下只能到视口 67% 处，否则底部会超出视口
+	div.style.top = Math.min(y, window.innerHeight * 0.67) + "px";
 	div.tabIndex = 0;
 	div.role = "dialog";
 	document.body.append(div);
 	div.focus();
 	失去焦点时隐藏 && div.addEventListener("focusout", () => div.remove());
 	return div;
-} /**
+}
+/**
  * 在页面底部添加一个横幅通知，10 秒后自动隐藏
  * @param {string} html - 横幅内容的 HTML
  * @returns {HTMLDivElement} 创建的横幅元素
