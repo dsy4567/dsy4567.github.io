@@ -118,28 +118,29 @@ function gd(s, 缓存 = false) {
  * document.querySelector 的快捷方式，支持缓存
  * @param {string} s
  * @param {boolean} 缓存
+ * @param {Document | Element} [目标=document] - 搜索范围，默认 document
  * @returns {HTMLElement | null}
  */
-function qs(s, 缓存 = false) {
-	if (缓存) {
+function qs(s, 缓存 = false, 目标 = document) {
+	if (缓存 && 目标 === document) {
 		let r = qs缓存[s];
-		return r || (qs缓存[s] = document.querySelector(s));
+		return r || (qs缓存[s] = 目标.querySelector(s));
 	}
-	return document.querySelector(s);
+	return 目标.querySelector(s);
 }
 /**
  * document.querySelectorAll 的快捷方式
  * @type {typeof document.querySelectorAll}
  */
-const qsa = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
-	return document.querySelectorAll(s);
+const qsa = (/** @type {keyof HTMLElementTagNameMap} */ s, 目标 = document) => {
+	return 目标.querySelectorAll(s);
 };
 /**
  * document.getElementsByTagName 的快捷方式
  * @type {typeof document.getElementsByTagName}
  */
-const ge = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
-	return document.getElementsByTagName(s);
+const ge = (/** @type {keyof HTMLElementTagNameMap} */ s, 目标 = document) => {
+	return 目标.getElementsByTagName(s);
 };
 /**
  * document.createElement 的快捷方式
