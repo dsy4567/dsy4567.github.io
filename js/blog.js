@@ -606,9 +606,10 @@ let 入口函数首次调用 = false;
 /** @returns {Promise<void>} */
 export async function main(/** @type {String} */ 路径) {
 	return new Promise(async (resolve, reject) => {
+		const 入口函数首次调用拷贝 = 入口函数首次调用;
 		入口函数首次调用 = true;
 		if (重定向到博文(resolve)) return resolve();
-		if (!入口函数首次调用) return resolve();
+		if (!入口函数首次调用拷贝) return resolve();
 
 		_main().finally(resolve);
 	});
