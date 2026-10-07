@@ -159,9 +159,17 @@ spoiler {
 	color: #000;
 	transition: var(--transition) color;
 }
-spoiler:hover,
-body:has(:focus-visible) spoiler {
-	color: #fff !important;
+/* 不支持 :has() 的浏览器（如 Chrome 86）会整条规则失效，连 :hover 一起失效，故需兜底副本 */
+@supports selector(:has(*)) {
+	spoiler:hover,
+	body:has(:focus-visible) spoiler {
+		color: #fff !important;
+	}
+}
+@supports not selector(:has(*)) {
+	spoiler:hover {
+		color: #fff !important;
+	}
 }
 
 svg[data-icon] {
@@ -432,7 +440,10 @@ body > #顶部大图 {
 }
 
 body > #顶部大图 > .顶部大图层 {
-	inset: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 	opacity: 0;
 	position: absolute;
 	transition: var(--transition) opacity;
@@ -443,7 +454,7 @@ body > #顶部大图 > .顶部大图层:first-child {
 	opacity: 1;
 	transition: none;
 }
-body > #顶部大图 > .顶部大图层 > :is(img, svg, picture) {
+body > #顶部大图 > .顶部大图层 > img {
 	display: block;
 	object-fit: cover;
 	user-select: none;

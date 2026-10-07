@@ -14,10 +14,11 @@ module.exports = defineConfig([
 	// js.configs.recommended,
 
 	// ========== Web 前端代码（ES Module + 浏览器环境）==========
+	// 语法基线 ES2021：最低支持的 Chrome 86 不支持 ES2022 的类字段 / 顶层 await / Object.hasOwn 等
 	{
 		files: ["js/**/*.js"],
 		languageOptions: {
-			ecmaVersion: 2022,
+			ecmaVersion: 2021,
 			sourceType: "module",
 			globals: {
 				...globals.browser,

@@ -89,14 +89,27 @@
 
 ### 浏览器兼容基线
 
-- 最低支持 Chrome 109（Windows 7 可用的最后一个 Chromium 大版本），JavaScript 语法基线为 ES2022（与 `jsconfig.json` 的 `lib` 一致）
-- CSS 可放心使用：自定义属性、`calc()`、`min()` / `max()` / `clamp()`、`hsl()` / `rgb()` / `rgba()` 逗号语法、`#rrggbbaa` 十六进制透明度、`color-scheme`、`prefers-color-scheme`、`@property`、`:has()`、`:not()` 选择器列表、`Mark` / `MarkText` 系统色
-- CSS 禁止使用（均为 Chrome 111+ 至 123+ 特性，109 不支持）：`color-mix()`、`oklch()` / `oklab()`、相对颜色语法（如 `hsl(from var(--x) ...)`）、`light-dark()`、CSS 嵌套
+分为两级，按「必须可用」与「完美体验」区分：
+
+- 最低支持 Chrome 86（360 极速浏览器 13.0 的内核版本）：核心功能必须可用，允许样式降级
+- Chrome 109（Windows 7 可用的最后一个 Chromium 大版本）及以上：全部功能完美
+- JavaScript 语法基线为 ES2021（与 `jsconfig.json` 的 `lib` 一致），Chrome 86 已完整支持
+
+Chrome 86 可放心使用：自定义属性、`calc()`、`min()` / `max()` / `clamp()`、`hsl()` / `rgb()` / `rgba()` 逗号语法、`#rrggbbaa` 十六进制透明度、`color-scheme`、`prefers-color-scheme`、`@property`、`:focus-visible`、单一复合选择器的 `:not()`、`@supports selector()`、`Mark` / `MarkText` 系统色
+
+Chrome 86 不支持，且**不得与旧特性写进同一个逗号选择器列表**（列表中有任一无效选择器则整条规则被忽略）：
+`:has()`（105+）、`:is()` / `:where()`（88+）、`:not()` 的选择器列表形式（88+）
+
+- 既要保留新特性、又要在 86 上不失效时：把原规则原样包进 `@supports selector(...)` 正向守卫，紧随其后写一份 `@supports not selector(...)` 兜底副本（如 `:has(*:focus-visible)` → `:focus-within`，`body:has(...)` 前缀选择器只能丢弃）
+- JS 侧写选择器前必须运行时能力检测（如 `CSS.supports("selector(:has(*))")`），否则 `matches` / `querySelector` 在 86 上抛 `SyntaxError`
+- 属性/声明级的新特性（87+ 的含线宽 `text-decoration` 简写、`text-underline-offset`、`scrollbar-gutter` 等）不影响同规则的其他声明，86 只忽略该行，无等价物时可直接保留
+
+CSS 禁止使用（均为 Chrome 111+ 至 123+ 特性）：`color-mix()`、`oklch()` / `oklab()`、相对颜色语法（如 `hsl(from var(--x) ...)`）、`light-dark()`、CSS 嵌套
 - 颜色需要「按明暗选方向」的逻辑（叠层色、选区色、`color-scheme`、代码高亮主题等）一律由 JS 在写入主题变量时计算好，CSS 只做与方向无关的派生，不得依赖上述禁用特性
 
 #### 例外
 
-- 如果可接受功能降级并做好兼容性测试，则允许有限使用新特性
+- 如果可接受功能降级并做好兼容性测试，则允许有限使用新特性（仅限装饰性样式）
 - JavaScript 可通过实现简单 polyfill，有限使用新特性
 
 ### 变量名

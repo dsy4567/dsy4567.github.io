@@ -455,7 +455,11 @@ let 网易云音乐 = {
 	 * 无需每个 tick 都做选择器匹配；展开瞬间强制刷新一次，避免沿用收起期间的旧进度
 	 */
 	刷新面板展开状态() {
-		网易云音乐.面板已展开 = 网易云音乐元素?.matches(":hover, :has(*:focus-visible)") ?? false;
+		// Chrome 86 无 :has()，需退化为 :focus-within，否则 matches 会抛 SyntaxError
+		const 展开选择器 = 支持has选择器
+			? ":hover, :has(*:focus-visible)"
+			: ":hover, :focus-within";
+		网易云音乐.面板已展开 = 网易云音乐元素?.matches(展开选择器) ?? false;
 		if (网易云音乐.面板已展开) 网易云音乐.更新播放进度(true);
 	},
 	/**

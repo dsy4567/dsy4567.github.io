@@ -29,6 +29,8 @@ let 动态加载自增计数器 = 0;
 let /** @type {number} */ 通用计数器 = 0;
 const 网页访问者不为爬虫 =
 	!navigator.userAgent.includes("bot") && !navigator.userAgent.includes("spider");
+/** 当前浏览器是否支持 :has() 选择器（Chrome 105+ 才支持），供 JS 侧选择器降级用 */
+const 支持has选择器 = CSS.supports("selector(:has(*))");
 //#endregion
 
 //#region 简单工具函数
@@ -182,7 +184,7 @@ async function 回到顶部() {
  */
 async function 滚动到可见区域(s, 缓存 = false, 选项 = { inline: "start", block: "start" }) {
 	await qs(s, 缓存)?.scrollIntoView({
-		behavior: 用户已禁用动画特效 ? "instant" : "smooth",
+		behavior: 用户已禁用动画特效 ? "auto" : "smooth",
 		...选项,
 	});
 }
@@ -197,7 +199,7 @@ async function 垂直滚动到容器内可见区域(s, 缓存 = false) {
 	const 父容器 = 目标元素?.parentElement;
 	if (!父容器 || !目标元素) return;
 	await 父容器.scrollTo({
-		behavior: 用户已禁用动画特效 ? "instant" : "smooth",
+		behavior: 用户已禁用动画特效 ? "auto" : "smooth",
 		top: 目标元素?.offsetTop || 0,
 	});
 }

@@ -557,7 +557,9 @@ fetch("https://api.github.com/users/dsy4567")
 			 */
 			const 滚动高亮视口百分比 = 0.65;
 			/** 参与高亮的标题选择器，与 global-nfp.css 中 ::before 的样式规则保持一致 */
-			const 标题选择器 = ":is(h1, h2, h3, h4, h5, h6):not(:has(svg))";
+			const 标题选择器 = 支持has选择器
+				? ":is(h1, h2, h3, h4, h5, h6):not(:has(svg))"
+				: "h1, h2, h3, h4, h5, h6";
 
 			// 滚动与鼠标各自维护一个高亮类，互不干扰，因此无需在两者之间做竞争仲裁
 			/** 上一次被滚动逻辑高亮的标题 @type {Element | null} */
@@ -578,9 +580,13 @@ fetch("https://api.github.com/users/dsy4567")
 			const 取标题元素列表 = () => {
 				if (标题列表有效) return 标题元素列表;
 				标题列表有效 = true;
-				标题元素列表 = Array.from(
+				const 匹配到的标题 = Array.from(
 					qs("main > .右", true)?.querySelectorAll(标题选择器) || []
 				);
+				// 不支持 :has() 时选择器退化为纯标签列表，需在 JS 侧剔除含 svg 图标的标题，保证两端集合一致
+				标题元素列表 = 支持has选择器
+					? 匹配到的标题
+					: 匹配到的标题.filter(元素 => !元素.querySelector("svg"));
 				// 不重置 上次滚动高亮标题/上次鼠标高亮标题：正文局部增删时旧高亮节点可能仍在文档中，
 				// 保留引用才能让 切换标题高亮 从它身上移除高亮类
 				return 标题元素列表;
