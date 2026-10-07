@@ -281,7 +281,8 @@ function 添加样式(url, crossOrigin = "use-credentials", 使用缓存 = true)
 }
 /**
  * 动态添加一个外部脚本，若脚本已加载或正在加载则不会重复添加，而是等待其完成或失败
- * 加载失败的 Promise 同样会被缓存，之后对同一 url 的调用会得到同一个失败的 Promise 而不会重新加载，由调用方自行处理失败
+ * 加载失败的 Promise 不会被缓存（失败时清除缓存条目），调用方可在稍后重试，
+ * 避免一次网络抖动导致整个会话内对同一 url 永久失败，重复失败由调用方自行处理
  * @param {string} url - 脚本 URL
  * @param {"anonymous" | "use-credentials" | null} [crossOrigin="use-credentials"] - 跨域属性
  * @returns {Promise<Event>} 在脚本加载完成时 resolve，失败时 reject
@@ -303,6 +304,10 @@ function 添加脚本(url, crossOrigin = "use-credentials", 使用缓存 = true)
 		document.head.append(s);
 	});
 	已添加的脚本.set(url, 加载);
+	// 失败时清除缓存，允许调用方重试；仅当缓存仍指向本次加载时才删除，避免误删并发发起的新加载
+	加载.catch(() => {
+		if (已添加的脚本.get(url) === 加载) 已添加的脚本.delete(url);
+	});
 	console.timeEnd("添加脚本 " + url);
 	return 加载;
 }
