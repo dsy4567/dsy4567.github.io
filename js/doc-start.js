@@ -201,7 +201,8 @@ function 当前是否深色() {
  * @param {string} hex - 强调色原色，如 "#66ccff"
  */
 function 写入强调色变量(hex, 深 = 当前是否深色()) {
-	const 背景hex = 深 ? "#18171c" : "#eeeeee";
+	// 此值须与 css/global-fp.css 中 --bg-color 的深浅色定义保持一致，改背景色时同步更新
+	const 背景hex = 深 ? "#18171c" : "#f7f7f7";
 
 	// 主色用作链接/图标等前景文字
 	const 主色 = 调整亮度以满足对比度(hex, 背景hex, 4.5);
@@ -210,8 +211,7 @@ function 写入强调色变量(hex, 深 = 当前是否深色()) {
 	根.setProperty("--accent-color", 主色);
 	// 原色低透明度，用作高亮底色（保持原色不变，因为透明度会降低对比度要求）
 	根.setProperty("--accent-color-transparent", hex + "2e");
-	// 强调色块上的文字色：深色模式的主色偏亮、浅色模式的主色偏暗，故方向相反
-	根.setProperty("--accent-text-color", 深 ? "#222" : "#eee");
+	// --accent-text-color 不在此写死：css/global-fp.css 已定义 var(--bg-color)，跟随背景深浅自动生效
 	根.setProperty("--link-color", 主色);
 }
 /**
@@ -223,7 +223,8 @@ function 刷新主题() {
 	// 自动模式也解析为具体类，保证 hljs 等只认类的地方能跟随
 	document.documentElement.classList.toggle("深色", 深);
 	document.documentElement.classList.toggle("浅色", !深);
-	document.getElementById("主题色")?.setAttribute("content", 深 ? "#18171c" : "#eeeeee");
+	// 深浅两色须与 --bg-color 一致，避免移动端地址栏与页面背景出现色差
+	document.getElementById("主题色")?.setAttribute("content", 深 ? "#18171c" : "#f7f7f7");
 	写入强调色变量(读取强调色(), 深);
 	console.timeEnd("刷新主题");
 }
