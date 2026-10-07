@@ -144,7 +144,7 @@ h5,
 h6 {
 	font-weight: 400;
 	margin-left: 4px;
-	padding-left: 2px;
+	padding-left: 6px;
 	position: relative;
 }
 
@@ -201,6 +201,8 @@ section h2:has(svg) {
 	align-items: center;
 	justify-content: flex-start;
 	position: relative;
+	margin-left: 0;
+	padding-left: 0;
 }
 section h2:has(svg)::before,
 main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg))::before {
@@ -230,7 +232,7 @@ blockquote {
 	border-left: 4px solid var(--accent-color-transparent);
 	border-radius: var(--border-radius);
 	margin: 4px 0;
-	padding: 4px;
+	padding: 0 8px;
 }
 code {
 	background-color: var(--overlay);
