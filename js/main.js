@@ -396,56 +396,124 @@ fetch("https://api.github.com/users/dsy4567")
 				元素?.addEventListener("click", 事件 => {
 					事件.preventDefault();
 					if (gd("recaptcha")) return;
-					let div = 添加悬浮卡片(
+					const div = 添加悬浮卡片(
 						`
-            <div id="g-recaptcha"></div><br />
-            <button id="recaptcha">开始人机验证/提交</button>
+            <div id="g-recaptcha"></div>
+            <button disabled id="recaptcha">提交</button>
             <button id="close_recaptcha">关闭</button>
             <a href="https://qwq.dsy4567.icu/api/getemail">在新标签页验证</a><br/>
-            要查看 dsy4567 的电子邮箱地址/TG 用户名，请通过 reCAPTCHA 人机验证。<br />
+            <p id="recaptcha_tips">要查看 dsy4567 的电子邮箱地址/TG 用户名，请通过 reCAPTCHA 人机验证。<br />
             继续查看电子邮箱地址即代表您同意不向 dsy4567<br />
-            发送广告/要饭/雇童工/炒币等垃圾邮件。`,
-						// @ts-ignore
-						事件.pageX,
-						// @ts-ignore
-						事件.pageY,
+            发送广告/要饭/雇童工/炒币等垃圾邮件。</p>
+            <p class="悬浮卡片提示" id="recaptcha_status">正在加载人机验证…</p>
+            <div id="recaptcha_result" tabindex="0"></div>
+            <p class="悬浮卡片错误" id="recaptcha_error" hidden></p>`,
+						0,
+						事件.clientY,
 						false
 					);
-					添加脚本("https://www.recaptcha.net/recaptcha/api.js?render=explicit", null)
-						.then(() => {
-							gd("close_recaptcha")?.addEventListener("click", () => {
-								div.remove();
+					const 提交按钮 = /** @type {HTMLButtonElement} */ (
+							qs("#recaptcha", false, div)
+						),
+						关闭按钮 = qs("#close_recaptcha", false, div),
+						提示区 = qs("#recaptcha_tips", false, div),
+						状态行 = qs("#recaptcha_status", false, div),
+						结果区 = qs("#recaptcha_result", false, div),
+						错误提示 = qs("#recaptcha_error", false, div),
+						验证容器 = qs("#g-recaptcha", false, div);
+					if (
+						!提交按钮 ||
+						!关闭按钮 ||
+						!提示区 ||
+						!状态行 ||
+						!结果区 ||
+						!错误提示 ||
+						!验证容器
+					)
+						return;
+					// 关闭按钮立即绑定，避免脚本加载期间卡片无法关闭
+					关闭按钮.addEventListener("click", () => div.remove());
+					/** 在错误行展示失败原因 @param {string} 原因 */
+					const 显示验证错误 = 原因 => {
+						错误提示.textContent = `recaptcha验证出现问题，原因：${原因}，请尝试关闭卡片并重试，或点击在新标签页验证`;
+						错误提示.hidden = false;
+					};
+					/** reCAPTCHA 挂件 ID，脚本加载完毕渲染后才有值 */
+					let /** @type {number | null} */ 挂件id = null,
+						/** 是否正在提交，避免验证回调与按钮点击重复触发并发请求 */
+						提交中 = false;
+					/** 把验证回复发给接口并展示结果 @param {string} 回复 */
+					const 提交回复 = async 回复 => {
+						if (提交中) return;
+						提交中 = true;
+						状态行.hidden = true;
+						提交按钮.disabled = true;
+						try {
+							const 响应 = await fetch(
+								"https://qwq.dsy4567.icu/api/getemail?g-recaptcha-response=" + 回复
+							);
+							if (!响应.ok) throw new Error(`接口返回 HTTP ${响应.status}`);
+							结果区.innerHTML = `<hr>${await 响应.text()}`;
+							提示区.style.display = "none";
+							验证容器.style.display = "none";
+							提交按钮.disabled = true;
+							结果区.focus();
+						} catch (e) {
+							console.error(e);
+							提交按钮.disabled = false;
+							显示验证错误(e instanceof Error ? e.message : String(e));
+						} finally {
+							提交中 = false;
+						}
+					};
+					// reCAPTCHA 垫片：api.js 加载完成前先提供 grecaptcha.ready，
+					// 回调会被排入 ___grecaptcha_cfg.fns，待脚本加载后由 reCAPTCHA 自动取出执行
+					if (typeof grecaptcha === "undefined")
+						/** @type {any} */ (window).grecaptcha = {
+							ready: /** @param {() => void} 回调 */ 回调 => {
+								const /** @type {any} */ 配置 = (window.___grecaptcha_cfg =
+										window.___grecaptcha_cfg || {});
+								(配置.fns = 配置.fns || []).push(回调);
+							},
+						};
+					添加脚本(
+						"https://www.recaptcha.net/recaptcha/api.js?render=explicit",
+						null
+					).catch(e => {
+						console.error("无法加载 reCAPTCHA", e);
+						状态行.hidden = true;
+						显示验证错误("无法加载 reCAPTCHA 脚本");
+					});
+					grecaptcha.ready(() => {
+						// 人机验证通过时由 grecaptcha 调用并传入回复，收到回复即自动提交
+						/** @param {string} 回复 */
+						const 验证完成 = 回复 => 提交回复(回复);
+						try {
+							// reCAPTCHA 就绪后立即渲染验证组件
+							挂件id = grecaptcha.render(验证容器, {
+								sitekey: gr_sitekey,
+								theme: 当前是否深色() ? "dark" : "light",
+								callback: 验证完成,
+								"expired-callback": () => 显示验证错误("人机验证已过期"),
+								"error-callback": () => 显示验证错误("人机验证执行出错"),
 							});
-							gd("recaptcha")?.addEventListener("click", async 事件 => {
-								const gr = gd("g-recaptcha");
-								if (!gr) return;
-								try {
-									const 回复 = grecaptcha.getResponse();
-									if (!回复) throw new Error();
-									gr.innerHTML = await (
-										await fetch(
-											"https://qwq.dsy4567.icu/api/getemail?g-recaptcha-response=" +
-												回复
-										)
-									).text();
-									gr.focus();
-								} catch (e) {
-									gr.tabIndex = 0;
-									gr.focus();
-									grecaptcha.render("g-recaptcha", {
-										sitekey: gr_sitekey,
-										theme: matchMedia("(prefers-color-scheme: dark)").matches
-											? "dark"
-											: "light",
-									});
-								}
-							});
-						})
-						.catch(() => {
-							console.error("无法加载 reCAPTCHA");
-							open("https://qwq.dsy4567.icu/api/getemail", "_blank");
-							div.remove();
+						} catch (e) {
+							console.error(e);
+							显示验证错误(e instanceof Error ? e.message : String(e));
+							return;
+						}
+						提交按钮.addEventListener("click", () => {
+							if (挂件id === null) return;
+							const 回复 = grecaptcha.getResponse(挂件id);
+							if (!回复) {
+								状态行.textContent = "请先完成上方的人机验证";
+								return;
+							}
+							提交回复(回复);
 						});
+						状态行.textContent = "请勾选上方复选框完成人机验证";
+						提交按钮.disabled = false;
+					});
 				});
 			});
 			//#endregion

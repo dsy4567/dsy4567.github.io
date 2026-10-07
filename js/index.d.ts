@@ -107,14 +107,30 @@ declare class Hljs {
 	getLanguage(语言: string);
 }
 declare class Recaptcha {
-	getResponse(): string;
+	/** 脚本加载完成时调用回调；脚本尚未加载时由垫片把回调排入队列等待执行 */
+	ready(callback: () => void): void;
 	render(
-		id: string,
+		id: string | HTMLElement,
 		options: {
 			sitekey: string;
 			theme: "light" | "dark";
+			/** 人机验证完成时由 reCAPTCHA 调用，参数为验证回复 */
+			callback?: (回复: string) => void;
+			/** 验证过期时调用 */
+			"expired-callback"?: () => void;
+			/** 验证出错时调用 */
+			"error-callback"?: () => void;
 		}
-	);
+	): number;
+	getResponse(widgetId?: number): string;
+}
+
+interface Window {
+	/** reCAPTCHA 内部配置对象；脚本加载完成前，ready 回调会被排入 fns 等待执行 */
+	___grecaptcha_cfg?: {
+		/** 待 reCAPTCHA 加载完成后执行的回调队列 */
+		fns?: (() => void)[];
+	};
 }
 
 var dataLayer: any[];

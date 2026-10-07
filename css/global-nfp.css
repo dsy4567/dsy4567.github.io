@@ -438,6 +438,16 @@ div.通知 {
 	z-index: 997;
 }
 
+.悬浮卡片提示 {
+	background-color: var(--accent-color);
+	color: var(--accent-text-color);
+}
+
+.悬浮卡片错误 {
+	background-color: #000;
+	color: #f00;
+}
+
 .横幅 {
 	background-color: var(--surface-2);
 	box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 0px;
