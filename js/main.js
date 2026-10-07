@@ -543,6 +543,11 @@ fetch("https://api.github.com/users/dsy4567")
 
 			/** 触发样式切换所需的最小滚动幅度（px），避免小幅滚动频繁切换导致导航栏抖动 */
 			const 滚动阈值 = 25;
+			/**
+			 * 两次更新之间的最小间隔（毫秒）：高亮只在标题顶端越过判定线时才变化，
+			 * 导航栏同样不需要逐帧跟手，故不再逐帧（rAF）更新，改为按最小间隔时间节流
+			 */
+			const 更新最小间隔 = 100;
 			const 类列表 = document.body.classList;
 
 			/**
@@ -673,26 +678,39 @@ fetch("https://api.github.com/users/dsy4567")
 					上次鼠标高亮标题 = 切换标题高亮("高亮-鼠标", 上次鼠标高亮标题, 命中);
 				};
 
-				// rAF 节流：一帧内多次触发只执行一次，导航栏与标题高亮共用同一次帧回调
-				let 已排队 = false;
-				/** 把导航栏与滚动高亮的更新合并到同一帧执行 */
-				const 排队更新 = () => {
-					if (已排队) return;
-					已排队 = true;
-					requestAnimationFrame(() => {
-						已排队 = false;
-						更新导航栏();
-						更新滚动高亮();
-					});
+				/**
+				 * 「立即执行 + 尾随合并」的时间节流器：首次调用立即执行，
+				 * 间隔内的后续调用只登记一次尾随执行，保证停下后的最终状态也能被应用
+				 * @param {() => void} 任务
+				 */
+				const 创建节流器 = 任务 => {
+					/** @type {ReturnType<typeof setTimeout> | null} */
+					let 定时器 = null;
+					let 上次执行 = Number.NEGATIVE_INFINITY;
+					const 执行 = () => {
+						上次执行 = performance.now();
+						任务();
+					};
+					return () => {
+						if (定时器 !== null) return; // 已有尾随执行在等待，本次触发合并进去即可
+						const 剩余 = 更新最小间隔 - (performance.now() - 上次执行);
+						if (剩余 <= 0) {
+							执行();
+							return;
+						}
+						定时器 = setTimeout(() => {
+							定时器 = null;
+							执行();
+						}, 剩余);
+					};
 				};
-				addEventListener(
-					"scroll",
-					() => {
-						// console.log("onscroll");
-						排队更新();
-					},
-					{ passive: true }
-				);
+
+				/** 把导航栏与滚动高亮的更新合并到同一次节流执行中（滚动、正文变化共用） */
+				const 排队更新 = 创建节流器(() => {
+					更新导航栏();
+					更新滚动高亮();
+				});
+				addEventListener("scroll", 排队更新, { passive: true });
 
 				// 观察正文子节点增删，覆盖换页以外的写入（含其他模块的异步写入与局部追加）；
 				// 正文元素自身不随换页替换（动态换页只替换其 innerHTML），故可长期观察，
@@ -705,8 +723,9 @@ fetch("https://api.github.com/users/dsy4567")
 						排队更新();
 					}).observe(正文元素, { childList: true, subtree: true });
 
-				let 鼠标已排队 = false,
-					光标Y = 0;
+				let 光标Y = 0;
+				/** 把鼠标高亮的更新合并到同一次节流执行中（每次读取最新的 光标Y） */
+				const 排队鼠标更新 = 创建节流器(() => 更新鼠标高亮(光标Y));
 				// 用 pointermove 而非 mousemove：除鼠标外还能覆盖手写笔的悬浮；
 				// 过滤 pointerType 排除触摸，触摸拖动不参与高亮（触摸也没有真正的「悬浮」）
 				addEventListener(
@@ -714,12 +733,7 @@ fetch("https://api.github.com/users/dsy4567")
 					事件 => {
 						if (事件.pointerType !== "mouse" && 事件.pointerType !== "pen") return;
 						光标Y = 事件.clientY;
-						if (鼠标已排队) return;
-						鼠标已排队 = true;
-						requestAnimationFrame(() => {
-							鼠标已排队 = false;
-							更新鼠标高亮(光标Y);
-						});
+						排队鼠标更新();
 					},
 					{ passive: true }
 				);
