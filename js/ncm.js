@@ -874,6 +874,70 @@ fetch("/json/ncm.json")
 		歌单加载完成Resolve();
 	});
 
+//#region 页面歌单数据
+/**
+ * 把一组歌单并入 歌单 与 歌单索引（按 id 去重）。
+ * 与 ncm.json 基础歌单的填充保持一致：只写数据、不主动渲染播放列表面板，
+ * 面板的整体渲染统一交给 立即渲染网易云音乐组件（它要等基础歌单填充完成后才会被触发，
+ * 提前渲染会让随后追加的基础歌曲无法出现在列表里）；只有面板已经渲染过时才补上列表项
+ * @param {歌单[]} 歌曲表
+ */
+function 并入歌单(歌曲表) {
+	const 播放列表 = 染网易云音乐组件已渲染 ? gd("播放列表", true) : null;
+	/** @type {HTMLLIElement[]} */
+	const 待添加项 = [];
+	for (const 歌曲 of 歌曲表 || []) {
+		if (!歌曲 || typeof 歌曲.id !== "number") continue;
+		if (typeof 网易云音乐.歌单索引[歌曲.id] !== "undefined") continue;
+		网易云音乐.歌单索引[歌曲.id] = 网易云音乐.歌单.push(歌曲) - 1;
+		if (播放列表) 待添加项.push(创建歌单项(歌曲));
+	}
+	if (待添加项.length) 播放列表?.append(...待添加项);
+}
+
+/**
+ * 读取构建期注入的歌单数据（<script id="网易云音乐歌单" type="application/json">，内容为本页 歌单[]），
+ * 并入歌单后移除脚本（换页时新页面会重新注入一份），并放行 歌单加载完成，
+ * 使小组件不必等待 ncm.json 与额外的歌曲详情请求（见 tools/build.js 的 解析博文歌曲）
+ * @returns {boolean} 是否读到并成功解析出数据
+ */
+function 同步页面歌单数据() {
+	const 脚本 = /** @type {HTMLScriptElement | null} */ (
+		qs("script#网易云音乐歌单", false, qs("main > .右", true) || document)
+	);
+	if (!脚本) return false;
+	// 先移除再解析：解析失败也不留下脚本，避免下次进入同一页面时重复读取
+	脚本.remove();
+	let 歌曲表 = null;
+	try {
+		歌曲表 = JSON.parse(脚本.text);
+	} catch (e) {
+		console.error(e);
+	}
+	if (!Array.isArray(歌曲表)) return false;
+	并入歌单(歌曲表);
+	歌单加载完成Resolve();
+	return true;
+}
+
+同步页面歌单数据();
+// 动态换页只替换正文的 innerHTML，正文元素本身长期存在，观察其子节点即可覆盖每次导航；
+// 只在新增节点里直接出现目标脚本时才处理，避免正文大量写入时反复查询
+const 正文元素 = qs("main > .右", true);
+if (正文元素)
+	new MutationObserver(记录 => {
+		if (
+			!记录.some(记录项 =>
+				Array.from(记录项.addedNodes).some(
+					节点 => 节点 instanceof HTMLScriptElement && 节点.id === "网易云音乐歌单"
+				)
+			)
+		)
+			return;
+		同步页面歌单数据();
+	}).observe(正文元素, { childList: true, subtree: true });
+//#endregion
+
 //#region 网易云音乐小组件
 /**
  * <x-163music data-id="音乐id">：在博文等页面内嵌展示单曲推荐。
@@ -1073,11 +1137,13 @@ function 渲染小组件内容(组件, 歌曲) {
  * @param {网易云音乐小组件} 组件
  */
 async function 填充小组件(组件) {
-	// 等待基础歌单填充完成，避免按索引写入时互相覆盖，也保证 切换音乐 能定位到该歌曲
+	// 等待歌单就绪：命中构建期注入的数据时该 Promise 已被提前放行，否则等 ncm.json 填充完成
 	await 网易云音乐.歌单加载完成;
 	const 歌曲 = await 解析小组件歌曲(组件.getAttribute("data-id"));
 	组件.歌曲 = 歌曲;
-	if (歌曲) await 网易云音乐.添加歌曲到播放列表([歌曲]);
+	// 用 并入歌单 而非 添加歌曲到播放列表：后者会提前渲染播放列表面板，
+	// 令随后填入的基础歌单无法出现在列表里（详见 并入歌单）
+	if (歌曲) 并入歌单([歌曲]);
 	渲染小组件内容(组件, 歌曲);
 }
 

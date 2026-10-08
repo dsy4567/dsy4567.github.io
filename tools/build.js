@@ -29,6 +29,8 @@ const CONFIG = {
 	blogIndexPath: "./blog/index.html",
 	ncmPlaylistId: 9123680760,
 	ncmOutputPath: "./json/ncm.json",
+	// 博文内嵌小组件（<x-163music>）的歌曲缓存：内容为歌单数组，构建时命中缓存可省去重复请求
+	ncmSongCachePath: "./tools/ncm-song-cache.json",
 	fileStatesPath: "./tools/file-states.json",
 	// 需追踪内容 hash 与「内容修改时间」的静态页面（相对项目根目录）
 	staticTrackedFiles: ["index.html", "blog.html", "friends.html"],
@@ -81,10 +83,23 @@ const 顶部大图优先级 = {
  */
 
 /**
+ * 博文内嵌小组件展示的歌曲结构（字段与 js/ncm.js 的 歌单 保持一致，ncm.js 会直接并入歌单使用）
+ * @typedef {object} 歌单
+ * @property {string} 完整歌名 - 「歌手 - 歌名」，用于 title 与提示
+ * @property {string} 歌名
+ * @property {string} 歌手 - 多个歌手以 " / " 连接
+ * @property {string} 专辑
+ * @property {string} 封面 - 封面图 URL
+ * @property {number} mv - mv id，0 表示无 mv
+ * @property {number} id - 音乐 id
+ */
+
+/**
  * 单篇文章的构建结果
  * @typedef {object} 构建结果
  * @property {文章元数据} meta - 补全后的文章元数据
  * @property {string} processedHtml - 处理后的文章 HTML
+ * @property {number[]} 歌单ids - 文章内 <x-163music> 引用的歌曲 id（去重且保持出现顺序）
  */
 
 /**
@@ -412,6 +427,92 @@ function syncBlogPageState(states) {
 	writeFileStates(states);
 }
 
+// ==================== 博文内嵌网易云小组件歌曲 ====================
+
+/**
+ * 提取文章 HTML 里 <x-163music data-id="..."> 引用的歌曲 id
+ * @param {string} html - 文章 HTML
+ * @returns {number[]} 歌曲 id 列表（去重且保持出现顺序，非法值忽略）
+ */
+function 提取小组件歌曲ids(html) {
+	if (!html.includes("x-163music")) return [];
+	const $ = cheerio.load(html);
+	/** @type {number[]} */
+	const ids = [];
+	$("x-163music").each((_索引, 元素) => {
+		const id = Number($(元素).attr("data-id"));
+		if (Number.isInteger(id) && id > 0 && !ids.includes(id)) ids.push(id);
+	});
+	return ids;
+}
+
+/**
+ * 读取小组件歌曲缓存（内容为 歌单[]）；文件缺失或损坏时返回空数组
+ * @returns {歌单[]}
+ */
+function 读取歌曲缓存() {
+	try {
+		const 歌曲表 = jsonfile.readFileSync(CONFIG.ncmSongCachePath);
+		return Array.isArray(歌曲表) ? 歌曲表 : [];
+	} catch (_err) {
+		return [];
+	}
+}
+
+/**
+ * 把歌曲详情接口返回的歌曲转换为歌单结构（字段与 js/ncm.js 的 歌单 一致）
+ * @param {any} 音乐信息 - 接口返回的单首歌曲
+ * @returns {歌单|null} 数据非法时返回 null
+ */
+function 音乐信息转歌单(音乐信息) {
+	const id = 音乐信息?.id,
+		歌名 = 音乐信息?.name;
+	if (typeof id !== "number" || typeof 歌名 !== "string") return null;
+	const 歌手 = (音乐信息.ar || [])
+		.map((/** @type {any} */ 歌手信息) => 歌手信息?.name)
+		.filter(Boolean)
+		.join(" / ");
+	return {
+		完整歌名: 歌手 ? 歌手 + " - " + 歌名 : 歌名,
+		歌名,
+		歌手,
+		专辑: 音乐信息.al?.name || "",
+		封面: (音乐信息.al?.picUrl || "").replace("http://", "https://"),
+		mv: 音乐信息.mv || 0,
+		id,
+	};
+}
+
+/**
+ * 解析博文里小组件引用的歌曲：优先命中缓存，未命中的批量请求歌曲详情接口，
+ * 新增歌曲并入缓存并落盘（缓存内容为 歌单[]）
+ * @param {number[]} 待解析ids - 文章中出现的全部歌曲 id（可重复，内部会去重）
+ * @returns {Promise<Map<number, 歌单>>} 歌曲 id → 歌单（未解析到的 id 不在其中）
+ */
+async function 解析博文歌曲(待解析ids) {
+	const 缓存 = 读取歌曲缓存();
+	const 歌曲表 = new Map(缓存.map(歌曲 => [歌曲.id, 歌曲]));
+	const 缺失ids = [...new Set(待解析ids)].filter(id => !歌曲表.has(id));
+	if (!缺失ids.length) return 歌曲表;
+
+	try {
+		// NeteaseCloudMusicApi 的类型声明与实际响应结构差异较大，这里统一按 any 处理
+		const { body } = await /** @type {any} */ (
+			require("@neteasecloudmusicapienhanced/api")
+		).song_detail({ ids: 缺失ids.join(",") });
+		for (const 音乐信息 of normalizeNcmImageHost(body?.songs || [])) {
+			const 歌曲 = 音乐信息转歌单(音乐信息);
+			if (!歌曲) continue;
+			歌曲表.set(歌曲.id, 歌曲);
+			缓存.push(歌曲);
+		}
+		jsonfile.writeFileSync(CONFIG.ncmSongCachePath, 缓存, { spaces: 4 });
+	} catch (err) {
+		console.error("Fetching widget songs failed:", /** @type {Error} */ (err).message);
+	}
+	return 歌曲表;
+}
+
 // ==================== 文章处理器 ====================
 
 /**
@@ -465,15 +566,20 @@ class ArticleBuilder {
 
 		const processedHtml = processArticleImages(parsedHtml);
 
-		return /** @type {构建结果} */ ({ meta, processedHtml });
+		return /** @type {构建结果} */ ({
+			meta,
+			processedHtml,
+			歌单ids: 提取小组件歌曲ids(processedHtml),
+		});
 	}
 
 	/**
 	 * 渲染文章页面（SEO/OG 标签、许可与标签信息）并写入 index.html
 	 * @param {构建结果} article - 构建结果
+	 * @param {Map<number, 歌单>} 歌曲表 - 文章内小组件用到的歌曲（见 解析博文歌曲）
 	 * @returns {文章元数据} 补全后的文章元数据
 	 */
-	renderPage(article) {
+	renderPage(article, 歌曲表) {
 		const { meta, processedHtml } = article;
 		let html = this.template;
 
@@ -544,10 +650,24 @@ class ArticleBuilder {
 		const tempMeta = structuredClone(meta);
 		tempMeta.cover = tempMeta._originalCover;
 		delete tempMeta._originalCover;
+
+		// 文章内嵌网易云小组件的歌曲数据随 HTML 一起注入：ncm.js 读到后直接并入歌单，
+		// 无需等待 ncm.json，也无需再为这些歌曲请求一次详情接口（见 js/ncm.js 的 同步页面歌单数据）
+		/** @type {歌单[]} */
+		const 小组件歌单 = [];
+		for (const id of article.歌单ids) {
+			const 歌曲 = 歌曲表.get(id);
+			if (歌曲) 小组件歌单.push(歌曲);
+		}
+		const 小组件script = 小组件歌单.length
+			? // 转义 < 避免歌名等字段中出现 </script> 提前闭合脚本块
+				`\n\t\t\t\t<script id="网易云音乐歌单" type="application/json">${JSON.stringify(小组件歌单).replaceAll("<", "\\u003c")}</script>`
+			: "";
+
 		html = replaceTemplateBlock(
 			html,
 			"MAIN",
-			`${mainContent}\n\t\t\t\t<script id="当前文章信息" type="application/json">${JSON.stringify(tempMeta)}</script>`
+			`${mainContent}\n\t\t\t\t<script id="当前文章信息" type="application/json">${JSON.stringify(tempMeta)}</script>${小组件script}`
 		);
 
 		const outputPath = path.join(CONFIG.blogDir, meta.id, "index.html");
@@ -790,15 +910,21 @@ async function main() {
 		const builder = new ArticleBuilder(template);
 
 		const entries = fs.readdirSync(CONFIG.blogDir);
-		/** @type {文章元数据[]} 构建完成的文章列表 */
-		const articles = [];
-
+		/** @type {构建结果[]} 解析完成、等待渲染的文章 */
+		const 待渲染文章 = [];
 		for (const entry of entries) {
 			const article = builder.build(entry);
-			if (!article) continue;
+			if (article) 待渲染文章.push(article);
+		}
 
-			console.log(`Building: ${entry}`);
-			const meta = builder.renderPage(article);
+		// 先集中解析所有文章内嵌小组件引用的歌曲（查缓存 / 请求接口），渲染时再注入对应文章
+		const 歌曲表 = await 解析博文歌曲(待渲染文章.flatMap(文章 => 文章.歌单ids));
+
+		/** @type {文章元数据[]} 构建完成的文章列表 */
+		const articles = [];
+		for (const article of 待渲染文章) {
+			console.log(`Building: ${article.meta.id}`);
+			const meta = builder.renderPage(article, 歌曲表);
 			articles.push({ ...meta, html: article.processedHtml });
 		}
 
