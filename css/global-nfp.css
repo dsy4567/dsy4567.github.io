@@ -660,7 +660,7 @@ div#侧边按钮容器 > * {
 	border: var(--border);
 	border-radius: 50%;
 	display: flex;
-	opacity: 0.5;
+	opacity: 0.7;
 	margin-top: 5px;
 	padding: 4px;
 	position: relative;
@@ -688,7 +688,7 @@ body::after {
 body:has(#侧边按钮容器 > .拥有更多选项:hover)::after,
 body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible)::after {
 	content: "";
-	opacity: 0.5;
+	opacity: 0.7;
 	pointer-events: all;
 	transition-delay: var(--transition);
 }
