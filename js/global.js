@@ -443,7 +443,7 @@ async function _触发事件(事件名) {
 						const _通用计数器 = ++通用计数器;
 						console.time(`高优回调 id:${_通用计数器}`);
 						await Promise.resolve().then(() => 回调());
-						console.log(_通用计数器, 回调, 优先级);
+						// console.log(_通用计数器, 回调, 优先级);
 						console.timeEnd(`高优回调 id:${_通用计数器}`);
 					} catch (e) {
 						console.error(`[${事件名}] 优先级 ${优先级} 回调执行失败:`, e);
