@@ -1298,3 +1298,15 @@ section#评论区 .评论 .评论正文 {
 		}
 	}
 }
+
+/* ==================== 网易云音乐小组件 ==================== */
+/* 宿主无 .已加载 时由 ::before 呈现骨架，尺寸与填充后的卡片一致，替换时不产生偏移 */
+x-163music:not(.已加载)::before {
+	content: "";
+	display: block;
+	width: 328px;
+	height: 64px;
+	border-radius: 64px;
+	background-color: var(--overlay-strong);
+	animation: 高频闪烁 3s linear infinite;
+}

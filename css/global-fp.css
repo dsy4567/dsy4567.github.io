@@ -666,3 +666,13 @@ div#侧边按钮容器 {
 		}
 	}
 }
+
+/* ==================== 网易云音乐小组件 ==================== */
+/* 骨架在 light DOM，需文档级样式；此处只负责占住高度，避免布局偏移 */
+x-163music {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 64px;
+}

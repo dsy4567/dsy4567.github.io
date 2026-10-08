@@ -874,6 +874,240 @@ fetch("/json/ncm.json")
 		歌单加载完成Resolve();
 	});
 
+//#region 网易云音乐小组件
+/**
+ * <x-163music data-id="音乐id">：在博文等页面内嵌展示单曲推荐。
+ * 骨架由文档级 ::before 呈现（宿主无 .已加载 时），数据就绪后挂 shadow 渲染内容并加上 .已加载。
+ * 支持先使用后注册：此处 define 会升级文档中已有实例并触发 connectedCallback，之后动态插入的实例同样会自动触发。
+ */
+
+/** 已解析歌曲缓存：音乐 id → 歌单（null 表示 id 非法或接口数据非法），避免同一 id 重复请求 */
+const /** @type {Map<number, 歌单 | null>} */ 小组件歌曲缓存 = new Map();
+
+/** 小组件内容（shadow DOM）的样式：文档级样式进不了 shadow，因此尺寸、填充色等需在此重写 */
+const 小组件内容样式 = `
+	:host {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 64px;
+	}
+	.卡片 {
+		background-color: var(--bg-color);
+		border: 1px solid var(--overlay);
+		border-radius: 64px;
+		cursor: pointer;
+		display: flex;
+		flex-direction: row;
+		align-items: stretch;
+		justify-content: space-between;
+		position: relative;
+		width: 328px;
+		height: 64px;
+		overflow: hidden;
+		transition: background-color var(--transition);
+	}
+	.卡片:hover,
+	.卡片:focus-visible {
+		background-color: var(--accent-color-transparent);
+	}
+	.卡片:focus-visible {
+		outline: 2px dashed var(--link-color);
+	}
+	.卡片 > .封面,
+	.卡片 > .歌曲信息 {
+		z-index: 2;
+	}
+	/* 封面缺失时 img 会被移除 src，这个 64×64 圆形灰块即是兜底占位 */
+	.卡片 > .封面 {
+		background-color: var(--overlay-strong);
+		border-radius: 50%;
+		flex: none;
+		width: 64px;
+		height: 64px;
+	}
+	.卡片 > .封面 > img {
+		border-radius: 50%;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+	}
+	.卡片 > .歌曲信息 {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		min-width: 0;
+		width: calc(100% - 64px - 4px);
+	}
+	.卡片 > .歌曲信息 > .歌曲名称,
+	.卡片 > .歌曲信息 > .歌手 {
+		display: block;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		margin: 0 4px;
+		width: 50%;
+	}
+	.卡片 > .歌曲信息 > .歌手 {
+		flex: none;
+		opacity: 0.7;
+	}
+	/* 文档级的 .中尺寸 / .fill 只作用于文档，shadow 内需自行给尺寸与填充色 */
+	.卡片 > svg.logo {
+		bottom: calc(50% - 24px);
+		fill: var(--link-color);
+		height: 48px;
+		opacity: 0.1;
+		position: absolute;
+		right: 8px;
+		width: 48px;
+		z-index: 0;
+	}
+`;
+
+/**
+ * 在 shadow 内渲染图标：文档级的“渲染图标”只扫 document，不会进入 shadow；
+ * 图标数据由 main.js 异步拉取，未就绪时短暂等待，避免 logo 永久空白
+ * @param {ShadowRoot} shadow
+ */
+async function 渲染小组件图标(shadow) {
+	for (let 次数 = 0; 次数 < 100 && !图标["网易云音乐"]; 次数++)
+		await new Promise(resolve => setTimeout(resolve, 50));
+	const 图标元素 = /** @type {SVGSVGElement[]} */ (
+		Array.from(shadow.querySelectorAll("svg[data-icon]"))
+	);
+	// 传空数组会让 渲染图标 退回全文档查询，故仅在确有图标时调用
+	if (图标元素.length) 渲染图标({ 要渲染图标的元素: 图标元素 });
+}
+
+/**
+ * 解析小组件要展示的歌曲：优先命中已加载的歌单，未命中再请求歌曲详情；
+ * data-id 非法或接口数据非法时返回 null，由调用方以“未知”占位
+ * @param {string | null} 原始id
+ * @returns {Promise<歌单 | null>}
+ */
+async function 解析小组件歌曲(原始id) {
+	const id = Number(原始id);
+	if (!原始id || !Number.isInteger(id) || id <= 0) return null;
+	const 索引 = 网易云音乐.歌单索引[id];
+	if (typeof 索引 !== "undefined") return 网易云音乐.歌单[索引] || null;
+	if (小组件歌曲缓存.has(id)) return 小组件歌曲缓存.get(id) ?? null;
+
+	let /** @type {歌单 | null} */ 歌曲 = null;
+	try {
+		const 详情 = (await 网易云音乐.请求接口("/song/detail", { ids: id }))?.songs?.[0];
+		// 接口可能返回空或异常结构，只有确实拿到这首歌才认作有效数据
+		if (详情?.id === id && typeof 详情.name === "string") {
+			const 歌手 = (详情.ar || [])
+				.map(/** @param {{ name?: string }} 歌手信息 */ 歌手信息 => 歌手信息?.name)
+				.filter(Boolean)
+				.join(" / ");
+			歌曲 = {
+				完整歌名: 歌手 ? 歌手 + " - " + 详情.name : 详情.name,
+				歌名: 详情.name,
+				歌手,
+				专辑: 详情.al?.name || "",
+				封面: (详情.al?.picUrl || "").replace("http://", "https://"),
+				id,
+				mv: 详情.mv || 0,
+			};
+		}
+	} catch (e) {
+		console.error(e);
+	}
+	小组件歌曲缓存.set(id, 歌曲);
+	return 歌曲;
+}
+
+/**
+ * 把歌曲写进 shadow：合法时展示封面/歌名/歌手，非法时以灰块与“未知歌名/未知歌手”兜底；
+ * 完成后给宿主加上 .已加载，文档级样式据此把骨架 ::before 换成 shadow 内容
+ * @param {网易云音乐小组件} 组件
+ * @param {歌单 | null} 歌曲
+ */
+function 渲染小组件内容(组件, 歌曲) {
+	const shadow = 组件.attachShadow({ mode: "open" });
+	shadow.innerHTML = `
+		<style>${小组件内容样式}</style>
+		<div class="卡片">
+			<div class="封面"><img alt="" loading="lazy" /></div>
+			<div class="歌曲信息">
+				<span class="歌曲名称"></span>
+				<span class="歌手"></span>
+			</div>
+			<svg class="logo" data-icon="网易云音乐"></svg>
+		</div>`;
+	// 上面刚写入 shadow 内容，以下节点必然存在
+	// @ts-ignore
+	const /** @type {HTMLImageElement} */ 封面图 = shadow.querySelector("img");
+	// @ts-ignore
+	const /** @type {HTMLElement} */ 歌曲名称元素 = shadow.querySelector(".歌曲名称");
+	// @ts-ignore
+	const /** @type {HTMLElement} */ 歌手元素 = shadow.querySelector(".歌手");
+	封面图.alt = 歌曲?.完整歌名 || "未知歌曲封面";
+	if (歌曲?.封面) {
+		// 与侧边栏一致地按 256×256 取图；加载失败退回灰底
+		封面图.src = 歌曲.封面 + "?param=256y256";
+		封面图.onerror = () => 封面图.removeAttribute("src");
+	} else 封面图.hidden = true;
+	歌曲名称元素.textContent = 歌曲?.歌名 || "未知歌名";
+	歌手元素.textContent = 歌曲?.歌手 || "未知歌手";
+	// tabindex/role 放在内层带圆角的卡片上；非法歌曲不可播放，不赋予可聚焦语义
+	// @ts-ignore
+	const /** @type {HTMLElement} */ 卡片元素 = shadow.querySelector(".卡片");
+	if (歌曲) {
+		卡片元素.tabIndex = 0;
+		卡片元素.setAttribute("role", "button");
+		卡片元素.title = "播放：" + 歌曲.完整歌名;
+	}
+	组件.classList.add("已加载");
+	渲染小组件图标(shadow);
+}
+
+/**
+ * 等待歌单就绪后解析 data-id 对应的歌曲，合法则自动加入播放列表，最后把骨架换成内容
+ * @param {网易云音乐小组件} 组件
+ */
+async function 填充小组件(组件) {
+	// 等待基础歌单填充完成，避免按索引写入时互相覆盖，也保证 切换音乐 能定位到该歌曲
+	await 网易云音乐.歌单加载完成;
+	const 歌曲 = await 解析小组件歌曲(组件.getAttribute("data-id"));
+	组件.歌曲 = 歌曲;
+	if (歌曲) await 网易云音乐.添加歌曲到播放列表([歌曲]);
+	渲染小组件内容(组件, 歌曲);
+}
+
+/** <x-163music> 宿主元素：自行解析 data-id、切换骨架与内容，并响应点击/回车立即播放 */
+class 网易云音乐小组件 extends HTMLElement {
+	/** connectedCallback 可能因元素被移动而多次触发，用此标记确保只处理一次 @type {boolean} */
+	已处理 = false;
+	/** 解析得到的歌曲，null 表示未知（不可播放） @type {歌单 | null} */
+	歌曲 = null;
+
+	connectedCallback() {
+		if (this.已处理) return;
+		this.已处理 = true;
+		// 焦点在内层卡片上，点击与回车事件都会冒泡到宿主，此处统一处理
+		this.addEventListener("click", () => this.播放());
+		this.addEventListener("keyup", 事件 => {
+			if (事件.key === "Enter") this.播放();
+		});
+		填充小组件(this);
+	}
+
+	/** 点击/回车立即播放本卡片对应的歌曲；数据非法时不播放 */
+	播放() {
+		if (this.歌曲) 网易云音乐.切换音乐(this.歌曲.id, true);
+	}
+}
+
+if (!customElements.get("x-163music")) customElements.define("x-163music", 网易云音乐小组件);
+//#endregion
+
 export default 网易云音乐;
 
 _global["ncm.js"] = () => ({

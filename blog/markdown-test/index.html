@@ -12,7 +12,8 @@
                         object-src 'none'
                     "
 		/>
-		<meta id="主题色" name="theme-color" content="#ddd" />
+		<!-- 浅色默认值须与 css/global-fp.css 的 --bg-color 一致，深色由 doc-start.js 运行时改写 -->
+		<meta id="主题色" name="theme-color" content="#f7f7f7" />
 		<meta id="robots" name="robots" content="all" />
 		<meta name="template" content="https://github.com/dsy4567/dsy4567.github.io" />
 		<!-- BEGIN META -->
@@ -165,8 +166,8 @@
 
 		<!-- BEGIN COVER -->
 		<div id="顶部大图" role="img" aria-label="顶部大图">
-			<div class="顶部大图层" data-优先级="9999" data-生命周期="永久"><img alt="" src="/img/bg.avif" data-回退src="/img/bg.webp" /></div>
 			<div class="顶部大图层 显示" data-优先级="100" data-生命周期="仅当前页"><img alt="" src="/img/avatar.webp" fetchpriority="high" /></div>
+			<div class="顶部大图层" data-优先级="9999" data-生命周期="永久"><img alt="" src="/img/bg.avif" data-回退src="/img/bg.webp" /></div>
 		</div>
 		<!-- END COVER -->
 
@@ -480,6 +481,10 @@ echo "你好，世界"
 <p><spoiler>这就是被藏起来的内容</spoiler></p>
 <p>其它 HTML 标签：<del>删除</del>、<ins>插入</ins>、<mark>高亮</mark>、<small>小字</small>、<samp>程序输出</samp>、<q>短引用</q>、<code>code 标签</code>、<span style="color: #f66">带内联样式的 span</span>、<bdo dir="rtl">反向文字</bdo>。</p>
 <p>HTML 注释不会显示：<!-- 这行注释在渲染结果里看不到 --></p>
+<h2 id="网易云音乐小组件">网易云音乐小组件</h2>
+<p><code>&lt;x-163music data-id="音乐id"&gt;</code> 会在正文里嵌入一张歌曲卡片：数据就绪前显示闪烁骨架，加载完成后展示封面、歌名与歌手，点击卡片立即播放。</p>
+<p><x-163music data-id="2689720483"></x-163music></p>
+<p><x-163music data-id="1963053471"></x-163music></p>
 <h2 id="已知不支持">已知不支持</h2>
 <ul>
 <li>脚注：<code>[^1]</code> 与 <code>[^1]: 说明</code> 会被 marked 当成引用式链接的写法，渲染成一条链接，而不是脚注。</li>
@@ -489,9 +494,9 @@ echo "你好，世界"
 </ul>
 <p><nocopyright value="true"></nocopyright></p>
 
-<span class="元数据">发表于: 2026/9/19 01:42:49, 更新于: 2026/10/2 09:35:31</br></span>
+<span class="元数据">发表于: 2026/9/19 01:42:49, 更新于: 2026/10/8 14:09:20</br></span>
 				</section>
-				<script id="当前文章信息" type="application/json">{"updated":"2026-10-02T01:35:31.850Z","date":"2026-09-18T17:42:49.000Z","issue":3,"tags":[],"hidden":true,"id":"markdown-test","title":"Markdown 特性测试","desc":"# Markdown 特性测试\n\n这是一篇用来核对本站 Markdown 渲染效果的隐藏文章，常见的 Markdown 与 HTML 写法各来一份，改样式的时候可以进来看看有没有渲染崩。\n\n本文章由 AI 生成。\n\n","desc_text":"这是一篇用来核对本站 Markdown 渲染效果的隐藏文章，常见的 Markdown 与 HTML 写法各来一份，改样式的时候可以进来看看有没有渲染崩。 本文章由 AI 生成。...","cover":"/img/avatar.webp"}</script>
+				<script id="当前文章信息" type="application/json">{"updated":"2026-10-08T06:09:20.192Z","date":"2026-09-18T17:42:49.000Z","issue":3,"tags":[],"hidden":true,"id":"markdown-test","title":"Markdown 特性测试","desc":"# Markdown 特性测试\n\n这是一篇用来核对本站 Markdown 渲染效果的隐藏文章，常见的 Markdown 与 HTML 写法各来一份，改样式的时候可以进来看看有没有渲染崩。\n\n本文章由 AI 生成。\n\n","desc_text":"这是一篇用来核对本站 Markdown 渲染效果的隐藏文章，常见的 Markdown 与 HTML 写法各来一份，改样式的时候可以进来看看有没有渲染崩。 本文章由 AI 生成。...","cover":"/img/avatar.webp"}</script>
 		<!-- END MAIN -->
 			</article>
 		</main>
