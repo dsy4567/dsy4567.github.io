@@ -523,8 +523,8 @@ class ArticleBuilder {
 			html,
 			"COVER",
 			`\t\t<div id="顶部大图" role="img" aria-label="顶部大图">\n` +
-				`\t\t\t<div class="顶部大图层" data-优先级="${顶部大图优先级.基线}" data-生命周期="永久"><img alt="" src="${CONFIG.baselineCoverPath}" data-回退src="${CONFIG.baselineCoverFallbackPath}" /></div>\n` +
 				`\t\t\t<div class="顶部大图层 显示" data-优先级="${封面优先级}" data-生命周期="仅当前页"><img alt="" src="${封面src}" fetchpriority="high" /></div>\n` +
+				`\t\t\t<div class="顶部大图层" data-优先级="${顶部大图优先级.基线}" data-生命周期="永久"><img alt="" src="${CONFIG.baselineCoverPath}" data-回退src="${CONFIG.baselineCoverFallbackPath}" /></div>\n` +
 				`\t\t</div>`
 		);
 

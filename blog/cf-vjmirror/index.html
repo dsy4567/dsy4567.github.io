@@ -12,7 +12,8 @@
                         object-src 'none'
                     "
 		/>
-		<meta id="主题色" name="theme-color" content="#ddd" />
+		<!-- 浅色默认值须与 css/global-fp.css 的 --bg-color 一致，深色由 doc-start.js 运行时改写 -->
+		<meta id="主题色" name="theme-color" content="#f7f7f7" />
 		<meta id="robots" name="robots" content="all" />
 		<meta name="template" content="https://github.com/dsy4567/dsy4567.github.io" />
 		<!-- BEGIN META -->
@@ -165,8 +166,8 @@
 
 		<!-- BEGIN COVER -->
 		<div id="顶部大图" role="img" aria-label="顶部大图">
-			<div class="顶部大图层" data-优先级="9999" data-生命周期="永久"><img alt="" src="/img/bg.avif" data-回退src="/img/bg.webp" /></div>
 			<div class="顶部大图层 显示" data-优先级="100" data-生命周期="仅当前页"><img alt="" src="https://dsy4567.icu/blog/cf-workers-ip/img/workers.webp" fetchpriority="high" /></div>
+			<div class="顶部大图层" data-优先级="9999" data-生命周期="永久"><img alt="" src="/img/bg.avif" data-回退src="/img/bg.webp" /></div>
 		</div>
 		<!-- END COVER -->
 
