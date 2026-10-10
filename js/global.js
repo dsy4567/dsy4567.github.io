@@ -329,12 +329,21 @@ function 添加悬浮卡片(/** @type {string} */ html, x = 0, y = 0, 失去焦�
 	div.className = "悬浮卡片";
 	div.innerHTML = html;
 	div.style.left = x + "px";
-	// 卡片最大高度为 33vh，顶部最靠下只能到视口 67% 处，否则底部会超出视口
-	div.style.top = Math.min(y, window.innerHeight * 0.67) + "px";
+	// 卡片最大高度为 33vh，顶部最靠下只能到视口 64px - 67% 处，否则底部会超出视口/被导航栏遮挡
+	div.style.top = Math.min(Math.max(64, y), window.innerHeight * 0.67) + "px";
 	div.tabIndex = 0;
 	div.role = "dialog";
+	// 记录打开前的焦点，Esc 关闭后归还，避免焦点掉到 body
+	const 打开前的焦点 = document.activeElement;
 	document.body.append(div);
 	div.focus();
+	// Esc 关闭：监听挂在卡片上，焦点位于卡片内任意子元素时事件都会冒泡到这里
+	div.addEventListener("keydown", 事件 => {
+		if (事件.key !== "Escape") return;
+		div.remove();
+		if (打开前的焦点 instanceof HTMLElement && document.contains(打开前的焦点))
+			打开前的焦点.focus();
+	});
 	失去焦点时隐藏 && div.addEventListener("focusout", () => div.remove());
 	return div;
 }

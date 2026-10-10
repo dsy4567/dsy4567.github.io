@@ -775,6 +775,10 @@ async function 立即渲染网易云音乐组件() {
 	if (染网易云音乐组件已渲染) return;
 	染网易云音乐组件已渲染 = true;
 
+	// 分组容器是 hover/聚焦即展开的，补分组语义与可访问名；role=group 不支持 aria-expanded，故不设展开态
+	网易云音乐元素.setAttribute("role", "group");
+	网易云音乐元素.setAttribute("aria-label", "网易云音乐");
+
 	/** @type {HTMLButtonElement[]} */
 	let 待添加按钮 = [];
 	/**
@@ -835,8 +839,13 @@ async function 立即渲染网易云音乐组件() {
 			网易云音乐.切换音乐(音乐id, true);
 		};
 		播放列表.addEventListener("click", 定位并播放);
-		播放列表.addEventListener("keyup", 事件 => {
-			if (事件.key === "Enter") 定位并播放(事件);
+		播放列表.addEventListener("keydown", 事件 => {
+			// Enter/Space 都是按钮的标准激活键；Space 需阻止默认的页面滚动
+			if (事件.key !== "Enter" && 事件.key !== " ") return;
+			事件.preventDefault();
+			// 长按产生的重复事件不再触发，避免重复切歌
+			if (事件.repeat) return;
+			定位并播放(事件);
 		});
 
 		let 文档片段 = document.createDocumentFragment();
@@ -883,6 +892,8 @@ fetch("/json/ncm.json")
 		});
 
 		网易云音乐元素.addEventListener("mousemove", 立即渲染网易云音乐组件, { once: true });
+		// 键盘用户不产生 mousemove：首次按键时也提前渲染一次，使其能 Tab 进侧栏控件
+		document.addEventListener("keydown", 立即渲染网易云音乐组件, { once: true });
 
 		延迟执行("关键任务完成", 网易云音乐.初始化, 3);
 		歌单加载完成Resolve();
@@ -1176,15 +1187,20 @@ class 网易云音乐小组件 extends HTMLElement {
 	connectedCallback() {
 		if (this.已处理) return;
 		this.已处理 = true;
-		// 焦点在内层卡片上，点击与回车事件都会冒泡到宿主，此处统一处理
+		// 焦点在内层卡片上，点击与回车/空格事件都会冒泡到宿主，此处统一处理
 		this.addEventListener("click", () => this.播放());
-		this.addEventListener("keyup", 事件 => {
-			if (事件.key === "Enter") this.播放();
+		this.addEventListener("keydown", 事件 => {
+			// Enter/Space 都是按钮的标准激活键；Space 需阻止默认的页面滚动
+			if (事件.key !== "Enter" && 事件.key !== " ") return;
+			事件.preventDefault();
+			// 长按产生的重复事件不再触发，避免重复播放
+			if (事件.repeat) return;
+			this.播放();
 		});
 		填充小组件(this);
 	}
 
-	/** 点击/回车立即播放本卡片对应的歌曲；数据非法时不播放 */
+	/** 点击/回车/空格立即播放本卡片对应的歌曲；数据非法时不播放 */
 	播放() {
 		if (this.歌曲) 网易云音乐.切换音乐(this.歌曲.id, true);
 	}

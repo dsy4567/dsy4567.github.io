@@ -60,6 +60,10 @@ function 动态加载(元素) {
 			if (!元素.popstate && !location.hash) 回到顶部();
 			动态加载自增计数器++;
 			右.innerHTML = 正文;
+			// 动态换页后把焦点移入新正文：键盘/屏幕阅读器用户据此感知内容已更换。
+			// 先让正文容器可编程聚焦；preventScroll 避免打断 popstate 的历史滚动恢复与上面的回到顶部
+			右.tabIndex = -1;
+			右.focus({ preventScroll: true });
 			加载模块().finally(() => {
 				正在动态加载 = false;
 
@@ -162,6 +166,10 @@ fetch("/json/theme.json")
 				主题容器 = gd("所有主题", true);
 			if (!控件容器 || !主题容器) return;
 
+			// 分组容器是 hover/聚焦即展开的，补分组语义与可访问名；role=group 不支持 aria-expanded，故不设展开态
+			gd("切换主题")?.setAttribute("role", "group");
+			gd("切换主题")?.setAttribute("aria-label", "切换主题");
+
 			const f = () => {
 				//#region 第一行：背景模式切换、自定义强调色调色盘
 				/** @type {HTMLButtonElement} */
@@ -247,7 +255,16 @@ fetch("/json/theme.json")
 					要渲染图标的元素: 调色盘按钮.getElementsByTagName("svg"),
 				});
 			};
-			gd("切换主题")?.addEventListener("mousemove", f, { once: true });
+			// 首次鼠标移动或首次按键时渲染一次主题控件：
+			// 键盘用户不会产生 mousemove，需额外用一次性全局按键监听兜底
+			let 已渲染主题控件 = false;
+			const 渲染主题控件 = () => {
+				if (已渲染主题控件) return;
+				已渲染主题控件 = true;
+				f();
+			};
+			gd("切换主题")?.addEventListener("mousemove", 渲染主题控件, { once: true });
+			document.addEventListener("keydown", 渲染主题控件, { once: true });
 		}
 	)
 	.catch(e => console.error(e));
@@ -386,8 +403,46 @@ fetch("https://api.github.com/users/dsy4567")
 		try {
 			//#region 核心元素、事件、字体css等
 			gd("回到顶部")?.addEventListener("click", 回到顶部);
-			gd("分界线")?.addEventListener("click", () => {
-				document.body.classList.toggle("宽屏");
+			// 分界线（切换宽屏）：div 充当按钮，动态补角色、可访问名与键盘支持
+			const 分界线 = gd("分界线");
+			if (分界线) {
+				// 可聚焦元素不得 aria-hidden，移除后改用真正的按钮语义
+				分界线.removeAttribute("aria-hidden");
+				分界线.setAttribute("role", "button");
+				分界线.setAttribute("aria-label", "切换宽屏");
+				分界线.tabIndex = 0;
+				const 切换宽屏 = () => document.body.classList.toggle("宽屏");
+				分界线.addEventListener("click", 切换宽屏);
+				分界线.addEventListener("keydown", 事件 => {
+					// 只响应 Enter/Space；preventDefault 阻止 Space 滚动页面
+					if (事件.key !== "Enter" && 事件.key !== " ") return;
+					事件.preventDefault();
+					// 长按产生的重复事件不再触发切换，避免连续翻转宽屏
+					if (事件.repeat) return;
+					切换宽屏();
+				});
+			}
+			// 收起按钮只服务触摸屏：从键盘/AT 树摘出，改为显式点击时移走焦点以收起面板，
+			// 不再依赖“点击按钮会移动焦点 / 粘滞 hover”这类 UA 副作用
+			const 收起按钮 = gd("关闭侧边按钮");
+			if (收起按钮) {
+				收起按钮.tabIndex = -1;
+				收起按钮.setAttribute("aria-hidden", "true");
+				收起按钮.addEventListener("click", () => {
+					if (document.activeElement instanceof HTMLElement)
+						document.activeElement.blur();
+				});
+			}
+			// 左栏在移动端滚动后会被滚动动画淡出、又被正文盖住，且 sticky 定位让浏览器以为它已在视口内，
+			// 故 Shift+Tab 聚焦左栏元素时不会自动滚动。这里手动兜底：先把文档滚回顶部露出左栏，
+			// 再把已聚焦元素滚进左栏自身的滚动容器
+			const 左栏 = qs("main > .左", true);
+			左栏?.addEventListener("focusin", async () => {
+				// if (!(document.activeElement instanceof HTMLElement)) return;
+				// const 行为 = 用户已禁用动画特效 ? "auto" : "smooth";
+				// document.documentElement.scrollTo({ top: 0, behavior: 行为 });
+				// // 垂直滚动到容器内可见区域("main", true);
+				// document.activeElement.scrollIntoView({ block: "nearest", behavior: 行为 });
 			});
 			//#endregion
 

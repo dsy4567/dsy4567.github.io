@@ -346,6 +346,12 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 *:focus-visible {
 	outline: 2px dashed var(--link-color) !important;
 }
+/* 动态换页后焦点会落到正文容器 main > .右[tabindex="-1"] 上，它不是交互控件，
+   隐藏其焦点轮廓，避免键盘换页时给整篇正文描边；可交互元素的轮廓仍由上面的规则保留 */
+main > .右[tabindex="-1"]:focus,
+main > .右[tabindex="-1"]:focus-visible {
+	outline: none !important;
+}
 a {
 	-webkit-tap-highlight-color: var(--accent-color-transparent);
 }
