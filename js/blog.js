@@ -172,6 +172,19 @@ async function 渲染文章(当前文章信息) {
 		qs("main > .右 > section")?.classList.add("博客正文");
 		//#endregion
 
+		//#region 文章编辑历史
+		// 文章源文件位于 blog/<id>/index.md，链接到 GitHub 上该文件的提交历史
+		const 编辑历史元素 = ce("span"),
+			编辑历史链接 = ce("a");
+		编辑历史链接.href = `https://github.com/dsy4567/dsy4567.github.io/commits/main/blog/${encodeURIComponent(
+			当前文章信息.id
+		)}/index.md`;
+		编辑历史链接.textContent = "查看文章编辑历史";
+		编辑历史元素.className = "元数据";
+		编辑历史元素.append(编辑历史链接);
+		qs("main > .右 > section")?.append(编辑历史元素);
+		//#endregion
+
 		//#region 目录
 		let 目录 = ce("section"),
 			根列表 = ce("ul"),
