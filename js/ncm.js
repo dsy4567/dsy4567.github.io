@@ -246,6 +246,21 @@ let 网易云音乐 = {
 		} else if (网易云音乐.洗牌位置 < 0) 网易云音乐.洗牌位置 = 歌单长度 - 1;
 		return 网易云音乐.洗牌后的索引[网易云音乐.洗牌位置];
 	},
+	/**
+	 * 立即重新洗牌，并把指定歌单索引排到游标处（位置 0）。
+	 * 供点击侧栏播放列表项时调用：让随机播放从这首开始按全新顺序进行，
+	 * 而不是沿用上次留下的洗牌顺序（否则接下来的“下一首”往往早已被旧顺序决定）
+	 * @param {number} 索引 - 要排在洗牌顺序开头的歌单索引
+	 */
+	立即洗牌(/** @type {number} */ 索引) {
+		let 歌单长度 = 网易云音乐.歌单.length;
+		if (!歌单长度) return;
+		网易云音乐.洗牌后的索引 = [
+			索引,
+			...洗牌([...Array(歌单长度).keys()].filter(当前索引 => 当前索引 !== 索引)),
+		];
+		网易云音乐.洗牌位置 = 0;
+	},
 	async 切换音乐(/** @type {number} */ 欲播放的音乐id, 立即播放 = false) {
 		// 捕获本次点击对应的索引：初始化等 await 期间可能被其他点击改写 正在播放.索引，
 		// 若之后重新读取会播成别人的歌
@@ -812,8 +827,12 @@ async function 立即渲染网易云音乐组件() {
 		let 定位并播放 = (/** @type {Event} */ 事件) => {
 			if (!(事件.target instanceof HTMLElement)) return;
 			let li = 事件.target.closest("li");
-			if (li instanceof HTMLElement && li.dataset.id)
-				网易云音乐.切换音乐(+li.dataset.id, true);
+			if (!(li instanceof HTMLElement) || !li.dataset.id) return;
+			let 音乐id = +li.dataset.id;
+			// 点击播放列表项即重新洗牌，让随机播放从这首开始按全新顺序进行
+			let 索引 = 网易云音乐.歌单索引[音乐id];
+			if (typeof 索引 !== "undefined") 网易云音乐.立即洗牌(索引);
+			网易云音乐.切换音乐(音乐id, true);
 		};
 		播放列表.addEventListener("click", 定位并播放);
 		播放列表.addEventListener("keyup", 事件 => {
