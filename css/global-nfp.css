@@ -914,12 +914,14 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 .网易云封面旋
 }
 
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
+	border: solid transparent;
+	border-width: 12px 48px 12px 0;
 	font-size: 12px;
 	position: absolute;
 	user-select: none;
 	overflow: hidden;
 	pointer-events: none;
-	right: 48px;
+	right: 0;
 	text-align: end;
 	word-wrap: break-word;
 	width: 256px;
@@ -932,6 +934,9 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	div#侧边按钮容器 > .拥有更多选项#网易云音乐:has(*:focus-visible) #歌词 {
 		color: #fff;
 		transition-delay: var(--transition);
+		user-select: auto;
+		pointer-events: all;
+		cursor: text;
 	}
 }
 @supports not selector(:has(*)) {
