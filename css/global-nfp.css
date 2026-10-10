@@ -124,7 +124,7 @@ div#侧边按钮容器,
 			transform: translateY(0);
 			/* border-radius: var(--border-radius); */
 		}
-		28% {
+		24% {
 			transform: translateY(0);
 		}
 		50% {
@@ -142,7 +142,7 @@ div#侧边按钮容器,
 		0% {
 			opacity: 1;
 		}
-		28% {
+		24% {
 			opacity: 0;
 		}
 		100% {
@@ -153,7 +153,7 @@ div#侧边按钮容器,
 		0% {
 			opacity: 1;
 		}
-		28% {
+		24% {
 			opacity: 0;
 		}
 		100% {
@@ -164,10 +164,10 @@ div#侧边按钮容器,
 		0% {
 			border-top: 0 solid transparent;
 		}
-		28% {
+		24% {
 			border-top: 0 solid transparent;
 		}
-		28.01% {
+		24.01% {
 			border-top: min(var(--height), var(--maxh)) solid transparent;
 		}
 		100% {
