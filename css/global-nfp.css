@@ -1259,7 +1259,7 @@ section#评论区 .评论 .评论正文 {
 	}
 
 	main > .左 > *:last-child {
-		margin-bottom: min(calc(64vh - 32px), 398px);
+		margin-bottom: min(calc(var(--height) + 32px), 420px);
 	}
 	main > .左::before,
 	main > .左::after {
@@ -1267,13 +1267,14 @@ section#评论区 .评论 .评论正文 {
 		display: block;
 		position: sticky;
 		width: calc(100% - 14px);
-		margin: 0 0 0 7px;
+		margin: 0px 0 0 8px;
 		pointer-events: all;
 		z-index: 9;
 	}
 	main > .左::before {
 		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
 		top: 0;
+		transform: translateY(-64px);
 	}
 	main > .左::after {
 		bottom: 0;
