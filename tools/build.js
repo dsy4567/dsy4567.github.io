@@ -765,10 +765,10 @@ class SiteGenerator {
 	 * @returns {void}
 	 */
 	generateBlogIndex() {
-		let html = `<!DOCTYPE html>\n<html lang="zh-CN">\n\t<head>\n\t\t<meta charset="UTF-8" />\n\t\t<style>:root{color-scheme: light dark;}</style>\n\t\t<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n\t\t<script>location.pathname = "/blog.html";</script>\n\t</head>\n\t<body>\n`;
+		let html = `<!DOCTYPE html>\n<html lang="zh-CN">\n\t<head>\n\t\t<meta charset="UTF-8" />\n\t\t<style>:root{color-scheme: light dark;}</style>\n\t\t<meta name="viewport" content="width=device-width, initial-scale=1.0" />\n\t</head>\n\t<body>\n`;
 		for (const a of this.articles) html += `\t\t<p><a href="./${a.id}/">${a.title}</a></p>\n`;
 
-		html += `\n\t\t<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，以上作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名</a>进行许可。\n\t</body>\n</html>\n`;
+		html += `\n\t\t<hr /><a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/"><img width="88" height="31" alt="知识共享许可协议" style="border-width:0;width:inherit;height:inherit;border-radius:unset;" src="/img/cc-by-sa-4.0.png" /></a><br />如无特别说明，以上作品采用<a rel="license" href="https://www.creativecommons.org/licenses/by-sa/4.0/">知识共享署名</a>进行许可。\n\t\t<script>\n\t\t\t// 本站 JS 的语法基线（??=）：不支持该语法的旧浏览器在解析阶段直接报错，整块不执行，等同于「无 JS」，仍能读到上面的静态目录\n\t\t\tlet 参数 = new URLSearchParams(location.search).get("no-redirect");\n\t\t\t参数 ??= "";\n\t\t\t// noscript：脚本既然跑起来了就说明 JS 可用（如从书签打开），送去完整版；unsupported：完整版的脚本已确认跑不起来，再跳过去只会来回弹\n\t\t\tif (参数 === "noscript") location.replace("/blog.html");\n\t\t\telse if (参数 !== "unsupported") {\n\t\t\t\tconst 完整版链接 = document.createElement("a");\n\t\t\t\t完整版链接.href = "/blog.html";\n\t\t\t\t完整版链接.textContent = "点击这里访问完整版，体验更佳";\n\t\t\t\t完整版链接.style.cssText =\n\t\t\t\t\t"background: #000; color: #66ccff; display: block; margin-top: 1em; padding: 1em; text-align: center; text-decoration: none;";\n\t\t\t\tdocument.body.append(完整版链接);\n\t\t\t}\n\t\t</script>\n\t</body>\n</html>\n`;
 		fs.writeFileSync(CONFIG.blogIndexPath, html);
 	}
 

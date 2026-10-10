@@ -382,9 +382,8 @@ function 处理文章列表加载失败(e) {
 	console.error(e);
 	阻止搜索引擎收录();
 	显示或隐藏进度条(false);
-	const 正在加载文章提示 = gd("正在加载文章提示");
-	if (正在加载文章提示)
-		正在加载文章提示.innerHTML = "<div>加载失败，<a href=''>点击重试</a></div>";
+	gd("正在加载文章提示")?.remove();
+	gd("列表加载失败")?.classList.add("显示");
 }
 /**
  * 请求文章列表数据：拉取 /json/blog.json，并把 json 解析推迟到 DOMContentLoaded 高优任务之后

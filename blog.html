@@ -25,7 +25,9 @@
 		<link rel="canonical" href="https://dsy4567.icu/blog.html" />
 		<!-- END META -->
 		<!-- BEGIN NOSCRIPT -->
-		<noscript><meta http-equiv="refresh" content="0; url=/blog/index.html" /></noscript>
+		<noscript
+			><meta http-equiv="refresh" content="0; url=/blog/index.html?no-redirect=noscript"
+		/></noscript>
 		<!-- END NOSCRIPT -->
 		<base target="_self" />
 		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
@@ -240,6 +242,17 @@
 			</div>
 			<article class="右" id="main">
 				<!-- BEGIN MAIN -->
+				<section id="列表加载失败">
+					<p>
+						文章列表加载失败：可能是网络问题，也可能是你的浏览器过于陈旧，无法运行本站的脚本。
+					</p>
+					<p>
+						<a href="">点击重试</a>，或<a
+							href="/blog/index.html?no-redirect=unsupported"
+							>查看纯静态的文章目录</a
+						>。
+					</p>
+				</section>
 				<section class="骨架屏占位" id="正在加载文章提示">
 					<div>
 						<span class="骨架屏标题"></span>
@@ -286,6 +299,16 @@
 						object-fit: cover;
 						height: 256px;
 						width: 100%;
+					}
+					/* 兜底块默认可见：读取不到下面这条 @supports 的旧浏览器会直接把它显示出来 */
+					#列表加载失败 {
+						display: block;
+					}
+					/* 能运行本站脚本的浏览器先藏起来，等 JS 渲染失败再靠 .显示 亮出来 */
+					@supports selector(:focus-visible) {
+						#列表加载失败:not(.显示) {
+							display: none;
+						}
 					}
 				</style>
 				<section class="骨架屏占位">
