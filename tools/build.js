@@ -687,7 +687,7 @@ class SiteGenerator {
 	 * @param {文件状态表} [fileStates] - 文件状态表（用于 sitemap 静态页面 lastmod）
 	 */
 	constructor(articles, fileStates) {
-		this.articles = articles.sort((a, b) => +new Date(b.date) - +new Date(a.date));
+		this.articles = articles.sort((a, b) => +new Date(b.updated) - +new Date(a.updated));
 		this.fileStates = fileStates || {};
 	}
 
@@ -696,6 +696,8 @@ class SiteGenerator {
 	 * @returns {void}
 	 */
 	generateRss() {
+		// RSS 只收录最新文章，避免订阅源随文章增多而无限膨胀
+		const 最新文章 = this.articles.slice(0, 20);
 		// feed 顶层 updated：取所有文章中最新的 updated（无文章时用当前时间）
 		const feedUpdated = this.articles.length
 			? new Date(Math.max(...this.articles.map(a => +new Date(a.updated)))).toISOString()
