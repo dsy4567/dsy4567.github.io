@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /*
 
-Sitemap: https://dsy4567.github.io/sitemap.xml
+Sitemap: https://dsy4567.icu/sitemap.xml
