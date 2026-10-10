@@ -192,6 +192,26 @@ function processArticleImages(html) {
 }
 
 /**
+ * 补全文章 HTML 中的站内相对链接：把 href/src 以 / 开头的地址加上站点域名
+ * 只处理真正的元素属性，代码块中形如 href="/..." 的示例文本不受影响
+ * @param {string} html - 文章 HTML
+ * @param {string} 域名 - 站点域名
+ * @returns {string} 补全后的 HTML
+ */
+function 补全相对链接(html, 域名) {
+	const $ = cheerio.load(html);
+	$("[href^='/'], [src^='/']").each((_, el) => {
+		const $el = $(el);
+		for (const 属性 of ["href", "src"]) {
+			const 值 = $el.attr(属性);
+			// 跳过 // 开头的协议相对地址，它本就是绝对地址
+			if (值?.startsWith("/") && !值.startsWith("//")) $el.attr(属性, `https://${域名}${值}`);
+		}
+	});
+	return /** @type {string} */ ($("body").html());
+}
+
+/**
  * 生成文章摘要：去除 h1 与 HTML 标签后的纯文本
  * @param {string} descMarkdown - 描述 Markdown 原文
  * @returns {string} 摘要文本（以 ... 结尾）
@@ -710,8 +730,10 @@ class SiteGenerator {
 			`    <updated>${feedUpdated}</updated>\n` +
 			`    <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>\n`;
 
-		for (const a of this.articles) {
+		for (const a of 最新文章) {
 			const summaryText = a.desc_text; // 复用缓存
+			// 站内相对链接（href/src 以 / 开头）在阅读器中缺少上下文，需补全为绝对地址
+			const contentHtml = 补全相对链接(a.html || "", getDomain("infra"));
 			xml +=
 				`    <entry>\n` +
 				`        <title>${a.title}</title>\n` +
@@ -725,7 +747,7 @@ class SiteGenerator {
 				`            <uri>https://${getDomain("infra")}/</uri>\n` +
 				`        </author>\n` +
 				`        <category term="Default" />\n` +
-				`        <content type="html" xml:lang="zh-cn">\n            <![CDATA[\n${a.html}\n            ]]>\n        </content>\n` +
+				`        <content type="html" xml:lang="zh-cn">\n            <![CDATA[\n${contentHtml}\n            ]]>\n        </content>\n` +
 				`    </entry>\n`;
 		}
 		xml += "</feed>";
