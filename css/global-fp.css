@@ -431,10 +431,11 @@ body > #顶部大图 {
 }
 
 body > #顶部大图 {
+	--height-desktop: min(45vh, 480px);
 	background-color: var(--bg-color);
 	border-radius: var(--border-radius);
 	display: block;
-	height: 45vh;
+	height: var(--height-desktop);
 	overflow: hidden;
 	position: relative;
 	z-index: 1;
@@ -600,7 +601,6 @@ div#侧边按钮容器 {
 		margin-top: 66px;
 		position: fixed;
 		width: 100%;
-		/* height: calc(64vh); */
 		height: calc(64px + min(calc(64vh), 430px));
 		z-index: -1;
 	}
