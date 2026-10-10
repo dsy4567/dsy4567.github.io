@@ -922,7 +922,8 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	right: 48px;
 	text-align: end;
 	word-wrap: break-word;
-	width: calc(100vw - 64px);
+	width: 256px;
+	max-width: min(calc(100vw - 306px), 33vw);
 	transition: var(--transition) color;
 	transition-delay: 0s;
 }
@@ -931,7 +932,6 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	div#侧边按钮容器 > .拥有更多选项#网易云音乐:has(*:focus-visible) #歌词 {
 		color: #fff;
 		transition-delay: var(--transition);
-		width: calc(100vw - 306px);
 	}
 }
 @supports not selector(:has(*)) {
@@ -939,7 +939,6 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-within #歌词 {
 		color: #fff;
 		transition-delay: var(--transition);
-		width: calc(100vw - 306px);
 	}
 }
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 > .更多选项 {
