@@ -30,6 +30,12 @@ const 预加载有效期 = 2 * 60 * 1000;
 /** 播放进度条的最小写入间隔（毫秒）：进度只是视觉反馈，1s 一次足够，避免高频样式写入 */
 const 进度更新间隔 = 1000;
 
+/**
+ * 测试开关：把歌词显示在系统媒体控件的歌手位置（标题相应改为「歌名（歌手 演唱）」）。
+ * 默认关闭，仅当 localStorage 中存在「测试-在歌手处展示歌词」项时启用
+ */
+const 在歌手处展示歌词 = localStorage.getItem("测试-在歌手处展示歌词") !== null;
+
 /** 将 `[mm:ss.xx]` 时间标签转换为秒数（与 lrc-parser 的 convertTime 一致） */
 function 标签转秒(/** @type {string} */ 标签) {
 	let [分钟, 秒数] = 标签.slice(1, -1).split(":");
@@ -505,11 +511,13 @@ let 网易云音乐 = {
 			true
 		);
 
-		let 封面 = 网易云音乐.歌单[网易云音乐.正在播放.索引].封面;
+		let 封面 = 网易云音乐.歌单[网易云音乐.正在播放.索引].封面,
+			歌曲 = 网易云音乐.歌单[网易云音乐.正在播放.索引];
 		navigator.mediaSession &&
 			(navigator.mediaSession.metadata = new MediaMetadata({
-				title: 网易云音乐.歌单[网易云音乐.正在播放.索引].歌名,
-				artist: 网易云音乐.歌单[网易云音乐.正在播放.索引].歌手,
+				// 开启「在歌手处展示歌词」后，歌手信息并入标题，歌手位置让给歌词（由 渲染歌词 持续写入）
+				title: 在歌手处展示歌词 ? 歌曲.歌名 + "（" + 歌曲.歌手 + " 演唱）" : 歌曲.歌名,
+				artist: 在歌手处展示歌词 ? "" : 歌曲.歌手,
 				artwork: [
 					{
 						src: 封面 + "?param=1280y1280",
@@ -648,6 +656,7 @@ let 网易云音乐 = {
 					if (!歌词) {
 						// 无活跃 cue 的区间（前奏、间奏等）要清空，否则上一句会一直残留
 						歌词元素.innerText = "";
+						更新媒体会话歌词("");
 						return;
 					}
 					let 翻译 = /** @type {VTTCue | undefined} */ (
@@ -660,6 +669,7 @@ let 网易云音乐 = {
 						(翻译 && 翻译.startTime >= 歌词.startTime && 翻译.startTime < 歌词.endTime
 							? ` (${翻译.text})`
 							: "");
+					更新媒体会话歌词(歌词元素.innerText);
 				}
 				const f = async () => {
 					await 立即渲染网易云音乐组件();
@@ -768,6 +778,16 @@ function 创建歌单项(/** @type {歌单} */ 音乐信息) {
 	li.title = 音乐信息.完整歌名;
 	li.dataset.id = "" + 音乐信息.id;
 	return li;
+}
+
+/**
+ * 把当前歌词同步到系统媒体控件的歌手位置（仅在开启 在歌手处展示歌词 时生效）。
+ * 元数据对象已由 更新歌曲信息 建好，此处原地改写 artist 即可，不必每句歌词都整体重建
+ * @param {string} 文本 - 当前应展示的歌词（含翻译），空串表示无歌词
+ */
+function 更新媒体会话歌词(文本) {
+	if (!在歌手处展示歌词 || !navigator.mediaSession?.metadata) return;
+	navigator.mediaSession.metadata.artist = 文本;
 }
 
 let 染网易云音乐组件已渲染 = false;
