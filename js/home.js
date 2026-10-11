@@ -488,9 +488,14 @@ async function 渲染最近在听() {
 	排行容器.addEventListener("dblclick", 定位并播放);
 	/** @param {KeyboardEvent} 事件 */
 	const 键盘定位并播放 = 事件 => {
-		if (事件.key === "Enter") 定位并播放(事件);
+		// Enter/Space 都是按钮的标准激活键；Space 需阻止默认的页面滚动
+		if (事件.key !== "Enter" && 事件.key !== " ") return;
+		事件.preventDefault();
+		// 长按产生的重复事件不再触发，避免重复跳转/播放
+		if (事件.repeat) return;
+		定位并播放(事件);
 	};
-	排行容器.addEventListener("keyup", 键盘定位并播放);
+	排行容器.addEventListener("keydown", 键盘定位并播放);
 
 	await schedulerYield();
 	await 填充精选歌词();
