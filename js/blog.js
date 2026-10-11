@@ -87,7 +87,6 @@ function 解析GitHub链接(url) {
 async function 渲染文章(当前文章信息) {
 	// /blog/<id>/
 	try {
-		添加脚本("/js/lib/purify.min.js");
 		const 动态加载自增计数器拷贝 = 动态加载自增计数器;
 		// 直接访问文章页时，构建产物已声明好封面层；此处只为 SPA 换页补注册，优先级见 global.js 的 顶部大图优先级
 		if (入口函数首次调用)
@@ -260,7 +259,12 @@ async function 渲染文章(当前文章信息) {
 		//#endregion
 
 		//#region 评论区
-		当前文章信息.issue &&
+		if (当前文章信息.issue) {
+			// 净化模块与 DOMPurify 并行加载，两者均在请求 GitHub API 之前完成
+			const [净化模块] = await Promise.all([
+				import("./purify-comments.js"),
+				添加脚本("/js/lib/purify.min.js"),
+			]);
 			fetch(
 				`https://api.github.com/repos/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}/comments`
 			)
@@ -321,9 +325,8 @@ async function 渲染文章(当前文章信息) {
 						用户信息.append(头像链接, 用户名);
 
 						正文.className = "评论正文";
-						await 添加脚本("/js/lib/purify.min.js");
-						// @ts-ignore
-						正文.innerHTML = DOMPurify.sanitize(marked.parse(评论.body)); // TODO: 需要过滤
+						// @ts-ignore DOMPurify 由动态脚本注入
+						正文.append(净化模块.净化评论HTML(DOMPurify, 评论.body));
 
 						元数据.className = "元数据";
 						元数据.textContent = `发表于: ${new Date(
@@ -362,6 +365,7 @@ async function 渲染文章(当前文章信息) {
 					右.append(sect);
 					渲染图标();
 				});
+		}
 		//#endregion
 	} catch (e) {
 		console.error(e);
