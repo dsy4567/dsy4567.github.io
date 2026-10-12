@@ -942,7 +942,6 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 		transition-delay: var(--transition);
 		user-select: auto;
 		pointer-events: all;
-		cursor: text;
 	}
 }
 @supports not selector(:has(*)) {
