@@ -409,6 +409,11 @@ body > #导航栏 {
 	z-index: 998;
 	transform: translateY(0);
 }
+@media (max-height: 240px) {
+	body > #导航栏 {
+		position: relative;
+	}
+}
 #导航栏 > .左,
 #导航栏 > .右 {
 	display: flex;
@@ -420,8 +425,9 @@ body > #导航栏 {
 #导航栏 a {
 	color: var(--text-color);
 	display: flex;
-	text-decoration: none;
 	align-items: center;
+	text-decoration: none;
+	word-break: keep-all;
 }
 #导航栏 > .左 > .标题 {
 	font-size: x-large;
@@ -530,6 +536,8 @@ section#我 > img {
 	margin-bottom: -64px;
 	position: relative;
 	top: -64px;
+	max-width: unset;
+	max-height: unset;
 }
 
 section#我 span#联系方式 {
@@ -581,6 +589,7 @@ footer#copyright {
 	text-align: center;
 	width: 100%;
 	z-index: 1;
+	overflow-x: auto;
 }
 
 /* ==================== 侧边按钮-通用 ==================== */
