@@ -1233,10 +1233,14 @@ async function 填充小组件(组件) {
 
 /** <x-163music> 宿主元素：自行解析 data-id、切换骨架与内容，并响应点击/回车立即播放 */
 class 网易云音乐小组件 extends HTMLElement {
-	/** connectedCallback 可能因元素被移动而多次触发，用此标记确保只处理一次 @type {boolean} */
-	已处理 = false;
-	/** 解析得到的歌曲，null 表示未知（不可播放） @type {歌单 | null} */
-	歌曲 = null;
+	// 语法基线为 ES2021（eslint ecmaVersion 2021），类字段改在构造函数中声明并赋初值
+	constructor() {
+		super();
+		/** connectedCallback 可能因元素被移动而多次触发，用此标记确保只处理一次 @type {boolean} */
+		this.已处理 = false;
+		/** 解析得到的歌曲，null 表示未知（不可播放） @type {歌单 | null} */
+		this.歌曲 = null;
+	}
 
 	connectedCallback() {
 		if (this.已处理) return;
