@@ -18,6 +18,19 @@ let /** @type {文章信息[]} */ 所有文章信息 = [],
 	 */
 	文章列表缓存 = null;
 
+/**
+ * 强制预览文章：为 true 时，在白名单域名下拉取博客 Markdown 源文件
+ * （/blog/<id>/index.md）就地渲染，覆盖页面已有的构建产物，便于本地预览编辑中的文章
+ */
+const 免构建预览文章 = false;
+/**
+ * 强制预览文章的域名白名单：仅本地与开发域名，避免线上直接读取未构建的源文件。
+ * 与 location.hostname 严格全等匹配（不含端口）
+ */
+const 预览白名单域名 = ["localhost", "127.0.0.1", "dev.dsy4567.icu"];
+/** 强制预览时追加到 Markdown 最前面的警告提示，提醒尽快运行构建命令 */
+const 预览警告 = "> ⚠️正在预览编辑中的文章，请记得运行构建命令\n\n";
+
 /** 注意同步修改 [/tools/build.js](../tools/build.js) */
 const 博客默认封面 = [
 	"https://qwq.dsy4567.icu/files-2/63936697_p0.webp",
@@ -106,8 +119,20 @@ async function 渲染文章(当前文章信息) {
 		if (!右) return;
 
 		//#region 渲染文章正文
-		if (当前文章信息.url) {
-			let t = await (await fetch(当前文章信息.url)).text();
+		// 强制预览：白名单域名下拉取 Markdown 源文件并覆盖构建产物；否则沿用外链文章的远程内容
+		const 免构建预览 = 免构建预览文章 && 预览白名单域名.includes(location.hostname);
+		let 文章源文本 = /** @type {string | null} */ (null);
+		if (免构建预览) {
+			const res = await fetch(`/blog/${encodeURIComponent(当前文章信息.id)}/index.md`).catch(
+				() => null
+			);
+			if (res?.ok) 文章源文本 = 预览警告 + (await res.text());
+		}
+		if (文章源文本 === null && 当前文章信息.url)
+			文章源文本 = await (await fetch(当前文章信息.url)).text();
+
+		if (文章源文本 !== null) {
+			let t = 文章源文本;
 			if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
 
 			// 解析 Markdown、追加许可与元信息
@@ -144,7 +169,9 @@ async function 渲染文章(当前文章信息) {
 					.split("x")
 					.map(s => +s);
 			}
-			gd("正在加载文章提示")?.replaceWith(sect);
+			// 强制预览时页面已有构建产物正文，直接整体替换；外链文章则替换加载提示
+			if (免构建预览) qs("main > .右 > section")?.replaceWith(sect);
+			else gd("正在加载文章提示")?.replaceWith(sect);
 
 			// 更新 SEO 元数据
 			qs("meta[name='description']")?.setAttribute(
