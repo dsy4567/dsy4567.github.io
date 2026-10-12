@@ -554,7 +554,7 @@ section#我 > br {
 	text-decoration: underline wavy var(--accent-color);
 	text-underline-offset: 4px;
 	overflow-y: auto;
-	height: 3em;
+	height: calc(2em + 4px);
 	padding-bottom: 4px;
 }
 #一言 .作者 {
