@@ -36,13 +36,17 @@ let /** @type {最近在听项[]} */ 排行歌曲 = [],
 	 * @type {最近在听项[]}
 	 */
 	展示歌曲 = [],
-	/** 是否已请求过排行数据（失败/非法也算“有结论”，避免换页后重复请求） */
+	/** 是否已请求过排行数据（失败/非法也算“有结论”，避免换页后重复请求；换页作废的请求会解除该标记） */
 	排行已请求 = false,
-	/** 排行数据是否有效（无效时隐藏整个 section） */
+	/** 排行数据是否有效（无效时把排行与歌词替换为失败提示） */
 	排行有效 = false,
 	/** @type {{ lrc?: { lyric?: string } } | null} */ 歌词原始 = null,
 	/** @type {{ code?: number; chorus?: 副歌信息[] } | null} */ 副歌原始 = null,
 	/** @type {精选歌词 | "失败" | null} */ 精选歌词缓存 = null,
+	/** 排行请求失败的用户可读原因（成功时为空串），渲染失败提示时展示 */
+	加载失败原因 = "",
+	/** 精选歌词失败的用户可读原因（成功时为空串） */
+	歌词失败原因 = "",
 	正在处理点击 = false;
 
 /** 全/半角标点与符号，用于无副歌数据时挑选“干净”的歌词行 */
@@ -139,6 +143,55 @@ function 应用缓存(/** @type {最近在听缓存} */ 缓存) {
 	歌词原始 = 缓存.歌词原始 ?? null;
 	副歌原始 = 缓存.副歌原始 ?? null;
 	排行有效 = 排行歌曲.length > 0;
+}
+
+/**
+ * 把请求异常翻译成面向用户的简短原因：网络中断、DNS、跨域、被拦截等取不到响应时
+ * fetch 抛 TypeError，响应体解析失败抛 SyntaxError，其余（含自定义的 HTTP 状态提示）取异常信息
+ * @param {unknown} 错误
+ * @returns {string}
+ */
+function 请求失败原因(错误) {
+	if (错误 instanceof TypeError) return "网络异常";
+	if (错误 instanceof SyntaxError) return "响应数据异常";
+	return 错误 instanceof Error && 错误.message ? 错误.message : "未知错误";
+}
+
+/** 解除「已有结论」状态：重试链接点击后随动态换页重建 section，重新发起请求 */
+function 重置为待请求() {
+	排行已请求 = false;
+	最近在听已渲染 = false;
+	精选歌词缓存 = null;
+	加载失败原因 = "";
+	歌词失败原因 = "";
+}
+
+/**
+ * 换页期间完成的请求结果已不属于当前页面：作废并解除「已有结论」，让下次进入首页重新请求；
+ * 若此时已回到首页（section 在文档中）则立即重试一次，避免停留在失败提示上
+ */
+function 作废请求并重试() {
+	排行已请求 = false;
+	if (gd("网易云音乐-最近在听")) 获取并渲染最近在听();
+}
+
+/**
+ * 把容器内容整体替换为加载失败提示：失败原因 + 指向当前页的重试链接
+ * @param {HTMLElement} 容器
+ * @param {string} 原因
+ */
+function 渲染加载失败(容器, 原因) {
+	容器.textContent = "";
+	const 提示元素 = ce("div");
+	提示元素.className = "加载失败";
+	提示元素.append(原因 + "，");
+	const 重试链接 = ce("a");
+	// 只取路径与查询、丢弃 hash：同路径带 hash 的链接会被 main.js 放行给浏览器做锚点跳转，不会动态换页
+	重试链接.href = location.pathname + location.search;
+	重试链接.textContent = "点击重试";
+	重试链接.addEventListener("click", 重置为待请求);
+	提示元素.append(重试链接);
+	容器.append(提示元素);
 }
 
 /**
@@ -284,19 +337,19 @@ async function 渲染精选歌词(/** @type {HTMLElement} */ 容器, /** @type {
 	await schedulerYield();
 }
 
-/** 加载、选取并渲染精选歌词；失败或无歌词时隐藏容器 */
+/** 加载、选取并渲染精选歌词；失败或无歌词时替换为失败提示 */
 async function 填充精选歌词() {
 	const 容器 = qs("#网易云音乐-最近在听 .精选歌词容器");
 	if (!容器) return;
 	if (精选歌词缓存 === "失败") {
-		容器.remove();
+		渲染加载失败(容器, "歌词加载失败：" + (歌词失败原因 || "暂无歌词"));
 		return;
 	}
 	if (精选歌词缓存) return 渲染精选歌词(容器, 精选歌词缓存);
 	try {
 		await 添加脚本("/js/lib/lrc-parser.js");
 		const 行 = await 选取歌词行();
-		if (!行) throw new Error("无可展示的歌词");
+		if (!行) throw new Error("暂无歌词");
 		精选歌词缓存 = {
 			行,
 			歌手: 排行歌曲[0].song.ar.map(歌手信息 => 歌手信息.name).join(" / "),
@@ -306,7 +359,8 @@ async function 填充精选歌词() {
 	} catch (e) {
 		console.warn(e);
 		精选歌词缓存 = "失败";
-		容器.remove();
+		歌词失败原因 = 请求失败原因(e);
+		渲染加载失败(容器, "歌词加载失败：" + 歌词失败原因);
 	}
 }
 
@@ -415,8 +469,18 @@ async function 渲染最近在听() {
 	const 模块 = gd("网易云音乐-最近在听");
 	if (!模块) return;
 	if (!排行有效) {
-		// 请求已有结论（失败或数据非法）时隐藏整个 section，未请求时保留骨架等待渲染
-		if (排行已请求) 模块.remove();
+		// 请求已有结论（失败或数据非法）时把排行与歌词替换为失败提示，而不是移除整个 section
+		模块.classList.remove("加载中");
+		const 原因 = "最近在听加载失败：" + (加载失败原因 || "暂时没有可展示的数据");
+		const 排行区域 = 模块.querySelector(".播放排行");
+		if (排行区域 instanceof HTMLElement) {
+			// 清掉 ::before 里默认的「—— 加载中 ——」，避免与失败提示并存
+			排行区域.style.setProperty("--date-range", '""');
+			渲染加载失败(排行区域, 原因);
+		}
+		// 歌词依赖排行数据，已请求过才一并替换；首次请求尚未有结论时保留骨架等待渲染
+		const 歌词区域 = 模块.querySelector(".精选歌词容器");
+		if (排行已请求 && 歌词区域 instanceof HTMLElement) 渲染加载失败(歌词区域, 原因);
 		return;
 	}
 	/** @type {HTMLElement | null} */
@@ -527,11 +591,14 @@ async function 获取并渲染最近在听() {
 	const 动态加载自增计数器拷贝 = 动态加载自增计数器;
 	try {
 		// NOTE: 接口返回数据中 playCount 非登录状态恒为 0，只能通过 score 大致判断播放次数
-		const 响应 = /** @type {最近在听响应} */ (await (await fetch(最近在听接口)).json());
-		if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
+		const 响应 = await fetch(最近在听接口);
+		// 换页期间返回的结果已不属于当前页面，作废（见 作废请求并重试）
+		if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return 作废请求并重试();
+		if (!响应.ok) throw new Error(`服务异常（HTTP ${响应.status}）`);
+		const 数据 = /** @type {最近在听响应} */ (await 响应.json());
 
-		const 原始项 = 响应?.weekData;
-		if (!Array.isArray(原始项)) throw new Error("最近在听数据非法");
+		const 原始项 = 数据?.weekData;
+		if (!Array.isArray(原始项)) throw new Error("响应数据异常");
 		const 有效项 = 原始项.filter(
 			项 =>
 				项 &&
@@ -541,10 +608,11 @@ async function 获取并渲染最近在听() {
 				typeof 项.song.name === "string" &&
 				Array.isArray(项.song.ar)
 		);
-		if (!有效项.length) throw new Error("最近在听数据为空");
+		if (!有效项.length) throw new Error("暂无收听数据");
 		// score 是排行依据（不是播放次数），降序排列；同分保持接口原顺序，展示上限在渲染时按 排行上限 截断
 		排行歌曲 = 有效项.sort((甲, 乙) => 乙.score - 甲.score);
 		排行有效 = true;
+		加载失败原因 = "";
 
 		// 接口不提供歌词，由客户端为第 1 名补取；副歌接口只在 启用副歌时间 时请求
 		const 第一名id = 排行歌曲[0].song.id;
@@ -563,7 +631,10 @@ async function 获取并渲染最近在听() {
 		写入排行缓存();
 	} catch (e) {
 		console.error(e);
-		// 请求失败时用已过期的旧缓存兜底
+		// 换页期间失败同样作废，避免把过期的失败结论留给下一次进入首页
+		if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return 作废请求并重试();
+		加载失败原因 = 请求失败原因(e);
+		// 请求失败时用已过期的旧缓存兜底（兜底成功则排行有效，不再展示失败提示）
 		const 缓存 = 读取排行缓存();
 		if (缓存) 应用缓存(缓存);
 	}
@@ -620,6 +691,8 @@ _global["home.js"] = () => ({
 	歌词原始,
 	副歌原始,
 	精选歌词缓存,
+	加载失败原因,
+	歌词失败原因,
 	最近在听已渲染,
 	采样排行,
 	选取歌词行,

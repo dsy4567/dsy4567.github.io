@@ -1236,6 +1236,24 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	text-overflow: ellipsis;
 }
 
+/* 加载失败提示：整体替换排行榜/歌词区域的内容，需覆盖 .播放排行 > * 的行样式 */
+#网易云音乐-最近在听 .播放排行 > .加载失败,
+#网易云音乐-最近在听 .精选歌词容器 > .加载失败 {
+	display: block;
+	height: auto;
+	margin: 12px;
+	padding: 24px 12px;
+	text-align: center;
+	color: var(--text-color);
+	background-color: transparent;
+	border: 0;
+	font-weight: normal;
+}
+/* 失败提示不渲染榜单行左侧的进度条 */
+#网易云音乐-最近在听 .播放排行 > .加载失败::after {
+	content: none;
+}
+
 /* ==================== 博客 ==================== */
 .左 > .目录 {
 	word-break: keep-all;
