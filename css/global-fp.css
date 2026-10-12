@@ -98,6 +98,9 @@ main > #分界线 {
 	background-color: var(--overlay);
 	border-radius: var(--border-radius);
 }
+::-webkit-scrollbar-corner {
+	background-color: transparent;
+}
 
 /* ==================== html/body/通用元素 ==================== */
 html {
