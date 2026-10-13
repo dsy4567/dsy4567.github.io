@@ -465,7 +465,9 @@ async function 渲染最近在听() {
 		const 排行区域 = 模块.querySelector(".播放排行");
 		if (排行区域 instanceof HTMLElement) {
 			// 清掉 ::before 里默认的「—— 加载中 ——」，避免与失败提示并存
-			排行区域.style.setProperty("--date-range", '""');
+			排行区域.style.setProperty("--range", '""');
+			排行区域.style.setProperty("--tip", '""');
+			排行区域.style.setProperty("--tip-fv", '""');
 			渲染加载失败(排行区域, 原因);
 		}
 		// 歌词依赖排行数据，已请求过才一并替换；首次请求尚未有结论时保留骨架等待渲染
@@ -479,7 +481,9 @@ async function 渲染最近在听() {
 	// 数据已就绪、准备操作 DOM，此时才摘掉骨架的闪烁样式
 	模块.classList.remove("加载中");
 	// 接口不提供统计区间，文案固定为「最近一周」，写入 CSS 变量交给 .播放排行::before 展示（值含引号，content 可直接引用）
-	排行容器.style.setProperty("--date-range", '"—— 最近一周 | 双击以播放 ——"');
+	排行容器.style.setProperty("--range", '"最近一周 | "');
+	排行容器.style.setProperty("--tip", '"双击以播放"');
+	排行容器.style.setProperty("--tip-fv", '"聚焦并按空格以播放"');
 	// 换页重渲染会丢弃旧列表：元素脱离文档后其 CSS 动画即随之失效，无需再逐个收尾
 	排行容器.textContent = "";
 	await schedulerYield();

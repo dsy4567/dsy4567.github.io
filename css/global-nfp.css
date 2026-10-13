@@ -1200,9 +1200,14 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 		animation: none;
 	}
 }
-#网易云音乐-最近在听 .播放排行 > *::after {
+
+#网易云音乐-最近在听 .播放排行 > *::after,
+#网易云音乐-最近在听 .播放排行 > *::before {
 	content: "";
 	position: absolute;
+	transition: var(--transition) background-color, var(--transition) opacity;
+}
+#网易云音乐-最近在听 .播放排行 > *::after {
 	top: 0;
 	left: 0;
 	background-color: var(--accent-color);
@@ -1210,7 +1215,23 @@ div#侧边按钮容器 > #切换主题 > #所有主题 > button[aria-checked="tr
 	border-radius: calc(var(--border-radius) - 1px);
 	width: min(var(--progress), 95%);
 	height: 100%;
-	transition: var(--transition) background-color;
+}
+#网易云音乐-最近在听 .播放排行 > *::before {
+	content: var(--tip, "");
+	background: linear-gradient(to top, rgba(0,0,0,.45), transparent);
+	opacity: 0;
+	bottom: 0;
+	left: 0;
+	text-align: center;
+	width: 100%;
+	z-index: 1;
+}
+body:has(:focus-visible) #网易云音乐-最近在听 .播放排行 > *::before {
+	content: var(--tip-fv, "");
+}
+#网易云音乐-最近在听 .播放排行 > *:hover::before,
+#网易云音乐-最近在听 .播放排行 > *:focus-visible::before {
+	opacity: 1;
 }
 #网易云音乐-最近在听.加载中 .播放排行 > * > .歌曲信息,
 #网易云音乐-最近在听.加载中 .播放排行 > * > .排名 {
