@@ -497,7 +497,7 @@ async function 渲染最近在听() {
 	/** @type {HTMLElement[]} */
 	const 项元素列表 = [];
 	await 批量低阻塞操作(展示歌曲, 项 => {
-		const 项元素 = ce("div");
+		const 项元素 = ce("li");
 		项元素.style.setProperty("--progress", (项.score / 最大score) * 100 + "%");
 		项元素.tabIndex = 0;
 		项元素.dataset.songId = "" + 项.song.id;
@@ -523,13 +523,19 @@ async function 渲染最近在听() {
 		}
 		const 歌曲信息 = ce("div");
 		歌曲信息.className = "歌曲信息";
-		歌曲信息.append(项.song.name);
+
+		const 歌名元素 = ce("span");
+		歌名元素.textContent = 项.song.name;
+		歌名元素.setAttribute("aria-label", "歌名");
+		歌曲信息.append(歌名元素);
 		if (歌手) {
 			const 歌手元素 = ce("span");
 			歌手元素.className = "淡化";
 			歌手元素.textContent = 歌手;
-			歌曲信息.append(" ", 歌手元素);
+			歌手元素.setAttribute("aria-label", "歌手");
+			歌曲信息.append(歌手元素);
 		}
+
 		// 不展示任何数字，名次由 CSS 的 counter 输出「TOP n」
 		const 排名 = ce("div");
 		排名.className = "排名";

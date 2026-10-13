@@ -151,11 +151,9 @@ async function 渲染文章(当前文章信息) {
 					html += `<a href="/blog.html?tag=${标签}">${标签}</a> `;
 				return html.trim();
 			})();
-			span.innerHTML = `发表于: ${new Date(
-				当前文章信息.date
-			).toLocaleString()}, 更新于: ${new Date(
-				当前文章信息.updated
-			).toLocaleString()}${标签html ? `</br>标签: ${标签html}` : ""}`;
+			const 发表时间 = new Date(当前文章信息.date),
+				更新时间 = new Date(当前文章信息.updated);
+			span.innerHTML = `发表于: <time datetime="${发表时间.toISOString()}">${发表时间.toLocaleString()}</time>, 更新于: <time datetime="${更新时间.toISOString()}">${更新时间.toLocaleString()}</time>${标签html ? `</br>标签: ${标签html}` : ""}`;
 			span.classList.add("元数据");
 			sect.append(span);
 			// 设置大小和懒加载
@@ -329,7 +327,7 @@ async function 渲染文章(当前文章信息) {
 					for (const 评论 of j || []) {
 						const 用户主页 = 解析GitHub链接(评论.user.html_url),
 							头像地址 = 解析GitHub链接(评论.user.avatar_url),
-							评论元素 = ce("section"),
+							评论元素 = ce("article"),
 							用户信息 = ce("div"),
 							头像链接 = ce("a"),
 							头像 = ce("img"),
@@ -338,17 +336,20 @@ async function 渲染文章(当前文章信息) {
 							正文 = ce("div"),
 							元数据 = ce("span");
 						评论元素.className = "评论";
+						评论元素.setAttribute("role", "comment");
 
 						用户信息.className = "用户信息";
+						用户信息.setAttribute("aria-label", "用户信息");
 						if (用户主页) 头像链接.href = 用户主页;
 						头像.className = "头像 小尺寸";
-						头像.alt = "的头像";
+						头像.alt = 评论.user.login + "的头像";
 						if (头像地址) 头像.src = 头像地址;
 						头像链接.append(头像);
 						头像链接.classList.add("小尺寸");
 						用户名.className = "用户名";
 						if (用户主页) 用户名链接.href = 用户主页;
 						用户名链接.textContent = 评论.user.login;
+						用户名链接.setAttribute("rel", "author");
 						用户名.append(用户名链接);
 						用户信息.append(头像链接, 用户名);
 
@@ -357,9 +358,11 @@ async function 渲染文章(当前文章信息) {
 						正文.append(净化模块.净化评论HTML(DOMPurify, 评论.body));
 
 						元数据.className = "元数据";
-						元数据.textContent = `发表于: ${new Date(
+						元数据.innerHTML = `发表于: <time datetime="${评论.created_at}">${new Date(
 							评论.created_at
-						).toLocaleString()} 更新于: ${new Date(评论.updated_at).toLocaleString()}`;
+						).toLocaleString()}</time> 更新于: <time datetime="${评论.updated_at}">${new Date(
+							评论.updated_at
+						).toLocaleString()}</time>`;
 						评论元素.append(用户信息, 正文, 元数据);
 
 						// 表情反应
@@ -491,17 +494,15 @@ async function 渲染文章列表(u) {
 					br = ce("br"),
 					预览 = ce("div"),
 					span = ce("span"),
-					sect = ce("section"),
+					arti = ce("article"),
 					封面 = ce("img"),
 					鼠标已移动 = false;
 				a.href = `/blog/${文章.id}/`;
 				a.innerText = "阅读更多";
 				预览.innerHTML = marked.parse(文章.desc);
-				span.innerHTML = `发表于: ${new Date(
-					文章.date
-				).toLocaleString()}, 更新于: ${new Date(
-					文章.updated
-				).toLocaleString()}</br>标签: ${(() => {
+				const 发表时间 = new Date(文章.date),
+					更新时间 = new Date(文章.updated);
+				span.innerHTML = `发表于: <time datetime="${发表时间.toISOString()}">${发表时间.toLocaleString()}</time>, 更新于: <time datetime="${更新时间.toISOString()}">${更新时间.toLocaleString()}</time></br>标签: ${(() => {
 					let html = "";
 					文章标签.forEach(标签 => {
 						html += `<a href="/blog.html?tag=${标签}">${标签}</a> `;
@@ -531,12 +532,12 @@ async function 渲染文章列表(u) {
 					封面.alt = "文章封面图";
 					封面.classList.add("封面");
 					span.prepend(封面);
-					sect.append(预览, a, br, span);
-				} else sect.append(预览, a, br, span);
+					arti.append(预览, a, br, span);
+				} else arti.append(预览, a, br, span);
 				//#endregion
 
 				//#region 设置大小和懒加载、文字选中优化
-				for (const img of sect.getElementsByTagName("img")) {
+				for (const img of arti.getElementsByTagName("img")) {
 					const m = img.alt.match(/^s:[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?/gi);
 					if (!m) continue;
 					img.alt = img.alt.replace(m[0], "");
@@ -547,13 +548,13 @@ async function 渲染文章列表(u) {
 						.map(s => +s);
 				}
 
-				sect.addEventListener("mousedown", 事件 => {
+				arti.addEventListener("mousedown", 事件 => {
 					鼠标已移动 = false;
 				});
-				sect.addEventListener("mousemove", 事件 => {
+				arti.addEventListener("mousemove", 事件 => {
 					鼠标已移动 = true;
 				});
-				sect.addEventListener("click", 事件 => {
+				arti.addEventListener("click", 事件 => {
 					if (
 						// @ts-ignore
 						事件.target?.tagName !== "A" &&
@@ -566,10 +567,10 @@ async function 渲染文章列表(u) {
 				//#endregion
 
 				if (!骨架屏已移除) {
-					gd("正在加载文章提示")?.replaceWith(sect);
+					gd("正在加载文章提示")?.replaceWith(arti);
 					await schedulerYield();
 					骨架屏已移除 = true;
-				} else 待添加.push(sect);
+				} else 待添加.push(arti);
 
 				// console.log(_通用计数器, 文章);
 				// console.timeEnd(`渲染文章列表 id:${_通用计数器}`);
@@ -579,22 +580,27 @@ async function 渲染文章列表(u) {
 
 			//#region 渲染标签列表
 			let 标签元素 = ce("section"),
-				div = ce("div");
+				标签容器 = ce("div");
 			const 创建标签元素 = (/** @type {string} */ 标签, 是否已归档 = false) => {
 				if (标签 === "已归档" && !是否已归档) return;
 				let a = ce("a");
 				a.innerText = 标签;
+				a.role = "listitem";
 				if (标签 === 限定标签) {
+					a.setAttribute("aria-label", "已选中标签项");
 					a.style.border = "1px solid var(--accent-color)";
 					document.title = "标签：" + 标签 + " | " + document.title;
 					a.href = "/blog.html";
 					// 限定标签排在容器第一位
-					div.prepend(a);
+					标签容器.prepend(a);
 				} else {
+					a.setAttribute("aria-label", "标签项");
 					a.href = "?tag=" + 标签;
-					div.append(a);
+					标签容器.append(a);
 				}
 			};
+
+			标签容器.setAttribute("role", "list");
 			所有标签.forEach(标签 => {
 				创建标签元素(标签);
 			});
@@ -608,7 +614,7 @@ async function 渲染文章列表(u) {
 			});
 
 			标签元素.classList.add("标签");
-			标签元素.append(div);
+			标签元素.append(标签容器);
 			qs("main > .左", true)?.append(标签元素);
 			渲染图标();
 			//#endregion

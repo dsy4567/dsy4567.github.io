@@ -180,7 +180,8 @@ svg[data-icon] {
 	border-radius: 50%;
 }
 
-section {
+section,
+article {
 	background-color: var(--surface-1);
 	border: 1px solid var(--overlay);
 	border-radius: var(--border-radius);
@@ -189,21 +190,25 @@ section {
 	padding: 12px;
 	word-break: break-word;
 }
-section > section {
+:is(section, article) > :is(section, article) {
 	margin: 0 -4px 8px -4px;
 	padding: 12px;
 }
 
-section h2 svg {
+section h2 svg,
+article h2 svg {
 	margin-right: 8px;
 }
 section img,
-section video {
+section video,
+article img,
+article video {
 	max-width: 100%;
 	height: auto;
 }
 
-section h2:has(svg) {
+section h2:has(svg),
+article h2:has(svg) {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
@@ -212,13 +217,15 @@ section h2:has(svg) {
 	padding-left: 0;
 }
 section h2:has(svg)::before,
+article h2:has(svg)::before,
 main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg))::before {
 	content: "";
 	border-radius: var(--border-radius);
 	display: block;
 	position: absolute;
 }
-section h2:has(svg)::before {
+section h2:has(svg)::before,
+article h2:has(svg)::before {
 	background: linear-gradient(to right, var(--accent-color), var(--accent-color-transparent));
 	width: 4em;
 	max-width: 50%;

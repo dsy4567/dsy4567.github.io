@@ -142,7 +142,7 @@
 		<!-- END COVER -->
 
 		<main>
-			<div class="左">
+			<aside class="左">
 				<section id="我">
 					<img
 						aria-label="自画像"
@@ -191,13 +191,13 @@
 					<p id="一言">加载中</p>
 					<a href="#">查看详细信息</a>
 				</section>
-			</div>
+			</aside>
 			<div aria-hidden="true" id="分界线">
 				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
 			</div>
-			<article class="右" id="main">
+			<div class="右" id="main">
 				<!-- BEGIN MAIN -->
-				<section id="个人简介">
+				<article id="个人简介">
 					<h2>
 						<svg class="小尺寸" data-icon="笑脸"></svg>
 						<span>个人简介</span>
@@ -449,7 +449,8 @@
 							/></a>
 						</p>
 					</div>
-				</section>
+				</article>
+
 				<style>
 					#网易云音乐-最近在听 .精选歌词容器,
 					#网易云音乐-最近在听 .播放排行 {
@@ -477,6 +478,7 @@
 						max-height: 75vh;
 						height: 75vh;
 						overflow: auto;
+						padding: 0;
 					}
 					#网易云音乐-最近在听 .播放排行 > * {
 						overflow: hidden;
@@ -501,12 +503,12 @@
 						height: 50px;
 					}
 				</style>
-				<section id="网易云音乐-最近在听" class="加载中">
+				<article id="网易云音乐-最近在听" class="加载中">
 					<h2>
 						<svg class="小尺寸" data-icon="网易云音乐"></svg>
 						<span>网易云音乐-最近在听</span>
 					</h2>
-					<div class="精选歌词容器">
+					<div class="精选歌词容器" aria-label="精选歌词">
 						<span class="单句"><br /></span>
 						<span class="单句"><br /></span>
 						<span class="单句"><br /></span>
@@ -514,7 +516,7 @@
 						<span class="单句"><br /></span>
 						<span class="歌曲信息"><br /></span>
 					</div>
-					<div class="播放排行">
+					<ol class="播放排行" aria-label="播放排行">
 						<div>
 							<div class="歌曲信息">
 								<span class="淡化"></span>
@@ -557,15 +559,16 @@
 							</div>
 							<div class="排名"></div>
 						</div>
-					</div>
-				</section>
-				<section>
+					</ol>
+				</article>
+
+				<article>
 					<h2>
 						<svg class="小尺寸" data-icon="置顶仓库"></svg>
 						<span>置顶仓库</span>
 					</h2>
-					<div class="组">
-						<section>
+					<div class="组" role="list">
+						<section role="listitem">
 							<b>
 								<a href="https://github.com/dsy4567/4399-on-vscode"
 									>4399-on-vscode</a
@@ -573,27 +576,27 @@
 							</b>
 							<p>在 vscode 上玩 4399 小游戏, 帮助你劳逸结合, 提高开发效率</p>
 						</section>
-						<section>
+						<section role="listitem">
 							<b>
 								<a href="https://github.com/dsy4567/picture2js">picture2js</a>
 							</b>
 							<p>图片转 JavaScript 字符画</p>
 						</section>
-						<section>
+						<section role="listitem">
 							<b>
 								<a href="https://github.com/dsy4567/ikun">ikun</a>
 							</b>
 							<p>ikun 专属乐器</p>
 						</section>
-						<section>
+						<section role="listitem">
 							<b>
 								<a href="https://github.com/dsy4567/fcm-and-shit">fcm-and-shit</a>
 							</b>
 							<p>防沉迷和答辩小游戏</p>
 						</section>
 					</div>
-				</section>
-				<section>
+				</article>
+				<article>
 					<h2>
 						<svg class="小尺寸" data-icon="小游戏"></svg>
 						<span>小游戏</span>
@@ -604,9 +607,9 @@
 							<a href="https://dsy4567.github.io/ikun/">ikun 专属乐器</a>
 						</li>
 					</ul>
-				</section>
+				</article>
 				<!-- END MAIN -->
-			</article>
+			</div>
 		</main>
 
 		<footer id="copyright">

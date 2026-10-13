@@ -187,7 +187,7 @@
 		<!-- END COVER -->
 
 		<main>
-			<div class="左">
+			<aside class="左">
 				<section id="我">
 					<img
 						aria-label="自画像"
@@ -236,11 +236,11 @@
 					<p id="一言">加载中</p>
 					<a href="#">查看详细信息</a>
 				</section>
-			</div>
+			</aside>
 			<div aria-hidden="true" id="分界线">
 				<svg class="特小尺寸" data-icon="隐藏显示"></svg>
 			</div>
-			<article class="右" id="main">
+			<div class="右" id="main">
 				<!-- BEGIN MAIN -->
 				<section id="列表加载失败">
 					<p>
@@ -268,10 +268,10 @@
 					</div>
 				</section>
 				<style>
-					article#main > .骨架屏占位 {
+					div#main > .骨架屏占位 {
 						display: none;
 					}
-					article#main:has(.骨架屏占位#正在加载文章提示) > .骨架屏占位 {
+					div#main:has(.骨架屏占位#正在加载文章提示) > .骨架屏占位 {
 						display: flex;
 						flex-direction: column;
 					}
@@ -326,7 +326,7 @@
 					</div>
 				</section>
 				<!-- END MAIN -->
-			</article>
+			</div>
 		</main>
 
 		<footer id="copyright">

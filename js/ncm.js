@@ -722,9 +722,11 @@ function 创建歌单项(/** @type {歌单} */ 音乐信息) {
 	let li = ce("li");
 	let 歌名 = ce("span");
 	歌名.textContent = 音乐信息.歌名;
+	歌名.setAttribute("aria-label", "歌名");
 	let 歌手 = ce("span");
 	歌手.className = "淡化";
 	歌手.textContent = 音乐信息.歌手;
+	歌手.setAttribute("aria-label", "歌手");
 	li.append(歌名, " ", 歌手);
 	li.tabIndex = 0;
 	li.title = 音乐信息.完整歌名;
@@ -810,6 +812,7 @@ async function 立即渲染网易云音乐组件() {
 			if (typeof 索引 !== "undefined") 网易云音乐.立即洗牌(索引);
 			网易云音乐.切换音乐(音乐id, true);
 		};
+		播放列表.setAttribute("aria-label", "播放列表");
 		播放列表.addEventListener("click", 定位并播放);
 		播放列表.addEventListener("keydown", 事件 => {
 			// Enter/Space 都是按钮的标准激活键；Space 需阻止默认的页面滚动

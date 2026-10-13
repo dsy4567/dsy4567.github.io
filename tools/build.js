@@ -665,7 +665,7 @@ class ArticleBuilder {
 
 		const mainContent = meta.url
 			? `\t\t\t\t<section id="正在加载文章提示">\n\t\t\t\t\t正在加载文章\n\t\t\t\t\t\t<noscript>在<a href="https://github.com/dsy4567/dsy4567.github.io/tree/main/blog">GitHub</a>上阅读文章</noscript>\n\t\t\t\t</section>`
-			: `\t\t\t\t<section>\n${processedHtml}${licenseHtml}\n<span class="元数据">发表于: ${formatDate(meta.date)}, 更新于: ${formatDate(meta.updated)}</br>${tagsHtml ? `标签: ${tagsHtml}` : ""}</span>\n\t\t\t\t</section>`;
+			: `\t\t\t\t<article>\n${processedHtml}${licenseHtml}\n<span class="元数据">发表于: <time datetime="${new Date(meta.date).toISOString()}">${formatDate(meta.date)}</time>, 更新于: <time datetime="${new Date(meta.updated).toISOString()}">${formatDate(meta.updated)}</time></br>${tagsHtml ? `标签: ${tagsHtml}` : ""}</span>\n\t\t\t\t</article>`;
 
 		const tempMeta = structuredClone(meta);
 		tempMeta.cover = tempMeta._originalCover;
