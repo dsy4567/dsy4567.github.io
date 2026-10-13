@@ -6,8 +6,8 @@
 
 <!-- more -->
 
-> 本文在 `article.json` 里写了 `"hidden": true`，所以不会出现在[博客列表](/blog.html)中；
-> 但 RSS、站点地图与左侧标签列表并不区分隐藏文章，正文里别写见不得人的东西。
+> ~~本文在 `article.json` 里写了 `"hidden": true`，所以不会出现在[博客列表](/blog.html)中；~~
+> ~~但 RSS、站点地图与左侧标签列表并不区分隐藏文章，正文里别写见不得人的东西。~~
 
 ## 标题层级
 
@@ -49,7 +49,7 @@
 
 - 行内链接：[本站首页](https://dsy4567.icu "dsy4567 的小站")
 - 自动链接：<https://dsy4567.icu>
-- 邮箱自动链接：<dsy4567@outlook.com>
+- 邮箱自动链接：<username@example.com>
 - 引用式链接：[博客列表][blog-list]
 - 站内绝对路径：[如何优化网站加载速度](/blog/how-to-improve-performance/)
 - 锚点链接：[跳回标题层级](#标题层级)
@@ -70,7 +70,7 @@
 
 图片外面套链接（点图放大）：
 
-[![s:1280x1014 站点背景图](/img/bg.jpg)](/img/bg.jpg)
+[![s:1280x1014 站点背景图](/img/bg.webp)](/img/bg.webp)
 
 不写尺寸的图片（没有占位高度，加载完成前会跳一下）：
 
