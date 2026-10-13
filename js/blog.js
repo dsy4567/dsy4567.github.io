@@ -345,6 +345,7 @@ async function 渲染文章(当前文章信息) {
 						头像.alt = "的头像";
 						if (头像地址) 头像.src = 头像地址;
 						头像链接.append(头像);
+						头像链接.classList.add("小尺寸");
 						用户名.className = "用户名";
 						if (用户主页) 用户名链接.href = 用户主页;
 						用户名链接.textContent = 评论.user.login;

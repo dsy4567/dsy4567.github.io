@@ -1300,7 +1300,7 @@ section#评论区 .评论 .用户信息 {
 	align-items: center;
 }
 section#评论区 .评论 .用户信息 > * {
-	margin-left: 8px;
+	margin-right: 8px;
 }
 section#评论区 .评论 .评论正文 {
 	margin: 4px;
