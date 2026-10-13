@@ -929,6 +929,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 .网易云封面旋
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	border: solid transparent;
 	border-width: 12px 48px 12px 0;
+	color: var(--accent-color);
 	font-size: 12px;
 	position: absolute;
 	user-select: none;
@@ -938,6 +939,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	text-align: end;
 	word-wrap: break-word;
 	width: 256px;
+	min-width: 64px;
 	max-width: min(calc(100vw - 306px), 33vw);
 	transition: var(--transition) color;
 	transition-delay: 0s;
