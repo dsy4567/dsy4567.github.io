@@ -1314,15 +1314,20 @@ code.hljs.已复制:hover::before {
 }
 
 section#评论区 .评论 .用户信息 {
+	background-color: var(--surface-2);
+	border: 1px solid var(--overlay);
+	border-radius: var(--border-radius);
 	display: flex;
 	justify-content: flex-start;
 	align-items: center;
+	padding: 6px;
+	margin-bottom: 12px;
+	width: fit-content;
 }
 section#评论区 .评论 .用户信息 > * {
 	margin-right: 8px;
 }
 section#评论区 .评论 .评论正文 {
-	margin: 4px;
 }
 
 /* ==================== 友链 ==================== */
