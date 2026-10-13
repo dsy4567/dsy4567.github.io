@@ -1,7 +1,7 @@
 {
     "blog.html": {
-        "hash": "70bc6ec2a54db199c4ca2773f37b7229effa581106b20fefa661ad542ca18f23",
-        "updated": "2026-09-22T09:31:12.088Z"
+        "hash": "11f28e36d4488fe1181d1c8ed3a51b4b6423a4e0ff2d2f9c0dd3ed361f98a85c",
+        "updated": "2026-10-13T13:50:49.993Z"
     },
     "blog/2022-ccf-csp-j-you-ji/index.md": {
         "hash": "eef12de9b2048a1dd9b0865c4e4eac8c5c092637ac4f81001db05d51eb4a0483",
@@ -36,20 +36,20 @@
         "updated": "2023-06-24T07:38:27.834Z"
     },
     "blog/markdown-test/index.md": {
-        "hash": "f0b1208ee5c870851f0dcdf7b04a7c76b148c4c73a5f050faec68f1bd3359785",
-        "updated": "2026-10-08T06:09:20.192Z"
+        "hash": "58959fe951827e888349b5811a4bf1df311dec0c0c718f87a470f40bb822f79c",
+        "updated": "2026-10-13T13:50:49.779Z"
     },
     "blog/vercel-dev-sidecar-fq/index.md": {
         "hash": "a9443fe80453692f065a98cc255449513b092aa032bdd2ed69f0c4caf79803a3",
         "updated": "2023-08-22T13:10:35.171Z"
     },
     "friends.html": {
-        "hash": "faa23bf90aff476262b9c5fd44e25d5b503561eeb2fb675613947aba3ee262c8",
-        "updated": "2026-09-06T15:27:30.297Z"
+        "hash": "f912ea207eed3f047921649a623e35df2f5af0b8fa3ced5f271406d3cc7486a4",
+        "updated": "2026-10-13T13:50:49.779Z"
     },
     "index.html": {
-        "hash": "633dd6b83f41e9e3aa497602cae09382464a19c721a107760f97db1aae7b930e",
-        "updated": "2026-09-22T08:36:39.273Z"
+        "hash": "bd4b02578a16664d5ca3885fa86ace3264fee72c62afd924c6818b4256a1b1b2",
+        "updated": "2026-10-13T13:50:49.779Z"
     },
     "json/ncm.json": {
         "hash": "14bc5426bc413e055ba91ed5f844b05a0b14e14e3c5cd120c189284d2a998945",
