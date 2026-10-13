@@ -52,13 +52,6 @@ let /** @type {最近在听项[]} */ 排行歌曲 = [],
 /** 全/半角标点与符号，用于无副歌数据时挑选“干净”的歌词行 */
 const 标点符号正则 = /[\p{P}\p{S}]/u;
 
-/**
- * 匹配「时间标签 + 非空歌词文本」的歌词行，与 ncm.js 的 有词歌词行 同一条件。
- * lrc-parser 靠第一条这样的行结束「跳过开头元信息行」的循环，一行都没有时该循环永不终止、
- * 内存暴涨卡死主线程（详见 ncm.js 的 歌词可解析），故解析前用它兜底
- */
-const 有词歌词行 = /\[\d*:\d*\.?\d*\].+/;
-
 /** 已完成加载的 640px 大封面地址缓存：换页重渲染时可直接显示大图，避免先糊后清 */
 const 大封面已加载 = new Set();
 
@@ -286,13 +279,10 @@ function 排行项转歌单(/** @type {最近在听项} */ 项) {
  */
 async function 选取歌词行() {
 	const 歌词文本 = 歌词原始?.lrc?.lyric;
-	// 除「有时间标签」外，还要求至少有一行「时间标签 + 非空文本」，否则 lrc-parser 会死循环卡死主线程
-	if (typeof 歌词文本 !== "string" || !歌词文本.split("\n").some(行 => 有词歌词行.test(行)))
-		return null;
+	if (typeof 歌词文本 !== "string") return null;
 	let 脚本;
 	try {
-		// 结尾追加哨兵行，保证最后一句歌词有结束时间（与 ncm.js 的用法一致）
-		脚本 = lrcParser(歌词文本 + "[999:59.99]\n").scripts;
+		脚本 = lrcParser(歌词文本).scripts;
 		await schedulerYield();
 	} catch (e) {
 		console.warn(e);

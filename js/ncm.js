@@ -12,28 +12,6 @@
 /** mv 字段哨兵值：排行数据等来源无 mv 信息时填充，真实 mv id 恒为正数（见 home.js 的 排行项转歌单） */
 const 无mv哨兵 = -0x66ccff;
 
-/**
- * 匹配行首（允许前置空白）连续的 LRC 时间标签，如 `[00:10.00][01:20.00]`。
- * 之所以允许前置空白：第三方歌词里混有 BOM（\uFEFF）等不可见字符（\s 恰好覆盖 \uFEFF），
- * 如「\uFEFF[00:00.00]歌名」。若不放宽，这类行会被当成非时间行排到最后（见 展开多时间戳行），
- * 而 lrc-parser 仍能匹配到它，于是它的结束时间取自末尾的哨兵行，生成一条从 0 点持续到
- * 歌曲结束的 cue——该 cue 开始时间最小，会一直占据 activeCues[0]，整首歌只显示这一行。
- * 匹配结果含前置空白，歌词正文用 slice(行首标签.length) 取得，空白正好一并去掉
- *
- * 测试用例：年年对对（2026哔哩哔哩拜年纪单品） id 3348915449
- */
-const 行首时间标签 = /^\s*(?:\[\d*:\d*\.?\d*\])+/;
-
-/** 匹配单个 LRC 时间标签，如 [01:23.45] */
-const 时间标签 = /\[\d*:\d*\.?\d*\]/g;
-
-/**
- * 匹配「时间标签 + 非空歌词文本」的行，如 `[00:10.00]歌词`，等价于 lrc-parser 内部的 startAndText。
- * 该库靠第一条这样的行结束「跳过开头元信息行」的循环（其中 `(.+)` 要求 `]` 后至少有一个字符，
- * 因此裸时间戳行如 `[00:10.00]` 不算数），一行都没有时该循环永不终止，见 歌词可解析
- */
-const 有词歌词行 = /\[\d*:\d*\.?\d*\].+/;
-
 /** 触发下一首预加载地址请求的剩余播放时长（秒）：第三方接口响应很慢，需提前取回 */
 const 预加载剩余秒数 = 30;
 
@@ -51,51 +29,6 @@ const 进度更新间隔 = 1000;
  * 默认关闭，仅当 localStorage 中存在「测试-在歌手处展示歌词」项时启用
  */
 const 在歌手处展示歌词 = localStorage.getItem("测试-在歌手处展示歌词") !== null;
-
-/** 将 `[mm:ss.xx]` 时间标签转换为秒数（与 lrc-parser 的 convertTime 一致） */
-function 标签转秒(/** @type {string} */ 标签) {
-	let [分钟, 秒数] = 标签.slice(1, -1).split(":");
-	return +分钟 * 60 + +秒数;
-}
-
-/**
- * 把形如 `[00:10.00][01:20.00]歌词` 的多时间戳行拆成多行，并按时间升序重排。
- * lrc-parser 每行只取第一个时间戳，且以下一行的开始时间作为本行的结束时间，
- * 所以这类重复段落必须在解析前展开并重排，否则 cue 的时间区间会错位甚至倒序
- */
-function 展开多时间戳行(/** @type {string} */ 歌词文本) {
-	/** @type {{ 开始时间: number, 行: string }[]} */
-	let 待排序行 = [];
-	for (const 行 of 歌词文本.split("\n")) {
-		let 行首标签 = 行.match(行首时间标签)?.[0];
-		if (!行首标签) {
-			待排序行.push({ 开始时间: Infinity, 行 });
-			continue;
-		}
-		let 歌词 = 行.slice(行首标签.length);
-		for (const 标签 of 行首标签.match(时间标签) ?? [])
-			待排序行.push({ 开始时间: 标签转秒(标签), 行: 标签 + 歌词 });
-	}
-	// 展开后行序与时间轴无关，需按时间重排；元信息行等非时间行排到最后，会被解析器过滤
-	待排序行.sort((甲, 乙) => 甲.开始时间 - 乙.开始时间);
-	return 待排序行.map(项 => 项.行).join("\n");
-}
-
-/**
- * 判断歌词里是否存在 lrc-parser 能识别的歌词行（有词歌词行），不存在则不能交给它解析。
- *
- * 该库以第一条有词歌词行作为歌词起点，其前的每一行都逐行 test 后收进 infos；一旦整段歌词
- * 都没有这样一行（如只有 `[ti:标题]` 之类的元信息，或全是裸时间戳 `[00:10.00]`），
- * 循环的终止条件就永远不成立：i 越过数组末尾后 lines[i] 恒为 undefined，test(undefined)
- * 恒不匹配，于是无上限地 push undefined，主线程被独占、内存暴涨，实测约 9 秒、近 2GB 后
- * 才抛 RangeError（浏览器内存上限更低，通常先 OOM 或标签页崩溃）。因此解析前必须用它兜底
- * @param {string | undefined} 歌词文本 - 准备交给 lrcParser 的歌词
- * @returns {boolean} 是否可以安全解析
- */
-function 歌词可解析(歌词文本) {
-	if (typeof 歌词文本 !== "string") return false;
-	return 歌词文本.split("\n").some(行 => 有词歌词行.test(行));
-}
 
 // @ts-ignore
 let /** @type {HTMLDivElement} */ 网易云音乐元素 = gd("网易云音乐", true),
@@ -587,41 +520,26 @@ let 网易云音乐 = {
 			.then(async j => {
 				if (令牌 !== 网易云音乐.播放请求令牌) return;
 
-				// 忽略非法歌词：除「没有歌词」外，lrc-parser 还要求至少有一行「时间标签 + 非空歌词文本」
-				// 才能找到歌词起点，否则它会死循环卡死主线程（见 歌词可解析），故一并拦下
 				let 待解析歌词,
 					待解析歌词翻译 = j.tlyric?.lyric;
-				if (
-					(!(待解析歌词 = j.lrc.lyric) && j.lrc.version !== 6) ||
-					!歌词可解析(待解析歌词)
-				) {
+				// 没有歌词（纯音乐等）时不解析；无歌词行的输入由解析器安全返回空列表（见 js/lib/lrc-parser.js）
+				if (!(待解析歌词 = j.lrc.lyric) && j.lrc.version !== 6) {
 					歌词元素.innerText = "";
 					return;
 				}
 				await 添加脚本("/js/lib/lrc-parser.js");
-				// 时间戳畸形（NaN）、重复（end === start）或倒序（end < start）的行会得到永不激活的
-				// cue，甚至让 new VTTCue 抛错中断后续歌词，因此直接跳过
-				let 所有歌词 = lrcParser(展开多时间戳行(待解析歌词) + "[999:59.99]\n").scripts;
-				所有歌词.forEach(歌词 => {
-					if (!(Number.isFinite(歌词.start) && 歌词.end > 歌词.start)) return;
+				// 解析器保证输出按时间升序、start 与 end 有限且 start < end，末行结束时间缺省时
+				// 由哨兵兜底，无需再过滤畸形时间戳或手工追加哨兵行
+				for (const 歌词 of lrcParser(待解析歌词).scripts)
 					网易云音乐.正在播放.歌词track?.addCue(
 						new VTTCue(歌词.start, 歌词.end, 歌词.text)
 					);
-				});
 
-				// 翻译歌词同样要过 歌词可解析，非法或会让解析器卡死的翻译一律丢弃
-				if (歌词可解析(待解析歌词翻译)) {
-					let 所有歌词翻译 = lrcParser(
-						展开多时间戳行(待解析歌词翻译) + "[999:59.99]\n"
-					).scripts;
-					所有歌词翻译.forEach(歌词翻译 => {
-						if (!(Number.isFinite(歌词翻译.start) && 歌词翻译.end > 歌词翻译.start))
-							return;
+				if (待解析歌词翻译)
+					for (const 歌词翻译 of lrcParser(待解析歌词翻译).scripts)
 						网易云音乐.正在播放.翻译track?.addCue(
 							new VTTCue(歌词翻译.start, 歌词翻译.end, 歌词翻译.text)
 						);
-					});
-				}
 			})
 			.catch(e => {
 				console.error(e);

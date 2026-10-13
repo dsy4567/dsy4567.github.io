@@ -136,7 +136,12 @@ interface Window {
 var dataLayer: any[];
 var grecaptcha = new Recaptcha();
 var hljs = new Hljs();
-var lrcParser: (s: string) => {
+/** LRC 歌词解析器（js/lib/lrc-parser.js）：解析结果按开始时间升序且 start < end，
+ * 总时长（秒）用于推算末行结束时间，缺省时解析器以哨兵时间兜底 */
+var lrcParser: (
+	歌词文本: string,
+	总时长?: number
+) => {
 	scripts: {
 		start: number;
 		end: number;
