@@ -189,6 +189,10 @@ section {
 	padding: 12px;
 	word-break: break-word;
 }
+section > section {
+	margin: 0 -4px 8px -4px;
+	padding: 12px;
+}
 
 section h2 svg {
 	margin-right: 8px;
