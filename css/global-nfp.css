@@ -688,8 +688,9 @@ body::after {
 	height: 100%;
 	background: #000;
 	opacity: 0;
-	transition: opacity var(--transition);
+	transition: opacity var(--transition), pointer-events var(--transition);
 	transition-delay: 0s;
+	transition-behavior: allow-discrete;
 	z-index: 1006;
 	pointer-events: none;
 }
