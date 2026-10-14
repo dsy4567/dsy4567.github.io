@@ -512,7 +512,7 @@ body.隐藏导航栏 #导航栏 {
 .进度条外面.显示 {
 	background-color: rgba(127, 127, 127, 0.3);
 	opacity: 1;
-	pointer-events: all;
+	pointer-events: auto;
 }
 .进度条 {
 	animation-duration: 10s;
@@ -698,7 +698,7 @@ body:has(#侧边按钮容器 > .拥有更多选项:hover)::after,
 body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible)::after {
 	content: "";
 	opacity: 0.7;
-	pointer-events: all;
+	pointer-events: auto;
 	transition-delay: var(--transition);
 }
 @supports selector(:has(*)) {
@@ -808,14 +808,14 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 + .更多选项 {
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
 	div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) > .更多选项 {
-		pointer-events: all !important;
+		pointer-events: auto !important;
 		opacity: 1 !important;
 	}
 }
 @supports not selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
 	div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项 {
-		pointer-events: all !important;
+		pointer-events: auto !important;
 		opacity: 1 !important;
 	}
 }
@@ -954,7 +954,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 		color: #fff;
 		transition-delay: var(--transition);
 		user-select: auto;
-		pointer-events: all;
+		pointer-events: auto;
 	}
 }
 @supports not selector(:has(*)) {
@@ -1350,7 +1350,7 @@ section#评论区 .评论 .评论正文 {
 		position: sticky;
 		width: calc(100% - 14px);
 		margin: 0px 0 0 8px;
-		pointer-events: all;
+		pointer-events: auto;
 		z-index: 9;
 	}
 	main > .左::before {
@@ -1369,11 +1369,11 @@ section#评论区 .评论 .评论正文 {
 		}
 		main > .左::before {
 			animation-name: 左栏阴影上移动端;
-			pointer-events: all;
+			pointer-events: auto;
 		}
 		main > .左::after {
 			animation-name: 左栏下透明遮罩移动端;
-			pointer-events: all;
+			pointer-events: auto;
 		}
 		main .左 {
 			animation: 左栏移动端 linear both;
