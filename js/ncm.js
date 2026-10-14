@@ -300,7 +300,7 @@ let 网易云音乐 = {
 		网易云音乐元素 && (网易云音乐元素.title = "网易云音乐 - 正在播放: " + 音乐信息.完整歌名);
 		localStorage.setItem("上次播放", "" + 音乐信息.id);
 	},
-	async 播放暂停() {
+	async 播放暂停(/** @type {HTMLButtonElement} */ 按钮) {
 		try {
 			clearTimeout(网易云音乐.重试timeout);
 			await 网易云音乐.初始化();
@@ -320,8 +320,14 @@ let 网易云音乐 = {
 				网易云音乐.正在播放.已加载的音乐令牌 = 令牌;
 			}
 
-			if (网易云音乐.正在播放.Audio.paused) 网易云音乐.正在播放.Audio.play();
-			else 网易云音乐.正在播放.Audio.pause();
+			按钮.setAttribute("aria-checked", "" + 网易云音乐.正在播放.Audio.paused);
+			if (网易云音乐.正在播放.Audio.paused) {
+				网易云音乐.正在播放.Audio.play();
+				按钮.classList.remove("激活");
+			} else {
+				网易云音乐.正在播放.Audio.pause();
+				按钮.classList.add("激活");
+			}
 		} catch (e) {
 			提示("播放失败");
 			console.error(e);
@@ -774,7 +780,7 @@ async function 立即渲染网易云音乐组件() {
 	}
 
 	创建按钮("上一首", 网易云音乐.上一首, "上一首");
-	创建按钮("播放暂停", 网易云音乐.播放暂停, "播放/暂停");
+	创建按钮("播放暂停", 网易云音乐.播放暂停, "暂停", "checkbox");
 	创建按钮("下一首", 网易云音乐.下一首, "下一首");
 	创建按钮(
 		"在网易云音乐中查看",
