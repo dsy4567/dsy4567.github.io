@@ -48,6 +48,10 @@ const CONFIG = {
 		"https://qwq.dsy4567.icu/files-2/90904448_p0.webp",
 	],
 	timezone: "Asia/Shanghai",
+	githubUserName: "dsy4567",
+	githubRepo: "dsy4567/dsy4567.github.io",
+	defaultTitle: "dsy4567 的小站",
+	defaultBlogDesc: "dsy4567 的博客 - 记录 dsy4567 的折腾经验、技术分享、编程笔记",
 };
 
 // ncm.json 在 file-states 中的键（统一为不含 "./" 前缀的相对路径）
@@ -606,10 +610,8 @@ class ArticleBuilder {
 		// 移除 noscript 区块
 		html = html.replace(/<!-- BEGIN NOSCRIPT -->.+<!-- END NOSCRIPT -->/s, "");
 
-		const metaDesc = escapeHtml(
-			meta.desc_text || "dsy4567 的博客 - 记录 dsy4567 的折腾经验、技术分享、编程笔记"
-		);
-		const metaTitle = escapeHtml(`${meta.title} | 博客 | dsy4567 的小站`);
+		const metaDesc = escapeHtml(meta.desc_text || CONFIG.defaultBlogDesc);
+		const metaTitle = escapeHtml(`${meta.title} | 博客 | ${CONFIG.defaultTitle}`);
 
 		// SEO Meta + Canonical
 		html = replaceTemplateBlock(
@@ -635,7 +637,7 @@ class ArticleBuilder {
 			`\t\t<meta property="og:url" content="https://${getDomain("public")}/blog/${meta.id}/" />\n\t\t` +
 				`<meta property="og:type" content="article" />\n\t\t` +
 				`<meta property="og:title" content="${metaTitle}" />\n\t\t` +
-				`<meta property="og:description" content="${escapeHtml(meta.desc_text || "记录 dsy4567 的折腾经验、技术分享、编程笔记")}" />\n\t\t` +
+				`<meta property="og:description" content="${escapeHtml(meta.desc_text || CONFIG.defaultBlogDesc)}" />\n\t\t` +
 				`<meta property="og:image" content="${new URL(封面src, `https://${getDomain("infra")}/`).href}" />`
 		);
 
@@ -664,7 +666,7 @@ class ArticleBuilder {
 			.join(" ");
 
 		const mainContent = meta.url
-			? `\t\t\t\t<section id="正在加载文章提示">\n\t\t\t\t\t正在加载文章\n\t\t\t\t\t\t<noscript>在<a href="https://github.com/dsy4567/dsy4567.github.io/tree/main/blog">GitHub</a>上阅读文章</noscript>\n\t\t\t\t</section>`
+			? `\t\t\t\t<section id="正在加载文章提示">\n\t\t\t\t\t正在加载文章\n\t\t\t\t\t\t<noscript>在<a href="https://github.com/${CONFIG.githubRepo}/tree/main/blog">GitHub</a>上阅读文章</noscript>\n\t\t\t\t</section>`
 			: `\t\t\t\t<article>\n${processedHtml}${licenseHtml}\n<span class="元数据">发表于: <time datetime="${new Date(meta.date).toISOString()}">${formatDate(meta.date)}</time>, 更新于: <time datetime="${new Date(meta.updated).toISOString()}">${formatDate(meta.updated)}</time></br>${tagsHtml ? `标签: ${tagsHtml}` : ""}</span>\n\t\t\t\t</article>`;
 
 		const tempMeta = structuredClone(meta);
@@ -724,11 +726,12 @@ class SiteGenerator {
 			: new Date().toISOString();
 		let xml =
 			`<?xml version="1.0" encoding="UTF-8"?>\n<feed xmlns="https://www.w3.org/2005/Atom">\n` +
-			`    <title>博客 | dsy4567 的小站</title>\n` +
+			`    <title>博客 | ${CONFIG.defaultTitle}</title>\n` +
 			`    <link rel="alternate" type="text/html" href="https://${getDomain("infra")}/blog.html" />\n` +
 			`    <link rel="self" type="application/atom+xml" href="https://${getDomain("infra")}/rss.xml" />\n` +
 			`    <updated>${feedUpdated}</updated>\n` +
-			`    <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>\n`;
+			`    <generator uri="https://github.com/${CONFIG.githubRepo}">dsy4567/dsy4567.github.io</generator>\n`;
+		// dsy4567/dsy4567.github.io 为生成器项目信息，需保留
 
 		for (const a of 最新文章) {
 			const summaryText = a.desc_text; // 复用缓存
@@ -743,7 +746,7 @@ class SiteGenerator {
 				`        <updated>${a.updated}</updated>\n` +
 				`        <summary>${summaryText}</summary>\n` +
 				`        <author>\n` +
-				`            <name>dsy4567</name>\n` +
+				`            <name>${CONFIG.githubUserName}</name>\n` +
 				`            <uri>https://${getDomain("infra")}/</uri>\n` +
 				`        </author>\n` +
 				`        <category term="Default" />\n` +

@@ -9,18 +9,17 @@
 // @ts-check
 "use strict";
 
-/** 媒体地址白名单域名：githubusercontent 为 GitHub 用户内容域；icu、eu.org 放行子域名 */
-const 媒体地址白名单 = ["dsy4567.icu", "dsy4567.eu.org", "githubusercontent.com"];
+const 媒体地址白名单_匹配前缀 = ["dsy4567.icu", "dsy4567.eu.org", "githubusercontent.com"];
+const 媒体地址白名单_完全匹配 = ["dsy4567.github.io"];
 /**
  * 判断主机名是否命中媒体地址白名单
  * @param {string} 主机名
  * @returns {boolean}
  */
 function 命中媒体地址白名单(主机名) {
-	// dsy4567.github.io 严格匹配，不含子域名
 	return (
-		主机名 === "dsy4567.github.io" ||
-		媒体地址白名单.some(域名 => 主机名 === 域名 || 主机名.endsWith("." + 域名))
+		媒体地址白名单_完全匹配.includes(主机名) ||
+		媒体地址白名单_匹配前缀.some(域名 => 主机名 === 域名 || 主机名.endsWith("." + 域名))
 	);
 }
 /**

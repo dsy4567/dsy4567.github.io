@@ -18,6 +18,9 @@ let /** @type {文章信息[]} */ 所有文章信息 = [],
 	 */
 	文章列表缓存 = null;
 
+const og域名 = "dsy4567.github.io",
+	github仓库 = "dsy4567/dsy4567.github.io";
+
 /**
  * 强制预览文章：为 true 时，在白名单域名下拉取博客 Markdown 源文件
  * （/blog/<id>/index.md）就地渲染，覆盖页面已有的构建产物，便于本地预览编辑中的文章
@@ -186,7 +189,7 @@ async function 渲染文章(当前文章信息) {
 			);
 			qs('meta[property="og:url"]')?.setAttribute(
 				"content",
-				`https://dsy4567.github.io/blog/${当前文章信息.id}/`
+				`https://${og域名}/blog/${当前文章信息.id}/`
 			);
 			qs('meta[property="og:image"]')?.setAttribute(
 				"content",
@@ -200,7 +203,7 @@ async function 渲染文章(当前文章信息) {
 		// 文章源文件位于 blog/<id>/index.md，链接到 GitHub 上该文件的提交历史
 		const 编辑历史元素 = ce("span"),
 			编辑历史链接 = ce("a");
-		编辑历史链接.href = `https://github.com/dsy4567/dsy4567.github.io/commits/main/blog/${encodeURIComponent(
+		编辑历史链接.href = `https://github.com/${github仓库}/commits/main/blog/${encodeURIComponent(
 			当前文章信息.id
 		)}/index.md`;
 		编辑历史链接.textContent = "查看文章编辑历史";
@@ -291,7 +294,7 @@ async function 渲染文章(当前文章信息) {
 				添加脚本("/js/lib/purify.min.js"),
 			]);
 			fetch(
-				`https://api.github.com/repos/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}/comments`
+				`https://api.github.com/repos/${github仓库}/issues/${当前文章信息.issue}/comments`
 			)
 				.then(res => {
 					// GitHub API 在限流、异常等情况下返回非 2xx，直接抛错交由 catch 渲染提示，
@@ -322,7 +325,7 @@ async function 渲染文章(当前文章信息) {
 <section>
 	<a
 		id="评论链接"
-		href="https://github.com/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}#issue-comment-box"
+		href="https://github.com/${github仓库}/issues/${当前文章信息.issue}#issue-comment-box"
 	>在 GitHub 上发表评论</a>
 </section>`;
 					// 评论数据来自 GitHub API，属不可信输入：文本一律 textContent，链接一律属性赋值，不拼接 HTML
@@ -421,7 +424,7 @@ function 处理评论加载失败(e, 当前文章信息, 动态加载自增计�
 	console.error(e);
 	// 加载期间已切换页面则放弃渲染，避免污染新页面
 	if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
-	const 评论提示 = `<p>评论加载失败，可能是网络异常或 GitHub 接口访问受限，<a href="https://github.com/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}">前往 GitHub 查看评论</a>。</p>`;
+	const 评论提示 = `<p>评论加载失败，可能是网络异常或 GitHub 接口访问受限，<a href="https://github.com/${github仓库}/issues/${当前文章信息.issue}">前往 GitHub 查看评论</a>。</p>`;
 	// 评论区已渲染（失败发生在后续步骤）时只补一条提示，避免出现两个评论区
 	const 已有评论区 = gd("评论区");
 	if (已有评论区) {
@@ -439,7 +442,7 @@ function 处理评论加载失败(e, 当前文章信息, 动态加载自增计�
 	${评论提示}
 	<a
 		id="评论链接"
-		href="https://github.com/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}#issue-comment-box"
+		href="https://github.com/${github仓库}/issues/${当前文章信息.issue}#issue-comment-box"
 	>在 GitHub 上发表评论</a>
 </section>`;
 	qs("main > .右", true)?.append(sect);

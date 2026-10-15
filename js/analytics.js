@@ -9,10 +9,14 @@
 // @ts-check
 "use strict";
 
+const cfBeaconToken = "9ef701d58e594dcc960850227e0f2436";
+const ga_id = location.hostname === "dsy4567.icu" ? "G-9E9HPL4Y86" : "G-N7WR0PVV4J";
+const 启用统计的域名 = ["dsy4567.icu", "dsy4567.github.io"];
+
 export default (() => {
-	if (location.hostname !== "dsy4567.icu" && location.hostname !== "dsy4567.github.io") return;
-	const /** @type {HTMLScriptElement} */ s1 = document.createElement("script"),
-		ga_id = location.hostname === "dsy4567.icu" ? "G-9E9HPL4Y86" : "G-N7WR0PVV4J";
+	if (!启用统计的域名.includes(location.hostname)) return;
+	const /** @type {HTMLScriptElement} */ s1 = document.createElement("script");
+
 	s1.async = true;
 	s1.src = "https://www.googletagmanager.com/gtag/js?id=" + ga_id;
 	document.body.append(s1);
@@ -25,7 +29,7 @@ export default (() => {
 
 	const /** @type {HTMLScriptElement} */ s2 = document.createElement("script");
 	s2.async = true;
-	s2.setAttribute("data-cf-beacon", '{"token": "9ef701d58e594dcc960850227e0f2436"}');
+	s2.setAttribute("data-cf-beacon", `{"token": "${cfBeaconToken}"}`);
 	s2.src = "https://static.cloudflareinsights.com/beacon.min.js";
 
 	// if (location.hostname !== "dsy4567.icu") return;

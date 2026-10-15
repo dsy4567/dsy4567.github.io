@@ -2,6 +2,10 @@
 
 @charset "utf-8";
 
+:root {
+	--hostname: "dsy4567.icu";
+}
+
 /* ==================== 延后显示元素 ==================== */
 main > #分界线 {
 	visibility: hidden;
@@ -110,7 +114,6 @@ html {
 	--accent-text-color: var(--bg-color);
 	--link-color: var(--text-color);
 	--border-radius: 12px;
-	--hostname: "dsy4567.icu";
 	scroll-behavior: smooth;
 }
 body {

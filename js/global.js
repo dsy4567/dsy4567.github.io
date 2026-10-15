@@ -15,6 +15,9 @@ console.timeEnd = () => {};
 //#endregion
 
 //#region 通用全局变量
+const 默认标题 = "dsy4567 的小站",
+	github用户名 = "dsy4567";
+
 /** 方便 modules 暴露到全局变量 */
 let _global = {};
 let 已触发动态加载 = false;

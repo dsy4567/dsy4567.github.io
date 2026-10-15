@@ -9,12 +9,16 @@
 // @ts-check
 "use strict";
 
+// NOTE: 以下`region 域名迁移` 仅适用于本仓库主域名，二次开发者请删除该区块
 const /** @type {Record<string, string[]>} */ 加载清单 = {
 		"/": ["home"],
 		"/blog": ["blog"],
 		"/friends": ["friends"],
 	},
 	gr_sitekey = "6Ldo1dIkAAAAAM_2VtEneT3l7AE25HdWU45x03ng",
+	一言接口地址 = "https://dsy4567.icu/api/hitokoto?c=a&c=b&encode=json",
+	人机验证接口地址 = "https://qwq.dsy4567.icu/api/getemail",
+	脏话数组 = ["\u4f60\u5988", "\u5c3c\u739b", "\u4f60\u5927\u7237", "\u5bc4\u5427"],
 	移动端界面最大宽度 = 1080;
 let 路径 = 获取清理后当前路径(),
 	正在动态加载 = false;
@@ -50,7 +54,7 @@ function 动态加载(元素) {
 	const 应用正文 = (正文, 标题) => {
 		if (元素.replaceState) history.replaceState({ 路径: 键 }, "", 元素.href);
 		else if (!元素.popstate) history.pushState({ 路径: 键 }, "", 元素.href);
-		document.title = 标题 || "dsy4567 的小站";
+		document.title = 标题 || 默认标题;
 		dispatchEvent(URL发生变化事件);
 		try {
 			let 右 = qs("main > .右", true);
@@ -291,7 +295,7 @@ fetch("/json/icon.json")
 (async () => {
 	//#region 一言
 	const 获取一言 = (/** @type {"text" | "json"} */ json类型) =>
-		fetch("https://dsy4567.icu/api/hitokoto?c=a&c=b&encode=json").then(
+		fetch(一言接口地址).then(
 			res =>
 				new Promise((resolve, reject) => {
 					延迟执行(
@@ -369,7 +373,7 @@ try {
 	console.error(e);
 }
 
-fetch("https://api.github.com/users/dsy4567")
+fetch(`https://api.github.com/users/${github用户名}`)
 	.then(
 		res =>
 			new Promise((resolve, reject) => {
@@ -527,9 +531,9 @@ function 设置展开容器可访问名(展开容器) {
             <div id="g-recaptcha"></div>
             <button disabled id="recaptcha">提交</button>
             <button id="close_recaptcha">关闭</button>
-            <a href="https://qwq.dsy4567.icu/api/getemail">在新标签页验证</a><br/>
-            <p id="recaptcha_tips">要查看 dsy4567 的电子邮箱地址/TG 用户名，请通过 reCAPTCHA 人机验证。<br />
-            继续查看电子邮箱地址即代表您同意不向 dsy4567<br />
+            <a href="${人机验证接口地址}">在新标签页验证</a><br/>
+            <p id="recaptcha_tips">要查看 ${github用户名} 的电子邮箱地址/TG 用户名，请通过 reCAPTCHA 人机验证。<br />
+            继续查看电子邮箱地址即代表您同意不向 ${github用户名}<br />
             发送广告/要饭/雇童工/炒币等垃圾邮件。</p>
             <p class="悬浮卡片提示" id="recaptcha_status">正在加载人机验证…</p>
             <div id="recaptcha_result" tabindex="0"></div>
@@ -578,7 +582,7 @@ function 设置展开容器可访问名(展开容器) {
 						提交按钮.disabled = true;
 						try {
 							const 响应 = await fetch(
-								"https://qwq.dsy4567.icu/api/getemail?g-recaptcha-response=" + 回复
+								`${人机验证接口地址}?g-recaptcha-response=${回复}`
 							);
 							if (!响应.ok) throw new Error(`接口返回 HTTP ${响应.status}`);
 							结果区.innerHTML = `<hr>${await 响应.text()}`;
@@ -651,10 +655,7 @@ function 设置展开容器可访问名(展开容器) {
 			//#region 备案
 			let fuck = gd("fuck");
 			if (fuck)
-				fuck.innerText =
-					["\u4f60\u5988", "\u5c3c\u739b", "\u4f60\u5927\u7237", "\u5bc4\u5427"][
-						随机含零自然数(3)
-					] || "\u4f60\u5988";
+				fuck.innerText = 脏话数组[随机含零自然数(脏话数组.length - 1)] || "\u4f60\u5988";
 			//#endregion
 
 			//#region 导航栏、标题高亮
@@ -955,6 +956,7 @@ addEventListener("click", 事件 => {
 //   2. 刚从旧域名跳来（URL 带 from-non-icu-tld）→ 在新域名上弹「回原域名」横幅
 //   3. 用户选择过「不跳转」（URL 参数或 localStorage 的 no-redirect）→ 仅弹横幅提示新域名
 //   4. 其余情况 → 自动跳转并在 URL 携带来源参数，供新域名页面弹「回原域名」横幅
+// NOTE: 以下`region 域名迁移` 仅适用于本仓库主域名，二次开发者请删除该区块
 延迟执行(
 	"关键任务完成",
 	() => {
