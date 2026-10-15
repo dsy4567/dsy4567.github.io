@@ -320,7 +320,7 @@ let 网易云音乐 = {
 				网易云音乐.正在播放.已加载的音乐令牌 = 令牌;
 			}
 
-			按钮.setAttribute("aria-checked", "" + 网易云音乐.正在播放.Audio.paused);
+			按钮.setAttribute("aria-checked", "" + !网易云音乐.正在播放.Audio.paused);
 			if (网易云音乐.正在播放.Audio.paused) {
 				网易云音乐.正在播放.Audio.play();
 				按钮.classList.remove("激活");
