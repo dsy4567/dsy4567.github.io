@@ -322,7 +322,7 @@ function 添加脚本(url, crossOrigin = "use-credentials", 使用缓存 = true)
  * @param {number} [x=0] - 水平位置（像素）
  * @param {number} [y=0] - 垂直位置（像素），超过视口高度的 67% 时会被限制到 67% 处
  * @param {boolean} [失去焦点时隐藏=true] - 是否失去焦点时隐藏卡片
- * @returns {HTMLDivElement} 卡片元素
+ * @returns {{ 卡片: HTMLDivElement, 关闭: () => void }} 卡片元素与关闭卡片的函数
  */
 function 添加悬浮卡片(/** @type {string} */ html, x = 0, y = 0, 失去焦点时隐藏 = true) {
 	let div = ce("div");
@@ -333,19 +333,24 @@ function 添加悬浮卡片(/** @type {string} */ html, x = 0, y = 0, 失去焦�
 	div.style.top = Math.min(Math.max(64, y), window.innerHeight * 0.67) + "px";
 	div.tabIndex = 0;
 	div.role = "dialog";
-	// 记录打开前的焦点，Esc 关闭后归还，避免焦点掉到 body
+	// 记录打开前的焦点，关闭后归还，避免焦点掉到 body
 	const 打开前的焦点 = document.activeElement;
 	document.body.append(div);
 	div.focus();
-	// Esc 关闭：监听挂在卡片上，焦点位于卡片内任意子元素时事件都会冒泡到这里
-	div.addEventListener("keydown", 事件 => {
-		if (事件.key !== "Escape") return;
+	/** 关闭卡片（移除元素），并把焦点归还给打开前的焦点 */
+	function 关闭() {
 		div.remove();
 		if (打开前的焦点 instanceof HTMLElement && document.contains(打开前的焦点))
 			打开前的焦点.focus();
+	}
+	// Esc 关闭：监听挂在卡片上，焦点位于卡片内任意子元素时事件都会冒泡到这里
+	div.addEventListener("keydown", 事件 => {
+		if (事件.key !== "Escape") return;
+		关闭();
 	});
+	// 失焦关闭只移除元素，不归还焦点——此时焦点已经落在用户新点击/切换到的元素上，抢回来反而会打断操作
 	失去焦点时隐藏 && div.addEventListener("focusout", () => div.remove());
-	return div;
+	return { 卡片: div, 关闭 };
 }
 /**
  * 在页面底部添加一个横幅通知，10 秒后自动隐藏

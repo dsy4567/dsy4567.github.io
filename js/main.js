@@ -512,7 +512,7 @@ function 设置展开容器可访问名(展开容器) {
 				元素?.addEventListener("click", 事件 => {
 					事件.preventDefault();
 					if (gd("recaptcha")) return;
-					const div = 添加悬浮卡片(
+					const { 卡片: div, 关闭: 关闭卡片 } = 添加悬浮卡片(
 						`
             <div id="g-recaptcha"></div>
             <button disabled id="recaptcha">提交</button>
@@ -548,7 +548,7 @@ function 设置展开容器可访问名(展开容器) {
 					)
 						return;
 					// 关闭按钮立即绑定，避免脚本加载期间卡片无法关闭
-					关闭按钮.addEventListener("click", () => div.remove());
+					关闭按钮.addEventListener("click", 关闭卡片);
 					/** 在错误行展示失败原因 @param {string} 原因 */
 					const 显示验证错误 = 原因 => {
 						const 文字 = `recaptcha验证出现问题，原因：${原因}，请尝试关闭卡片并重试，或点击在新标签页验证`;
