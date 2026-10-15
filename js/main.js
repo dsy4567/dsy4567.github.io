@@ -456,6 +456,16 @@ function 设置展开容器可访问名(展开容器) {
 	"关键任务完成",
 	() => {
 		try {
+			// 宽屏（隐藏左栏、右栏占满整行）状态：用变量维护而非读 class，重复设置时直接返回，不做多余的 class 写入；
+			// 视口收窄时需要据此立即取消宽屏（见下方 resize），否则会与移动端单栏布局冲突
+			let 宽屏已开启 = false;
+			/** 设置宽屏状态 @param {boolean} 开启 */
+			const 设置宽屏 = 开启 => {
+				if (宽屏已开启 === 开启) return;
+				宽屏已开启 = 开启;
+				document.body.classList.toggle("宽屏", 开启);
+			};
+
 			//#region 核心元素、事件、字体css等
 			gd("回到顶部")?.addEventListener("click", 回到顶部);
 			// 展开入口：容器是 div，补分组语义（避免 button 角色把内部控件当装饰而屏蔽）与键盘激活；
@@ -474,7 +484,7 @@ function 设置展开容器可访问名(展开容器) {
 				分界线.setAttribute("role", "button");
 				分界线.setAttribute("aria-label", "切换宽屏");
 				分界线.tabIndex = 0;
-				const 切换宽屏 = () => document.body.classList.toggle("宽屏");
+				const 切换宽屏 = () => 设置宽屏(!宽屏已开启);
 				分界线.addEventListener("click", 切换宽屏);
 				分界线.addEventListener("keydown", 事件 => {
 					// 只响应 Enter/Space；preventDefault 阻止 Space 滚动页面
@@ -733,9 +743,12 @@ function 设置展开容器可访问名(展开容器) {
 
 			setTimeout(() => {
 				const 窗口尺寸变化 = () => {
-					if (document.body.clientWidth <= 移动端界面最大宽度)
-						顶部一定范围不隐藏阈值 =
-							qs("main > .右")?.offsetTop || 顶部一定范围不隐藏阈值;
+					// 以 innerWidth 判断是否落入移动端断点：innerWidth 与 css 的 max-width 媒体查询同为「含滚动条」的视口宽度，
+					// 二者判定一致，避免在断点附近 JS 认为已进移动端、css 仍按桌面布局渲染
+					if (innerWidth > 移动端界面最大宽度) return;
+					顶部一定范围不隐藏阈值 = qs("main > .右")?.offsetTop || 顶部一定范围不隐藏阈值;
+					// 移动端是单栏布局（分界线被隐藏、左右栏各自占满整行），继续挂着宽屏会隐藏左栏并把右栏收窄，故立即退出宽屏
+					设置宽屏(false);
 				};
 				addEventListener("resize", 窗口尺寸变化);
 				窗口尺寸变化();
