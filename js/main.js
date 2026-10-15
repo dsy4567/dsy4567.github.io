@@ -403,6 +403,13 @@ fetch("https://api.github.com/users/dsy4567")
 		try {
 			//#region 核心元素、事件、字体css等
 			gd("回到顶部")?.addEventListener("click", 回到顶部);
+			// 展开入口：容器是 div，补分组语义（避免 button 角色把内部控件当装饰而屏蔽）与键盘激活；
+			// 收起靠指针离开让 hover 自然清除（零 JS），故不注册任何收起/展开事件监听
+			qsa(".拥有更多选项").forEach(el => {
+				const 展开容器 = /** @type {HTMLElement} */ (el);
+				展开容器.setAttribute("role", "group");
+				展开容器.tabIndex = 0;
+			});
 			// 分界线（切换宽屏）：div 充当按钮，动态补角色、可访问名与键盘支持
 			const 分界线 = gd("分界线");
 			if (分界线) {
@@ -422,16 +429,12 @@ fetch("https://api.github.com/users/dsy4567")
 					切换宽屏();
 				});
 			}
-			// 收起按钮只服务触摸屏：从键盘/AT 树摘出，改为显式点击时移走焦点以收起面板，
-			// 不再依赖“点击按钮会移动焦点 / 粘滞 hover”这类 UA 副作用
+			// 收起按钮只服务触摸屏：视觉透明但保持可点、保留在 AT 树中；
+			// 注入的不可见提示点明「点此收起」，而收起本身靠指针离开（零 JS）
 			const 收起按钮 = gd("关闭侧边按钮");
 			if (收起按钮) {
-				收起按钮.tabIndex = -1;
-				收起按钮.setAttribute("aria-hidden", "true");
-				收起按钮.addEventListener("click", () => {
-					if (document.activeElement instanceof HTMLElement)
-						document.activeElement.blur();
-				});
+				收起按钮.tabIndex = 0;
+				收起按钮.setAttribute("aria-label", "触屏+读屏用户，长按 此按钮以收起侧边按钮");
 			}
 			// 左栏在移动端滚动后会被滚动动画淡出、又被正文盖住，且 sticky 定位让浏览器以为它已在视口内，
 			// 故 Shift+Tab 聚焦左栏元素时不会自动滚动。这里手动兜底：先把文档滚回顶部露出左栏，

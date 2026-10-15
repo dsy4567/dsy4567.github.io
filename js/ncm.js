@@ -755,10 +755,6 @@ async function 立即渲染网易云音乐组件() {
 	if (染网易云音乐组件已渲染) return;
 	染网易云音乐组件已渲染 = true;
 
-	// 分组容器是 hover/聚焦即展开的，补分组语义与可访问名；role=group 不支持 aria-expanded，故不设展开态
-	网易云音乐元素.setAttribute("role", "group");
-	网易云音乐元素.setAttribute("aria-label", "网易云音乐");
-
 	/** @type {HTMLButtonElement[]} */
 	let 待添加按钮 = [];
 	/**

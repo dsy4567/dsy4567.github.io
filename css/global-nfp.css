@@ -192,15 +192,15 @@ div#侧边按钮容器,
 		opacity: 0.5;
 	}
 }
-@keyframes 延迟不可见 {
+@keyframes 延迟不可点击 {
 	0% {
-		visibility: visible;
+		pointer-events: auto;
 	}
 	99.9% {
-		visibility: visible;
+		pointer-events: auto;
 	}
 	100% {
-		visibility: hidden;
+		pointer-events: none;
 	}
 }
 /* 循环动画 */
@@ -396,6 +396,7 @@ main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg)):target::before {
 }
 
 /* ==================== 通用工具类 class ==================== */
+/* 仅可通过键盘聚焦显示 */
 .隐藏链接:focus-visible {
 	width: auto;
 	height: auto;
@@ -679,7 +680,7 @@ div#侧边按钮容器 > * {
 	box-sizing: border-box;
 	justify-content: center;
 }
-
+/* 黑色半透明全屏遮罩，挡住点击事件，点击遮罩/收起按钮自动隐藏 */
 body::after {
 	content: "";
 	position: fixed;
@@ -688,19 +689,23 @@ body::after {
 	height: 100%;
 	background: #000;
 	opacity: 0;
-	transition: opacity var(--transition), pointer-events var(--transition);
+	transition:
+		opacity var(--transition),
+		pointer-events var(--transition);
 	transition-delay: 0s;
 	transition-behavior: allow-discrete;
 	z-index: 1006;
 	pointer-events: none;
 }
 body:has(#侧边按钮容器 > .拥有更多选项:hover)::after,
+body:has(#侧边按钮容器 > .拥有更多选项:focus-visible)::after,
 body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible)::after {
 	content: "";
 	opacity: 0.7;
 	pointer-events: auto;
 	transition-delay: var(--transition);
 }
+
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > *:hover,
 	div#侧边按钮容器 > *:focus-visible,
@@ -757,13 +762,14 @@ div#侧边按钮容器 > div:hover::before {
 
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:hover,
+	div#侧边按钮容器 > .拥有更多选项:focus-visible,
 	div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) {
 		border-bottom-left-radius: 0;
 		z-index: 1;
 	}
 }
 @supports not selector(:has(*)) {
-	div#侧边按钮容器 > .拥有更多选项:hover,
+	div#侧边按钮容器 > .拥有更多选项:focus-visible,
 	div#侧边按钮容器 > .拥有更多选项:focus-within {
 		border-bottom-left-radius: 0;
 		z-index: 1;
@@ -776,7 +782,9 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 	transition:
 		var(--transition) border-radius,
 		var(--transition) transform,
-		var(--transition) opacity;
+		var(--transition) opacity,
+		var(--transition) visibility;
+	transition-behavior: allow-discrete;
 }
 
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
@@ -788,14 +796,15 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 {
 	border-left: var(--border);
 	border-right: 1px solid transparent;
 	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	align-items: center;
 	padding-right: 32px;
 	padding-left: var(--padding-left-overflow);
 	transform: translateX(28px);
-	flex-direction: row;
-	flex-wrap: wrap;
 	box-sizing: border-box;
 	height: 36px;
-	align-items: center;
+	visibility: hidden;
 	opacity: 0;
 	pointer-events: none;
 	position: absolute;
@@ -807,18 +816,22 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 + .更多选项 {
 }
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
+	div#侧边按钮容器 > .拥有更多选项:focus-visible > .更多选项,
 	div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) > .更多选项 {
 		pointer-events: auto !important;
 		opacity: 1 !important;
+		visibility: visible;
 	}
 }
 @supports not selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
+	div#侧边按钮容器 > .拥有更多选项:focus-visible > .更多选项,
 	div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项 {
 		pointer-events: auto !important;
 		opacity: 1 !important;
 	}
 }
+
 div#侧边按钮容器 > .拥有更多选项 > .更多选项 > button {
 	background-color: var(--surface-2);
 	box-sizing: border-box;
@@ -849,38 +862,43 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项#所有主题 {
 	border-left: var(--border);
 	border-bottom: var(--border);
 }
+/* 防误触：#网易云音乐 的播放列表面板会向下盖住 #切换主题，读屏焦点落到被遮住的
+   #切换主题 上会误触。故 #网易云音乐 被 hover（含读屏的模拟 hover）时隐藏 #切换主题；
+   反向不需要处理：#切换主题 的面板不遮住 #网易云音乐，且 CSS 无前驱兄弟选择器。
+   写死两个 id、只用后继兄弟选择器，无需 :has()，Chrome 86 亦可生效；:focus-visible 不参与判断 */
+div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
+	visibility: hidden;
+}
+
 /* ==================== 侧边按钮-关闭侧边按钮 ==================== */
+/* 只在触摸屏出现；默认视觉透明但保持可点、留在 AT 树中，展开任一面板时才显露 */
+div#侧边按钮容器 > #关闭侧边按钮 {
+	opacity: 0 !important;
+	display: none;
+}
 div#侧边按钮容器 > #关闭侧边按钮 > svg {
 	transform: translateX(2px) rotateY(180deg);
 }
 @media (any-pointer: coarse) {
+	div#侧边按钮容器 > #关闭侧边按钮 {
+		display: flex;
+	}
 	body:has(#侧边按钮容器 > .拥有更多选项:hover) #侧边按钮容器 > #关闭侧边按钮 {
-		opacity: 1;
-		pointer-events: all;
+		opacity: 1 !important;
+		pointer-events: auto;
 	}
 }
 
-/* ==================== 侧边按钮-关闭侧边按钮、回到顶部 ==================== */
-body.顶部 div#侧边按钮容器 > #回到顶部,
-div#侧边按钮容器 > #关闭侧边按钮 {
-	animation-name: 延迟不可见;
+/* ==================== 侧边按钮-回到顶部 ==================== */
+/* 页面处于顶部时不显示回到顶部：延迟 3s 后禁止点击，避免滚动/换页途中误触 */
+body.顶部 div#侧边按钮容器 > #回到顶部 {
+	animation-name: 延迟不可点击;
 	animation-duration: 3s;
 	animation-fill-mode: forwards;
 	opacity: 0;
-	pointer-events: none;
 }
-@supports selector(:has(*)) {
-	div#侧边按钮容器 > #回到顶部,
-	body:has(#侧边按钮容器 > .拥有更多选项:hover) #侧边按钮容器 > #关闭侧边按钮,
-	body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible) #侧边按钮容器 > #关闭侧边按钮 {
-		animation-name: none;
-	}
-}
-/* 86 兜底：去掉 body:has() 两条选择器，只保留 #回到顶部，避免整条规则连坐失效 */
-@supports not selector(:has(*)) {
-	div#侧边按钮容器 > #回到顶部 {
-		animation-name: none;
-	}
+div#侧边按钮容器 > #回到顶部 {
+	animation-name: none;
 }
 
 /* ==================== 侧边按钮-网易云音乐 ==================== */
@@ -919,12 +937,14 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 .网易云封面旋
 
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover,
+	div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-visible,
 	div#侧边按钮容器 > .拥有更多选项#网易云音乐:has(*:focus-visible) {
 		transform: translateX(calc((var(--container-width) - 16px) * -1));
 	}
 }
 @supports not selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover,
+	div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-visible,
 	div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-within {
 		transform: translateX(calc((var(--container-width) - 16px) * -1));
 	}
@@ -950,6 +970,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 }
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover #歌词,
+	div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-visible #歌词,
 	div#侧边按钮容器 > .拥有更多选项#网易云音乐:has(*:focus-visible) #歌词 {
 		color: #fff;
 		transition-delay: var(--transition);
@@ -1062,12 +1083,14 @@ div#侧边按钮容器 > .拥有更多选项#切换主题 {
 }
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项#切换主题:hover,
+	div#侧边按钮容器 > .拥有更多选项#切换主题:focus-visible,
 	div#侧边按钮容器 > .拥有更多选项#切换主题:has(*:focus-visible) {
 		transform: translateX(calc(-32px * 3 - 6px));
 	}
 }
 @supports not selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项#切换主题:hover,
+	div#侧边按钮容器 > .拥有更多选项#切换主题:focus-visible,
 	div#侧边按钮容器 > .拥有更多选项#切换主题:focus-within {
 		transform: translateX(calc(-32px * 3 - 6px));
 	}
