@@ -878,6 +878,8 @@ matchMedia("(prefers-reduced-motion: reduce)").addEventListener("change", 事件
 //#region 样式预加载
 const /** @type {NodeListOf<HTMLLinkElement>} */ 样式链接 = qsa("link[data-preload='style']");
 const 支持预加载 = 样式链接[0]?.relList.supports?.("preload") ?? false;
+/** preload 链接迟迟不派发 load 时的兜底超时（毫秒）：到点直接改 rel，避免样式永远不生效 */
+const 样式预加载超时 = 5000;
 样式链接.forEach(元素 => {
 	if (!(元素 instanceof HTMLLinkElement)) return;
 	const 加载样式 = () => {
@@ -890,8 +892,18 @@ const 支持预加载 = 样式链接[0]?.relList.supports?.("preload") ?? false;
 	const 已加载 = Array.from(performance.getEntriesByName(元素.href)).some(
 		entry => entry.entryType === "resource"
 	);
+	if (已加载) return 加载样式();
 
-	if (已加载) 加载样式();
-	else 元素.addEventListener("load", 加载样式, { once: true });
+	/** @type {ReturnType<typeof setTimeout> | undefined} */
+	let 超时句柄;
+	const 完成加载 = () => {
+		clearTimeout(超时句柄);
+		加载样式();
+	};
+	元素.addEventListener("load", 完成加载, { once: true });
+	超时句柄 = setTimeout(() => {
+		元素.removeEventListener("load", 完成加载);
+		加载样式();
+	}, 样式预加载超时);
 });
 //#endregion
