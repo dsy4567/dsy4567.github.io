@@ -532,7 +532,9 @@ function 设置展开容器可访问名(展开容器) {
 					关闭按钮.addEventListener("click", () => div.remove());
 					/** 在错误行展示失败原因 @param {string} 原因 */
 					const 显示验证错误 = 原因 => {
-						错误提示.textContent = `recaptcha验证出现问题，原因：${原因}，请尝试关闭卡片并重试，或点击在新标签页验证`;
+						const 文字 = `recaptcha验证出现问题，原因：${原因}，请尝试关闭卡片并重试，或点击在新标签页验证`;
+						错误提示.textContent = 文字;
+						提示(文字, true);
 						错误提示.hidden = false;
 					};
 					/** reCAPTCHA 挂件 ID，脚本加载完毕渲染后才有值 */
@@ -604,11 +606,13 @@ function 设置展开容器可访问名(展开容器) {
 							const 回复 = grecaptcha.getResponse(挂件id);
 							if (!回复) {
 								状态行.textContent = "请先完成上方的人机验证";
+								提示(状态行.textContent, true);
 								return;
 							}
 							提交回复(回复);
 						});
 						状态行.textContent = "请勾选上方复选框完成人机验证";
+						提示(状态行.textContent, true);
 						提交按钮.disabled = false;
 					});
 				});
