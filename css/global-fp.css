@@ -273,6 +273,7 @@ pre code.hljs {
 	display: block;
 	overflow-x: auto;
 	padding: 1em;
+	position: relative;
 }
 code.hljs {
 	padding: 3px 5px;
@@ -358,6 +359,10 @@ input {
 	max-width: 100%;
 	max-height: 100%;
 }
+img:is(.特小尺寸, .小尺寸, .中尺寸, .大尺寸) {
+	max-width: unset;
+	max-height: unset;
+}
 .特小尺寸 {
 	--width: 24px;
 	--height: 24px;
@@ -429,6 +434,8 @@ body > #导航栏 {
 #导航栏 > .左,
 #导航栏 > .右 {
 	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 }
 #导航栏 > .左 > a,
 #导航栏 > .右 > a {
