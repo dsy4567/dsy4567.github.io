@@ -336,7 +336,6 @@ async function 渲染文章(当前文章信息) {
 							正文 = ce("div"),
 							元数据 = ce("span");
 						评论元素.className = "评论";
-						评论元素.setAttribute("role", "comment");
 
 						用户信息.className = "用户信息";
 						用户信息.setAttribute("aria-label", "用户信息");
