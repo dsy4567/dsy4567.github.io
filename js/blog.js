@@ -293,18 +293,20 @@ async function 渲染文章(当前文章信息) {
 			fetch(
 				`https://api.github.com/repos/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}/comments`
 			)
-				.then(
-					res =>
-						new Promise((resolve, reject) => {
-							延迟执行(
-								"关键任务完成",
-								() => {
-									resolve(res.json());
-								},
-								3
-							);
-						})
-				)
+				.then(res => {
+					// GitHub API 在限流、异常等情况下返回非 2xx，直接抛错交由 catch 渲染提示，
+					// 避免把错误响应当成评论数据解析
+					if (!res.ok) throw new Error("评论请求失败, 状态码: " + res.status);
+					return new Promise((resolve, reject) => {
+						延迟执行(
+							"关键任务完成",
+							() => {
+								resolve(res.json());
+							},
+							3
+						);
+					});
+				})
 				.then(async j => {
 					// 避免加载太晚导致评论区显示错误
 					if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
@@ -394,7 +396,8 @@ async function 渲染文章(当前文章信息) {
 					高亮代码(sect);
 					右.append(sect);
 					渲染图标();
-				});
+				})
+				.catch(e => 处理评论加载失败(e, 当前文章信息, 动态加载自增计数器拷贝));
 		}
 		//#endregion
 	} catch (e) {
@@ -406,6 +409,41 @@ async function 渲染文章(当前文章信息) {
 			正在加载文章提示.innerHTML =
 				"加载失败, 加载时可能遇到了错误, 或此文章不存在。<a href=''>点击重试</a>";
 	}
+}
+
+/**
+ * 评论加载失败时的兜底：在评论区渲染提示信息，并给出指向 GitHub Issue 的链接
+ * @param {unknown} e - 失败原因，仅用于控制台输出
+ * @param {文章信息} 当前文章信息 - 当前文章信息，用于拼接 GitHub Issue 地址
+ * @param {number} 动态加载自增计数器拷贝 - 发起评论加载时的代次，用于判断页面是否已切换
+ */
+function 处理评论加载失败(e, 当前文章信息, 动态加载自增计数器拷贝) {
+	console.error(e);
+	// 加载期间已切换页面则放弃渲染，避免污染新页面
+	if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
+	const 评论提示 = `<p>评论加载失败，可能是网络异常或 GitHub 接口访问受限，<a href="https://github.com/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}">前往 GitHub 查看评论</a>。</p>`;
+	// 评论区已渲染（失败发生在后续步骤）时只补一条提示，避免出现两个评论区
+	const 已有评论区 = gd("评论区");
+	if (已有评论区) {
+		已有评论区.querySelector("section")?.insertAdjacentHTML("afterbegin", 评论提示);
+		return;
+	}
+	let sect = ce("section");
+	sect.id = "评论区";
+	sect.innerHTML = `
+<h2>
+	<svg data-icon="评论" class="小尺寸"></svg>
+	<span>评论</span>
+</h2>
+<section>
+	${评论提示}
+	<a
+		id="评论链接"
+		href="https://github.com/dsy4567/dsy4567.github.io/issues/${当前文章信息.issue}#issue-comment-box"
+	>在 GitHub 上发表评论</a>
+</section>`;
+	qs("main > .右", true)?.append(sect);
+	渲染图标();
 }
 
 /**
