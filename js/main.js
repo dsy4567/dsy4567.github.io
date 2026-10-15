@@ -166,10 +166,6 @@ fetch("/json/theme.json")
 				主题容器 = gd("所有主题", true);
 			if (!控件容器 || !主题容器) return;
 
-			// 分组容器是 hover/聚焦即展开的，补分组语义与可访问名；role=group 不支持 aria-expanded，故不设展开态
-			gd("切换主题")?.setAttribute("role", "group");
-			gd("切换主题")?.setAttribute("aria-label", "切换主题");
-
 			const f = () => {
 				//#region 第一行：背景模式切换、自定义强调色调色盘
 				/** @type {HTMLButtonElement} */
@@ -263,8 +259,9 @@ fetch("/json/theme.json")
 				已渲染主题控件 = true;
 				f();
 			};
-			gd("切换主题")?.addEventListener("mousemove", 渲染主题控件, { once: true });
+			gd("切换主题", true)?.addEventListener("mousemove", 渲染主题控件, { once: true });
 			document.addEventListener("keydown", 渲染主题控件, { once: true });
+			// 展开容器的可访问名与展开/收起播报由 设置展开容器可访问名 统一维护
 		}
 	)
 	.catch(e => console.error(e));
@@ -397,6 +394,45 @@ fetch("https://api.github.com/users/dsy4567")
 	.catch(e => console.error(e));
 //#endregion
 
+//#region 展开容器（拥有更多选项）
+/**
+ * 为展开容器（.拥有更多选项，如 网易云音乐、切换主题）维护可访问名：组件名取自容器 id，
+ * 鼠标移入移出时写入 展开态/收起态 文案，并用不可见提示向读屏用户播报状态变化。
+ * 容器视觉上的展开/收起由 CSS 的 :hover 呈现，故这里只补读屏可感知的部分
+ * @param {HTMLElement} 展开容器
+ */
+function 设置展开容器可访问名(展开容器) {
+	const 组件名 = 展开容器.id;
+	/**
+	 * 生成某个展开状态下的可访问名
+	 * @param {boolean} 已展开
+	 * @returns {string}
+	 */
+	const 取可访问名 = 已展开 =>
+		组件名 +
+		(已展开
+			? "（已展开，触屏+读屏用户，向前聚焦到收起按钮并 长按 以收起）"
+			: "（已收起，触屏+读屏用户，长按 展开）");
+	/** @param {boolean} 已展开 @param {boolean} 播报 - 是否用不可见提示向读屏用户播报本次状态变化 */
+	const 更新 = (已展开, 播报) => {
+		展开容器.setAttribute("aria-label", 取可访问名(已展开));
+		// 展开/收起在视觉上是即时的，读屏用户看不到，用不可见提示补一次状态播报
+		if (播报)
+			提示(
+				组件名 +
+					(已展开
+						? " 已展开，触屏+读屏用户，向前聚焦到收起按钮并 长按 以收起）"
+						: " 已收起"),
+				true
+			);
+	};
+	// 初始写入收起态可访问名，但不播报：避免每次进入页面都向读屏用户抛出两条 assertive 提示
+	更新(false, false);
+	展开容器.addEventListener("mouseenter", () => 更新(true, true));
+	展开容器.addEventListener("mouseleave", () => 更新(false, true));
+}
+//#endregion
+
 延迟执行(
 	"关键任务完成",
 	() => {
@@ -404,11 +440,12 @@ fetch("https://api.github.com/users/dsy4567")
 			//#region 核心元素、事件、字体css等
 			gd("回到顶部")?.addEventListener("click", 回到顶部);
 			// 展开入口：容器是 div，补分组语义（避免 button 角色把内部控件当装饰而屏蔽）与键盘激活；
-			// 收起靠指针离开让 hover 自然清除（零 JS），故不注册任何收起/展开事件监听
+			// 视觉上的收起仍靠指针离开让 hover 自然清除，可访问名与展开/收起播报交给 设置展开容器可访问名
 			qsa(".拥有更多选项").forEach(el => {
 				const 展开容器 = /** @type {HTMLElement} */ (el);
 				展开容器.setAttribute("role", "group");
 				展开容器.tabIndex = 0;
+				设置展开容器可访问名(展开容器);
 			});
 			// 分界线（切换宽屏）：div 充当按钮，动态补角色、可访问名与键盘支持
 			const 分界线 = gd("分界线");

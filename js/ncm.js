@@ -635,6 +635,7 @@ let 网易云音乐 = {
 						"li[data-id='" + 网易云音乐.歌单[网易云音乐.正在播放.索引].id + "']",
 						true
 					);
+					// 可访问名与展开/收起播报由 main.js 的 设置展开容器可访问名 统一维护
 				};
 				网易云音乐元素.addEventListener("mouseenter", f);
 				网易云音乐元素.addEventListener("dblclick", f);
