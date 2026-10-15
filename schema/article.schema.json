@@ -1,5 +1,5 @@
 {
-	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$schema": "https://json-schema.org/draft-07/schema#",
 	"$id": "https://dsy4567.github.io/schema/article.schema.json",
 	"title": "博客文章元数据",
 	"description": "blog/<id>/article.json 的结构。id、title、desc、desc_text 等其余字段由构建脚本（tools/build.js）从 index.md 补全，不在此文件中出现。",
