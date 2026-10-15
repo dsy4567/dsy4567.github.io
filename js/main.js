@@ -398,6 +398,8 @@ fetch("https://api.github.com/users/dsy4567")
 /**
  * 为展开容器（.拥有更多选项，如 网易云音乐、切换主题）维护可访问名：组件名取自容器 id，
  * 鼠标移入移出时写入 展开态/收起态 文案，并用不可见提示向读屏用户播报状态变化。
+ * 「已展开」需指针停留满 展开播报延迟 才播报：快速划过容器不该打断读屏用户；
+ * 一次未播报过的划过，收起时也不播报，避免抛出一对无意义的状态提示。
  * 容器视觉上的展开/收起由 CSS 的 :hover 呈现，故这里只补读屏可感知的部分
  * @param {HTMLElement} 展开容器
  */
@@ -426,10 +428,27 @@ function 设置展开容器可访问名(展开容器) {
 				true
 			);
 	};
+	/** 展开态的播报延迟（毫秒）：指针在容器上停留满该时长才播报「已展开」 */
+	const 展开播报延迟 = 500;
+	/** 待播报「已展开」的定时器；快速划过时由 mouseleave 取消 */
+	let /** @type {ReturnType<typeof setTimeout> | undefined} */ 播报定时器;
+	/** 本轮停留是否已播报过「已展开」：未播报过则收起时也静默，保证播报成对出现 */
+	let 已播报展开 = false;
 	// 初始写入收起态可访问名，但不播报：避免每次进入页面都向读屏用户抛出两条 assertive 提示
 	更新(false, false);
-	展开容器.addEventListener("mouseenter", () => 更新(true, true));
-	展开容器.addEventListener("mouseleave", () => 更新(false, true));
+	展开容器.addEventListener("mouseenter", () => {
+		更新(true, false);
+		clearTimeout(播报定时器);
+		播报定时器 = setTimeout(() => {
+			已播报展开 = true;
+			更新(true, true);
+		}, 展开播报延迟);
+	});
+	展开容器.addEventListener("mouseleave", () => {
+		clearTimeout(播报定时器);
+		更新(false, 已播报展开);
+		已播报展开 = false;
+	});
 }
 //#endregion
 
