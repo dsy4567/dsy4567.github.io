@@ -731,11 +731,11 @@ function 创建歌单项(/** @type {歌单} */ 音乐信息) {
 	let li = ce("li");
 	let 歌名 = ce("span");
 	歌名.textContent = 音乐信息.歌名;
-	歌名.setAttribute("aria-label", "歌名");
+	歌名.prepend(创建隐藏文字("歌名"));
 	let 歌手 = ce("span");
 	歌手.className = "淡化";
 	歌手.textContent = 音乐信息.歌手;
-	歌手.setAttribute("aria-label", "歌手");
+	歌手.prepend(创建隐藏文字("歌手"));
 	li.append(歌名, " ", 歌手);
 	li.tabIndex = 0;
 	li.title = 音乐信息.完整歌名;

@@ -390,6 +390,17 @@ function 提示(m, 不可见 = false) {
 		}, 500);
 	}, 3000);
 }
+/**
+ * 创建一段视觉隐藏的文字（读屏可读、不影响布局），用于给元素补充可访问名
+ * @param {string} 文本 - 隐藏文字的内容
+ * @returns {HTMLSpanElement}
+ */
+function 创建隐藏文字(文本) {
+	const span = ce("span");
+	span.className = "隐藏文字";
+	span.textContent = 文本;
+	return span;
+}
 //#endregion
 
 //#region 调度类

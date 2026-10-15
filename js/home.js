@@ -526,13 +526,13 @@ async function 渲染最近在听() {
 
 		const 歌名元素 = ce("span");
 		歌名元素.textContent = 项.song.name;
-		歌名元素.setAttribute("aria-label", "歌名");
+		歌名元素.prepend(创建隐藏文字("歌名"));
 		歌曲信息.append(歌名元素);
 		if (歌手) {
 			const 歌手元素 = ce("span");
 			歌手元素.className = "淡化";
 			歌手元素.textContent = 歌手;
-			歌手元素.setAttribute("aria-label", "歌手");
+			歌手元素.prepend(创建隐藏文字("歌手"));
 			歌曲信息.append(歌手元素);
 		}
 
