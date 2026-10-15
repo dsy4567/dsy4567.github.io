@@ -372,13 +372,16 @@ function 添加横幅(/** @type {string} */ html) {
 /**
  * 显示一个临时的通知消息，3 秒后自动隐藏
  * @param {string} m - 要显示的 HTML 内容
+ * @param {boolean} [不可见=false] - true 时元素保持透明，仅供读屏用户播报（视觉上的状态变化由页面自身呈现）
  */
-function 提示(m) {
+function 提示(m, 不可见 = false) {
 	let 元素 = ce("div");
 	元素.innerHTML = m;
 	元素.classList.add("通知");
 	元素.ariaLive = "assertive";
 	元素.role = "alert";
+	// .通知 的「显示」动画 animation-fill-mode: forwards 会盖过普通行内 opacity，故置透明须用 !important
+	if (不可见) 元素.style.setProperty("opacity", "0", "important");
 	document.body.append(元素);
 	setTimeout(function () {
 		元素.style.animationName = "隐藏";
