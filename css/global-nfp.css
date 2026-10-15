@@ -174,6 +174,17 @@ div#侧边按钮容器,
 			border-top: min(var(--height), var(--maxh)) solid transparent;
 		}
 	}
+	@keyframes 右栏阴影上移动端 {
+		0% {
+			box-shadow: 0px -4px 16px 0px rgba(0, 0, 0, 0.5);
+		}
+		66% {
+			box-shadow: 0px -4px 16px 0px rgba(0, 0, 0, 0);
+		}
+		100% {
+			box-shadow: 0px -4px 16px 0px rgba(0, 0, 0, 0);
+		}
+	}
 }
 @keyframes 高频闪烁 {
 	0% {
@@ -1400,6 +1411,12 @@ section#评论区 .评论 .评论正文 {
 		}
 		main .左 {
 			animation: 左栏移动端 linear both;
+		}
+		main .右 {
+			animation: 右栏阴影上移动端 linear both;
+		}
+		main .左,
+		main .右 {
 			animation-timeline: scroll(root);
 			animation-range: 1px var(--cover-scroll-range);
 		}
