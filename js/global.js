@@ -203,12 +203,16 @@ async function 垂直滚动到容器内可见区域(s, 缓存 = false) {
 		top: 目标元素?.offsetTop || 0,
 	});
 }
+let 显示或隐藏进度条_已执行至少一次 = false;
 /**
  * 显示或隐藏页面顶部的进度条
  * @param {boolean} 状态 - true 显示，false 隐藏
  */
 function 显示或隐藏进度条(状态) {
 	qs(".进度条外面", true)?.classList.toggle("显示", 状态);
+	// 视觉上进度条不播报加载状态，靠读屏可读的隐藏提示让无障碍用户感知
+	if (显示或隐藏进度条_已执行至少一次) 提示(状态 ? "正在加载" : "加载完成", true);
+	显示或隐藏进度条_已执行至少一次 = true;
 }
 /**
  * 设置 meta robots 为 noindex，阻止搜索引擎收录当前页面
