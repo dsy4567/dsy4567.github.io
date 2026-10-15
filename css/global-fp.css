@@ -557,6 +557,7 @@ section#我 span#联系方式 {
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
+	margin: 0 -8px;
 }
 section#我 span#联系方式 > * {
 	margin: 0 4px;
