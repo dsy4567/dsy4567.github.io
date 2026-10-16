@@ -718,6 +718,9 @@ body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible)::after {
 }
 
 @supports selector(:has(*)) {
+	div#侧边按钮容器:has(.拥有更多选项:hover) > * {
+		opacity: 1;
+	}
 	div#侧边按钮容器 > *:hover,
 	div#侧边按钮容器 > *:focus-visible,
 	div#侧边按钮容器 > *:has(*:focus-visible) {
@@ -727,7 +730,6 @@ body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible)::after {
 		border-top-right-radius: 0;
 		border-bottom-right-radius: 0;
 		border-right: 1px solid transparent;
-		opacity: 1;
 		transform: translateX(1px);
 	}
 }
@@ -980,11 +982,16 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 	transition-delay: 0s;
 }
 @supports selector(:has(*)) {
-	div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover #歌词,
-	div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-visible #歌词,
-	div#侧边按钮容器 > .拥有更多选项#网易云音乐:has(*:focus-visible) #歌词 {
+	div#侧边按钮容器:has(
+			.拥有更多选项:is(:focus-visible, :hover),
+			.拥有更多选项 :is(:focus-visible, :hover)
+		)
+		> .拥有更多选项#网易云音乐
+		#歌词 {
 		color: #fff;
 		transition-delay: var(--transition);
+	}
+	div#侧边按钮容器 > .拥有更多选项#网易云音乐:is(:hover, :focus-visible, *:focus-visible) #歌词{
 		user-select: auto;
 		pointer-events: auto;
 	}
