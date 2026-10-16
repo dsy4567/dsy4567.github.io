@@ -729,7 +729,8 @@ body::after {
 		opacity: 1;
 	}
 	div#侧边按钮容器 > :is(:hover, :focus-visible),
-	div#侧边按钮容器 > :has(:focus-visible) {
+	div#侧边按钮容器 > :has(:focus-visible),
+	div#侧边按钮容器 > #关闭侧边按钮 {
 		border-radius: unset;
 		border-top-left-radius: 50%;
 		border-bottom-left-radius: 50%;
@@ -742,7 +743,8 @@ body::after {
 @supports not selector(:has(*)) {
 	div#侧边按钮容器 > *:hover,
 	div#侧边按钮容器 > *:focus-visible,
-	div#侧边按钮容器 > *:focus-within {
+	div#侧边按钮容器 > *:focus-within,
+	div#侧边按钮容器 > #关闭侧边按钮 {
 		border-radius: unset;
 		border-top-left-radius: 50%;
 		border-bottom-left-radius: 50%;
@@ -900,8 +902,11 @@ div#侧边按钮容器 > #关闭侧边按钮 > svg {
 		display: flex;
 	}
 	div#侧边按钮容器:has(> .拥有更多选项:hover) > #关闭侧边按钮 {
+		border: var(--border);
+		border-radius: 50%;
 		opacity: 1 !important;
 		pointer-events: auto;
+		transform: translateX(-4px);
 	}
 }
 
