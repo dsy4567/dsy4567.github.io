@@ -168,7 +168,7 @@ spoiler {
 /* 不支持 :has() 的浏览器（如 Chrome 86）会整条规则失效，连 :hover 一起失效，故需兜底副本 */
 @supports selector(:has(*)) {
 	spoiler:hover,
-	body:has(:focus-visible) spoiler {
+	main:focus-within:has(:focus-visible) spoiler {
 		color: #fff !important;
 	}
 }
@@ -193,7 +193,8 @@ article {
 	padding: 12px;
 	word-break: break-word;
 }
-:is(section, article) > :is(section, article) {
+section > :is(section, article),
+article > :is(section, article) {
 	margin: 0 -4px 8px -4px;
 	padding: 12px;
 }
@@ -562,14 +563,14 @@ section#我 > img {
 	max-height: unset;
 }
 
-section#我 span#联系方式 {
+section#我 #联系方式 {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
 	margin: 0 -8px;
 }
-section#我 span#联系方式 > * {
+section#我 #联系方式 > * {
 	margin: 0 4px;
 }
 .rss {
