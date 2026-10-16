@@ -580,6 +580,8 @@ body.隐藏导航栏 #导航栏 {
 /* ==================== main、左右栏 ==================== */
 main > #分界线 {
 	background-color: var(--surface-1);
+	border: 8px solid var(--bg-color);
+	border-radius: var(--border-radius);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
