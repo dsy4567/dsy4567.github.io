@@ -578,8 +578,12 @@ function 设置展开容器可访问名(展开容器) {
 					const 提交回复 = async 回复 => {
 						if (提交中) return;
 						提交中 = true;
-						状态行.hidden = true;
+						状态行.hidden = false;
+						错误提示.hidden = true;
 						提交按钮.disabled = true;
+
+						状态行.textContent = "正在提交";
+						提示(状态行.textContent, true);
 						try {
 							const 响应 = await fetch(
 								`${人机验证接口地址}?g-recaptcha-response=${回复}`
@@ -589,6 +593,9 @@ function 设置展开容器可访问名(展开容器) {
 							提示区.style.display = "none";
 							验证容器.style.display = "none";
 							提交按钮.disabled = true;
+
+							状态行.textContent = "提交成功";
+							提示(状态行.textContent, true);
 							结果区.focus();
 						} catch (e) {
 							console.error(e);
