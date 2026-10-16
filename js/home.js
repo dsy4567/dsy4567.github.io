@@ -521,7 +521,7 @@ async function 渲染最近在听() {
 				封面.dataset.大图地址 = 大图地址;
 			项元素.append(封面);
 		}
-		const 歌曲信息 = ce("div");
+		const 歌曲信息 = ce("span");
 		歌曲信息.className = "歌曲信息";
 
 		const 歌名元素 = ce("span");
@@ -537,7 +537,7 @@ async function 渲染最近在听() {
 		}
 
 		// 不展示任何数字，名次由 CSS 的 counter 输出「TOP n」
-		const 排名 = ce("div");
+		const 排名 = ce("span");
 		排名.className = "排名";
 		项元素.append(歌曲信息, 排名);
 		排行片段.append(项元素);
