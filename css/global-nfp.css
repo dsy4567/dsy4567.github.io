@@ -718,12 +718,10 @@ body:has(#侧边按钮容器 > .拥有更多选项 *:focus-visible)::after {
 }
 
 @supports selector(:has(*)) {
-	div#侧边按钮容器:has(.拥有更多选项:hover) > * {
+	div#侧边按钮容器:has(.拥有更多选项:is(:hover, :focus-visible, :has(*:focus-visible))) > * {
 		opacity: 1;
 	}
-	div#侧边按钮容器 > *:hover,
-	div#侧边按钮容器 > *:focus-visible,
-	div#侧边按钮容器 > *:has(*:focus-visible) {
+	div#侧边按钮容器 > *:is(:hover, :focus-visible, :has(*:focus-visible)) {
 		border-radius: unset;
 		border-top-left-radius: 50%;
 		border-bottom-left-radius: 50%;
@@ -774,9 +772,7 @@ div#侧边按钮容器 > div:hover::before {
 }
 
 @supports selector(:has(*)) {
-	div#侧边按钮容器 > .拥有更多选项:hover,
-	div#侧边按钮容器 > .拥有更多选项:focus-visible,
-	div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) {
+	div#侧边按钮容器 > .拥有更多选项:is(:hover, :focus-visible, :has(*:focus-visible)) {
 		border-bottom-left-radius: 0;
 		z-index: 1;
 	}
@@ -828,9 +824,7 @@ div#侧边按钮容器 > .拥有更多选项 > .更多选项 + .更多选项 {
 	border-top: var(--border);
 }
 @supports selector(:has(*)) {
-	div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
-	div#侧边按钮容器 > .拥有更多选项:focus-visible > .更多选项,
-	div#侧边按钮容器 > .拥有更多选项:has(*:focus-visible) > .更多选项 {
+	div#侧边按钮容器 > .拥有更多选项:is(:hover, :focus-visible, :has(*:focus-visible)) > .更多选项 {
 		pointer-events: auto !important;
 		opacity: 1 !important;
 		visibility: visible;
@@ -949,9 +943,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 .网易云封面旋
 }
 
 @supports selector(:has(*)) {
-	div#侧边按钮容器 > .拥有更多选项#网易云音乐:hover,
-	div#侧边按钮容器 > .拥有更多选项#网易云音乐:focus-visible,
-	div#侧边按钮容器 > .拥有更多选项#网易云音乐:has(*:focus-visible) {
+	div#侧边按钮容器 > .拥有更多选项#网易云音乐:is(:hover, :focus-visible, :has(*:focus-visible)) {
 		transform: translateX(calc((var(--container-width) - 16px) * -1));
 	}
 }
@@ -991,7 +983,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #歌词 {
 		color: #fff;
 		transition-delay: var(--transition);
 	}
-	div#侧边按钮容器 > .拥有更多选项#网易云音乐:is(:hover, :focus-visible, *:focus-visible) #歌词{
+	div#侧边按钮容器 > .拥有更多选项#网易云音乐:is(:hover, *:focus-visible) #歌词 {
 		user-select: auto;
 		pointer-events: auto;
 	}
@@ -1100,9 +1092,7 @@ div#侧边按钮容器 > .拥有更多选项#切换主题 {
 	--container-width: calc(32px * 4);
 }
 @supports selector(:has(*)) {
-	div#侧边按钮容器 > .拥有更多选项#切换主题:hover,
-	div#侧边按钮容器 > .拥有更多选项#切换主题:focus-visible,
-	div#侧边按钮容器 > .拥有更多选项#切换主题:has(*:focus-visible) {
+	div#侧边按钮容器 > .拥有更多选项#切换主题:is(:hover, :focus-visible, :has(*:focus-visible)) {
 		transform: translateX(calc(-32px * 3 - 6px));
 	}
 }
