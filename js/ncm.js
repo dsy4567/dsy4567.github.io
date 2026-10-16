@@ -74,6 +74,7 @@ let 网易云音乐 = {
 	 * 首页“最近在听”批量添加歌曲前需等待其完成，避免基础歌单按索引写入时覆盖新增歌曲
 	 */
 	歌单加载完成: new Promise(resolve => (歌单加载完成Resolve = resolve)),
+	/** @type {HTMLButtonElement | null} */ 播放暂停按钮: null,
 	正在播放: {
 		索引: 0,
 		/** 最近一次写入 Audio.src 的歌曲 id，-1 表示尚未加载过 */
@@ -300,7 +301,7 @@ let 网易云音乐 = {
 		网易云音乐元素 && (网易云音乐元素.title = "网易云音乐 - 正在播放: " + 音乐信息.完整歌名);
 		localStorage.setItem("上次播放", "" + 音乐信息.id);
 	},
-	async 播放暂停(/** @type {HTMLButtonElement} */ 按钮) {
+	async 播放暂停() {
 		try {
 			clearTimeout(网易云音乐.重试timeout);
 			await 网易云音乐.初始化();
@@ -320,14 +321,8 @@ let 网易云音乐 = {
 				网易云音乐.正在播放.已加载的音乐令牌 = 令牌;
 			}
 
-			按钮.setAttribute("aria-checked", "" + !网易云音乐.正在播放.Audio.paused);
-			if (网易云音乐.正在播放.Audio.paused) {
-				网易云音乐.正在播放.Audio.play();
-				按钮.classList.remove("激活");
-			} else {
-				网易云音乐.正在播放.Audio.pause();
-				按钮.classList.add("激活");
-			}
+			if (网易云音乐.正在播放.Audio.paused) 网易云音乐.正在播放.Audio.play();
+			else 网易云音乐.正在播放.Audio.pause();
 		} catch (e) {
 			提示("播放失败");
 			console.error(e);
@@ -685,10 +680,22 @@ let 网易云音乐 = {
 				网易云音乐.设置封面旋转动画(true);
 				网易云音乐.连续失败次数 = 0;
 				if (navigator.mediaSession) navigator.mediaSession.playbackState = "playing";
+
+				网易云音乐.播放暂停按钮?.setAttribute(
+					"aria-checked",
+					"" + !网易云音乐.正在播放.Audio.paused
+				);
+				网易云音乐.播放暂停按钮?.classList.remove("激活");
 			};
 			网易云音乐.正在播放.Audio.onpause = () => {
 				网易云音乐.设置封面旋转动画(false);
 				if (navigator.mediaSession) navigator.mediaSession.playbackState = "paused";
+
+				网易云音乐.播放暂停按钮?.setAttribute(
+					"aria-checked",
+					"" + !网易云音乐.正在播放.Audio.paused
+				);
+				网易云音乐.播放暂停按钮?.classList.add("激活");
 			};
 			网易云音乐.正在播放.Audio.ontimeupdate = () => {
 				网易云音乐.预加载下一首();
@@ -776,10 +783,11 @@ async function 立即渲染网易云音乐组件() {
 		if (role === "checkbox") btn.setAttribute("aria-checked", "false");
 		网易云音乐.按钮[名称] = btn;
 		待添加按钮.push(btn);
+		return btn;
 	}
 
 	创建按钮("上一首", 网易云音乐.上一首, "上一首");
-	创建按钮("播放暂停", 网易云音乐.播放暂停, "暂停", "checkbox");
+	网易云音乐.播放暂停按钮 = 创建按钮("播放暂停", 网易云音乐.播放暂停, "暂停", "checkbox");
 	创建按钮("下一首", 网易云音乐.下一首, "下一首");
 	创建按钮(
 		"在网易云音乐中查看",
