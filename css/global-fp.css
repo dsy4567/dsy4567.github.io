@@ -169,12 +169,12 @@ spoiler {
 @supports selector(:has(*)) {
 	spoiler:hover,
 	main:has(:focus-visible) spoiler {
-		color: #fff !important;
+		color: #fff;
 	}
 }
 @supports not selector(:has(*)) {
 	spoiler:hover {
-		color: #fff !important;
+		color: #fff;
 	}
 }
 

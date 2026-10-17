@@ -320,7 +320,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 		border-bottom: 1px solid #000;
 	}
 	spoiler {
-		color: #fff !important;
+		color: #fff;
 	}
 	pre {
 		background-color: #fff !important;
@@ -372,16 +372,13 @@ a:focus-visible {
 	text-underline-offset: 4px;
 }
 a:has(img, svg) {
-	text-decoration: none !important;
+	text-decoration: none;
 }
 /* a.外链::after {
 	content: "";
 }
 a.外链:has(img, svg)::after {
 	content: "";
-} */
-/* a[title]::after {
-	content: "" !important;
 } */
 
 abbr {
@@ -837,8 +834,8 @@ div#侧边按钮容器 .更多选项 + .更多选项 {
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:is(:hover, :focus-visible) > .更多选项,
 	div#侧边按钮容器 > .拥有更多选项:has(:focus-visible) > .更多选项 {
-		pointer-events: auto !important;
-		opacity: 1 !important;
+		pointer-events: auto;
+		opacity: 1;
 		visibility: visible;
 	}
 }
@@ -846,8 +843,8 @@ div#侧边按钮容器 .更多选项 + .更多选项 {
 	div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
 	div#侧边按钮容器 > .拥有更多选项:focus-visible > .更多选项,
 	div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项 {
-		pointer-events: auto !important;
-		opacity: 1 !important;
+		pointer-events: auto;
+		opacity: 1;
 	}
 }
 
@@ -891,21 +888,21 @@ div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
 
 /* ==================== 侧边按钮-关闭侧边按钮 ==================== */
 /* 只在触摸屏出现；默认视觉透明但保持可点、留在 AT 树中，展开任一面板时才显露 */
-div#侧边按钮容器 > #关闭侧边按钮 {
-	opacity: 0 !important;
+div#侧边按钮容器 > button#关闭侧边按钮 {
+	opacity: 0;
 	display: none;
 }
 div#侧边按钮容器 > #关闭侧边按钮 > svg {
 	transform: translateX(2px) rotateY(180deg);
 }
 @media (any-pointer: coarse) {
-	div#侧边按钮容器 > #关闭侧边按钮 {
+	div#侧边按钮容器 > button#关闭侧边按钮 {
 		display: flex;
 	}
-	div#侧边按钮容器:has(> .拥有更多选项:hover) > #关闭侧边按钮 {
+	div#侧边按钮容器:has(> .拥有更多选项:hover) > button#关闭侧边按钮 {
 		border: var(--border);
 		border-radius: 50%;
-		opacity: 1 !important;
+		opacity: 1;
 		pointer-events: auto;
 		transform: translateX(-4px);
 	}
@@ -946,15 +943,16 @@ div#侧边按钮容器 > #网易云音乐 {
 	display: none;
 }
 
-#网易云音乐 #网易云音乐封面.网易云加载闪烁,
-#网易云音乐 #网易云音乐封面.网易云加载闪烁 + svg {
-	animation-name: 高频闪烁 !important;
-	animation-duration: 3s !important;
-	animation-play-state: running !important;
-}
 #网易云音乐 .网易云封面旋转#网易云音乐封面 {
 	animation-name: 匀速转;
 	border-radius: 50%;
+}
+/* 本条须排在 .网易云封面旋转 之后：两者同特异性，靠源序让加载闪烁压过旋转，避免 !important */
+#网易云音乐 #网易云音乐封面.网易云加载闪烁,
+#网易云音乐 #网易云音乐封面.网易云加载闪烁 + svg {
+	animation-name: 高频闪烁;
+	animation-duration: 3s;
+	animation-play-state: running;
 }
 
 @supports selector(:has(*)) {
@@ -1277,17 +1275,14 @@ html.深色 #切换主题 > #主题控件 > button#背景模式 {
 	width: 100%;
 	z-index: 1;
 }
+.播放排行:hover > li::before {
+	content: var(--tip, "");
+}
 .播放排行 > li:focus-visible::before {
 	content: var(--tip-fv, "");
 }
-.播放排行:hover > li::before {
-	content: var(--tip, "") !important;
-}
-.播放排行 > li:focus-visible::before {
-	content: var(--tip-fv, "") !important;
-}
 .播放排行 > li:hover::before {
-	content: var(--tip, "") !important;
+	content: var(--tip, "");
 }
 .播放排行 > li:hover::before,
 .播放排行 > li:focus-visible::before {
