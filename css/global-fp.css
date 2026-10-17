@@ -168,7 +168,7 @@ spoiler {
 /* 不支持 :has() 的浏览器（如 Chrome 86）会整条规则失效，连 :hover 一起失效，故需兜底副本 */
 @supports selector(:has(*)) {
 	spoiler:hover,
-	main:focus-within:has(:focus-visible) spoiler {
+	main:has(:focus-visible) spoiler {
 		color: #fff !important;
 	}
 }
@@ -236,6 +236,7 @@ article h2:has(svg)::before {
 	height: 4px;
 	bottom: -0.3em;
 }
+/* TODO: shit code */
 main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg))::before {
 	background-color: var(--accent-color-transparent);
 	width: 4px;
@@ -511,7 +512,9 @@ main {
 	width: calc(100vw - 90px);
 	max-width: 1600px;
 }
-main > * {
+main > .左,
+main > .右,
+main > #分界线 {
 	padding-top: 64px;
 }
 main > .左,
@@ -570,7 +573,7 @@ section#我 #联系方式 {
 	justify-content: center;
 	margin: 0 -8px;
 }
-section#我 #联系方式 > * {
+section#我 #联系方式 > a {
 	margin: 0 4px;
 }
 .rss {
