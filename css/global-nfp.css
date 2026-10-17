@@ -375,7 +375,6 @@ a:has(img, svg) {
 	text-decoration: none;
 }
 
-
 abbr {
 	cursor: help;
 	text-decoration: dashed underline var(--accent-color);
@@ -1296,9 +1295,12 @@ html.深色 #切换主题 > #主题控件 > button#背景模式 {
 	border-radius: 4px;
 	padding: 2px;
 	margin: 4px;
+	transition: var(--transition) background-color;
 }
 .播放排行 > li:hover > .歌曲信息,
-.播放排行 > li:hover > .排名 {
+.播放排行 > li:hover > .排名,
+.播放排行 > li:focus-visible > .歌曲信息,
+.播放排行 > li:focus-visible > .排名 {
 	background-color: transparent;
 }
 .播放排行 > li > .歌曲信息 > :first-child {
