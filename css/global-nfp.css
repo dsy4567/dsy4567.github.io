@@ -374,12 +374,7 @@ a:focus-visible {
 a:has(img, svg) {
 	text-decoration: none;
 }
-/* a.外链::after {
-	content: "";
-}
-a.外链:has(img, svg)::after {
-	content: "";
-} */
+
 
 abbr {
 	cursor: help;
