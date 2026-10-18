@@ -1377,10 +1377,6 @@ section#评论区 .评论 .评论正文 {
 		--cover-scroll-range: min(calc(64vh + 56px), 496px);
 	}
 
-	main > .左 > section:last-child,
-	main > .左 > article:last-child {
-		margin-bottom: min(calc(var(--height) + 32px), 420px);
-	}
 	main > .左::before,
 	main > .左::after {
 		content: "";

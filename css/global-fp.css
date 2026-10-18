@@ -670,11 +670,15 @@ div#侧边按钮容器 {
 	}
 	main .左 {
 		--height: 45vh;
-		--maxh: 390px;
+		--maxh: 432px;
 		height: var(--height);
 		scrollbar-width: none;
 		z-index: 0;
 		top: 50px;
+	}
+	main > .左 > section:last-child,
+	main > .左 > article:last-child {
+		margin-bottom: min(calc(var(--height) + -32px), 380px);
 	}
 	main > .左::-webkit-scrollbar {
 		display: none;
