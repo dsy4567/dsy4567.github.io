@@ -683,9 +683,11 @@ div#侧边按钮容器 > :is(button, .拥有更多选项) {
 	box-sizing: border-box;
 	justify-content: center;
 }
-/* 黑色半透明全屏遮罩，挡住点击事件，点击遮罩/收起按钮自动隐藏 */
-/* body::after {
-	content: "";
+/* 黑色半透明全屏遮罩，挡住面板外的点击，点击遮罩/收起按钮自动隐藏。
+   元素由 js/main.js 动态创建，紧邻 #侧边按钮容器 之后（与容器同为 body 的直接子元素），
+   故这里用兄弟选择器而非 body:has()：展开任一 .拥有更多选项（悬停或内部聚焦）时
+   由 JS 添加 .显示，指针离开面板即移除 */
+div#侧边按钮容器 + #侧边遮罩 {
 	position: fixed;
 	top: 0;
 	width: 100%;
@@ -700,17 +702,11 @@ div#侧边按钮容器 > :is(button, .拥有更多选项) {
 	z-index: 1006;
 	pointer-events: none;
 }
-@supports selector(:has(*)) {
-	body:has(
-			> div#侧边按钮容器 > .拥有更多选项:hover,
-			> div#侧边按钮容器 > .拥有更多选项:focus-visible,
-			> div#侧边按钮容器 > .拥有更多选项 :focus-visible
-		)::after {
-		opacity: 0.7;
-		pointer-events: auto;
-		transition-delay: var(--transition);
-	}
-} */
+div#侧边按钮容器 + #侧边遮罩.显示 {
+	opacity: 0.7;
+	pointer-events: auto;
+	transition-delay: var(--transition);
+}
 
 @supports selector(:has(*)) {
 	div#侧边按钮容器:hover > :is(.拥有更多选项, button),
