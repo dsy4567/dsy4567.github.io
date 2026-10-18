@@ -34,8 +34,7 @@ main > #分界线 {
 	visibility: visible;
 }
 .进度条外面,
-div#侧边按钮容器,
-#网易云音乐-最近在听 .播放排行 > li > * {
+div#侧边按钮容器 {
 	display: block;
 }
 
@@ -217,7 +216,6 @@ div#侧边按钮容器,
 /* 循环动画 */
 #网易云音乐-最近在听.加载中 .精选歌词容器 .单句,
 #网易云音乐-最近在听.加载中 .精选歌词容器 .歌曲信息,
-#网易云音乐-最近在听.加载中 > .播放排行 > div,
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面,
 div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面 + svg {
 	animation-iteration-count: infinite;
@@ -330,14 +328,15 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 	main > .左,
 	main > #分界线,
 	footer,
-	body > #导航栏,
-	body > #侧边按钮容器 {
+	nav#导航栏,
+	body > #侧边按钮容器,
+	body > #侧边遮罩 {
 		display: none !important;
 	}
 }
 
 /* ==================== ::* ==================== */
-::selection {
+body::selection {
 	background-color: var(--accent-color);
 	color: var(--accent-text-color);
 }
@@ -481,19 +480,15 @@ div.通知 {
 :root {
 	--cover-scroll-range: calc(45vh + 108px);
 }
-body > #导航栏 {
+nav#导航栏 {
 	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
 	transition:
 		var(--transition) background-color,
 		var(--transition) transform;
 	backdrop-filter: blur(4px);
 }
-body.顶部 #导航栏 {
-	/* box-shadow: none; */
-}
-body.隐藏导航栏 #导航栏 {
+.隐藏导航栏 #导航栏 {
 	transform: translateY(calc(-50px - 8px));
-	/* box-shadow: none; */
 }
 
 /* ==================== 导航栏和进度条 ==================== */
@@ -1417,6 +1412,18 @@ section#评论区 .评论 .评论正文 {
 		main .右 {
 			animation-timeline: scroll(root);
 			animation-range: 1px var(--cover-scroll-range);
+		}
+
+		/* 挡住右栏底部溢出阴影 */
+		main > .右::after {
+			content: "";
+			background-color: var(--bg-color);
+			display: block;
+			position: absolute;
+			bottom: -32px;
+			z-index: -1;
+			width: 100%;
+			height: 32px;
 		}
 	}
 }

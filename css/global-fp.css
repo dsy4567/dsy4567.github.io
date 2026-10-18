@@ -6,13 +6,14 @@
 	--hostname: "dsy4567.icu";
 }
 
-/* ==================== 延后显示元素 ==================== */
+/* ==================== 延后显示元素/本来就需要隐藏的元素 ==================== */
 main > #分界线 {
 	visibility: hidden;
 }
 .进度条外面,
 .标签 > div,
-#网易云音乐-最近在听 .播放排行 > div > * {
+div#侧边按钮容器,
+section#我 > br {
 	display: none;
 }
 
@@ -432,7 +433,7 @@ img:is(.特小尺寸, .小尺寸, .中尺寸, .大尺寸) {
 }
 
 /* ==================== 导航栏、进度条、顶部大图 ==================== */
-body > #导航栏 {
+nav#导航栏 {
 	background-color: transparent;
 	box-sizing: border-box;
 	border: var(--border);
@@ -451,7 +452,7 @@ body > #导航栏 {
 	transform: translateY(0);
 }
 @media (max-height: 240px) {
-	body > #导航栏 {
+	nav#导航栏 {
 		position: relative;
 	}
 }
@@ -465,7 +466,7 @@ body > #导航栏 {
 #导航栏 > .右 > a {
 	margin: 0 8px;
 }
-#导航栏 a {
+nav#导航栏 a {
 	color: var(--text-color);
 	display: flex;
 	align-items: center;
@@ -476,7 +477,7 @@ body > #导航栏 {
 	font-size: x-large;
 	font-weight: 600;
 }
-body > #导航栏,
+nav#导航栏,
 body > #顶部大图 {
 	width: calc(100% - 90px - 18px);
 	max-width: calc(1600px - 16px);
@@ -503,8 +504,8 @@ body > #顶部大图 > .顶部大图层 {
 	position: absolute;
 	transition: var(--transition) opacity;
 }
-/* 最底下的基线层：无变化。始终不透明且不参与过渡，作为兜底与背景，新层直接在其上淡入，
-   避免首屏就存在的 .显示 层被重新赋值为透明；:first-child 即 DOM 中最底层的一条封面 */
+/* 最底下的基线层无变化。始终不透明且不参与过渡，作为兜底与背景，新层直接在其上淡入，
+   避免首屏就存在的 .显示 层被重新赋值为透明 */
 body > #顶部大图 > .顶部大图层:first-child {
 	opacity: 1;
 	transition: none;
@@ -514,11 +515,9 @@ body > #顶部大图 > .顶部大图层 > img {
 	object-fit: cover;
 	user-select: none;
 	height: auto;
-	/* 图片按宽度缩放后不足一屏（横图）时退化为铺满容器，等价于原来的 background-size: cover */
 	min-height: 100%;
 	width: 100%;
 }
-/* 最顶层的显示层：由透明变不透明 */
 body > #顶部大图 > .顶部大图层.显示 {
 	opacity: 1;
 }
@@ -608,9 +607,6 @@ section#我 #关注被关注码龄 {
 	font-size: smaller;
 	margin-bottom: 2em;
 }
-section#我 > br {
-	display: none;
-}
 
 #一言 .语句 {
 	text-decoration: underline wavy var(--accent-color);
@@ -643,20 +639,9 @@ footer#copyright {
 	overflow-x: auto;
 }
 
-/* ==================== 侧边按钮-通用 ==================== */
-div#侧边按钮容器 {
-	display: none;
-}
-
-/* ==================== 首页 ==================== */
-
-/* ==================== 博客 ==================== */
-
-/* ==================== 友链 ==================== */
-
 /* ==================== 移动端 ==================== */
 @media only screen and (max-width: 1080px) {
-	body > #导航栏 {
+	nav#导航栏 {
 		width: calc(100% - 18px);
 	}
 	body > #顶部大图 {
@@ -709,16 +694,6 @@ div#侧边按钮容器 {
 		position: relative;
 		padding: 16px 0 0 0;
 	}
-	main > .右::after {
-		content: "";
-		background-color: var(--bg-color);
-		display: block;
-		position: absolute;
-		bottom: -32px;
-		z-index: -1;
-		width: 100%;
-		height: 32px;
-	}
 
 	@supports (animation-timeline: scroll()) {
 		body > #顶部大图 {
@@ -728,7 +703,7 @@ div#侧边按钮容器 {
 }
 
 /* ==================== 网易云音乐小组件 ==================== */
-/* 骨架在 light DOM，需文档级样式；此处只负责占住高度，避免布局偏移 */
+/* 骨架在 light DOM，此处仅占位 */
 x-163music {
 	display: flex;
 	justify-content: center;
