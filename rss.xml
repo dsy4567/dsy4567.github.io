@@ -4,7 +4,7 @@
     <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog.html" />
     <link rel="self" type="application/atom+xml" href="https://dsy4567.github.io/rss.xml" />
     <updated>2026-10-13T13:50:49.779Z</updated>
-    <generator uri="https://github.com/dsy4567/dsy4567.github.io/">dsy4567/dsy4567.github.io</generator>
+    <generator uri="https://github.com/dsy4567/dsy4567.github.io">dsy4567/dsy4567.github.io</generator>
     <entry>
         <title>Markdown 特性测试</title>
         <link rel="alternate" type="text/html" href="https://dsy4567.github.io/blog/markdown-test/" />
@@ -468,7 +468,8 @@ echo "你好，世界"
 pkg install git nodejs-lts nginx python3 openssl-tool wget openssh vim screen -y
 pkg up
 
-#在这里查 code-server 的最新版本号，然后替换下面的版本号 #https://github.com/search?q=repo%3Atermux-user-repository%2Fdists%20dists%2Ftur-packages%2Ftur%2Fbinary-aarch64%2FPackages%20code-server&amp;type=code
+#在这里查 code-server 的最新版本号，然后替换下面的版本号
+#https://github.com/search?q=repo%3Atermux-user-repository%2Fdists%20dists%2Ftur-packages%2Ftur%2Fbinary-aarch64%2FPackages%20code-server&amp;type=code
 wget https://ghproxy.com/https://github.com/termux-user-repository/dists/releases/download/0.1/code-server_4.17.1_aarch64.deb -O code-server.deb
 apt-get --fix-broken install ./code-server.deb -y
 #网快的也可以用这个
@@ -563,7 +564,8 @@ IP.1 = &lt;手机内网IP&gt;
 IP.2 = 127.0.0.1
 </code></pre>
 <p>按 <kbd>Esc</kbd>，输入 <code>:wq</code> 并按回车后执行命令 <code>vim ./cert.conf</code>，再按 <kbd>i</kbd> 进入编辑模式，粘贴以下内容：</p>
-<pre><code class="language-properties">authorityKeyIdentifier=keyid,issuer basicConstraints=CA:FALSE
+<pre><code class="language-properties">authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
 keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
@@ -726,17 +728,17 @@ code-server --host 0.0.0.0 --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/
 <blockquote>
 <p><a href="https://www.gov.cn/zhengce/2020-12/26/content_5574802.htm">https://www.gov.cn/zhengce/2020-12/26/content_5574802.htm</a></p>
 </blockquote>
-<p><strong>第六条</strong>　计算机信息网络直接进行国际联网，必须使用邮电部国家公用电信网提供的国际出入口信道。</p>
+<p>  <strong>第六条</strong>　计算机信息网络直接进行国际联网，必须使用邮电部国家公用电信网提供的国际出入口信道。</p>
 <p>任何单位和个人不得自行建立或者使用其他信道进行国际联网。</p>
-<p><strong>第十条</strong>　个人、法人和其他组织(以下统称用户)使用的计算机或者计算机信息网络，需要进行国际联网的，必须通过接入网络进行国际联网。</p>
+<p>  <strong>第十条</strong>　个人、法人和其他组织(以下统称用户)使用的计算机或者计算机信息网络，需要进行国际联网的，必须通过接入网络进行国际联网。</p>
 <p>前款规定的计算机或者计算机信息网络，需要接入网络的，应当征得接入单位的同意，并办理登记手续。</p>
-<p><strong>第十四条</strong>　违反本规定第六条、第八条和第十条的规定的，由公安机关责令停止联网，给予警告，可以并处 15000 元以下的罚款；有违法所得的，没收违法所得。</p>
+<p>  <strong>第十四条</strong>　违反本规定第六条、第八条和第十条的规定的，由公安机关责令停止联网，给予警告，可以并处 15000 元以下的罚款；有违法所得的，没收违法所得。</p>
 <h3 id="计算机信息网络国际联网安全保护管理办法节选">计算机信息网络国际联网安全保护管理办法(节选)</h3>
 <blockquote>
 <p><a href="http://www.gov.cn/zhengce/2020-12/26/content_5574873.htm">http://www.gov.cn/zhengce/2020-12/26/content_5574873.htm</a></p>
 </blockquote>
-<p><strong>第四条</strong>　任何单位和个人不得利用国际联网危害国家安全、泄露国家秘密，不得侵犯国家的、社会的、集体的利益和公民的合法权益，不得从事违法犯罪活动。</p>
-<p><strong>第五条</strong>　任何单位和个人不得利用国际联网制作、复制、查阅和传播下列信息：</p>
+<p>  <strong>第四条</strong>　任何单位和个人不得利用国际联网危害国家安全、泄露国家秘密，不得侵犯国家的、社会的、集体的利益和公民的合法权益，不得从事违法犯罪活动。</p>
+<p>  <strong>第五条</strong>　任何单位和个人不得利用国际联网制作、复制、查阅和传播下列信息：</p>
 <p>  （一）煽动抗拒、破坏宪法和法律、行政法规实施的；</p>
 <p>  （二）煽动颠覆国家政权，推翻社会主义制度的；</p>
 <p>  （三）煽动分裂国家、破坏国家统一的；</p>
@@ -1013,7 +1015,9 @@ B
 1
 0
 
-# 提示 length(A),length(B)&lt;=10^4
+# 提示
+
+length(A),length(B)&lt;=10^4
 
 A,B&gt;0
 每个点3s。
