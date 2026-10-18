@@ -663,7 +663,7 @@ div#侧边按钮容器 {
 		top: max(0px, calc(75vh - 46px * 4));
 	}
 }
-div#侧边按钮容器 > :is(button, div) {
+div#侧边按钮容器 > :is(button, .拥有更多选项) {
 	box-shadow:
 		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
 		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
@@ -713,11 +713,12 @@ body::after {
 
 @supports selector(:has(*)) {
 	div#侧边按钮容器:hover > :is(.拥有更多选项, button),
-	div#侧边按钮容器:has(:focus-visible) > :is(.拥有更多选项, button) {
+	div#侧边按钮容器:has(:focus-visible)
+		> :is(.拥有更多选项, button):is(:focus-within, :focus-visible) {
 		opacity: 1;
 	}
 	div#侧边按钮容器 > :is(:hover, :focus-visible),
-	div#侧边按钮容器 > :has(:focus-visible):is(.拥有更多选项, button),
+	div#侧边按钮容器:has(:focus-visible) > :is(.拥有更多选项, button):focus-within,
 	div#侧边按钮容器 > #关闭侧边按钮 {
 		border-radius: unset;
 		border-top-left-radius: 50%;
@@ -775,7 +776,7 @@ div#侧边按钮容器 > .拥有更多选项:hover::before {
 
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:is(:hover, :focus-visible),
-	div#侧边按钮容器 > .拥有更多选项:has(:focus-visible) {
+	div#侧边按钮容器:has(:focus-visible) > .拥有更多选项:focus-within {
 		border-bottom-left-radius: 0;
 		z-index: 1;
 	}
@@ -869,8 +870,8 @@ div#侧边按钮容器 .更多选项 > button:active {
 	background-color: var(--overlay);
 }
 
-div#侧边按钮容器 .更多选项#播放列表,
-div#侧边按钮容器 .更多选项#所有主题 {
+#网易云音乐 #播放列表,
+#切换主题 #所有主题 {
 	border-left: var(--border);
 	border-bottom: var(--border);
 }
@@ -953,7 +954,7 @@ div#侧边按钮容器 > #网易云音乐 {
 
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > #网易云音乐:is(:hover, :focus-visible),
-	div#侧边按钮容器 > #网易云音乐:has(:focus-visible) {
+	div#侧边按钮容器:has(:focus-visible) > #网易云音乐:focus-within {
 		transform: translateX(calc((var(--container-width) - 16px) * -1));
 	}
 }
@@ -1098,7 +1099,7 @@ div#侧边按钮容器 > #切换主题 {
 }
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > #切换主题:is(:hover, :focus-visible),
-	div#侧边按钮容器 > #切换主题:has(:focus-visible) {
+	div#侧边按钮容器:has(:focus-visible) > #切换主题:focus-within {
 		transform: translateX(calc(-32px * 3 - 6px));
 	}
 }
