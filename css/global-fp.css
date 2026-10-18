@@ -108,7 +108,9 @@ main > #分界线 {
 	--border-width: 1px;
 	--border-style: solid;
 	--border-color: var(--overlay);
+	--border-color-strong: var(--overlay-strong);
 	--border: var(--border-width) var(--border-style) var(--border-color);
+	--border-strong: var(--border-width) var(--border-style) var(--border-color-strong);
 	--border-radius: 12px;
 	--footer-blank-height: 50vh;
 	--line-height: 1.6;
