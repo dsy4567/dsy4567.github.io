@@ -977,7 +977,7 @@ const 小组件内容样式 = `
 	}
 	.卡片 {
 		background-color: var(--bg-color);
-		border: 1px solid var(--overlay);
+		border: var(--border);
 		border-radius: 64px;
 		cursor: pointer;
 		display: flex;
