@@ -498,7 +498,7 @@ body.隐藏导航栏 #导航栏 {
 
 /* ==================== 导航栏和进度条 ==================== */
 .进度条外面 {
-	background-color: rgba(127, 127, 127, 0);
+	background-color: transparent;
 	transition:
 		var(--transition-slow) opacity,
 		var(--transition) background-color;
@@ -513,8 +513,8 @@ body.隐藏导航栏 #导航栏 {
 	z-index: 1005;
 }
 .进度条外面.显示 {
-	background-color: rgba(127, 127, 127, 0.3);
-	opacity: 1;
+	background-color: #000;
+	opacity: 0.7;
 	pointer-events: auto;
 }
 .进度条 {
