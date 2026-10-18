@@ -165,17 +165,14 @@ spoiler {
 	color: #000;
 	transition: var(--transition) color;
 }
-/* 不支持 :has() 的浏览器（如 Chrome 86）会整条规则失效，连 :hover 一起失效，故需兜底副本 */
-@supports selector(:has(*)) {
-	spoiler:hover,
-	main:has(:focus-visible) spoiler {
-		color: #fff;
-	}
+main:focus-within spoiler {
+	color: #fff;
 }
-@supports not selector(:has(*)) {
-	spoiler:hover {
-		color: #fff;
-	}
+main:focus-within:hover spoiler {
+	color: #000;
+}
+spoiler:hover {
+	color: #fff !important;
 }
 
 svg[data-icon] {
@@ -211,8 +208,10 @@ article video {
 	height: auto;
 }
 
-section h2:has(svg),
-article h2:has(svg) {
+/* 不支持 :has() 的浏览器（如 Chrome 86）会整条规则失效，连 :hover 一起失效，故需 @supports 兜底副本 */
+/* 但此类样式无替代方案，故不使用 @supports */
+section h2:has(> svg),
+article h2:has(> svg) {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
@@ -220,16 +219,16 @@ article h2:has(svg) {
 	margin-left: 0;
 	padding-left: 0;
 }
-section h2:has(svg)::before,
-article h2:has(svg)::before,
-main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg))::before {
+section h2:has(> svg)::before,
+article h2:has(> svg)::before,
+main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(> svg))::before {
 	content: "";
 	border-radius: var(--border-radius);
 	display: block;
 	position: absolute;
 }
-section h2:has(svg)::before,
-article h2:has(svg)::before {
+section h2:has(> svg)::before,
+article h2:has(> svg)::before {
 	background: linear-gradient(to right, var(--accent-color), var(--accent-color-transparent));
 	width: 4em;
 	max-width: 50%;
@@ -237,7 +236,7 @@ article h2:has(svg)::before {
 	bottom: -0.3em;
 }
 /* TODO: shit code */
-main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(svg))::before {
+main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(> svg))::before {
 	background-color: var(--accent-color-transparent);
 	width: 4px;
 	height: 100%;
