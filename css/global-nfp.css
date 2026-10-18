@@ -1051,7 +1051,6 @@ div#侧边按钮容器 > #网易云音乐 {
 }
 #网易云音乐 > #播放列表 > li.正在播放 {
 	background-color: var(--accent-color-transparent);
-	/* cursor: ew-resize; */
 }
 #网易云音乐 > #播放列表 > li.正在播放::after,
 #网易云音乐 > #播放列表 > li.正在播放::before {
