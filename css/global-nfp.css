@@ -577,14 +577,14 @@ main > #分界线 {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	height: calc(100vh - 16px);
+	height: calc(100vh - 80px);
 	transition:
 		var(--transition) background-color,
 		var(--transition) border;
 	/* transform: translateX(-4px); */
 }
 body.宽屏 > main > #分界线 {
-	margin-left: -40px;
+	margin-left: -26px;
 }
 main > #分界线 > .特小尺寸 {
 	background: var(--surface-1);
@@ -600,11 +600,9 @@ main > #分界线 > .特小尺寸 {
 main > #分界线 > .特小尺寸 > path {
 	transform: translateX(-2px);
 }
-body.宽屏 > main #分界线:hover,
-main > #分界线:hover > .特小尺寸 {
+main > #分界线:hover > .特小尺寸,
+main > #分界线:focus-visible > .特小尺寸 {
 	opacity: 1;
-	max-width: var(--width);
-	max-height: var(--height);
 }
 body.宽屏 > main #分界线 > .特小尺寸 {
 	transform: rotateY(180deg);
@@ -615,7 +613,7 @@ body.宽屏 > main .左 {
 	width: 0%;
 }
 body.宽屏 > main .右 {
-	width: calc(100% - 20px);
+	width: calc(100% + 24px);
 }
 
 /* ==================== 左栏 ==================== */

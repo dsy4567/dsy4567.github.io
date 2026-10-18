@@ -129,6 +129,12 @@ body {
 	padding: 0;
 }
 
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
 a,
 svg {
 	color: var(--link-color);
@@ -459,7 +465,7 @@ body > #导航栏 {
 body > #导航栏,
 body > #顶部大图 {
 	width: calc(100% - 90px - 18px);
-	max-width: calc(1600px - 27px);
+	max-width: calc(1600px - 16px);
 }
 
 body > #顶部大图 {
@@ -519,11 +525,11 @@ main > #分界线 {
 main > .左,
 main > .右 {
 	min-width: 0;
-	padding-left: 4px;
+	padding-left: 6px;
 }
 
 main > .左 {
-	--maxh: calc(100vh - 96px);
+	--maxh: calc(100vh - 16px);
 	border-radius: var(--border-radius);
 	overflow-y: auto;
 	scrollbar-gutter: stable;
@@ -544,10 +550,15 @@ main > .右 {
 main > #分界线 {
 	border: 8px solid var(--bg-color);
 	border-radius: var(--border-radius);
-	margin-top: 80px;
+	box-sizing: content-box;
+	margin: 80px 0 0 0;
 	position: sticky;
 	top: 0;
 	width: 4px;
+}
+main > #分界线 > .特小尺寸 {
+	max-width: var(--width);
+	max-height: var(--height);
 }
 
 /* ==================== 左栏 ==================== */
