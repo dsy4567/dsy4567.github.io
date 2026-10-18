@@ -761,9 +761,9 @@ div#侧边按钮容器 > .拥有更多选项::before {
 	content: "";
 	background-color: transparent;
 	left: 0;
-	bottom: 0;
+	bottom: -7px;
 	width: var(--container-width);
-	height: calc(100% + 5px);
+	height: calc(100% + 7px);
 	visibility: visible;
 	transition: var(--transition) visibility;
 }
@@ -1106,6 +1106,10 @@ div#侧边按钮容器 > #切换主题 {
 	div#侧边按钮容器 > #切换主题:focus-within {
 		transform: translateX(calc(-32px * 3 - 6px));
 	}
+}
+div#侧边按钮容器 > #切换主题::before {
+	height: 100%;
+	bottom: 0;
 }
 
 /* 第一行：背景模式切换、自定义强调色调色盘 */
