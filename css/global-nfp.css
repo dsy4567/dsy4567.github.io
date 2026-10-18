@@ -683,7 +683,7 @@ div#侧边按钮容器 > :is(button, .拥有更多选项) {
 	justify-content: center;
 }
 /* 黑色半透明全屏遮罩，挡住点击事件，点击遮罩/收起按钮自动隐藏 */
-body::after {
+/* body::after {
 	content: "";
 	position: fixed;
 	top: 0;
@@ -709,7 +709,7 @@ body::after {
 		pointer-events: auto;
 		transition-delay: var(--transition);
 	}
-}
+} */
 
 @supports selector(:has(*)) {
 	div#侧边按钮容器:hover > :is(.拥有更多选项, button),
