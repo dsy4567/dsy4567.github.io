@@ -34,8 +34,6 @@ main > #分界线 {
 
 /* ==================== @media ==================== */
 :root {
-	--transition: 0.3s;
-	--transition-slow: 1s;
 	--bg-color: #f7f7f7;
 	--surface-1: #ffffff;
 	--surface-2: #f2f2f2;
@@ -44,7 +42,6 @@ main > #分界线 {
 	--overlay-strong: #888;
 	--selection-bg: #0006;
 	color-scheme: light;
-	--footer-blank-height: 50vh;
 }
 @media (prefers-color-scheme: dark) {
 	:root {
@@ -107,17 +104,26 @@ main > #分界线 {
 }
 
 /* ==================== html/body/通用元素 ==================== */
+:root {
+	--border-width: 1px;
+	--border-style: solid;
+	--border-color: var(--overlay);
+	--border: var(--border-width) var(--border-style) var(--border-color);
+	--border-radius: 12px;
+	--footer-blank-height: 50vh;
+	--line-height: 1.6;
+	--transition: 0.3s;
+	--transition-slow: 1s;
+}
 html {
 	/* 强调色缺省（中性）：未设置时回退为文字色/叠层色，自动跟随背景深浅 */
 	--accent-color: var(--text-color);
 	--accent-color-transparent: var(--overlay);
 	--accent-text-color: var(--bg-color);
 	--link-color: var(--text-color);
-	--border-radius: 12px;
 	scroll-behavior: smooth;
 }
 body {
-	--line-height: 1.6;
 	background-color: var(--bg-color);
 	color: var(--text-color);
 	display: flex;
