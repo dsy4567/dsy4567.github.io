@@ -117,6 +117,7 @@ html {
 	scroll-behavior: smooth;
 }
 body {
+	--line-height: 1.6;
 	background-color: var(--bg-color);
 	color: var(--text-color);
 	display: flex;
@@ -124,7 +125,7 @@ body {
 	align-items: center;
 	font-family: "ZCOOL KuaiLe", sans-serif;
 	font-weight: 400;
-	line-height: 1.6;
+	line-height: var(--line-height);
 	margin: 0;
 	padding: 0;
 }
