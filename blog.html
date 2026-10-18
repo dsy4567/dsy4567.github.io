@@ -247,7 +247,7 @@
 						文章列表加载失败：可能是网络问题，也可能是你的浏览器过于陈旧，无法运行本站的脚本。
 					</p>
 					<p>
-						<a href="">点击重试</a>，或<a
+						<a href="">点击重试</a>，或手动刷新页面，或<a
 							href="/blog/index.html?no-redirect=unsupported"
 							>查看纯静态的文章目录</a
 						>。
@@ -309,6 +309,9 @@
 						#列表加载失败:not(.显示) {
 							display: none;
 						}
+					}
+					body.模块加载失败 #列表加载失败 {
+						display: block;
 					}
 				</style>
 				<section class="骨架屏占位">

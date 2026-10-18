@@ -24,13 +24,33 @@ let 路径 = 获取清理后当前路径(),
 	正在动态加载 = false;
 
 //#region 加载模块、动态加载
+/** 加载失败的模块名集合：因网络等问题导致 import 失败的模块记录在此，下次加载时为其附加随机查询字符串重试 */
+const 加载失败的模块 = new Set();
+/** 模块名 → 加载该模块时成功用过的随机查询字符串：一旦某个随机地址加载成功就固定复用它，之后不再重新生成随机值，
+ * 避免同一模块出现两个 URL——那会重复请求，并让浏览器重新求值出第二个模块实例（模块级状态被复制） */
+const 模块随机查询 = new Map();
 async function 加载模块() {
 	路径 = 获取清理后一级路径();
 	let 路径2 = 获取清理后当前路径();
 	for (const s of 加载清单[路径] || []) {
-		const i = import(`/js/${s}.js`);
+		// 只用成功过的随机 query（如有）；曾加载失败但尚无成功记录的，才生成新的随机 query：
+		// 浏览器会按 URL 缓存失败的模块请求，复用上次失败的地址不会重新发起请求，故每次重试都换一个未请求过的 URL
+		const 随机查询 =
+			模块随机查询.get(s) || (加载失败的模块.has(s) ? String(Math.random()) : "");
+		const i = import(`/js/${s}.js${随机查询 ? "?r=" + 随机查询 : ""}`);
 		await schedulerYield();
-		(await i).main(路径2);
+		/** @type {{ main: (路径2: string) => any }} */
+		let 模块;
+		try {
+			模块 = await i;
+		} catch (e) {
+			加载失败的模块.add(s);
+			throw e;
+		}
+		// 本次导入用的随机 query 确实成功了，记下来供后续复用；无随机 query 的模块不记录，下次仍按原地址导入
+		if (随机查询) 模块随机查询.set(s, 随机查询);
+		加载失败的模块.delete(s);
+		模块.main(路径2);
 	}
 	路径 = 路径2;
 }
@@ -68,31 +88,40 @@ function 动态加载(元素) {
 			// 先让正文容器可编程聚焦；preventScroll 避免打断 popstate 的历史滚动恢复与上面的回到顶部
 			右.tabIndex = -1;
 			右.focus({ preventScroll: true });
-			加载模块().finally(() => {
-				正在动态加载 = false;
+			加载模块()
+				.then(() => {
+					document.body.classList.toggle("模块加载失败", false);
+				})
+				.catch(e => {
+					document.body.classList.toggle("模块加载失败", true);
+					显示或隐藏进度条(false);
+					console.error(e);
+				})
+				.finally(() => {
+					正在动态加载 = false;
 
-				if (location.hash) {
-					schedulerYield();
+					if (location.hash) {
+						schedulerYield();
 
-					let /** @type {Element | null} */ 目标 = null,
-						选择器 = `[id="${decodeURI(location.hash.substring(1))}"]`;
-					// 滚动到hash位置
-					// 不能通过赋值 location.hash（置空再恢复）触发滚动：赋值 hash 属于 fragment 导航，
-					// 会 push 新历史条目，既污染后退栈，也会清空前进栈（导致后退后前进按钮变灰）
-					try {
-						目标 = 右.querySelector(选择器);
-						目标?.nextElementSibling?.classList.add("标记");
-						目标?.scrollIntoView({
-							behavior: "smooth",
-						});
-					} catch (e) {
-						console.error(e);
+						let /** @type {Element | null} */ 目标 = null,
+							选择器 = `[id="${decodeURI(location.hash.substring(1))}"]`;
+						// 滚动到hash位置
+						// 不能通过赋值 location.hash（置空再恢复）触发滚动：赋值 hash 属于 fragment 导航，
+						// 会 push 新历史条目，既污染后退栈，也会清空前进栈（导致后退后前进按钮变灰）
+						try {
+							目标 = 右.querySelector(选择器);
+							目标?.nextElementSibling?.classList.add("标记");
+							目标?.scrollIntoView({
+								behavior: "smooth",
+							});
+						} catch (e) {
+							console.error(e);
+						}
+						if (!目标) console.warn("找不到元素", 选择器);
 					}
-					if (!目标) console.warn("找不到元素", 选择器);
-				}
 
-				渲染图标();
-			});
+					渲染图标();
+				});
 		} catch (e) {
 			console.error(e);
 			open(元素.href, "_self");
@@ -149,7 +178,14 @@ _global["main.js"] = () => ({
 	动态加载,
 });
 
-加载模块();
+加载模块()
+	.then(() => {
+		document.body.classList.toggle("模块加载失败", false);
+	})
+	.catch(e => {
+		document.body.classList.toggle("模块加载失败", true);
+		console.error(e);
+	});
 //#endregion
 
 //#region 网易云音乐
