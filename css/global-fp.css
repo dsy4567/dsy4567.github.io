@@ -223,6 +223,11 @@ article video {
 	height: auto;
 }
 
+section > h2:first-child,
+article > h2:first-child {
+	margin-top: 12px;
+}
+
 /* 不支持 :has() 的浏览器（如 Chrome 86）会整条规则失效，连 :hover 一起失效，故需 @supports 兜底副本 */
 /* 但此类样式无替代方案，故不使用 @supports */
 section h2:has(> svg),
