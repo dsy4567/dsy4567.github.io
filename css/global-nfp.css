@@ -966,35 +966,33 @@ div#侧边按钮容器 > #网易云音乐 {
 }
 
 #网易云音乐 #歌词 {
-	border: solid transparent;
-	border-width: 12px 48px 12px 0;
+	--font-size: 12px;
+	background-color: transparent;
 	color: var(--accent-color);
-	font-size: 12px;
+	font-size: var(--font-size);
 	position: absolute;
 	user-select: none;
 	overflow: hidden;
 	pointer-events: none;
-	right: 0;
+	right: 35px;
 	text-align: end;
 	word-wrap: break-word;
-	width: 256px;
+	width: max-content;
 	min-width: 64px;
 	max-width: min(calc(100vw - 306px), 33vw);
-	transition: var(--transition) color;
+	height: calc(var(--line-height) * var(--font-size));
+	padding: 4px;
+	transition: var(
+	--transition) color, var(--transition) background-color;
 	transition-delay: 0s;
 }
 @supports selector(:has(*)) {
 	div#侧边按钮容器:has(.拥有更多选项:is(:focus-visible, :hover), .拥有更多选项 :focus-visible)
 		> .拥有更多选项#网易云音乐:is(:hover, :focus-visible, :focus-within)
 		#歌词 {
+		background-color: #333;
 		color: #fff;
 		transition-delay: var(--transition);
-	}
-	#网易云音乐:is(:hover, :focus-visible) #歌词,
-	#网易云音乐:has(:focus-visible) #歌词 {
-		color: #fff;
-		user-select: auto;
-		pointer-events: auto;
 	}
 }
 @supports not selector(:has(*)) {
