@@ -747,7 +747,6 @@ body::after {
 /* 防动画期间误触 */
 div#侧边按钮容器 > .拥有更多选项::before,
 div#侧边按钮容器 > button::before {
-	background-color: transparent;
 	display: block;
 	position: absolute;
 	height: calc(100% + 2px);
@@ -755,14 +754,18 @@ div#侧边按钮容器 > button::before {
 }
 div#侧边按钮容器 > button:hover::before {
 	content: "";
+	background: transparent;
 	border-radius: 50%;
 	left: -6px;
 	width: calc(100% + 2px);
 }
 div#侧边按钮容器 > .拥有更多选项::before {
 	content: "";
+	background-color: transparent;
 	left: 0;
+	bottom: 0;
 	width: var(--container-width);
+	height: calc(100% + 5px);
 	visibility: visible;
 	transition: var(--transition) visibility;
 }
