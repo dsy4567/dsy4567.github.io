@@ -1107,6 +1107,7 @@ async function 解析小组件歌曲(原始id) {
 
 /**
  * 把歌曲写进 shadow：合法时展示封面/歌名/歌手，非法时以灰块与“未知歌名/未知歌手”兜底；
+ * 同时在卡片上绑定播放事件（宿主比卡片宽，绑宿主会误响应卡片周围的空白），
  * 完成后给宿主加上 .已加载，文档级样式据此把骨架 ::before 换成 shadow 内容
  * @param {网易云音乐小组件} 组件
  * @param {歌单 | null} 歌曲
@@ -1146,6 +1147,8 @@ function 渲染小组件内容(组件, 歌曲) {
 		卡片元素.setAttribute("role", "button");
 		卡片元素.title = "播放：" + 歌曲.完整歌名;
 	}
+	// 事件绑在卡片上而非宿主：宿主与卡片同高但更宽，否则卡片周围的空白也会触发播放
+	组件.绑定播放事件(卡片元素);
 	组件.classList.add("已加载");
 	渲染小组件图标(shadow);
 }
@@ -1179,9 +1182,18 @@ class 网易云音乐小组件 extends HTMLElement {
 	connectedCallback() {
 		if (this.已处理) return;
 		this.已处理 = true;
-		// 焦点在内层卡片上，点击与回车/空格事件都会冒泡到宿主，此处统一处理
-		this.addEventListener("click", () => this.播放());
-		this.addEventListener("keydown", 事件 => {
+		填充小组件(this);
+	}
+
+	/**
+	 * 把播放事件绑定到内层卡片上：宿主比卡片宽，绑在宿主会让点击卡片周围的空白也触发播放；
+	 * 卡片不可聚焦时（数据非法）键盘事件自然也不会触发
+	 * @param {HTMLElement} 卡片元素
+	 */
+	绑定播放事件(卡片元素) {
+		// 焦点在内层卡片上，点击与回车/空格事件都由它接住
+		卡片元素.addEventListener("click", () => this.播放());
+		卡片元素.addEventListener("keydown", 事件 => {
 			// Enter/Space 都是按钮的标准激活键；Space 需阻止默认的页面滚动
 			if (事件.key !== "Enter" && 事件.key !== " ") return;
 			事件.preventDefault();
@@ -1189,7 +1201,6 @@ class 网易云音乐小组件 extends HTMLElement {
 			if (事件.repeat) return;
 			this.播放();
 		});
-		填充小组件(this);
 	}
 
 	/** 点击/回车/空格立即播放本卡片对应的歌曲；数据非法时不播放 */
