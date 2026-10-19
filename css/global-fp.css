@@ -486,11 +486,11 @@ body > #顶部大图 {
 }
 
 body > #顶部大图 {
-	--height-desktop: min(45vh, 480px);
+	--height: min(45vh, 480px);
 	background-color: var(--bg-color);
 	border-radius: var(--border-radius);
 	display: block;
-	height: var(--height-desktop);
+	height: var(--height);
 	overflow: hidden;
 	position: relative;
 	z-index: 1;
@@ -647,11 +647,12 @@ footer#copyright {
 		width: calc(100% - 18px);
 	}
 	body > #顶部大图 {
+		--height: calc(64px + min(calc(64vh), 430px));
 		border-radius: 0;
 		margin-top: 66px;
 		position: fixed;
 		width: 100%;
-		height: calc(64px + min(calc(64vh), 430px));
+		height: var(--height);
 		z-index: -1;
 	}
 	main {
