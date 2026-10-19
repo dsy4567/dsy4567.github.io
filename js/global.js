@@ -608,6 +608,8 @@ let 图标 = {};
 const 图标模板 = /** @type {Record<string, HTMLTemplateElement>} */ ({});
 /** 匹配图标模板字符串中的尺寸类（小尺寸 / 特小尺寸），用于替换为元素自己的 class */
 const 尺寸类正则 = /特?小尺寸/;
+/** 匹配标题标签（h1~h6），用于判断图标是否直接位于标题内 */
+const 标题标签正则 = /^H[1-6]$/;
 /** 在新增元素时调用，以确保图标正常显示、点击事件正常触发 @param {渲染图标选项} 选项 */
 function 渲染图标(选项 = {}) {
 	const 全部元素 = /** @type {ArrayLike<SVGSVGElement>} */ (
@@ -631,7 +633,14 @@ function 渲染图标(选项 = {}) {
 		}
 		// cloneNode 走原生结构克隆，比 outerHTML 的“字符串 → HTML 解析 → 重建子树”快得多；
 		// replaceWith 对游离节点是静默无操作，不会像 outerHTML 那样抛 DOMException
-		元素.replaceWith(模板.content.cloneNode(true));
+		const 片段 = /** @type {DocumentFragment} */ (模板.content.cloneNode(true));
+		// 需在 replaceWith 前取出根元素：片段插入后会清空，此后 firstElementChild 变成 null
+		const 新图标 = 片段.firstElementChild;
+		元素.replaceWith(片段);
+		// 标题图标：图标若是 h1~h6 的直接子元素，就由 JS 给标题打类，
+		// 让 CSS 无需依赖 :has() 也能识别这类标题（Chrome 86 不支持 :has()）
+		const 父元素 = 新图标?.parentElement;
+		if (父元素 && 标题标签正则.test(父元素.tagName)) 父元素.classList.add("含图标");
 	});
 }
 //#endregion

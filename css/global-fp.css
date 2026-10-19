@@ -229,35 +229,37 @@ article > h2:first-child {
 	margin-top: 12px;
 }
 
-/* 不支持 :has() 的浏览器（如 Chrome 86）会整条规则失效，连 :hover 一起失效，故需 @supports 兜底副本 */
-/* 但此类样式无替代方案，故不使用 @supports */
-section h2:has(> svg),
-article h2:has(> svg) {
+section h2,
+article h2 {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
 	position: relative;
+}
+/* 不支持 :has() 的浏览器（如 Chrome 86）会整条规则失效，连 :hover 一起失效，故需 @supports 兜底副本 */
+/* 但此类样式无替代方案，故不使用 @supports */
+section h2.含图标,
+article h2.含图标 {
 	margin-left: 0;
 	padding-left: 0;
 }
-section h2:has(> svg)::before,
-article h2:has(> svg)::before,
-main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(> svg))::before {
+section h2.含图标::before,
+article h2.含图标::before,
+main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
 	content: "";
 	border-radius: var(--border-radius);
 	display: block;
 	position: absolute;
 }
-section h2:has(> svg)::before,
-article h2:has(> svg)::before {
+section h2.含图标::before,
+article h2.含图标::before {
 	background: linear-gradient(to right, var(--accent-color), var(--accent-color-transparent));
 	width: 4em;
 	max-width: 50%;
 	height: 4px;
 	bottom: -0.3em;
 }
-/* TODO: shit code */
-main > .右 :is(h1, h2, h3, h4, h5, h6):not(:has(> svg))::before {
+main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
 	background-color: var(--accent-color-transparent);
 	width: 4px;
 	height: 100%;
