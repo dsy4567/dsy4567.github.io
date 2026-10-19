@@ -39,6 +39,7 @@ section#我 > br {
 	--surface-1: #ffffff;
 	--surface-2: #f2f2f2;
 	--text-color: #222;
+	--overlay-soft: #8881;
 	--overlay: #8885;
 	--overlay-strong: #888;
 	--selection-bg: #0006;
@@ -50,6 +51,7 @@ section#我 > br {
 		--surface-1: #222027;
 		--surface-2: #2a2931;
 		--text-color: #ccc;
+		--overlay-soft: #3333;
 		--overlay: #fff2;
 		--overlay-strong: #888;
 		--selection-bg: #fff5;
@@ -61,6 +63,7 @@ section#我 > br {
 	--surface-1: #222027;
 	--surface-2: #2a2931;
 	--text-color: #ccc;
+	--overlay-soft: #3333;
 	--overlay: #fff2;
 	--overlay-strong: #888;
 	--selection-bg: #fff5;
@@ -71,6 +74,7 @@ section#我 > br {
 	--surface-1: #ffffff;
 	--surface-2: #f2f2f2;
 	--text-color: #222;
+	--overlay-soft: #8881;
 	--overlay: #8885;
 	--overlay-strong: #888;
 	--selection-bg: #0006;
@@ -108,7 +112,7 @@ section#我 > br {
 :root {
 	--border-width: 1px;
 	--border-style: solid;
-	--border-color: var(--overlay);
+	--border-color: var(--overlay-soft);
 	--border-color-strong: var(--overlay-strong);
 	--border: var(--border-width) var(--border-style) var(--border-color);
 	--border-strong: var(--border-width) var(--border-style) var(--border-color-strong);
