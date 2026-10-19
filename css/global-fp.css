@@ -307,7 +307,7 @@ code.hljs {
 }
 
 hr {
-	border: var(--border);
+	border-color: var(--overlay);
 }
 
 table {
@@ -367,7 +367,7 @@ input {
 .元数据 {
 	display: block;
 	width: 100%;
-	border-top: var(--border);
+	border-top: 2px var(--border-style) var(--overlay);
 	font-style: italic;
 	margin-top: 8px;
 	padding-top: 8px;
