@@ -441,7 +441,7 @@ img:is(.特小尺寸, .小尺寸, .中尺寸, .大尺寸) {
 
 /* ==================== 导航栏、进度条、顶部大图 ==================== */
 nav#导航栏 {
-	background-color: transparent;
+	background-color: var(--overlay-soft);
 	box-sizing: border-box;
 	border: var(--border);
 	border-radius: var(--border-radius);
