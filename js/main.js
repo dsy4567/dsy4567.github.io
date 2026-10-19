@@ -533,13 +533,17 @@ function 设置展开容器可访问名(展开容器) {
 				侧边按钮容器.after(遮罩);
 				/** 指针是否停在某个面板上；触摸屏上由浏览器合成的鼠标事件同步维护 */
 				let 面板被悬停 = false;
-				/** 焦点是否在某个面板内（面板自身可聚焦，故含面板本身） */
-				const 面板内有焦点 = () => {
+				/** 当前键盘聚焦（:focus-visible）的元素；鼠标点击得到的焦点不是 :focus-visible，不计入 */
+				const 取键盘聚焦元素 = () => {
 					const 焦点 = document.activeElement;
-					return 焦点 instanceof Element && !!焦点.closest(".拥有更多选项");
+					return 焦点 instanceof Element && 焦点.matches(":focus-visible") ? 焦点 : null;
 				};
-				/** 按「悬停或聚焦于面板」重算遮罩显隐，与原 CSS 里 body:has(...) 的判定条件等价 */
-				const 更新遮罩 = () => 遮罩.classList.toggle("显示", 面板被悬停 || 面板内有焦点());
+				/** 焦点是否在某个面板内（面板自身可聚焦，故含面板本身）。只认键盘聚焦，
+				   避免鼠标点击面板或面板内控件后留下的焦点在指针移出后继续撑着遮罩 */
+				const 面板被键盘聚焦 = () => !!取键盘聚焦元素()?.closest(".拥有更多选项");
+				/** 按「悬停或键盘聚焦于面板」重算遮罩显隐，与 CSS 里 侧边按钮容器.有键盘焦点 的展开判定一致 */
+				const 更新遮罩 = () =>
+					遮罩.classList.toggle("显示", 面板被悬停 || 面板被键盘聚焦());
 				// 监听面板自身的 mouseenter/mouseleave 而非容器的：容器的 mouseenter 只在指针进出容器时触发，
 				// 指针在容器内部由某个按钮移到另一个按钮时不会再触发，无法据此判断面板是否展开。
 				// 面板的 mouseleave 同时覆盖点击遮罩/收起按钮的收起：指针（触摸屏上是粘滞的悬停）转移到别处即触发
@@ -553,9 +557,18 @@ function 设置展开容器可访问名(展开容器) {
 						更新遮罩();
 					});
 				});
-				// 焦点进出容器时重算：键盘用户没有指针悬停，聚焦面板内控件时同样应显示遮罩
-				侧边按钮容器.addEventListener("focusin", 更新遮罩);
-				侧边按钮容器.addEventListener("focusout", 更新遮罩);
+				// 焦点进出容器时同步类名与遮罩。键盘聚焦（:focus-visible）时给容器加 有键盘焦点，
+				// 供 CSS 以类名取代 :has(:focus-visible) 判断面板是否展开；鼠标点击得到的焦点不加，
+				// 避免其错误地把面板当成展开；键盘用户没有指针悬停，聚焦面板内控件时同样应显示遮罩
+				const 同步焦点状态 = () => {
+					侧边按钮容器.classList.toggle(
+						"有键盘焦点",
+						!!侧边按钮容器.querySelector(":focus-visible")
+					);
+					更新遮罩();
+				};
+				侧边按钮容器.addEventListener("focusin", 同步焦点状态);
+				侧边按钮容器.addEventListener("focusout", 同步焦点状态);
 			}
 			//#endregion
 

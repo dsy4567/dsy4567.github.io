@@ -703,14 +703,15 @@ div#侧边按钮容器 + #侧边遮罩.显示 {
 	transition-delay: var(--transition);
 }
 
+/* 键盘聚焦（:focus-visible）判定由 JS 给容器加 .有键盘焦点 承担，取代 :has(:focus-visible)：
+   鼠标点击得到的焦点不是 :focus-visible，不会加该类名，故不会把面板误判为展开（见 js/main.js 的 同步焦点状态） */
 @supports selector(:has(*)) {
 	div#侧边按钮容器:hover > :is(.拥有更多选项, button),
-	div#侧边按钮容器:has(:focus-visible)
-		> :is(.拥有更多选项, button):is(:focus-within, :focus-visible) {
+	div#侧边按钮容器.有键盘焦点 > :is(.拥有更多选项, button):is(:focus-within, :focus-visible) {
 		opacity: 1;
 	}
 	div#侧边按钮容器 > :is(:hover, :focus-visible),
-	div#侧边按钮容器:has(:focus-visible) > :is(.拥有更多选项, button):focus-within,
+	div#侧边按钮容器.有键盘焦点 > :is(.拥有更多选项, button):focus-within,
 	div#侧边按钮容器 > #关闭侧边按钮 {
 		border-radius: unset;
 		border-top-left-radius: 50%;
@@ -723,8 +724,7 @@ div#侧边按钮容器 + #侧边遮罩.显示 {
 }
 @supports not selector(:has(*)) {
 	div#侧边按钮容器 > *:hover,
-	div#侧边按钮容器 > *:focus-visible,
-	div#侧边按钮容器 > *:focus-within,
+	div#侧边按钮容器.有键盘焦点 > *:focus-within,
 	div#侧边按钮容器 > #关闭侧边按钮 {
 		border-radius: unset;
 		border-top-left-radius: 50%;
@@ -768,14 +768,14 @@ div#侧边按钮容器 > .拥有更多选项:hover::before {
 
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:is(:hover, :focus-visible),
-	div#侧边按钮容器:has(:focus-visible) > .拥有更多选项:focus-within {
+	div#侧边按钮容器.有键盘焦点 > .拥有更多选项:focus-within {
 		border-bottom-left-radius: 0;
 		z-index: 1;
 	}
 }
 @supports not selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:focus-visible,
-	div#侧边按钮容器 > .拥有更多选项:focus-within {
+	div#侧边按钮容器.有键盘焦点 > .拥有更多选项:focus-within {
 		border-bottom-left-radius: 0;
 		z-index: 1;
 	}
@@ -821,7 +821,7 @@ div#侧边按钮容器 .更多选项 + .更多选项 {
 }
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:is(:hover, :focus-visible) > .更多选项,
-	div#侧边按钮容器 > .拥有更多选项:has(:focus-visible) > .更多选项 {
+	div#侧边按钮容器.有键盘焦点 > .拥有更多选项:focus-within > .更多选项 {
 		pointer-events: auto;
 		opacity: 1;
 		visibility: visible;
@@ -830,7 +830,7 @@ div#侧边按钮容器 .更多选项 + .更多选项 {
 @supports not selector(:has(*)) {
 	div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
 	div#侧边按钮容器 > .拥有更多选项:focus-visible > .更多选项,
-	div#侧边按钮容器 > .拥有更多选项:focus-within > .更多选项 {
+	div#侧边按钮容器.有键盘焦点 > .拥有更多选项:focus-within > .更多选项 {
 		pointer-events: auto;
 		opacity: 1;
 		visibility: visible;
@@ -946,14 +946,14 @@ div#侧边按钮容器 > #网易云音乐 {
 
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > #网易云音乐:is(:hover, :focus-visible),
-	div#侧边按钮容器:has(:focus-visible) > #网易云音乐:focus-within {
+	div#侧边按钮容器.有键盘焦点 > #网易云音乐:focus-within {
 		transform: translateX(calc((var(--container-width) - 16px) * -1));
 	}
 }
 @supports not selector(:has(*)) {
 	div#侧边按钮容器 > #网易云音乐:hover,
 	div#侧边按钮容器 > #网易云音乐:focus-visible,
-	div#侧边按钮容器 > #网易云音乐:focus-within {
+	div#侧边按钮容器.有键盘焦点 > #网易云音乐:focus-within {
 		transform: translateX(calc((var(--container-width) - 16px) * -1));
 	}
 }
@@ -980,16 +980,17 @@ div#侧边按钮容器 > #网易云音乐 {
 	transition-delay: 0s;
 }
 @supports selector(:has(*)) {
-	div#侧边按钮容器:has(.拥有更多选项:is(:focus-visible, :hover), .拥有更多选项 :focus-visible)
-		> .拥有更多选项#网易云音乐:is(:hover, :focus-visible, :focus-within)
-		#歌词 {
+	/* 同为「键盘聚焦才算展开」的判定，故用 .有键盘焦点 取代 :has(... :focus-visible ...)；
+	   悬停/自身 :focus-visible 不需要容器 gate，直接写在同一条选择器里 */
+	div#侧边按钮容器 > .拥有更多选项#网易云音乐:is(:hover, :focus-visible) #歌词,
+	div#侧边按钮容器.有键盘焦点 > .拥有更多选项#网易云音乐:focus-within #歌词 {
 		color: #fff;
 		transition-delay: var(--transition);
 	}
 }
 @supports not selector(:has(*)) {
 	#网易云音乐:hover #歌词,
-	#网易云音乐:focus-within #歌词 {
+	div#侧边按钮容器.有键盘焦点 #网易云音乐:focus-within #歌词 {
 		color: #fff;
 		transition-delay: var(--transition);
 	}
@@ -1089,14 +1090,14 @@ div#侧边按钮容器 > #切换主题 {
 }
 @supports selector(:has(*)) {
 	div#侧边按钮容器 > #切换主题:is(:hover, :focus-visible),
-	div#侧边按钮容器:has(:focus-visible) > #切换主题:focus-within {
+	div#侧边按钮容器.有键盘焦点 > #切换主题:focus-within {
 		transform: translateX(calc(-32px * 3 - 6px));
 	}
 }
 @supports not selector(:has(*)) {
 	div#侧边按钮容器 > #切换主题:hover,
 	div#侧边按钮容器 > #切换主题:focus-visible,
-	div#侧边按钮容器 > #切换主题:focus-within {
+	div#侧边按钮容器.有键盘焦点 > #切换主题:focus-within {
 		transform: translateX(calc(-32px * 3 - 6px));
 	}
 }
