@@ -168,15 +168,23 @@ const ce = (/** @type {keyof HTMLElementTagNameMap} */ s) => {
 //#region 常用工具类 DOM 操作
 // chrome 150+ 返回 Promise
 async function 回到顶部() {
-	const 行为 = 用户已禁用动画特效 ? "auto" : "smooth";
-	await document.documentElement.scrollTo({
-		top: 0,
-		behavior: 行为,
-	});
-	await qs("main > .左")?.scrollTo({
-		top: 0,
-		behavior: 行为,
-	});
+	const 行为 = 用户已禁用动画特效 ? "auto" : "smooth",
+		左栏 = qs("main > .左");
+	try {
+		await document.documentElement.scrollTo({
+			top: 0,
+			behavior: 行为,
+		});
+		await 左栏?.scrollTo({
+			top: 0,
+			behavior: 行为,
+		});
+	} catch (错误) {
+		// 旧浏览器不支持 behavior 的取值（如 "smooth"）时 scrollTo 会抛 TypeError，降级为直接赋值
+		console.warn("回到顶部：平滑滚动不可用，已降级为瞬时滚动", 错误);
+		document.documentElement.scrollTop = 0;
+		if (左栏) 左栏.scrollTop = 0;
+	}
 }
 /**
  * 传入 selector，使元素滚动到可见区域
@@ -186,10 +194,18 @@ async function 回到顶部() {
  * @returns {Promise<void>}
  */
 async function 滚动到可见区域(s, 缓存 = false, 选项 = { inline: "start", block: "start" }) {
-	await qs(s, 缓存)?.scrollIntoView({
-		behavior: 用户已禁用动画特效 ? "auto" : "smooth",
-		...选项,
-	});
+	const 目标元素 = qs(s, 缓存);
+	if (!目标元素) return;
+	try {
+		await 目标元素.scrollIntoView({
+			behavior: 用户已禁用动画特效 ? "auto" : "smooth",
+			...选项,
+		});
+	} catch (错误) {
+		// 旧浏览器不支持 behavior 的取值（如 "smooth"）时 scrollIntoView 会抛 TypeError，降级为布尔形式的默认对齐
+		console.warn("滚动到可见区域：平滑滚动不可用，已降级为瞬时滚动", 错误);
+		目标元素.scrollIntoView();
+	}
 }
 /**
  * 传入 selector，使父容器垂直滚动到指定元素所在位置
@@ -201,10 +217,17 @@ async function 垂直滚动到容器内可见区域(s, 缓存 = false) {
 	const 目标元素 = qs(s, 缓存);
 	const 父容器 = 目标元素?.parentElement;
 	if (!父容器 || !目标元素) return;
-	await 父容器.scrollTo({
-		behavior: 用户已禁用动画特效 ? "auto" : "smooth",
-		top: 目标元素?.offsetTop || 0,
-	});
+	const 顶部 = 目标元素.offsetTop || 0;
+	try {
+		await 父容器.scrollTo({
+			behavior: 用户已禁用动画特效 ? "auto" : "smooth",
+			top: 顶部,
+		});
+	} catch (错误) {
+		// 旧浏览器不支持 behavior 的取值（如 "smooth"）时 scrollTo 会抛 TypeError，降级为直接赋值
+		console.warn("垂直滚动到容器内可见区域：平滑滚动不可用，已降级为瞬时滚动", 错误);
+		父容器.scrollTop = 顶部;
+	}
 }
 let 显示或隐藏进度条_已执行至少一次 = false;
 /**
