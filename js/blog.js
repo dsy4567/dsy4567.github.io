@@ -536,7 +536,8 @@ async function 渲染文章列表(u) {
 					span = ce("span"),
 					arti = ce("article"),
 					封面 = ce("img"),
-					鼠标已移动 = false;
+					鼠标已移动 = false,
+					鼠标按下时存在选中 = false;
 				a.href = `/blog/${文章.id}/`;
 				a.innerText = "阅读更多";
 				预览.innerHTML = marked.parse(文章.desc);
@@ -590,6 +591,10 @@ async function 渲染文章列表(u) {
 
 				arti.addEventListener("mousedown", 事件 => {
 					鼠标已移动 = false;
+					// 记录按下瞬间是否存在选区：浏览器在 mousedown 的默认行为里就清除了选区，
+					// 到 click 时选区已折叠，那时再判断就晚了
+					const 选区 = getSelection();
+					鼠标按下时存在选中 = !!选区 && !选区.isCollapsed;
 				});
 				arti.addEventListener("mousemove", 事件 => {
 					鼠标已移动 = true;
@@ -600,7 +605,9 @@ async function 渲染文章列表(u) {
 						事件.target?.tagName !== "A" &&
 						// @ts-ignore
 						事件.target?.parentElement?.tagName !== "A" &&
-						!鼠标已移动
+						!鼠标已移动 &&
+						// 本次点击只是为了取消选中的文字，不当作「点击文章卡片」处理
+						!鼠标按下时存在选中
 					)
 						_global["main.js"]?.()?.动态加载(a);
 				});
