@@ -128,9 +128,10 @@ html {
 	--transition-slow: 1s;
 }
 html {
-	/* 强调色缺省（中性）：未设置时回退为文字色/叠层色，自动跟随背景深浅 */
+	/* 中性缺省强调色 */
 	--accent-color: var(--text-color);
 	--accent-color-transparent: var(--overlay);
+	--accent-color-opacity: 0.18;
 	--accent-text-color: var(--bg-color);
 	--link-color: var(--text-color);
 	scroll-behavior: smooth;
@@ -271,8 +272,8 @@ article h2.含图标::before {
 }
 main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
 	background-color: var(--accent-color);
-	/* --accent-color-transparent 近似替代，减少重绘量 */
-	opacity: 0.18;
+	/* 用 opacity 而非 bgc:act 减少重绘量 */
+	opacity: var(--accent-color-opacity);
 	width: 4px;
 	height: 100%;
 	left: -8px;

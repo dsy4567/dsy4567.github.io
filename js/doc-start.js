@@ -14,6 +14,11 @@
 
 /** 默认强调色（天依蓝） */
 const 默认强调色 = "#66ccff";
+/**
+ * 强调色透明底的不透明度：配合 opacity + --accent-color 绘制透明色，
+ * 同时折算为十六进制 alpha，供无法使用 opacity 的边框、渐变、阴影等场景使用
+ */
+const 强调色透明度 = 0.18;
 
 /**
  * 将 RGB 颜色转换为 HSL 颜色
@@ -210,7 +215,15 @@ function 写入强调色变量(hex, 深 = 当前是否深色()) {
 	const 根 = document.documentElement.style;
 	根.setProperty("--accent-color", 主色);
 	// 原色低透明度，用作高亮底色（保持原色不变，因为透明度会降低对比度要求）
-	根.setProperty("--accent-color-transparent", hex + "2e");
+	根.setProperty(
+		"--accent-color-transparent",
+		hex +
+			Math.round(强调色透明度 * 255)
+				.toString(16)
+				.padStart(2, "0")
+	);
+	// 配合 opacity + --accent-color 绘制透明色（如伪元素底色）
+	根.setProperty("--accent-color-opacity", `${强调色透明度}`);
 	// --accent-text-color 不在此写死：css/global-fp.css 已定义 var(--bg-color)，跟随背景深浅自动生效
 	根.setProperty("--link-color", 主色);
 }
