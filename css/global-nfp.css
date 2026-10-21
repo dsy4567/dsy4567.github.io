@@ -863,19 +863,6 @@ div#侧边按钮容器 .更多选项 > button:active {
 	background-color: var(--overlay);
 }
 
-#网易云音乐 #播放列表,
-#切换主题 #所有主题 {
-	border-left: var(--border);
-	border-bottom: var(--border);
-}
-/* 防误触：#网易云音乐 的播放列表面板会向下盖住 #切换主题，读屏焦点落到被遮住的
-   #切换主题 上会误触。故 #网易云音乐 被 hover（含读屏的模拟 hover）时隐藏 #切换主题；
-   反向不需要处理：#切换主题 的面板不遮住 #网易云音乐，且 CSS 无前驱兄弟选择器。
-   写死两个 id、只用后继兄弟选择器，无需 :has()，Chrome 86 亦可生效；:focus-visible 不参与判断 */
-div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
-	visibility: hidden;
-}
-
 /* ==================== 侧边按钮-关闭侧边按钮 ==================== */
 /* 只在触摸屏出现；默认视觉透明但保持可点、留在 AT 树中，展开任一面板时才显露 */
 div#侧边按钮容器 > button#关闭侧边按钮 {
@@ -1011,7 +998,6 @@ div#侧边按钮容器 > #网易云音乐 {
 	font-size: 0.9em;
 	margin: 0;
 	padding: 8px;
-	padding-left: max(8px, calc(var(--padding-left-overflow) + 32px));
 	position: absolute;
 	top: 34px;
 	left: -29px;
@@ -1138,6 +1124,20 @@ html.深色 #切换主题 > #主题控件 > button#背景模式 {
 }
 #切换主题 > #所有主题 > button[aria-checked="true"] {
 	outline: 2px solid var(--text-color);
+}
+
+#网易云音乐 #播放列表,
+#切换主题 #所有主题 {
+	border-left: var(--border);
+	border-bottom: var(--border);
+	padding-left: max(8px, calc(var(--padding-left-overflow) + 32px));
+}
+/* 防误触：#网易云音乐 的播放列表面板会向下盖住 #切换主题，读屏焦点落到被遮住的
+   #切换主题 上会误触。故 #网易云音乐 被 hover（含读屏的模拟 hover）时隐藏 #切换主题；
+   反向不需要处理：#切换主题 的面板不遮住 #网易云音乐，且 CSS 无前驱兄弟选择器。
+   写死两个 id、只用后继兄弟选择器，无需 :has()，Chrome 86 亦可生效；:focus-visible 不参与判断 */
+div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
+	visibility: hidden;
 }
 
 /* ==================== 首页 ==================== */
