@@ -907,6 +907,10 @@ function 撤销顶部大图(优先级) {
 	for (const 层 of _取顶部大图层())
 		if (_读取顶部大图信息(层).优先级 === 优先级) _移除顶部大图层(层);
 }
+// 顶部大图：接管 HTML 里声明的层，并在导航（pushState 与 popstate 都会派发该事件）后回收过期层
+延迟执行("DOMContentLoaded", _初始化顶部大图, 0);
+addEventListener("URL发生变化", _清理过期顶部大图层);
+//#endregion
 
 //#region 动画特效相关
 /** 用户是否禁用了动画特效：跟随系统「减少动态效果」偏好（prefers-reduced-motion: reduce）实时更新 */
@@ -963,9 +967,4 @@ const 样式预加载超时 = 5000;
 		加载样式();
 	}, 样式预加载超时);
 });
-//#endregion
-
-// 顶部大图：接管 HTML 里声明的层，并在导航（pushState 与 popstate 都会派发该事件）后回收过期层
-延迟执行("DOMContentLoaded", _初始化顶部大图, 0);
-addEventListener("URL发生变化", _清理过期顶部大图层);
 //#endregion

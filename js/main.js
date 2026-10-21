@@ -519,13 +519,9 @@ function 设置展开容器可访问名(展开容器) {
 			// 视觉上的收起仍靠指针离开让 hover 自然清除，可访问名与展开/收起播报交给 设置展开容器可访问名
 			qsa(".拥有更多选项").forEach(el => {
 				const 展开容器 = /** @type {HTMLElement} */ (el);
-				展开容器.className = ".拥有更多选项 侧边按钮容器-拥有更多选项";
 				展开容器.setAttribute("role", "group");
 				展开容器.tabIndex = 0;
 				设置展开容器可访问名(展开容器);
-			});
-			qsa("div#侧边按钮容器 > button").forEach(el => {
-				el.className = "侧边按钮容器-无更多选项";
 			});
 
 			//#region 侧边遮罩
