@@ -390,10 +390,11 @@ main > .右::after {
 }
 
 main > .右 :is(.高亮-滚动, .高亮-鼠标):is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
-	background-color: var(--accent-color);
+	opacity: 1;
 }
 main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标):target::before {
 	background-color: mark;
+	opacity: 1;
 }
 
 /* ==================== 通用工具类 class ==================== */

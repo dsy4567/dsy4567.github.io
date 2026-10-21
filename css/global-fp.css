@@ -95,6 +95,11 @@ section#我 > br {
 }
 
 /* ==================== ::* ==================== */
+/* ::-webkit-scrollbar 会频繁重绘，新浏览器改由标准属性，
+旧 Chrome 回退 */
+html {
+	scrollbar-color: var(--overlay) transparent;
+}
 ::-webkit-scrollbar {
 	background-color: transparent;
 	width: 8px;
@@ -265,11 +270,12 @@ article h2.含图标::before {
 	bottom: -0.3em;
 }
 main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
-	background-color: var(--accent-color-transparent);
+	background-color: var(--accent-color);
+	/* --accent-color-transparent 近似替代，减少重绘量 */
+	opacity: 0.18;
 	width: 4px;
 	height: 100%;
-	left: -4px;
-	transition: background-color var(--transition);
+	transition: opacity var(--transition);
 }
 
 blockquote {
