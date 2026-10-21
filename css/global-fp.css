@@ -242,37 +242,21 @@ article > h2:first-child {
 	margin-top: 8px;
 }
 
-section h2,
-article h2 {
+/* 不支持 :has/is() 的浏览器（如 Chrome 86）会整条规则失效，故需 @supports 兜底副本 */
+/* 但此类样式无替代方案，故不使用 @supports */
+:is(section, article) :is(h1, h2, h3, h4, h5, h6) {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
 	position: relative;
 }
-/* 不支持 :has() 的浏览器（如 Chrome 86）会整条规则失效，连 :hover 一起失效，故需 @supports 兜底副本 */
-/* 但此类样式无替代方案，故不使用 @supports */
-section h2.含图标,
-article h2.含图标 {
-	margin-left: 0;
-	padding-left: 0;
-}
-section h2.含图标::before,
-article h2.含图标::before,
-main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
+:is(section, article) :is(h1, h2, h3, h4, h5, h6)::before {
 	content: "";
 	border-radius: var(--border-radius);
 	display: block;
 	position: absolute;
 }
-section h2.含图标::before,
-article h2.含图标::before {
-	background: linear-gradient(to right, var(--accent-color), var(--accent-color-transparent));
-	width: 4em;
-	max-width: 50%;
-	height: 4px;
-	bottom: -0.3em;
-}
-main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
+main > .右 :where(h1, h2, h3, h4, h5, h6)::before {
 	background-color: var(--accent-color);
 	/* 用 opacity 而非 bgc:act 减少重绘量 */
 	opacity: var(--accent-color-opacity);
@@ -280,6 +264,15 @@ main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
 	height: 100%;
 	left: -8px;
 	transition: opacity var(--transition);
+}
+:is(h1, h2, h3, h4, h5, h6).含图标::before {
+	background: linear-gradient(to right, var(--accent-color), var(--accent-color-transparent));
+	opacity: 1;
+	width: 4em;
+	max-width: 50%;
+	height: 4px;
+	bottom: -0.3em;
+	left: 0;
 }
 
 blockquote {
