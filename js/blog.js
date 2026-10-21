@@ -139,10 +139,10 @@ async function 渲染文章(当前文章信息) {
 			if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
 
 			// 解析 Markdown、追加许可与元信息
-			let sect = ce("section"),
+			let arti = ce("section"),
 				html = t && marked.parse(t),
 				span = ce("span");
-			sect.innerHTML =
+			arti.innerHTML =
 				html +
 				(html.includes('<nocopyright value="true"></nocopyright>')
 					? ""
@@ -158,9 +158,9 @@ async function 渲染文章(当前文章信息) {
 				更新时间 = new Date(当前文章信息.updated);
 			span.innerHTML = `发表于: <time datetime="${发表时间.toISOString()}">${发表时间.toLocaleString()}</time>, 更新于: <time datetime="${更新时间.toISOString()}">${更新时间.toLocaleString()}</time>${标签html ? `</br>标签: ${标签html}` : ""}`;
 			span.classList.add("元数据");
-			sect.append(span);
+			arti.append(span);
 			// 设置大小和懒加载
-			for (const img of sect.getElementsByTagName("img")) {
+			for (const img of arti.getElementsByTagName("img")) {
 				const m = img.alt.match(/^s:[0-9]+(\.[0-9]+)?x[0-9]+(\.[0-9]+)?/gi);
 				if (!m) continue;
 				img.alt = img.alt.replace(m[0], "");
@@ -171,21 +171,21 @@ async function 渲染文章(当前文章信息) {
 					.map(s => +s);
 			}
 			// 强制预览时页面已有构建产物正文，直接整体替换；外链文章则替换加载提示
-			if (免构建预览) qs("main > .右 > section")?.replaceWith(sect);
-			else gd("正在加载文章提示")?.replaceWith(sect);
+			if (免构建预览) qs("main > .右 > article")?.replaceWith(arti);
+			else gd("正在加载文章提示")?.replaceWith(arti);
 
 			// 更新 SEO 元数据
 			qs("meta[name='description']")?.setAttribute(
 				"content",
-				sect.querySelector("p")?.innerText || "此文章无法提供描述"
+				arti.querySelector("p")?.innerText || "此文章无法提供描述"
 			);
 			qs('meta[property="og:description"]')?.setAttribute(
 				"content",
-				sect.querySelector("p")?.innerText || "此文章无法提供描述"
+				arti.querySelector("p")?.innerText || "此文章无法提供描述"
 			);
 			qs('meta[property="og:title"]')?.setAttribute(
 				"content",
-				(sect.querySelector("h1")?.innerText || "无标题") + " | " + document.title
+				(arti.querySelector("h1")?.innerText || "无标题") + " | " + document.title
 			);
 			qs('meta[property="og:url"]')?.setAttribute(
 				"content",
@@ -196,7 +196,7 @@ async function 渲染文章(当前文章信息) {
 				new URL(当前文章信息.cover || 获取默认封面(当前文章信息.id), location.href).href
 			);
 		}
-		qs("main > .右 > section")?.classList.add("博客正文");
+		qs("main > .右 > article")?.classList.add("博客正文");
 		//#endregion
 
 		//#region 文章编辑历史
@@ -209,7 +209,7 @@ async function 渲染文章(当前文章信息) {
 		编辑历史链接.textContent = "查看文章编辑历史";
 		编辑历史元素.className = "元数据";
 		编辑历史元素.append(编辑历史链接);
-		qs("main > .右 > section")?.append(编辑历史元素);
+		qs("main > .右 > article")?.append(编辑历史元素);
 		//#endregion
 
 		//#region 目录
