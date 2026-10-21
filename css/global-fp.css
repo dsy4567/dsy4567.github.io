@@ -625,10 +625,11 @@ section#我 > #关注被关注码龄 {
 
 #一言 .语句 {
 	text-decoration: underline wavy var(--accent-color);
-	text-underline-offset: 4px;
+	text-underline-offset: 2px;
+	text-align: center;
 	overflow-y: auto;
-	height: calc(2em + 4px);
-	padding-bottom: 4px;
+	height: calc(var(--line-height) * 2em);
+	margin-top: 2em;
 }
 #一言 .作者 {
 	opacity: 0.7;
