@@ -174,8 +174,8 @@ h4,
 h5,
 h6 {
 	font-weight: 400;
-	margin-left: 4px;
-	padding-left: 6px;
+	margin-left: 8px;
+	padding: 0 4px;
 	position: relative;
 }
 
@@ -236,7 +236,7 @@ article video {
 
 section > h2:first-child,
 article > h2:first-child {
-	margin-top: 12px;
+	margin-top: 8px;
 }
 
 section h2,
@@ -275,6 +275,7 @@ main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
 	opacity: 0.18;
 	width: 4px;
 	height: 100%;
+	left: -8px;
 	transition: opacity var(--transition);
 }
 
@@ -601,24 +602,27 @@ section#我 > img {
 	max-width: unset;
 	max-height: unset;
 }
-
-section#我 #联系方式 {
+section#我 > h2 {
+	margin: 0.25em 0;
+}
+section#我 > #联系方式 {
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
 	justify-content: center;
 	margin: 0 -8px;
 }
-section#我 #联系方式 > a {
+section#我 > #联系方式 > a {
+	display: flex;
 	margin: 0 4px;
 }
 .rss {
 	transform: translate(-4px, 2px) rotate(45deg);
 }
 
-section#我 #关注被关注码龄 {
+section#我 > #关注被关注码龄 {
 	font-size: smaller;
-	margin-bottom: 2em;
+	margin: 0 0 1em;
 }
 
 #一言 .语句 {
