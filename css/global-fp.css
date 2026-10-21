@@ -546,17 +546,17 @@ main {
 	align-items: flex-start;
 	justify-content: center;
 	width: calc(100vw - 90px);
-	max-width: 1680px;
-}
-main > .左,
-main > .右,
-main > #分界线 {
-	padding-top: 64px;
+	max-width: 1800px;
 }
 main > .左,
 main > .右 {
+	--top: 80px;
 	overflow-y: auto;
 	scrollbar-gutter: stable both-edges;
+	padding-top: var(--top);
+	padding-bottom: 4px;
+	padding-left: 4px;
+	padding-right: 4px;
 }
 
 main > .左 {
@@ -564,7 +564,6 @@ main > .左 {
 	border-radius: var(--border-radius);
 	position: sticky;
 	top: 0;
-	transform: translateY(16px);
 	width: 25%;
 	max-height: var(--maxh);
 }
@@ -576,13 +575,15 @@ main > .右 {
 }
 
 main > #分界线 {
-	border: 8px solid var(--bg-color);
-	border-radius: var(--border-radius);
+	--border-width: 16px;
+	--width: 4px;
+	border: var(--border-width) solid var(--bg-color);
+	border: var(--border-width) solid transparent;
 	box-sizing: content-box;
-	margin-top: 80px;
+	margin-top: var(--top);
 	position: sticky;
 	top: 0;
-	width: 4px;
+	width: var(--width);
 }
 main > #分界线 > .特小尺寸 {
 	max-width: var(--width);
@@ -680,11 +681,12 @@ footer#copyright {
 	}
 	main .左 {
 		--height: 45vh;
-		--maxh: 432px;
+		--maxh: 420px;
 		height: var(--height);
 		scrollbar-width: none;
+		padding-top: 64px;
+		top: 64px;
 		z-index: 0;
-		top: 50px;
 	}
 	main > .左 > section:last-child,
 	main > .左 > article:last-child {
@@ -712,8 +714,11 @@ footer#copyright {
 		box-shadow: var(--box-shadow);
 		z-index: 1;
 		position: relative;
-		padding: 16px 0 0 0;
-		overflow-y: clip;
+		margin-top: 0;
+		padding-top: 16px;
+		padding-left: 0;
+		padding-right: 0;
+		overflow-y: unset;
 	}
 
 	@supports (animation-timeline: scroll()) {
