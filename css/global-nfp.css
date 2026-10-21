@@ -1100,13 +1100,15 @@ div#侧边按钮容器 > #切换主题::before {
 	right: calc(var(--container-width) * -1 + 52px);
 }
 
-/* 背景模式按钮：填充色反映当前生效的背景（浅色→白、深色→黑），边框提供轮廓 */
-#切换主题 > #主题控件 > button#背景模式 {
-	background-color: #fff;
+/* 背景模式按钮：填充色反映当前生效的背景（浅色→白、深色→黑、自动→渐变），边框提供轮廓 */
+#切换主题 > #主题控件 > #背景模式 {
+	background-color: var(--bg-color);
 	border: var(--border);
 }
-html.深色 #切换主题 > #主题控件 > button#背景模式 {
-	background-color: #000;
+html.深色 #切换主题 > #主题控件 > #背景模式[title*="自动"] {
+	background-image: linear-gradient(to top left, #000 50%, #fff 50%);
+	background-size: 125% 125%;
+	background-position: 37.5%;
 }
 
 /* 下方：预设强调色色板，3 个一行 */
