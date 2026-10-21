@@ -653,7 +653,7 @@ section#我 > .头像:hover {
 
 /* ==================== 侧边按钮-通用 ==================== */
 div#侧边按钮容器 {
-	--border: 1px solid var(--overlay-strong);
+	--border: 1px solid var(--overlay);
 	--border-soft: 1px solid var(--overlay);
 	position: fixed;
 	right: 0px;
