@@ -537,13 +537,17 @@ main {
 }
 main > .左,
 main > .右 {
-	--top: 80px;
 	overflow-y: auto;
 	scrollbar-gutter: stable both-edges;
 	padding-top: var(--top);
 	padding-bottom: 4px;
 	padding-left: 4px;
 	padding-right: 4px;
+}
+main > .左,
+main > .右,
+main > #分界线 {
+	--top: 80px;
 }
 
 main > .左 {
@@ -562,11 +566,14 @@ main > .右 {
 
 main > #分界线 {
 	--border-width: 16px;
+	--margin-x: calc((var(--border-width) * 2 + var(--width) - 24px) * -0.5);
 	--width: 4px;
 	border: var(--border-width) solid var(--bg-color);
 	border: var(--border-width) solid transparent;
 	box-sizing: content-box;
 	margin-top: var(--top);
+	margin-left: var(--margin-x);
+	margin-right: var(--margin-x);
 	position: sticky;
 	top: 0;
 	width: var(--width);

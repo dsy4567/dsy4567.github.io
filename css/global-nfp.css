@@ -555,12 +555,9 @@ nav#导航栏 {
 
 /* ==================== main、左右栏 ==================== */
 main > #分界线 {
-	--margin-x: calc((var(--border-width) * 2 + var(--width) - 24px) * -0.5);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin-left: var(--margin-x);
-	margin-right: var(--margin-x);
 	height: calc(100vh - var(--border-width) * 2);
 	transition: var(--transition) background-color;
 }
