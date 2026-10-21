@@ -952,36 +952,22 @@ div#侧边按钮容器 > #网易云音乐 {
 	font-size: var(--font-size);
 	position: absolute;
 	user-select: none;
-	overflow: hidden;
 	pointer-events: none;
-	right: 35px;
+	right: 42px;
 	text-align: end;
 	word-wrap: break-word;
 	width: max-content;
 	min-width: 64px;
 	max-width: min(calc(100vw - 306px), 33vw);
 	height: calc(var(--line-height) * var(--font-size));
-	padding: 4px;
 	transition:
 		var(--transition) color,
 		var(--transition) background-color;
 	transition-delay: 0s;
 }
-@supports selector(:has(*)) {
-	/* 同为「键盘聚焦才算展开」的判定，故用 .有键盘焦点 取代 :has(... :focus-visible ...)；
-	   悬停/自身 :focus-visible 不需要容器 gate，直接写在同一条选择器里 */
-	div#侧边按钮容器 > .拥有更多选项#网易云音乐:is(:hover, :focus-visible) #歌词,
-	div#侧边按钮容器.有键盘焦点 > .拥有更多选项#网易云音乐:focus-within #歌词 {
-		color: #fff;
-		transition-delay: var(--transition);
-	}
-}
-@supports not selector(:has(*)) {
-	#网易云音乐:hover #歌词,
-	div#侧边按钮容器.有键盘焦点 #网易云音乐:focus-within #歌词 {
-		color: #fff;
-		transition-delay: var(--transition);
-	}
+#侧边按钮容器.更多选项已激活 #歌词 {
+	color: #fff;
+	transition-delay: var(--transition);
 }
 
 #网易云音乐 > #音乐控件 {
