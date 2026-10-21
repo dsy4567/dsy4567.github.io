@@ -263,7 +263,7 @@ main > .右 :where(h1, h2, h3, h4, h5, h6)::before {
 :is(h1, h2, h3, h4, h5, h6).含图标::before {
 	background: linear-gradient(to right, var(--accent-color), var(--accent-color-transparent));
 	opacity: 1;
-	width: 4em;
+	width: 5em;
 	max-width: 50%;
 	height: 4px;
 	bottom: -0.3em;
