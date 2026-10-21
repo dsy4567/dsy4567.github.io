@@ -221,7 +221,6 @@ article {
 }
 section > :is(section, article),
 article > :is(section, article) {
-	background-color: var(--bg-color);
 	margin: 0 -4px 8px -4px;
 	padding: 12px;
 }

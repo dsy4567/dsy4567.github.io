@@ -1348,7 +1348,11 @@ code.hljs.已复制:hover::before {
 	content: attr(data-lang) " | 已复制";
 }
 
-section#评论区 .评论 .用户信息 {
+#评论区 {
+	border: var(--border-width) var(--border-style) var(--overlay);
+	background-color: var(--bg-color);
+}
+#评论区 .用户信息 {
 	background-color: var(--surface-2);
 	border: var(--border);
 	border-radius: var(--border-radius);
