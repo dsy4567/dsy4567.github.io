@@ -1409,11 +1409,7 @@ section#评论区 .评论 .评论正文 {
 		main .左 {
 			animation: 左栏移动端 linear both;
 		}
-		main .右 {
-			animation: 右栏阴影上移动端 linear both;
-		}
-		main .左,
-		main .右 {
+		main .左 {
 			animation-timeline: scroll(root);
 			animation-range: 1px var(--cover-scroll-range);
 		}
@@ -1424,6 +1420,7 @@ section#评论区 .评论 .评论正文 {
 			background-color: var(--bg-color);
 			display: block;
 			position: absolute;
+			left: 0;
 			bottom: -32px;
 			z-index: -1;
 			width: 100%;
