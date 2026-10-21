@@ -268,14 +268,16 @@ echo "你好，世界"
 </ul>
 </details>
 
-<p>本站自定义的剧透标签 <code>&lt;spoiler&gt;</code>，鼠标悬停或键盘聚焦后才会显示：</p>
-<p><spoiler>这就是被藏起来的内容</spoiler></p>
+<p>本站自定义的剧透标签 <code>&lt;x-spoiler&gt;</code>，鼠标悬停或键盘聚焦后才会显示：</p>
+<p><x-spoiler>这就是被藏起来的内容</x-spoiler></p>
 <p>其它 HTML 标签：<del>删除</del>、<ins>插入</ins>、<mark>高亮</mark>、<small>小字</small>、<samp>程序输出</samp>、<q>短引用</q>、<code>code 标签</code>、<span style="color: #f66">带内联样式的 span</span>、<bdo dir="rtl">反向文字</bdo>。</p>
 <p>HTML 注释不会显示：<!-- 这行注释在渲染结果里看不到 --></p>
 <h2 id="网易云音乐小组件">网易云音乐小组件</h2>
 <p><code>&lt;x-163music data-id="音乐id"&gt;</code> 会在正文里嵌入一张歌曲卡片：数据就绪前显示闪烁骨架，加载完成后展示封面、歌名与歌手，点击卡片立即播放。</p>
 <p><x-163music data-id="2689720483"></x-163music></p>
 <p><x-163music data-id="1963053471"></x-163music></p>
+<p>无效的音乐id：</p>
+<p><x-163music data-id="1145141919810"></x-163music></p>
 <h2 id="已知不支持">已知不支持</h2>
 <ul>
 <li>脚注：<code>[^1]</code> 与 <code>[^1]: 说明</code> 会被 marked 当成引用式链接的写法，渲染成一条链接，而不是脚注。</li>
@@ -320,7 +322,7 @@ echo "你好，世界"
 <h2 id="c">C</h2>
 <ul>
 <li>cn.bing.com：必应搜索，同上。</li>
-<li>chatgpt.com：ChatGPT 2024 年官宣不登录即可使用。<spoiler>但我梯子不干净（悲</spoiler></li>
+<li>chatgpt.com：ChatGPT 2024 年官宣不登录即可使用。<x-spoiler>但我梯子不干净（悲</x-spoiler></li>
 </ul>
 <h2 id="d">D</h2>
 <ul>
@@ -338,7 +340,7 @@ echo "你好，世界"
 <h2 id="g">G</h2>
 <ul>
 <li>greasyfork.org：油叉，有超多的用户脚本，可用来大幅提高上网冲浪体验，我也在上面发过脚本。</li>
-<li>github.com：全球最大的开源社区<spoiler>和同性交友网站（jiushi</spoiler>。</li>
+<li>github.com：全球最大的开源社区<x-spoiler>和同性交友网站（jiushi</x-spoiler>。</li>
 </ul>
 <h2 id="h">H</h2>
 <ul>
@@ -364,7 +366,7 @@ echo "你好，世界"
 </ul>
 <h2 id="n">N</h2>
 <ul>
-<li>ncm.vercel.dsy4567.icu：自建网易云音乐 API，用于测试自己写的第三方网易云客户端。<spoiler>2023 年 10 月因为这个号被冻了，<del>网易云你***</del></spoiler></li>
+<li>ncm.vercel.dsy4567.icu：自建网易云音乐 API，用于测试自己写的第三方网易云客户端。<x-spoiler>2023 年 10 月因为这个号被冻了，<del>网易云你***</del></x-spoiler></li>
 <li>note.ms：公共笔记，我以前经常会备份和恢复 /ad 里的内容，有时候也会在这个网站玩一整晚。</li>
 </ul>
 <h2 id="o">O</h2>
@@ -439,7 +441,7 @@ echo "你好，世界"
         <content type="html" xml:lang="zh-cn">
             <![CDATA[
 <h1 id="记一次在-termux-上搭建-code-server-环境">记一次在 Termux 上搭建 code-server 环境</h1>
-<p>店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。</p>
+<p>店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<x-spoiler>世界加钱可及的</x-spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。</p>
 <!-- more -->
 
 <h2 id="要求">要求</h2>
@@ -691,7 +693,7 @@ code-server --host 0.0.0.0 --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/
 <p>还有，code-server 的扩展由 <a href="https://open-vsx.org/">Open VSX Registry</a> 提供，但是一些扩展在这并没有上架，这时可以在 <a href="https://marketplace.visualstudio.com/">Visual Studio Marketplace</a> 上面找到需要的扩展，然后点击右侧的“Download Extension”。下载后将扩展文件拽到右侧的资源管理器，再点击右键 &gt; 安装扩展 VSIX。</p>
 <p>顺便推荐一些我正在用的扩展：</p>
 <ul>
-<li><spoiler><del>厚着脸皮给自己打广告</del> 4399 on VSCode：在 VSCode 上玩 4399 小游戏</spoiler></li>
+<li><x-spoiler><del>厚着脸皮给自己打广告</del> 4399 on VSCode：在 VSCode 上玩 4399 小游戏</x-spoiler></li>
 <li>Code Spell Checker：检查代码里的拼写错误，并给出修改建议</li>
 <li>Comment Translate：翻译代码里的注释，支持替换需要翻译的文字</li>
 <li>ESLint：规范代码风格</li>
@@ -777,7 +779,7 @@ code-server --host 0.0.0.0 --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/
 <p>优化后：</p>
 <p><a href="https://pagespeed.web.dev/analysis/https-dsy4567-cf/jyhkiaf907"><img src="https://dsy4567.github.io/blog/how-to-improve-performance/img/after.webp" alt="优化后" width="964" height="831" loading="lazy"></a></p>
 <h2 id="为什么优化网站加载速度很重要">为什么优化网站加载速度很重要</h2>
-<p>像我这种有点耐心<spoiler>（还不是被某堵墙和我这老爷机逼的）</spoiler>的人，逛加载速度慢网站通常会一边忍着一边想带妈的词语。而一些没耐心的人进了这种网站，肯定会想<code>这™什么破网站</code>，然后立马点叉。对于用户很多的电商平台来说，网站加载时间每多 100ms，用户越没有耐心看下去，然后电商平台就要少赚好几沓钞票。</p>
+<p>像我这种有点耐心<x-spoiler>（还不是被某堵墙和我这老爷机逼的）</x-spoiler>的人，逛加载速度慢网站通常会一边忍着一边想带妈的词语。而一些没耐心的人进了这种网站，肯定会想<code>这™什么破网站</code>，然后立马点叉。对于用户很多的电商平台来说，网站加载时间每多 100ms，用户越没有耐心看下去，然后电商平台就要少赚好几沓钞票。</p>
 <h2 id="少说废话，进入正题">少说废话，进入正题</h2>
 <h3 id="多用-getelementsbyxxx，少用-queryselectorall">多用 <code>getElement(s)ByXxx</code>，少用 <code>querySelector(All)</code></h3>
 <p><img src="https://dsy4567.github.io/blog/how-to-improve-performance/img/compare-gebxxx-qs.webp" alt="用一段代码比较 getElement(s)ByXxx 和 querySelector(All) 的性能" width="428" height="362" loading="lazy"></p>
@@ -834,7 +836,7 @@ code-server --host 0.0.0.0 --port 8443 --cert ~/ssl/server.crt --cert-key ~/ssl/
 <!-- more -->
 
 <blockquote>
-<p>千万不要反代<spoiler>反 D、色情、赌博等</spoiler>违规网站，小心你家水表坏了。</p>
+<p>千万不要反代<x-spoiler>反 D、色情、赌博等</x-spoiler>违规网站，小心你家水表坏了。</p>
 </blockquote>
 <h2 id="注册-cf">注册 CF</h2>
 <p>这个就不用我浪费口水了，传送门 -&gt; <a href="https://dash.cloudflare.com/">https://dash.cloudflare.com/</a></p>
