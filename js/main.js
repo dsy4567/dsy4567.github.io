@@ -517,7 +517,7 @@ function 设置展开容器可访问名(展开容器) {
 			gd("回到顶部")?.addEventListener("click", 回到顶部);
 			// 展开入口：容器是 div，补分组语义（避免 button 角色把内部控件当装饰而屏蔽）与键盘激活；
 			// 视觉上的收起仍靠指针离开让 hover 自然清除，可访问名与展开/收起播报交给 设置展开容器可访问名
-			qsa(".拥有更多选项").forEach(el => {
+			qsa(".侧边按钮容器-拥有更多选项").forEach(el => {
 				const 展开容器 = /** @type {HTMLElement} */ (el);
 				展开容器.setAttribute("role", "group");
 				展开容器.tabIndex = 0;
