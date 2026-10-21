@@ -436,7 +436,7 @@ img:is(.特小尺寸, .小尺寸, .中尺寸, .大尺寸) {
 }
 
 /* ==================== 导航栏、左右栏 ==================== */
-@media only screen and (max-width: 430px) {
+@media only screen and (max-width: 435px) {
 	#导航栏 > .右 > a svg {
 		display: none;
 	}
@@ -561,7 +561,6 @@ main > .左 {
 }
 
 main > .右 {
-	margin-top: 16px;
 	width: 75%;
 	min-height: 100vh;
 }
