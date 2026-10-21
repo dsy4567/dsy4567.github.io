@@ -540,9 +540,9 @@ body > #顶部大图 > .顶部大图层.显示 {
 main {
 	display: flex;
 	align-items: flex-start;
-	justify-content: space-around;
+	justify-content: center;
 	width: calc(100vw - 90px);
-	max-width: 1600px;
+	max-width: 1680px;
 }
 main > .左,
 main > .右,
@@ -551,26 +551,23 @@ main > #分界线 {
 }
 main > .左,
 main > .右 {
-	min-width: 0;
-	padding-left: 6px;
+	overflow-y: auto;
+	scrollbar-gutter: stable both-edges;
 }
 
 main > .左 {
-	--maxh: calc(100vh - 16px);
+	--maxh: calc(100vh - 16px * 2);
 	border-radius: var(--border-radius);
-	overflow-y: auto;
-	scrollbar-gutter: stable;
 	position: sticky;
 	top: 0;
 	transform: translateY(16px);
-	width: calc(25% - 5px);
+	width: 25%;
 	max-height: var(--maxh);
-	padding: 64px 0 16px 0;
 }
 
 main > .右 {
 	margin-top: 16px;
-	width: calc(75% - 5px);
+	width: 75%;
 	min-height: 100vh;
 }
 
@@ -578,7 +575,7 @@ main > #分界线 {
 	border: 8px solid var(--bg-color);
 	border-radius: var(--border-radius);
 	box-sizing: content-box;
-	margin: 80px 0 0 0;
+	margin-top: 80px;
 	position: sticky;
 	top: 0;
 	width: 4px;
@@ -711,6 +708,7 @@ footer#copyright {
 		z-index: 1;
 		position: relative;
 		padding: 16px 0 0 0;
+		overflow-y: clip;
 	}
 
 	@supports (animation-timeline: scroll()) {

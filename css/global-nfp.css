@@ -580,7 +580,10 @@ main > #分界线 {
 	/* transform: translateX(-4px); */
 }
 body.宽屏 > main > #分界线 {
-	margin-left: -26px;
+	margin-top: 0;
+	position: fixed;
+	left: 8px;
+	top: 0;
 }
 main > #分界线 > .特小尺寸 {
 	background: var(--surface-1);
@@ -604,12 +607,15 @@ body.宽屏 > main #分界线 > .特小尺寸 {
 	transform: rotateY(180deg);
 }
 
+body.宽屏 > main {
+	max-width: unset;
+}
 body.宽屏 > main .左 {
 	display: none;
 	width: 0%;
 }
 body.宽屏 > main .右 {
-	width: calc(100% + 24px);
+	width: 100%;
 }
 
 /* ==================== 左栏 ==================== */
