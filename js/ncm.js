@@ -736,11 +736,13 @@ let 网易云音乐 = {
  */
 function 创建歌单项(/** @type {歌单} */ 音乐信息) {
 	let li = ce("li");
+	li.className = "网易云音乐-播放列表-歌单项";
 	let 歌名 = ce("span");
+	歌名.className = "网易云音乐-播放列表-歌单项-歌名";
 	歌名.textContent = 音乐信息.歌名;
 	歌名.prepend(创建隐藏文字("歌名"));
 	let 歌手 = ce("span");
-	歌手.className = "淡化";
+	歌手.className = "淡化 网易云音乐-播放列表-歌单项-歌手";
 	歌手.textContent = 音乐信息.歌手;
 	歌手.prepend(创建隐藏文字("歌手"));
 	li.append(歌名, " ", 歌手);
@@ -775,6 +777,7 @@ async function 立即渲染网易云音乐组件() {
 	 */
 	function 创建按钮(名称, onclick, title, role = "button") {
 		let /** @type {HTMLButtonElement} */ btn = ce("button");
+		btn.className = "侧边按钮容器-更多选项-按钮";
 		btn.innerHTML = `<svg class="特小尺寸" data-icon="${名称}"></svg>`;
 		btn.onclick = () => onclick(btn); // 播放类按钮内部会自行初始化
 		btn.type = "button";

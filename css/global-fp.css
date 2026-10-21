@@ -500,7 +500,7 @@ body > #顶部大图 {
 	margin-top: 64px;
 }
 
-body > #顶部大图 > .顶部大图层 {
+#顶部大图 > .顶部大图层 {
 	top: 0;
 	right: 0;
 	bottom: 0;
@@ -511,11 +511,11 @@ body > #顶部大图 > .顶部大图层 {
 }
 /* 最底下的基线层无变化。始终不透明且不参与过渡，作为兜底与背景，新层直接在其上淡入，
    避免首屏就存在的 .显示 层被重新赋值为透明 */
-body > #顶部大图 > .顶部大图层:first-child {
+#顶部大图 > .顶部大图层:first-child {
 	opacity: 1;
 	transition: none;
 }
-body > #顶部大图 > .顶部大图层 > img {
+#顶部大图 > .顶部大图层 > img {
 	display: block;
 	object-fit: cover;
 	user-select: none;
@@ -523,7 +523,7 @@ body > #顶部大图 > .顶部大图层 > img {
 	min-height: 100%;
 	width: 100%;
 }
-body > #顶部大图 > .顶部大图层.显示 {
+#顶部大图 > .顶部大图层.显示 {
 	opacity: 1;
 }
 
@@ -577,13 +577,13 @@ main > #分界线 > .特小尺寸 {
 }
 
 /* ==================== 左栏 ==================== */
-
-main > .左 > section#我 {
+.左 > section#我 {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
-section#我 > img {
+
+section#我 > .头像 {
 	margin-bottom: -64px;
 	position: relative;
 	top: -64px;

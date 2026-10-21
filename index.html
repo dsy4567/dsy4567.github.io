@@ -452,12 +452,12 @@
 				</article>
 
 				<style>
-					#网易云音乐-最近在听 .精选歌词容器,
-					#网易云音乐-最近在听 .播放排行 {
+					.网易云音乐-最近在听-精选歌词,
+					.网易云音乐-最近在听-播放排行 {
 						background-color: var(--bg-color);
 						border-radius: var(--border-radius);
 					}
-					#网易云音乐-最近在听 .精选歌词容器 {
+					.网易云音乐-最近在听-精选歌词 {
 						font-size: small;
 						position: relative;
 						padding: 32px;
@@ -465,25 +465,25 @@
 						flex-direction: column;
 						align-items: stretch;
 					}
-					#网易云音乐-最近在听 .精选歌词容器 .单句,
-					#网易云音乐-最近在听 .精选歌词容器 .歌曲信息 {
+					.网易云音乐-最近在听-精选歌词-单句,
+					.网易云音乐-最近在听-精选歌词-歌曲信息 {
 						display: block;
 						width: 100%;
 						border-radius: var(--border-radius);
 						margin-top: 0.5em;
 						margin-bottom: 0.5em;
 					}
-					#网易云音乐-最近在听 .播放排行 {
+					.网易云音乐-最近在听-播放排行 {
 						margin-top: 8px;
-						max-height: 75vh;
-						height: 75vh;
+						height: 50vh;
+						max-height: 480px;
 						overflow: auto;
 						padding: 0;
 					}
-					#网易云音乐-最近在听 .播放排行 > li {
+					.网易云音乐-最近在听-播放排行项 {
 						overflow: hidden;
 					}
-					#网易云音乐-最近在听 .播放排行::before {
+					.网易云音乐-最近在听-播放排行::before {
 						content: "" var(--range, "") var(--tip, "—— 加载中 ——");
 						display: block;
 						font-size: small;
@@ -492,10 +492,11 @@
 						text-align: center;
 						opacity: 0.7;
 					}
-					#网易云音乐-最近在听:focus-within:has(:focus-visible) .播放排行::before {
+					#网易云音乐-最近在听:focus-within:has(:focus-visible)
+						.网易云音乐-最近在听-播放排行::before {
 						content: var(--range) var(--tip-fv, "—— 加载中 ——");
 					}
-					#网易云音乐-最近在听 .播放排行 > li {
+					.网易云音乐-最近在听-播放排行项 {
 						border: 1px solid var(--accent-color-transparent);
 						border-radius: var(--border-radius);
 						box-sizing: content-box;
@@ -509,56 +510,56 @@
 						<svg class="小尺寸" data-icon="网易云音乐"></svg>
 						<span>网易云音乐-最近在听</span>
 					</h2>
-					<div class="精选歌词容器">
-						<span class="单句"><br /></span>
-						<span class="单句"><br /></span>
-						<span class="单句"><br /></span>
-						<span class="单句"><br /></span>
-						<span class="单句"><br /></span>
-						<span class="歌曲信息"><br /></span>
+					<div class="网易云音乐-最近在听-精选歌词">
+						<span class="网易云音乐-最近在听-精选歌词-单句"><br /></span>
+						<span class="网易云音乐-最近在听-精选歌词-单句"><br /></span>
+						<span class="网易云音乐-最近在听-精选歌词-单句"><br /></span>
+						<span class="网易云音乐-最近在听-精选歌词-单句"><br /></span>
+						<span class="网易云音乐-最近在听-精选歌词-单句"><br /></span>
+						<span class="网易云音乐-最近在听-精选歌词-歌曲信息"><br /></span>
 					</div>
-					<ol class="播放排行" aria-label="播放排行">
-						<li>
-							<span class="歌曲信息">
+					<ol class="网易云音乐-最近在听-播放排行" aria-label="播放排行">
+						<li class="网易云音乐-最近在听-播放排行项">
+							<span class="网易云音乐-最近在听-播放排行项-歌曲信息">
 								<span class="淡化"></span>
 							</span>
-							<span class="排名"></span>
+							<span class="网易云音乐-最近在听-播放排行项-排名"></span>
 						</li>
-						<li>
-							<span class="歌曲信息">
+						<li class="网易云音乐-最近在听-播放排行项">
+							<span class="网易云音乐-最近在听-播放排行项-歌曲信息">
 								<span class="淡化"></span>
 							</span>
-							<span class="排名"></span>
+							<span class="网易云音乐-最近在听-播放排行项-排名"></span>
 						</li>
-						<li>
-							<span class="歌曲信息">
+						<li class="网易云音乐-最近在听-播放排行项">
+							<span class="网易云音乐-最近在听-播放排行项-歌曲信息">
 								<span class="淡化"></span>
 							</span>
-							<span class="排名"></span>
+							<span class="网易云音乐-最近在听-播放排行项-排名"></span>
 						</li>
-						<li>
-							<span class="歌曲信息">
+						<li class="网易云音乐-最近在听-播放排行项">
+							<span class="网易云音乐-最近在听-播放排行项-歌曲信息">
 								<span class="淡化"></span>
 							</span>
-							<span class="排名"></span>
+							<span class="网易云音乐-最近在听-播放排行项-排名"></span>
 						</li>
-						<li>
-							<span class="歌曲信息">
+						<li class="网易云音乐-最近在听-播放排行项">
+							<span class="网易云音乐-最近在听-播放排行项-歌曲信息">
 								<span class="淡化"></span>
 							</span>
-							<span class="排名"></span>
+							<span class="网易云音乐-最近在听-播放排行项-排名"></span>
 						</li>
-						<li>
-							<span class="歌曲信息">
+						<li class="网易云音乐-最近在听-播放排行项">
+							<span class="网易云音乐-最近在听-播放排行项-歌曲信息">
 								<span class="淡化"></span>
 							</span>
-							<span class="排名"></span>
+							<span class="网易云音乐-最近在听-播放排行项-排名"></span>
 						</li>
-						<li>
-							<span class="歌曲信息">
+						<li class="网易云音乐-最近在听-播放排行项">
+							<span class="网易云音乐-最近在听-播放排行项-歌曲信息">
 								<span class="淡化"></span>
 							</span>
-							<span class="排名"></span>
+							<span class="网易云音乐-最近在听-播放排行项-排名"></span>
 						</li>
 					</ol>
 				</article>

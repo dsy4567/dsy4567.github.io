@@ -176,7 +176,7 @@ function 作废请求并重试() {
 function 渲染加载失败(容器, 原因) {
 	容器.textContent = "";
 	const 提示元素 = ce("div");
-	提示元素.className = "加载失败";
+	提示元素.className = "网易云音乐-最近在听-加载失败";
 	提示元素.append(原因 + "，");
 	const 重试链接 = ce("a");
 	// 只取路径与查询、丢弃 hash：同路径带 hash 的链接会被 main.js 放行给浏览器做锚点跳转，不会动态换页
@@ -315,12 +315,12 @@ async function 渲染精选歌词(/** @type {HTMLElement} */ 容器, /** @type {
 	容器.textContent = "";
 	for (const 行 of 歌词.行) {
 		const 单句 = ce("span");
-		单句.className = "单句";
+		单句.className = "网易云音乐-最近在听-精选歌词-单句";
 		单句.textContent = 行;
 		容器.append(单句);
 	}
 	const 歌曲信息 = ce("span");
-	歌曲信息.className = "歌曲信息";
+	歌曲信息.className = "网易云音乐-最近在听-精选歌词-歌曲信息";
 	歌曲信息.textContent = `—— ${歌词.歌手}《${歌词.歌名}》`;
 	容器.append(歌曲信息);
 
@@ -329,7 +329,7 @@ async function 渲染精选歌词(/** @type {HTMLElement} */ 容器, /** @type {
 
 /** 加载、选取并渲染精选歌词；失败或无歌词时替换为失败提示 */
 async function 填充精选歌词() {
-	const 容器 = qs("#网易云音乐-最近在听 .精选歌词容器");
+	const 容器 = qs(".网易云音乐-最近在听-精选歌词");
 	if (!容器) return;
 	if (精选歌词缓存 === "失败") {
 		渲染加载失败(容器, "歌词加载失败：" + (歌词失败原因 || "暂无歌词"));
@@ -393,13 +393,13 @@ function 对齐封面相位(/** @type {HTMLImageElement} */ 封面) {
 
 /** 把模块内全部已就绪封面对齐到公共相位：容器重新进入播放范围时调用，抵消暂停期间流逝的时间 */
 function 对齐全部封面相位(/** @type {HTMLElement} */ 模块) {
-	for (const 封面 of 模块.querySelectorAll("img.封面.大图就绪"))
+	for (const 封面 of 模块.querySelectorAll("img.网易云音乐-最近在听-播放排行项-封面.大图就绪"))
 		if (封面 instanceof HTMLImageElement) 对齐封面相位(封面);
 }
 
 /** 请求一项的封面大图；已就绪者（缓存命中或此前已加载）无图可请求，改为对齐公共相位 */
 function 请求封面大图(/** @type {HTMLElement} */ 项元素) {
-	const 封面 = 项元素.querySelector("img.封面");
+	const 封面 = 项元素.querySelector("img.网易云音乐-最近在听-播放排行项-封面");
 	if (!(封面 instanceof HTMLImageElement)) return;
 	if (封面.dataset.大图地址) 加载封面大图(封面);
 	else 对齐封面相位(封面);
@@ -462,7 +462,7 @@ async function 渲染最近在听() {
 		// 请求已有结论（失败或数据非法）时把排行与歌词替换为失败提示，而不是移除整个 section
 		模块.classList.remove("加载中");
 		const 原因 = "最近在听加载失败：" + (加载失败原因 || "暂时没有可展示的数据");
-		const 排行区域 = 模块.querySelector(".播放排行");
+		const 排行区域 = 模块.querySelector(".网易云音乐-最近在听-播放排行");
 		if (排行区域 instanceof HTMLElement) {
 			// 清掉 ::before 里默认的「—— 加载中 ——」，避免与失败提示并存
 			排行区域.style.setProperty("--range", '""');
@@ -471,16 +471,16 @@ async function 渲染最近在听() {
 			渲染加载失败(排行区域, 原因);
 		}
 		// 歌词依赖排行数据，已请求过才一并替换；首次请求尚未有结论时保留骨架等待渲染
-		const 歌词区域 = 模块.querySelector(".精选歌词容器");
+		const 歌词区域 = 模块.querySelector(".网易云音乐-最近在听-精选歌词");
 		if (排行已请求 && 歌词区域 instanceof HTMLElement) 渲染加载失败(歌词区域, 原因);
 		return;
 	}
 	/** @type {HTMLElement | null} */
-	const 排行容器 = 模块.querySelector(".播放排行");
+	const 排行容器 = 模块.querySelector(".网易云音乐-最近在听-播放排行");
 	if (!排行容器) return;
 	// 数据已就绪、准备操作 DOM，此时才摘掉骨架的闪烁样式
 	模块.classList.remove("加载中");
-	// 接口不提供统计区间，文案固定为「最近一周」，写入 CSS 变量交给 .播放排行::before 展示（值含引号，content 可直接引用）
+	// 接口不提供统计区间，文案固定为「最近一周」，写入 CSS 变量交给 .网易云音乐-最近在听-播放排行::before 展示（值含引号，content 可直接引用）
 	排行容器.style.setProperty("--range", '"最近一周 | "');
 	排行容器.style.setProperty("--tip", '"双击以播放"');
 	排行容器.style.setProperty("--tip-fv", '"聚焦并按空格以播放"');
@@ -498,13 +498,14 @@ async function 渲染最近在听() {
 	const 项元素列表 = [];
 	await 批量低阻塞操作(展示歌曲, 项 => {
 		const 项元素 = ce("li");
+		项元素.className = "网易云音乐-最近在听-播放排行项";
 		项元素.style.setProperty("--progress", (项.score / 最大score) * 100 + "%");
 		项元素.tabIndex = 0;
 		项元素.dataset.songId = "" + 项.song.id;
 		const 歌手 = 项.song.ar.map(歌手信息 => 歌手信息.name).join(" / ");
 		if (项.song.al?.picUrl) {
 			const 封面 = ce("img");
-			封面.className = "封面";
+			封面.className = "网易云音乐-最近在听-播放排行项-封面";
 			const 封面地址 = 项.song.al.picUrl.replace("http://", "https://");
 			// 封面铺满整行，16px 小图放大严重模糊：lazy 小图立即占位（居中静止），进入加载范围后再并行请求大图，加载完成后换入并启用平移动画
 			封面.src = 封面地址 + "?param=16y16";
@@ -522,7 +523,7 @@ async function 渲染最近在听() {
 			项元素.append(封面);
 		}
 		const 歌曲信息 = ce("span");
-		歌曲信息.className = "歌曲信息";
+		歌曲信息.className = "网易云音乐-最近在听-播放排行项-歌曲信息";
 
 		const 歌名元素 = ce("span");
 		歌名元素.textContent = 项.song.name;
@@ -538,7 +539,7 @@ async function 渲染最近在听() {
 
 		// 不展示任何数字，名次由 CSS 的 counter 输出「TOP n」
 		const 排名 = ce("span");
-		排名.className = "排名";
+		排名.className = "网易云音乐-最近在听-播放排行项-排名";
 		项元素.append(歌曲信息, 排名);
 		排行片段.append(项元素);
 		项元素列表.push(项元素);

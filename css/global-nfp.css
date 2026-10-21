@@ -203,10 +203,11 @@ div#侧边按钮容器 {
 	}
 }
 /* 循环动画 */
-#网易云音乐-最近在听.加载中 .精选歌词容器 .单句,
-#网易云音乐-最近在听.加载中 .精选歌词容器 .歌曲信息,
-div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面,
-div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封面 + svg {
+.加载中 .网易云音乐-最近在听-精选歌词-单句,
+.加载中 .网易云音乐-最近在听-精选歌词-歌曲信息,
+.加载中 .网易云音乐-最近在听-播放排行项,
+.侧边按钮容器-拥有更多选项#网易云音乐 #网易云音乐封面,
+.侧边按钮容器-拥有更多选项#网易云音乐 #网易云音乐封面 + svg {
 	animation-iteration-count: infinite;
 	animation-timing-function: linear;
 	animation-fill-mode: forwards;
@@ -275,6 +276,9 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 	}
 	a.hash链接::after {
 		content: "" !important;
+	}
+	main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
+		opacity: 0;
 	}
 	main {
 		flex-direction: column !important;
@@ -654,7 +658,8 @@ div#侧边按钮容器 {
 		top: max(0px, calc(75vh - 46px * 4));
 	}
 }
-div#侧边按钮容器 > :is(button, .拥有更多选项) {
+.侧边按钮容器-无更多选项,
+.侧边按钮容器-拥有更多选项 {
 	box-shadow: var(--box-shadow-strong);
 	background-color: var(--surface-2);
 	border: var(--border);
@@ -673,7 +678,7 @@ div#侧边按钮容器 > :is(button, .拥有更多选项) {
 }
 /* 黑色半透明全屏遮罩，挡住面板外的点击，点击遮罩/收起按钮自动隐藏。
    元素由 js/main.js 动态创建，紧邻 #侧边按钮容器 之后（与容器同为 body 的直接子元素），
-   故这里用兄弟选择器而非 body:has()：展开任一 .拥有更多选项（悬停或内部聚焦）时
+   故这里用兄弟选择器而非 body:has()：展开任一 .侧边按钮容器-拥有更多选项（悬停或内部聚焦）时
    由 JS 添加 .显示，指针离开面板即移除 */
 div#侧边遮罩 {
 	position: fixed;
@@ -706,54 +711,50 @@ body.正在加载 > #侧边遮罩.显示 {
 
 /* 键盘聚焦（:focus-visible）判定由 JS 给容器加 .有键盘焦点 承担，取代 :has(:focus-visible)：
    鼠标点击得到的焦点不是 :focus-visible，不会加该类名，故不会把面板误判为展开（见 js/main.js 的 同步焦点状态） */
-@supports selector(:has(*)) {
-	div#侧边按钮容器:hover > :is(.拥有更多选项, button),
-	div#侧边按钮容器.有键盘焦点 > :is(.拥有更多选项, button):is(:focus-within, :focus-visible) {
-		opacity: 1;
-	}
-	div#侧边按钮容器 > :is(:hover, :focus-visible),
-	div#侧边按钮容器.有键盘焦点 > :is(.拥有更多选项, button):focus-within,
-	div#侧边按钮容器 > #关闭侧边按钮 {
-		border-radius: unset;
-		border-top-left-radius: 50%;
-		border-bottom-left-radius: 50%;
-		border-top-right-radius: 0;
-		border-bottom-right-radius: 0;
-		border-right: 1px solid transparent;
-		transform: translateX(1px);
-	}
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项:hover,
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项:focus-visible,
+#侧边按钮容器 > .侧边按钮容器-无更多选项:hover,
+#侧边按钮容器 > .侧边按钮容器-无更多选项:focus-visible,
+#侧边按钮容器.有键盘焦点 > .侧边按钮容器-拥有更多选项:focus-within {
+	opacity: 1;
 }
-@supports not selector(:has(*)) {
-	div#侧边按钮容器 > *:hover,
-	div#侧边按钮容器.有键盘焦点 > *:focus-within,
-	div#侧边按钮容器 > #关闭侧边按钮 {
-		border-radius: unset;
-		border-top-left-radius: 50%;
-		border-bottom-left-radius: 50%;
-		border-top-right-radius: 0;
-		border-bottom-right-radius: 0;
-		border-right: 1px solid transparent;
-		opacity: 1;
-		transform: translateX(1px);
-	}
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项:hover,
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项:focus-visible,
+#侧边按钮容器 > .侧边按钮容器-无更多选项:hover,
+#侧边按钮容器 > .侧边按钮容器-无更多选项:focus-visible,
+#侧边按钮容器.有键盘焦点 > .侧边按钮容器-拥有更多选项:focus-within,
+#侧边按钮容器 > .侧边按钮容器-无更多选项#关闭侧边按钮 {
+	border-radius: unset;
+	border-top-left-radius: 50%;
+	border-bottom-left-radius: 50%;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	border-right: 1px solid transparent;
+	transform: translateX(1px);
+}
+
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项:hover,
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项:focus-visible,
+#侧边按钮容器.有键盘焦点 > .侧边按钮容器-拥有更多选项:focus-within {
+	border-bottom-left-radius: 0;
 }
 
 /* 防动画期间误触 */
-div#侧边按钮容器 > .拥有更多选项::before,
-div#侧边按钮容器 > button::before {
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项::before,
+#侧边按钮容器 > .侧边按钮容器-无更多选项::before {
 	display: block;
 	position: absolute;
 	height: calc(100% + 2px);
 	z-index: 1;
 }
-div#侧边按钮容器 > button:hover::before {
+#侧边按钮容器 > .侧边按钮容器-无更多选项:hover::before {
 	content: "";
 	background: transparent;
 	border-radius: 50%;
 	left: -6px;
 	width: calc(100% + 2px);
 }
-div#侧边按钮容器 > .拥有更多选项::before {
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项::before {
 	content: "";
 	background-color: transparent;
 	left: 0;
@@ -763,27 +764,12 @@ div#侧边按钮容器 > .拥有更多选项::before {
 	visibility: visible;
 	transition: var(--transition) visibility;
 }
-div#侧边按钮容器 > .拥有更多选项:hover::before {
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项:hover::before {
 	visibility: hidden;
 }
 
-@supports selector(:has(*)) {
-	div#侧边按钮容器 > .拥有更多选项:is(:hover, :focus-visible),
-	div#侧边按钮容器.有键盘焦点 > .拥有更多选项:focus-within {
-		border-bottom-left-radius: 0;
-		z-index: 1;
-	}
-}
-@supports not selector(:has(*)) {
-	div#侧边按钮容器 > .拥有更多选项:focus-visible,
-	div#侧边按钮容器.有键盘焦点 > .拥有更多选项:focus-within {
-		border-bottom-left-radius: 0;
-		z-index: 1;
-	}
-}
-
-div#侧边按钮容器 > .拥有更多选项,
-div#侧边按钮容器 > button,
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项,
+#侧边按钮容器 > .侧边按钮容器-无更多选项,
 div#侧边按钮容器 .更多选项 {
 	transition:
 		var(--transition) border-radius,
@@ -820,25 +806,15 @@ div#侧边按钮容器 .更多选项 + .更多选项 {
 	border-bottom-left-radius: 19px;
 	border-top: var(--border);
 }
-@supports selector(:has(*)) {
-	div#侧边按钮容器 > .拥有更多选项:is(:hover, :focus-visible) > .更多选项,
-	div#侧边按钮容器.有键盘焦点 > .拥有更多选项:focus-within > .更多选项 {
-		pointer-events: auto;
-		opacity: 1;
-		visibility: visible;
-	}
-}
-@supports not selector(:has(*)) {
-	div#侧边按钮容器 > .拥有更多选项:hover > .更多选项,
-	div#侧边按钮容器 > .拥有更多选项:focus-visible > .更多选项,
-	div#侧边按钮容器.有键盘焦点 > .拥有更多选项:focus-within > .更多选项 {
-		pointer-events: auto;
-		opacity: 1;
-		visibility: visible;
-	}
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项:hover > .更多选项,
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项:focus-visible > .更多选项,
+#侧边按钮容器.有键盘焦点 > .侧边按钮容器-拥有更多选项:focus-within > .更多选项 {
+	pointer-events: auto;
+	opacity: 1;
+	visibility: visible;
 }
 
-div#侧边按钮容器 .更多选项 > button {
+.侧边按钮容器-更多选项-按钮 {
 	background-color: var(--surface-2);
 	box-sizing: border-box;
 	border: var(--border);
@@ -858,25 +834,26 @@ div#侧边按钮容器 .更多选项 > button {
 	-webkit-tap-highlight-color: transparent;
 	-webkit-touch-callout: none;
 }
-div#侧边按钮容器 .更多选项 > button.激活,
-div#侧边按钮容器 .更多选项 > button:active {
+.侧边按钮容器-更多选项-按钮.激活,
+.侧边按钮容器-更多选项-按钮:active {
 	background-color: var(--overlay);
 }
 
 /* ==================== 侧边按钮-关闭侧边按钮 ==================== */
 /* 只在触摸屏出现；默认视觉透明但保持可点、留在 AT 树中，展开任一面板时才显露 */
-div#侧边按钮容器 > button#关闭侧边按钮 {
+#侧边按钮容器 > .侧边按钮容器-无更多选项#关闭侧边按钮 {
 	opacity: 0;
 	display: none;
 }
-div#侧边按钮容器 > #关闭侧边按钮 > svg {
+.侧边按钮容器-无更多选项#关闭侧边按钮 > svg {
 	transform: translateX(2px) rotateY(180deg);
 }
 @media (any-pointer: coarse) {
-	div#侧边按钮容器 > button#关闭侧边按钮 {
+	#侧边按钮容器 > .侧边按钮容器-无更多选项#关闭侧边按钮 {
 		display: flex;
 	}
-	div#侧边按钮容器:has(> .拥有更多选项:hover) > button#关闭侧边按钮 {
+	div#侧边按钮容器:has(> .侧边按钮容器-拥有更多选项:hover)
+		> .侧边按钮容器-无更多选项#关闭侧边按钮 {
 		border: var(--border);
 		border-radius: 50%;
 		opacity: 1;
@@ -887,19 +864,20 @@ div#侧边按钮容器 > #关闭侧边按钮 > svg {
 
 /* ==================== 侧边按钮-回到顶部 ==================== */
 /* 页面处于顶部时不显示回到顶部：延迟 3s 后禁止点击，避免滚动/换页途中误触 */
-body.顶部 div#侧边按钮容器 > #回到顶部 {
+body.顶部 .侧边按钮容器-无更多选项#回到顶部 {
 	animation-name: 延迟不可点击;
 	animation-duration: 3s;
 	animation-fill-mode: forwards;
 	opacity: 0;
 }
-div#侧边按钮容器 > #回到顶部 {
+.侧边按钮容器-无更多选项#回到顶部 {
 	animation-name: none;
 }
 
 /* ==================== 侧边按钮-网易云音乐 ==================== */
-div#侧边按钮容器 > #网易云音乐 {
+.侧边按钮容器-拥有更多选项#网易云音乐 {
 	--container-width: calc(32px * 8);
+	z-index: 1;
 }
 
 #网易云音乐 #网易云音乐封面,
@@ -932,18 +910,10 @@ div#侧边按钮容器 > #网易云音乐 {
 	animation-play-state: running;
 }
 
-@supports selector(:has(*)) {
-	div#侧边按钮容器 > #网易云音乐:is(:hover, :focus-visible),
-	div#侧边按钮容器.有键盘焦点 > #网易云音乐:focus-within {
-		transform: translateX(calc((var(--container-width) - 16px) * -1));
-	}
-}
-@supports not selector(:has(*)) {
-	div#侧边按钮容器 > #网易云音乐:hover,
-	div#侧边按钮容器 > #网易云音乐:focus-visible,
-	div#侧边按钮容器.有键盘焦点 > #网易云音乐:focus-within {
-		transform: translateX(calc((var(--container-width) - 16px) * -1));
-	}
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项#网易云音乐:hover,
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项#网易云音乐:focus-visible,
+#侧边按钮容器.有键盘焦点 > .侧边按钮容器-拥有更多选项#网易云音乐:focus-within {
+	transform: translateX(calc((var(--container-width) - 16px) * -1));
 }
 
 #网易云音乐 #歌词 {
@@ -993,7 +963,7 @@ div#侧边按钮容器 > #网易云音乐 {
 	overflow-y: auto;
 	overflow-x: hidden;
 }
-#网易云音乐 > #播放列表 li {
+.网易云音乐-播放列表-歌单项 {
 	--progress: 0%;
 	box-sizing: border-box;
 	border: var(--border-soft);
@@ -1010,22 +980,22 @@ div#侧边按钮容器 > #网易云音乐 {
 	position: relative;
 }
 
-#网易云音乐 > #播放列表 > li:hover,
-#网易云音乐 > #播放列表 > li:focus-visible {
+.网易云音乐-播放列表-歌单项:hover,
+.网易云音乐-播放列表-歌单项:focus-visible {
 	background-color: var(--overlay);
 }
-#网易云音乐 > #播放列表 > li.正在播放 {
+.网易云音乐-播放列表-歌单项.正在播放 {
 	background-color: var(--accent-color-transparent);
 }
-#网易云音乐 > #播放列表 > li.正在播放::after,
-#网易云音乐 > #播放列表 > li.正在播放::before {
+.网易云音乐-播放列表-歌单项.正在播放::after,
+.网易云音乐-播放列表-歌单项.正在播放::before {
 	content: "";
 	display: block;
 	position: absolute;
 	pointer-events: none;
 }
 /* 左侧竖条：落在 li 外侧的面板内边距里，因此 li 不能靠 overflow 裁剪圆角 */
-#网易云音乐 > #播放列表 > li.正在播放::before {
+.网易云音乐-播放列表-歌单项.正在播放::before {
 	background-color: var(--accent-color);
 	border-radius: var(--border-radius);
 	top: calc(50% - 18px);
@@ -1036,7 +1006,7 @@ div#侧边按钮容器 > #网易云音乐 {
 /* 播放进度填充：元素铺满内边距盒、尺寸恒定，圆角便不会被浏览器按比例压缩，
    进度再小也不会从 li 的圆角处溢出；进度改用 background-size 表达，才能参与过渡。
    时长需与 ncm.js 的 进度更新间隔 一致，否则两次采样之间会先走完再停顿 */
-#网易云音乐 > #播放列表 > li.正在播放::after {
+.网易云音乐-播放列表-歌单项.正在播放::after {
 	top: 0;
 	right: 0;
 	bottom: 0;
@@ -1049,7 +1019,8 @@ div#侧边按钮容器 > #网易云音乐 {
 	border-radius: calc(var(--border-radius) - 1px);
 }
 
-#网易云音乐 > #播放列表 li span {
+.网易云音乐-播放列表-歌单项-歌名,
+.网易云音乐-播放列表-歌单项-歌手 {
 	display: block;
 	white-space: nowrap;
 	text-overflow: ellipsis;
@@ -1057,24 +1028,17 @@ div#侧边按钮容器 > #网易云音乐 {
 }
 
 /* ==================== 侧边按钮-主题 ==================== */
-div#侧边按钮容器 > #切换主题 {
+.侧边按钮容器-拥有更多选项#切换主题 {
 	z-index: 0;
 	--container-width: calc(32px * 4);
 }
-@supports selector(:has(*)) {
-	div#侧边按钮容器 > #切换主题:is(:hover, :focus-visible),
-	div#侧边按钮容器.有键盘焦点 > #切换主题:focus-within {
-		transform: translateX(calc(-32px * 3 - 6px));
-	}
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项#切换主题:hover,
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项#切换主题:focus-visible,
+#侧边按钮容器.有键盘焦点 > .侧边按钮容器-拥有更多选项#切换主题:focus-within {
+	transform: translateX(calc(-32px * 3 - 6px));
 }
-@supports not selector(:has(*)) {
-	div#侧边按钮容器 > #切换主题:hover,
-	div#侧边按钮容器 > #切换主题:focus-visible,
-	div#侧边按钮容器.有键盘焦点 > #切换主题:focus-within {
-		transform: translateX(calc(-32px * 3 - 6px));
-	}
-}
-div#侧边按钮容器 > #切换主题::before {
+
+.侧边按钮容器-拥有更多选项#切换主题::before {
 	height: 100%;
 	bottom: 0;
 }
@@ -1124,13 +1088,13 @@ html.深色 #切换主题 > #主题控件 > #背景模式[title*="自动"] {
    #切换主题 上会误触。故 #网易云音乐 被 hover（含读屏的模拟 hover）时隐藏 #切换主题；
    反向不需要处理：#切换主题 的面板不遮住 #网易云音乐，且 CSS 无前驱兄弟选择器。
    写死两个 id、只用后继兄弟选择器，无需 :has()，Chrome 86 亦可生效；:focus-visible 不参与判断 */
-div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
+#侧边按钮容器 > .侧边按钮容器-拥有更多选项#网易云音乐:hover ~ #切换主题 {
 	visibility: hidden;
 }
 
 /* ==================== 首页 ==================== */
-#网易云音乐-最近在听 .精选歌词容器::after,
-#网易云音乐-最近在听 .精选歌词容器::before {
+.网易云音乐-最近在听-精选歌词::after,
+.网易云音乐-最近在听-精选歌词::before {
 	padding: 0;
 	position: absolute;
 	font-family: Arial;
@@ -1139,42 +1103,43 @@ div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
 	width: 1px;
 	height: 1px;
 }
-#网易云音乐-最近在听 .精选歌词容器::after {
+.网易云音乐-最近在听-精选歌词::after {
 	content: "”";
 	bottom: 40px;
 	right: 32px;
 }
-#网易云音乐-最近在听 .精选歌词容器::before {
+.网易云音乐-最近在听-精选歌词::before {
 	content: "“";
 	top: 2px;
 	left: 16px;
 }
 
-#网易云音乐-最近在听 .精选歌词容器 .单句 {
+.网易云音乐-最近在听-精选歌词-单句 {
 	text-align: center;
 }
-#网易云音乐-最近在听 .精选歌词容器 .歌曲信息 {
+.网易云音乐-最近在听-精选歌词-歌曲信息 {
 	text-align: end;
 }
-#网易云音乐-最近在听 .精选歌词容器 .单句,
-#网易云音乐-最近在听 .精选歌词容器 .歌曲信息 {
+.网易云音乐-最近在听-精选歌词-单句,
+.网易云音乐-最近在听-精选歌词-歌曲信息 {
 	font-style: italic;
 }
 
-#网易云音乐-最近在听.加载中 .精选歌词容器 .单句,
-#网易云音乐-最近在听.加载中 .精选歌词容器 .歌曲信息,
-#网易云音乐-最近在听.加载中 > .播放排行 > div {
+.加载中 .网易云音乐-最近在听-精选歌词-单句,
+.加载中 .网易云音乐-最近在听-精选歌词-歌曲信息,
+.加载中 .网易云音乐-最近在听-播放排行项 {
 	background-color: var(--overlay-strong);
 	color: var(--overlay-strong);
 	animation-name: 高频闪烁;
 	animation-duration: 3s;
 }
 
-#网易云音乐-最近在听 .播放排行 {
+.网易云音乐-最近在听-播放排行 {
 	counter-reset: index;
 }
-#网易云音乐-最近在听 .播放排行 > li {
+.网易云音乐-最近在听-播放排行项 {
 	--item-height: 124px;
+	animation-name: none;
 	color: #fff;
 	background-color: #333;
 	font-size: smaller;
@@ -1186,12 +1151,12 @@ div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
 	position: relative;
 	transition: var(--transition) border;
 }
-#网易云音乐-最近在听 .播放排行 > li:hover,
-#网易云音乐-最近在听 .播放排行 > li:focus-visible {
+.网易云音乐-最近在听-播放排行项:hover,
+.网易云音乐-最近在听-播放排行项:focus-visible {
 	border: var(--border-strong);
 }
-#网易云音乐-最近在听 .播放排行 > li:hover::after,
-#网易云音乐-最近在听 .播放排行 > li:focus-visible::after {
+.网易云音乐-最近在听-播放排行项:hover::after,
+.网易云音乐-最近在听-播放排行项:focus-visible::after {
 	background-color: transparent;
 }
 /* 封面平移动画（translateY 自上而下、再自下而上循环）：动画由 CSS 声明，home.js 只负责在 .大图就绪
@@ -1199,7 +1164,7 @@ div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
    由 animation-play-state 统一开关。animation 与 animation-play-state 分两条规则写，是因为
    animation 简写隐含 animation-play-state: running，写在一条里会互相覆盖。
    transform 走合成器，动画期间不逐帧重绘 */
-#网易云音乐-最近在听 .播放排行 > li > .封面 {
+.网易云音乐-最近在听-播放排行项-封面 {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -1213,29 +1178,29 @@ div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
 	transition: var(--transition) background-color;
 }
 /* 时长亦硬编码于 home.js 的 封面动画半周期毫秒：相位对齐要求两处一致 */
-#网易云音乐-最近在听 .播放排行 > li > .封面.大图就绪 {
+.网易云音乐-最近在听-播放排行项-封面.大图就绪 {
 	animation: 封面平移 15s ease-in-out infinite alternate;
 	animation-play-state: paused;
 }
-#网易云音乐-最近在听.播放中 .播放排行 > li > .封面.大图就绪 {
+#网易云音乐-最近在听.播放中 .网易云音乐-最近在听-播放排行项-封面.大图就绪 {
 	animation-play-state: running;
 }
 @media (prefers-reduced-motion: reduce) {
 	/* 减少动效时干脆不留动画：全局规则只把时长归零，暂停中的动画会停在起始位移而非居中 */
-	#网易云音乐-最近在听 .播放排行 > li > .封面.大图就绪 {
+	.网易云音乐-最近在听-播放排行项-封面.大图就绪 {
 		animation: none;
 	}
 }
 
-.播放排行 > li::after,
-.播放排行 > li::before {
+.网易云音乐-最近在听-播放排行项::after,
+.网易云音乐-最近在听-播放排行项::before {
 	content: "";
 	position: absolute;
 	transition:
 		var(--transition) background-color,
 		var(--transition) opacity;
 }
-.播放排行 > li::after {
+.网易云音乐-最近在听-播放排行项::after {
 	top: 0;
 	left: 0;
 	background-color: var(--accent-color);
@@ -1244,7 +1209,7 @@ div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
 	width: min(var(--progress), 95%);
 	height: 100%;
 }
-.播放排行 > li::before {
+.网易云音乐-最近在听-播放排行项::before {
 	content: var(--tip, "");
 	background: linear-gradient(to top, rgba(0, 0, 0, 0.45), transparent);
 	opacity: 0;
@@ -1254,25 +1219,19 @@ div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
 	width: 100%;
 	z-index: 1;
 }
-.播放排行:hover > li::before {
-	content: var(--tip, "");
-}
-.播放排行 > li:focus-visible::before {
+.网易云音乐-最近在听-播放排行项:focus-visible::before {
 	content: var(--tip-fv, "");
 }
-.播放排行 > li:hover::before {
-	content: var(--tip, "");
-}
-.播放排行 > li:hover::before,
-.播放排行 > li:focus-visible::before {
+.网易云音乐-最近在听-播放排行项:hover::before,
+.网易云音乐-最近在听-播放排行项:focus-visible::before {
 	opacity: 1;
 }
-#网易云音乐-最近在听.加载中 .播放排行 > li > .歌曲信息,
-#网易云音乐-最近在听.加载中 .播放排行 > li > .排名 {
+.加载中 .网易云音乐-最近在听-播放排行项-歌曲信息,
+.加载中 .网易云音乐-最近在听-播放排行项-排名 {
 	display: none;
 }
-.播放排行 > li > .歌曲信息,
-.播放排行 > li > .排名 {
+.网易云音乐-最近在听-播放排行项-歌曲信息,
+.网易云音乐-最近在听-播放排行项-排名 {
 	z-index: 1;
 	position: relative;
 	background-color: #333c;
@@ -1281,25 +1240,24 @@ div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
 	margin: 4px;
 	transition: var(--transition) background-color;
 }
-.播放排行 > li:hover > .歌曲信息,
-.播放排行 > li:hover > .排名,
-.播放排行 > li:focus-visible > .歌曲信息,
-.播放排行 > li:focus-visible > .排名 {
+.网易云音乐-最近在听-播放排行项:hover > .网易云音乐-最近在听-播放排行项-歌曲信息,
+.网易云音乐-最近在听-播放排行项:hover > .网易云音乐-最近在听-播放排行项-排名,
+.网易云音乐-最近在听-播放排行项:focus-visible > .网易云音乐-最近在听-播放排行项-歌曲信息,
+.网易云音乐-最近在听-播放排行项:focus-visible > .网易云音乐-最近在听-播放排行项-排名 {
 	background-color: transparent;
 }
-.播放排行 > li > .歌曲信息 > :first-child {
+.网易云音乐-最近在听-播放排行项-歌曲信息 > :first-child {
 	margin-right: 0.5em;
 }
-.播放排行 > li > .排名::after {
+.网易云音乐-最近在听-播放排行项-排名::after {
 	content: "TOP " counter(index);
 	counter-increment: index;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
 
-/* 加载失败提示：整体替换排行榜/歌词区域的内容，需覆盖 .播放排行 > * 的行样式 */
-#网易云音乐-最近在听 .播放排行 > .加载失败,
-#网易云音乐-最近在听 .精选歌词容器 > .加载失败 {
+/* 加载失败提示：整体替换排行榜/歌词区域的内容，需覆盖该区域原有的行样式 */
+.网易云音乐-最近在听-加载失败 {
 	display: block;
 	height: auto;
 	margin: 12px;
@@ -1311,7 +1269,7 @@ div#侧边按钮容器 > #网易云音乐:hover ~ #切换主题 {
 	font-weight: normal;
 }
 /* 失败提示不渲染榜单行左侧的进度条 */
-#网易云音乐-最近在听 .播放排行 > .加载失败::after {
+.网易云音乐-最近在听-加载失败::after {
 	content: none;
 }
 
@@ -1349,10 +1307,8 @@ code.hljs.已复制:hover::before {
 	margin-bottom: 12px;
 	width: fit-content;
 }
-section#评论区 .评论 .用户信息 > * {
+#评论区 .用户信息 > * {
 	margin-right: 8px;
-}
-section#评论区 .评论 .评论正文 {
 }
 
 /* ==================== 友链 ==================== */
