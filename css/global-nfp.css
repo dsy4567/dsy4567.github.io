@@ -306,7 +306,7 @@ div#侧边按钮容器 > .拥有更多选项#网易云音乐 #网易云音乐封
 		position: relative !important;
 		border-bottom: 1px solid #000;
 	}
-	spoiler {
+	x-spoiler {
 		color: #fff;
 	}
 	pre {

@@ -18,7 +18,7 @@
 ## C
 
 - cn.bing.com：必应搜索，同上。
-- chatgpt.com：ChatGPT 2024 年官宣不登录即可使用。<spoiler>但我梯子不干净（悲</spoiler>
+- chatgpt.com：ChatGPT 2024 年官宣不登录即可使用。<x-spoiler>但我梯子不干净（悲</x-spoiler>
 
 ## D
 
@@ -38,7 +38,7 @@
 ## G
 
 - greasyfork.org：油叉，有超多的用户脚本，可用来大幅提高上网冲浪体验，我也在上面发过脚本。
-- github.com：全球最大的开源社区<spoiler>和同性交友网站（jiushi</spoiler>。
+- github.com：全球最大的开源社区<x-spoiler>和同性交友网站（jiushi</x-spoiler>。
 
 ## H
 
@@ -65,7 +65,7 @@
 
 ## N
 
-- ncm.vercel.dsy4567.icu：自建网易云音乐 API，用于测试自己写的第三方网易云客户端。<spoiler>2023 年 10 月因为这个号被冻了，<del>网易云你\*\*\*</del></spoiler>
+- ncm.vercel.dsy4567.icu：自建网易云音乐 API，用于测试自己写的第三方网易云客户端。<x-spoiler>2023 年 10 月因为这个号被冻了，<del>网易云你\*\*\*</del></x-spoiler>
 - note.ms：公共笔记，我以前经常会备份和恢复 /ad 里的内容，有时候也会在这个网站玩一整晚。
 
 ## O

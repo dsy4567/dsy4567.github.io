@@ -243,9 +243,9 @@ ___
 
 </details>
 
-本站自定义的剧透标签 `<spoiler>`，鼠标悬停或键盘聚焦后才会显示：
+本站自定义的剧透标签 `<x-spoiler>`，鼠标悬停或键盘聚焦后才会显示：
 
-<spoiler>这就是被藏起来的内容</spoiler>
+<x-spoiler>这就是被藏起来的内容</x-spoiler>
 
 其它 HTML 标签：<del>删除</del>、<ins>插入</ins>、<mark>高亮</mark>、<small>小字</small>、<samp>程序输出</samp>、<q>短引用</q>、<code>code 标签</code>、<span style="color: #f66">带内联样式的 span</span>、<bdo dir="rtl">反向文字</bdo>。
 

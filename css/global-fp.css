@@ -189,19 +189,14 @@ video {
 	border-radius: var(--border-radius);
 }
 
-spoiler {
+x-spoiler {
 	background-color: #000;
 	color: #000;
 	transition: var(--transition) color;
 }
-main:focus-within spoiler {
+x-spoiler:hover,
+x-spoiler:focus-visible {
 	color: #fff;
-}
-main:focus-within:hover spoiler {
-	color: #000;
-}
-spoiler:hover {
-	color: #fff !important;
 }
 
 svg[data-icon] {

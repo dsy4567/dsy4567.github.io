@@ -1,6 +1,6 @@
 # 记一次在 Termux 上搭建 code-server 环境
 
-店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<spoiler>世界加钱可及的</spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
+店里的电脑装着 Windows7，许多开发工具不能安装，因此有了远程开发的需求。说起远程开发，我第一个想到的肯定是 GitHub Codespaces。但这玩意服务器在国外，而且店里的宽带运营商是<x-spoiler>世界加钱可及的</x-spoiler>某信，裸连 GitHub Codespaces 时访问速度高达几十 kb/s。正好最近买了一台新手机，我准备在它上面借助 Termux 搭建 code-server 环境。
 
 <!-- more -->
 
@@ -311,7 +311,7 @@ chmod 777 ~/code-server.sh
 
 顺便推荐一些我正在用的扩展：
 
--   <spoiler><del>厚着脸皮给自己打广告</del> 4399 on VSCode：在 VSCode 上玩 4399 小游戏</spoiler>
+-   <x-spoiler><del>厚着脸皮给自己打广告</del> 4399 on VSCode：在 VSCode 上玩 4399 小游戏</x-spoiler>
 -   Code Spell Checker：检查代码里的拼写错误，并给出修改建议
 -   Comment Translate：翻译代码里的注释，支持替换需要翻译的文字
 -   ESLint：规范代码风格
