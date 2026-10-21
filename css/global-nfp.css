@@ -173,17 +173,6 @@ div#侧边按钮容器 {
 			border-top: min(var(--height), var(--maxh)) solid transparent;
 		}
 	}
-	@keyframes 右栏阴影上移动端 {
-		0% {
-			box-shadow: 0px -4px 16px 0px rgba(0, 0, 0, 0.5);
-		}
-		66% {
-			box-shadow: 0px -4px 16px 0px rgba(0, 0, 0, 0);
-		}
-		100% {
-			box-shadow: 0px -4px 16px 0px rgba(0, 0, 0, 0);
-		}
-	}
 }
 @keyframes 高频闪烁 {
 	0% {
@@ -418,9 +407,7 @@ div.通知 {
 	animation-iteration-count: 1;
 	animation-name: 显示;
 	/* animation-name: 隐藏; */
-	box-shadow:
-		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
-		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	box-shadow: var(--box-shadow-strong);
 	background-color: var(--surface-1);
 	border: var(--border);
 	border-radius: var(--border-radius);
@@ -438,9 +425,7 @@ div.通知 {
 	background-color: var(--surface-1);
 	border: var(--border);
 	border-radius: var(--border-radius);
-	box-shadow:
-		rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
-		rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+	box-shadow: var(--box-shadow-strong);
 	margin: 8px;
 	padding: 4px;
 	max-height: 33vh;
@@ -461,7 +446,7 @@ div.通知 {
 
 .横幅 {
 	background-color: var(--surface-2);
-	box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 0px;
+	box-shadow: var(--box-shadow-strong);
 	font-size: larger;
 	padding: 2px;
 	position: fixed;
@@ -482,7 +467,7 @@ div.通知 {
 	--cover-scroll-range: calc(45vh + 108px);
 }
 nav#导航栏 {
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
+	box-shadow: var(--box-shadow);
 	transition:
 		var(--transition) background-color,
 		var(--transition) transform;
@@ -519,7 +504,7 @@ nav#导航栏 {
 	animation-iteration-count: 1;
 	animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
 	background-color: var(--accent-color);
-	box-shadow: rgba(0, 0, 0) 0px 0px 16px 2px;
+	box-shadow: var(--box-shadow-strong);
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -588,9 +573,7 @@ body.宽屏 > main > #分界线 {
 main > #分界线 > .特小尺寸 {
 	background: var(--surface-1);
 	border-radius: 50%;
-	box-shadow:
-		rgba(0, 0, 0, 0.24) 0px 12px 15px 0px,
-		rgba(0, 0, 0, 0.19) 0px 17px 50px 0px;
+	box-shadow: var(--box-shadow-strong);
 	opacity: 0;
 	transition:
 		var(--transition) opacity,
@@ -667,9 +650,7 @@ div#侧边按钮容器 {
 	}
 }
 div#侧边按钮容器 > :is(button, .拥有更多选项) {
-	box-shadow:
-		rgba(0, 0, 0, 0.3) 0px 8px 16px 0px,
-		rgba(0, 0, 0, 0.3) 0px 16px 64px 0px;
+	box-shadow: var(--box-shadow-strong);
 	background-color: var(--surface-2);
 	border: var(--border);
 	border-radius: 50%;
@@ -1392,7 +1373,7 @@ section#评论区 .评论 .评论正文 {
 		z-index: 9;
 	}
 	main > .左::before {
-		box-shadow: rgba(0, 0, 0, 0.5) 0px 0px 16px 4px;
+		box-shadow: var(--box-shadow-strong);
 		top: 0;
 		transform: translateY(-64px);
 	}

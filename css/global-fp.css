@@ -122,6 +122,9 @@ html {
 	--border: var(--border-width) var(--border-style) var(--border-color);
 	--border-strong: var(--border-width) var(--border-style) var(--border-color-strong);
 	--border-radius: 12px;
+	--box-shadow-color: rgba(0, 0, 0, var(--accent-color-opacity));
+	--box-shadow: var(--box-shadow-color) 0px 0px 12px 0px;
+	--box-shadow-strong: var(--box-shadow-color) 0px 4px 16px 8px;
 	--footer-blank-height: 50vh;
 	--line-height: 1.6;
 	--transition: 0.3s;
@@ -211,7 +214,7 @@ article {
 	background-color: var(--surface-1);
 	border: var(--border);
 	border-radius: var(--border-radius);
-	box-shadow: rgba(0, 0, 0, 0.24) 0px 0px 16px 0px;
+	box-shadow: var(--box-shadow);
 	margin: 0 8px 8px 8px;
 	padding: 12px;
 	word-break: break-word;
@@ -706,7 +709,7 @@ footer#copyright {
 	main > .右 {
 		background-color: var(--bg-color);
 		border-radius: var(--border-radius) var(--border-radius) 0 0;
-		box-shadow: 0px -4px 16px 0px rgba(0, 0, 0, 0.5);
+		box-shadow: var(--box-shadow);
 		z-index: 1;
 		position: relative;
 		padding: 16px 0 0 0;
