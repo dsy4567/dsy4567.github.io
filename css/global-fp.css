@@ -489,7 +489,7 @@ body > #顶部大图 {
 }
 
 body > #顶部大图 {
-	--height: min(45vh, 480px);
+	--height: min(33vw, 420px);
 	background-color: var(--bg-color);
 	border-radius: var(--border-radius);
 	display: block;
