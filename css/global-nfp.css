@@ -821,12 +821,8 @@ div#侧边按钮容器 .更多选项 + .更多选项 {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin: 5px 0px 5px 5px;
+	margin: 4px 0px 4px 4px;
 	padding: 5px;
-	padding-block: 5px;
-	/* padding-inline: 5px; */
-	padding-left: 5px;
-	padding-right: 5px;
 	cursor: pointer;
 	width: 24px;
 	height: 24px;
