@@ -529,11 +529,13 @@ body > #顶部大图 {
 
 /* ==================== main、左右栏 ==================== */
 main {
+	--main-maxw: 1800px;
+	--left-maxw: 420px;
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
-	width: calc(100vw - 90px);
-	max-width: 1800px;
+	width: 100%;
+	max-width: var(--main-maxw);
 }
 main > .左,
 main > .右 {
@@ -551,16 +553,19 @@ main > #分界线 {
 }
 
 main > .左 {
-	--maxh: calc(100vh - 16px * 2);
+	--maxh: calc(100vh - 16px * 1);
 	border-radius: var(--border-radius);
 	position: sticky;
 	top: 0;
-	width: 25%;
+	width: 50%;
+	min-width: 320px;
+	max-width: var(--left-maxw);
 	max-height: var(--maxh);
 }
 
 main > .右 {
-	width: 75%;
+	width: 100%;
+	max-width: calc(var(--main-maxw) - var(--left-maxw));
 	min-height: 100vh;
 }
 
@@ -653,7 +658,8 @@ footer#copyright {
 }
 
 /* ==================== 移动端 ==================== */
-@media only screen and (max-width: 1080px) {
+/* 该数值同时存在于 main.js */
+@media only screen and (max-width: 840px) {
 	nav#导航栏 {
 		width: calc(100% - 18px);
 	}
@@ -672,9 +678,17 @@ footer#copyright {
 		padding-right: 0;
 		width: 100%;
 	}
+	main > .左,
+	main > .右 {
+		display: block;
+		width: 100%;
+		min-width: unset;
+		max-width: unset;
+	}
 	main .左 {
 		--height: 45vh;
 		--maxh: 420px;
+		--left-maxw: 540px;
 		height: var(--height);
 		scrollbar-width: none;
 		padding-top: 64px;
@@ -693,10 +707,10 @@ footer#copyright {
 	main .左 {
 		border-radius: var(--border-radius) var(--border-radius) 0 0;
 	}
-	main > .左,
-	main > .右 {
-		display: block;
-		width: 100%;
+	main .左 > section {
+		--margin-x: max(8px, calc((100% - var(--left-maxw)) / 2));
+		margin-left: var(--margin-x);
+		margin-right: var(--margin-x);
 	}
 	main > #分界线 {
 		display: none !important;
@@ -712,6 +726,18 @@ footer#copyright {
 		padding-left: 0;
 		padding-right: 0;
 		overflow-y: unset;
+	}
+	/* 挡住右栏底部溢出阴影 */
+	main > .右::after {
+		content: "";
+		background-color: var(--bg-color);
+		display: block;
+		position: absolute;
+		left: 0;
+		bottom: -60px;
+		z-index: -1;
+		width: 100%;
+		height: 64px;
 	}
 
 	@supports (animation-timeline: scroll()) {

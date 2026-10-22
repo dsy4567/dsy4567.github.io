@@ -607,6 +607,7 @@ body.宽屏 > main .左 {
 }
 body.宽屏 > main .右 {
 	width: 100%;
+	max-width: unset;
 }
 
 /* ==================== 左栏 ==================== */
@@ -1311,7 +1312,8 @@ code.hljs.已复制:hover::before {
 /* ==================== 友链 ==================== */
 
 /* ==================== 移动端 ==================== */
-@media only screen and (max-width: 1080px) {
+/* 该数值同时存在于 main.js */
+@media only screen and (max-width: 840px) {
 	/* 移动端封面为 sticky，高度 64vh（上限 430px），同样取「封面高度 + 顶部偏移」 */
 	:root {
 		--cover-scroll-range: min(calc(64vh + 56px), 496px);
@@ -1355,19 +1357,6 @@ code.hljs.已复制:hover::before {
 		main .左 {
 			animation-timeline: scroll(root);
 			animation-range: 1px var(--cover-scroll-range);
-		}
-
-		/* 挡住右栏底部溢出阴影 */
-		main > .右::after {
-			content: "";
-			background-color: var(--bg-color);
-			display: block;
-			position: absolute;
-			left: 0;
-			bottom: -32px;
-			z-index: -1;
-			width: 100%;
-			height: 32px;
 		}
 	}
 }

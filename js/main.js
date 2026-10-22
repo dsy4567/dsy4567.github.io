@@ -19,7 +19,8 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
 	一言接口地址 = "https://dsy4567.icu/api/hitokoto?c=a&c=b&encode=json",
 	人机验证接口地址 = "https://qwq.dsy4567.icu/api/getemail",
 	脏话数组 = ["\u4f60\u5988", "\u5c3c\u739b", "\u4f60\u5927\u7237", "\u5bc4\u5427"],
-	移动端界面最大宽度 = 1080;
+	/* 该数值同时存在于 global-(n)fp.css 中 */
+	移动端界面最大宽度 = 840;
 let 路径 = 获取清理后当前路径(),
 	正在动态加载 = false;
 
