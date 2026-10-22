@@ -918,6 +918,8 @@ body.顶部 .侧边按钮容器-无更多选项#回到顶部 {
 	--font-size: 12px;
 	color: var(--accent-color);
 	font-size: var(--font-size);
+	display: flex;
+	flex-direction: column-reverse;
 	position: absolute;
 	user-select: none;
 	pointer-events: none;
