@@ -1135,6 +1135,7 @@ function 渲染小组件内容(组件, 歌曲) {
 	// @ts-ignore
 	const /** @type {HTMLElement} */ 歌手元素 = shadow.querySelector(".歌手");
 	封面图.alt = 歌曲?.完整歌名 || "未知歌曲封面";
+	封面图.loading = "lazy";
 	if (歌曲?.封面) {
 		// 与侧边栏一致地按 256×256 取图；加载失败退回灰底
 		封面图.src = 歌曲.封面 + "?param=256y256";
