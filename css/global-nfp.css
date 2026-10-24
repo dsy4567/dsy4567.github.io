@@ -577,7 +577,7 @@ body.宽屏 > main > #分界线 {
 	top: 0;
 }
 main > #分界线 > .特小尺寸 {
-	background: var(--surface-1);
+	background-color: var(--surface-1);
 	border-radius: 50%;
 	box-shadow: var(--box-shadow-strong);
 	opacity: 0;
@@ -748,7 +748,7 @@ body.正在加载 > #侧边遮罩.显示 {
 }
 #侧边按钮容器 > .侧边按钮容器-无更多选项:hover::before {
 	content: "";
-	background: transparent;
+	background-color: transparent;
 	border-radius: 50%;
 	left: -6px;
 	width: calc(100% + 2px);
@@ -780,7 +780,7 @@ div#侧边按钮容器 .更多选项 {
 
 div#侧边按钮容器 .更多选项 {
 	--padding-left-overflow: calc(var(--container-width) - 100vw);
-	background: var(--surface-2);
+	background-color: var(--surface-2);
 	color: var(--text-color);
 	border: 1px solid transparent;
 	border-top: var(--border);
