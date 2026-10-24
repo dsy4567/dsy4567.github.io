@@ -222,7 +222,7 @@ article > :is(section, article) {
 
 section h2 svg,
 article h2 svg {
-	margin-right: 8px;
+	margin: 0 8px 0px -5px;
 }
 section img,
 section video,
