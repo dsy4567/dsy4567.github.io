@@ -89,10 +89,11 @@
 
 ### 浏览器兼容基线
 
-分为两级，按「必须可用」与「完美体验」区分：
+分为三级，按「必须可用」、「完美体验」、「极致体验」区分：
 
 - 最低支持 Chrome 86（360 极速浏览器 13.0 的内核版本）：核心功能必须可用，允许样式降级
 - Chrome 109（Windows 7 可用的最后一个 Chromium 大版本）及以上：全部功能完美
+- 最新 Chrome 版本：在不新增实质性功能、保证兼容性的前提下，通过渐进式增强提供极致体验
 - JavaScript 语法基线为 ES2021（与 `jsconfig.json` 的 `lib` 一致），Chrome 86 已完整支持
 
 Chrome 86 可放心使用：自定义属性、`calc()`、`min()` / `max()` / `clamp()`、`hsl()` / `rgb()` / `rgba()` 逗号语法、`#rrggbbaa` 十六进制透明度、`color-scheme`、`prefers-color-scheme`、`@property`、`:focus-visible`、单一复合选择器的 `:not()`、`@supports selector()`、`Mark` / `MarkText` 系统色
