@@ -209,20 +209,31 @@
 						<svg class="小尺寸" data-icon="友情链接"></svg>
 						<span>友情链接</span>
 					</h2>
-					<a href="https://github.com/dsy4567/dsy4567.github.io/issues/1">互挂友链申请</a>
+					<a style="margin-left: 0.5em;" href="https://github.com/dsy4567/dsy4567.github.io/issues/1">互挂友链申请</a>
 				</section>
 				<style>
-					.右:has(#友链) section > span {
+					#main {
+						    display: flex;
+						    flex-direction: row;
+						    align-content: flex-start;
+						    align-items: flex-start;
+						    flex-wrap: wrap;
+						    justify-content: center;
+					}
+					#友链 {
+						width: 100%;
+					}
+					#友链 ~ section > span {
 						display: flex;
 						flex-direction: row;
 						align-items: center;
 					}
 
-					.右:has(#友链) section > span > * {
+					#友链 ~ section > span > * {
 						margin: 4px;
 					}
 
-					.右:has(#友链) section > span > img {
+					#友链 ~ section > span > img {
 						border-radius: 50%;
 						width: 16px;
 						height: 16px;
