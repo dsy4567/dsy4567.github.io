@@ -80,9 +80,7 @@ div#侧边按钮容器 {
 	50% {
 		opacity: 0;
 	}
-	50.1% {
-		opacity: 1;
-	}
+	50.1%,
 	100% {
 		opacity: 1;
 	}
@@ -98,12 +96,10 @@ div#侧边按钮容器 {
 @supports (animation-timeline: scroll()) {
 	@keyframes 顶部大图背景 {
 		0% {
-			/* border-radius: var(--border-radius); */
 			/* 平移窗口围绕图片中线对称：起点在中线前 平移量/2 处，横图平移量为 0，此处即 0 */
 			transform: translateY(calc((var(--cover-travel) - var(--cover-overflow)) / 2));
 		}
 		100% {
-			/* transform: translateY(max(calc(var(--cover-scroll-range) * -1), calc(100cqh - 100%))); */
 			/* 终点在中线后 平移量/2 处；平移量取溢出量与一个滚动范围中的较小者，横图为 0 */
 			transform: translateY(calc((0px - var(--cover-overflow) - var(--cover-travel)) / 2));
 		}
@@ -115,35 +111,36 @@ div#侧边按钮容器 {
 			transform: translateY(0);
 		}
 		100% {
-			transform: translateY(32px);
+			transform: translateY(calc(var(--main-top) - 32px));
 		}
 	}
 	@keyframes 顶部大图移动端 {
-		0% {
-			transform: translateY(0);
-			/* border-radius: var(--border-radius); */
-		}
+		0%,
 		24% {
 			transform: translateY(0);
 		}
 		50% {
-			transform: translateY(-79px);
+			transform: translateY(calc(var(--bg-height) * -0.15));
 		}
-		66% {
+		62.5% {
 			opacity: 1;
+		}
+		75% {
+			transform: translateY(calc(var(--bg-height) * -0.3));
+		}
+		87.5% {
+			opacity: 0;
 		}
 		100% {
 			opacity: 0;
-			transform: translateY(-158px);
+			transform: translateY(calc(var(--bg-height) * -0.45));
 		}
 	}
 	@keyframes 左栏移动端 {
 		0% {
 			opacity: 1;
 		}
-		24% {
-			opacity: 0;
-		}
+		24%,
 		100% {
 			opacity: 0;
 		}
@@ -152,25 +149,39 @@ div#侧边按钮容器 {
 		0% {
 			opacity: 1;
 		}
-		24% {
-			opacity: 0;
-		}
+		24%,
 		100% {
 			opacity: 0;
 		}
 	}
 	@keyframes 左栏下透明遮罩移动端 {
-		0% {
-			border-top: 0 solid transparent;
-		}
+		0%,
 		24% {
 			border-top: 0 solid transparent;
 		}
-		24.01% {
-			border-top: min(var(--height), var(--maxh)) solid transparent;
+		24.01%,
+		100% {
+			border-top: min(var(--left-height), var(--maxh)) solid transparent;
+		}
+	}
+	@keyframes 右栏背景移动端 {
+		0% {
+			opacity: 1;
+		}
+		24%,
+		100% {
+			opacity: 0;
+		}
+	}
+	@keyframes 右栏下移移动端 {
+		0% {
+			transform: translateY(0px);
+		}
+		6% {
+			transform: translateY(0px);
 		}
 		100% {
-			border-top: min(var(--height), var(--maxh)) solid transparent;
+			transform: translateY(0px);
 		}
 	}
 }
@@ -465,11 +476,6 @@ div.通知 {
 	animation-play-state: paused;
 }
 /* ==================== 导航栏、左右栏 ==================== */
-/* 封面滚动动画的滚动范围：封面、封面背景层、左栏及其阴影共用同一段进度，完成时刻才会一致。
-   桌面端封面随页面滚出视口即播放完毕，故取「封面高度 + 顶部偏移」 */
-:root {
-	--cover-scroll-range: calc(45vh + 108px);
-}
 nav#导航栏 {
 	box-shadow: var(--box-shadow);
 	transition:
@@ -516,6 +522,10 @@ nav#导航栏 {
 }
 
 @supports (animation-timeline: scroll()) {
+	/* 封面滚动动画的滚动范围：封面、封面背景层、左栏及其阴影共用同一段进度，完成时刻才会一致。 */
+	:root {
+		--cover-scroll-range: calc(var(--bg-height) + var(--bg-top));
+	}
 	/* 封面平移动画落在 .顶部大图层 > img 上：图片按自身高度溢出容器，平移量用 cqh 引用容器高度 */
 	body > #顶部大图 {
 		animation-name: 顶部大图桌面端;
@@ -1304,18 +1314,15 @@ code.hljs.已复制:hover::before {
 /* ==================== 移动端 ==================== */
 /* 该数值同时存在于 main.js */
 @media only screen and (max-width: 840px) {
-	/* 移动端封面为 sticky，高度 64vh（上限 430px），同样取「封面高度 + 顶部偏移」 */
-	:root {
-		--cover-scroll-range: min(calc(64vh + 56px), 496px);
-	}
-
 	main > .左::before,
 	main > .左::after {
+		--width: min(calc(100% - 36px), var(--left-maxw));
 		content: "";
 		display: block;
+		margin-left: calc((100% - var(--width)) / 2);
 		position: sticky;
-		width: calc(100% - 14px);
-		margin: 0px 0 0 8px;
+		left: 0;
+		width: var(--width);
 		pointer-events: auto;
 		z-index: 9;
 	}
@@ -1344,7 +1351,11 @@ code.hljs.已复制:hover::before {
 		main .左 {
 			animation: 左栏移动端 linear both;
 		}
-		main .左 {
+		main > .右::before {
+			animation-name: 右栏背景移动端;
+		}
+		main .左,
+		main .右::before {
 			animation-timeline: scroll(root);
 			animation-range: 1px var(--cover-scroll-range);
 		}

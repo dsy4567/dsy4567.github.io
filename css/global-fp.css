@@ -125,8 +125,12 @@ html {
 	--box-shadow-color: rgba(0, 0, 0, var(--accent-color-opacity));
 	--box-shadow: var(--box-shadow-color) 0px 0px 12px 0px;
 	--box-shadow-strong: var(--box-shadow-color) 0px 4px 16px 8px;
-	--footer-blank-height: 50vh;
+	--bg-height: min(33vmin, 420px);
+	--bg-top: 112px;
+	--footer-margin-top: 32px;
 	--line-height: 1.6;
+	--main-top: 80px;
+	--right-shift: 256px;
 	--transition: 0.3s;
 	--transition-slow: 1s;
 }
@@ -489,14 +493,13 @@ body > #顶部大图 {
 }
 
 body > #顶部大图 {
-	--height: min(33vw, 420px);
 	background-color: var(--bg-color);
 	border-radius: var(--border-radius);
 	display: block;
-	height: var(--height);
+	height: var(--bg-height);
 	overflow: hidden;
 	position: relative;
-	z-index: 1;
+	z-index: 0;
 	margin-top: 64px;
 }
 
@@ -541,15 +544,10 @@ main > .左,
 main > .右 {
 	overflow-y: auto;
 	scrollbar-gutter: stable both-edges;
-	padding-top: var(--top);
+	padding-top: var(--main-top);
 	padding-bottom: 4px;
 	padding-left: 4px;
 	padding-right: 4px;
-}
-main > .左,
-main > .右,
-main > #分界线 {
-	--top: 80px;
 }
 
 main > .左 {
@@ -558,7 +556,7 @@ main > .左 {
 	position: sticky;
 	top: 0;
 	width: 50%;
-	min-width: 320px;
+	min-width: var(--left-minw);
 	max-width: var(--left-maxw);
 	max-height: var(--maxh);
 }
@@ -576,7 +574,7 @@ main > #分界线 {
 	border: var(--border-width) solid var(--bg-color);
 	border: var(--border-width) solid transparent;
 	box-sizing: content-box;
-	margin-top: var(--top);
+	margin-top: var(--main-top);
 	margin-left: var(--margin-x);
 	margin-right: var(--margin-x);
 	position: sticky;
@@ -660,16 +658,18 @@ footer#copyright {
 /* ==================== 移动端 ==================== */
 /* 该数值同时存在于 main.js */
 @media only screen and (max-width: 840px) {
+	:root {
+		--bg-top: 62px;
+		--bg-height: calc(min(calc(64vh), 420px));
+	}
 	nav#导航栏 {
 		width: calc(100% - 18px);
 	}
 	body > #顶部大图 {
-		--height: calc(64px + min(calc(64vh), 430px));
-		border-radius: 0;
-		margin-top: 66px;
+		margin-top: var(--bg-top);
 		position: fixed;
 		width: 100%;
-		height: var(--height);
+		height: var(--bg-height);
 		z-index: -1;
 	}
 	main {
@@ -680,35 +680,32 @@ footer#copyright {
 	}
 	main > .左,
 	main > .右 {
+		--left-height: var(--bg-height);
+		--left-maxw: 540px;
+		--left-minw: 320px;
 		display: block;
 		width: 100%;
 		min-width: unset;
 		max-width: unset;
 	}
 	main .左 {
-		--height: 45vh;
-		--maxh: 420px;
-		--left-maxw: 540px;
-		height: var(--height);
-		scrollbar-width: none;
-		padding-top: 64px;
-		top: 64px;
+		--margin-x: max(8px, calc((100% - var(--left-maxw)) / 2));
+		height: var(--left-height);
+		padding: var(--bg-top) 0 0;
+		top: var(--bg-top);
 		z-index: 0;
 	}
 	main > .左 > section:last-child,
 	main > .左 > article:last-child {
-		margin-bottom: min(calc(var(--height) + -32px), 380px);
+		margin-bottom: calc(var(--left-height) - 32px);
 	}
-	main > .左::-webkit-scrollbar {
-		display: none;
-		width: 0;
-	}
+	body > #顶部大图,
 	body > #顶部大图 > .顶部大图层 > img,
-	main .左 {
+	main .左,
+	main > .右::before {
 		border-radius: var(--border-radius) var(--border-radius) 0 0;
 	}
 	main .左 > section {
-		--margin-x: max(8px, calc((100% - var(--left-maxw)) / 2));
 		margin-left: var(--margin-x);
 		margin-right: var(--margin-x);
 	}
@@ -718,31 +715,42 @@ footer#copyright {
 	main > .右 {
 		background-color: var(--bg-color);
 		border-radius: var(--border-radius) var(--border-radius) 0 0;
-		box-shadow: var(--box-shadow);
 		z-index: 1;
 		position: relative;
 		margin-top: 0;
-		padding-top: 16px;
+		padding-top: calc(var(--border-radius) * 2);
 		padding-left: 0;
 		padding-right: 0;
 		overflow-y: unset;
 	}
-	/* 挡住右栏底部溢出阴影 */
+
+	main > .右::before,
 	main > .右::after {
 		content: "";
 		background-color: var(--bg-color);
 		display: block;
 		position: absolute;
 		left: 0;
-		bottom: -60px;
-		z-index: -1;
 		width: 100%;
-		height: 64px;
+	}
+	main > .右::before {
+		box-shadow: var(--box-shadow-strong);
+		height: var(--right-shift);
+		top: 0;
+		z-index: -1;
+	}
+	main > .右::after {
+		height: calc(100vh - var(--right-shift));
+		top: calc(var(--right-shift) * 0.5);
+		z-index: -1;
 	}
 
 	@supports (animation-timeline: scroll()) {
-		body > #顶部大图 {
-			border-radius: var(--border-radius) var(--border-radius) 0 0;
+		main > .右 {
+			background-color: transparent;
+		}
+		main > .右 > :first-child {
+			min-height: calc(var(--right-shift) / 2);
 		}
 	}
 }
