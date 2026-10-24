@@ -111,7 +111,7 @@ div#侧边按钮容器 {
 			transform: translateY(0);
 		}
 		100% {
-			transform: translateY(calc(var(--main-top) - 32px));
+			transform: translateY(calc(var(--main-top) - 16px));
 		}
 	}
 	@keyframes 顶部大图移动端 {
