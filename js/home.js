@@ -27,9 +27,6 @@ const 启用副歌时间 = false;
 /** 排行展示上限：接口可能返回上百条，只展示前 30 名 */
 const 排行上限 = 30;
 
-/** 缓存文本上限（String.length）：localStorage 按 UTF-16 存储，每个码元约占 2 字节，故 1024KB 约合 1024 * 1024 / 2 个码元 */
-const 缓存文本上限 = (1024 * 1024) / 2;
-
 let /** @type {最近在听项[]} */ 排行歌曲 = [],
 	/**
 	 * 本次渲染实际展示的排行项（全榜按档等比采样、按歌手加权的结果）：渲染时写入，点击时同样只加入这些
@@ -90,44 +87,27 @@ let /** @type {HTMLElement[]} */ 排行项列表 = [];
 let /** @type {IntersectionObserver | null} */ 模块观察器 = null;
 
 /** 东八区当天 23:59:59.999 的时间戳：先偏移到东八区、按 UTC 取当天末尾，再偏移回来，避免受访客本地时区影响 */
-function 今日缓存过期时间() {
+function 取今日缓存过期时间() {
 	const 东八区当天末尾 = new Date(Date.now() + 8 * 60 * 60 * 1000);
 	东八区当天末尾.setUTCHours(23, 59, 59, 999);
 	return 东八区当天末尾.getTime() - 8 * 60 * 60 * 1000;
 }
 
-/** 读取 localStorage 中的排行缓存；缺失或结构非法时返回 null */
-function 读取排行缓存() {
-	try {
-		const 原文 = localStorage.getItem("最近在听");
-		if (!原文) return null;
-		const 缓存 = JSON.parse(原文);
-		if (typeof 缓存?.过期时间 !== "number" || !Array.isArray(缓存?.排行项)) return null;
-		return /** @type {最近在听缓存} */ (缓存);
-	} catch (e) {
-		console.warn(e);
-		return null;
-	}
+/** 读取 Cache Storage 中的排行缓存；缺失或结构非法时返回 null */
+async function 读取排行缓存() {
+	const 缓存 = await 读取缓存("最近在听");
+	if (typeof 缓存?.过期时间 !== "number" || !Array.isArray(缓存?.排行项)) return null;
+	return /** @type {最近在听缓存} */ (缓存);
 }
 
-/** 写入排行缓存：排行与歌词同批存入，有效期为东八区当天 23:59:59.999；写入失败（如隐私模式）静默忽略 */
-function 写入排行缓存() {
-	try {
-		const 文本 = JSON.stringify({
-			过期时间: 今日缓存过期时间(),
-			排行项: 排行歌曲,
-			歌词原始,
-			副歌原始,
-		});
-		// 网易云歌词可能很长，超限的缓存会占满存储配额：放弃写入，只影响下次进站的加速
-		if (文本.length > 缓存文本上限) {
-			console.warn(`最近在听缓存过大（${文本.length}/${缓存文本上限} 字符），跳过写入`);
-			return;
-		}
-		localStorage.setItem("最近在听", 文本);
-	} catch (e) {
-		console.warn(e);
-	}
+/** 写入排行缓存：排行与歌词同批存入，有效期为东八区当天 23:59:59.999；写入失败由 写入缓存 自行告警 */
+async function 写入排行缓存() {
+	await 写入缓存("最近在听", {
+		过期时间: 取今日缓存过期时间(),
+		排行项: 排行歌曲,
+		歌词原始,
+		副歌原始,
+	});
 }
 
 /** 用缓存填充内存状态（命中有效缓存或请求失败兜底时调用） */
@@ -580,15 +560,15 @@ async function 渲染最近在听() {
 async function 获取并渲染最近在听() {
 	if (排行已请求) return 渲染最近在听();
 
+	// 缓存读取是异步的，先占位，避免读取期间再次进入时重复发起请求
+	排行已请求 = true;
 	// 命中仍在有效期内的缓存（东八区当天 23:59 前）不产生网络请求，直接渲染
-	const 缓存 = 读取排行缓存();
+	const 缓存 = await 读取排行缓存();
 	if (缓存 && 缓存.过期时间 > Date.now()) {
 		应用缓存(缓存);
-		排行已请求 = true;
 		return 渲染最近在听();
 	}
 
-	排行已请求 = true;
 	const 动态加载自增计数器拷贝 = 动态加载自增计数器;
 	try {
 		// NOTE: 接口返回数据中 playCount 非登录状态恒为 0，只能通过 score 大致判断播放次数
@@ -629,14 +609,14 @@ async function 获取并渲染最近在听() {
 		]);
 		歌词原始 = 歌词响应;
 		副歌原始 = 副歌响应;
-		写入排行缓存();
+		await 写入排行缓存();
 	} catch (e) {
 		console.error(e);
 		// 换页期间失败同样作废，避免把过期的失败结论留给下一次进入首页
 		if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return 作废请求并重试();
 		加载失败原因 = 请求失败原因(e);
 		// 请求失败时用已过期的旧缓存兜底（兜底成功则排行有效，不再展示失败提示）
-		const 缓存 = 读取排行缓存();
+		const 缓存 = await 读取排行缓存();
 		if (缓存) 应用缓存(缓存);
 	}
 	渲染最近在听();

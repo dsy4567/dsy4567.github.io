@@ -354,14 +354,9 @@ fetch("/json/icon.json")
 			作者 = ce("span"),
 			// @ts-ignore
 			/** @type {HTMLAnchorElement | null} */ 链接 = qs("#一言+a"),
-			缓存一言 = localStorage.getItem("缓存一言"),
+			缓存一言 = await 读取缓存("缓存一言"),
 			/** @type {一言句子} */ 一言json;
 		if (!一言元素 || !链接) return;
-		try {
-			if (缓存一言) 缓存一言 = JSON.parse(缓存一言);
-		} catch (e) {
-			缓存一言 = null;
-		}
 
 		await schedulerYield();
 		一言json = 缓存一言 || (await 获取一言("json"));
@@ -376,7 +371,7 @@ fetch("/json/icon.json")
 
 		setTimeout(async () => {
 			try {
-				localStorage.setItem("缓存一言", await 获取一言("text"));
+				await 写入缓存("缓存一言", await 获取一言("json"));
 			} catch (e) {
 				console.error(e);
 			}
@@ -405,13 +400,10 @@ const 渲染个人信息 = 个人信息 => {
 
 // 缓存键：GitHub 个人信息，命中时先立即渲染，再后台静默拉取最新数据覆盖
 const 个人信息缓存键 = "缓存个人信息";
-try {
-	const 缓存个人信息 = JSON.parse(localStorage.getItem(个人信息缓存键) || "null");
+(async () => {
+	const 缓存个人信息 = await 读取缓存(个人信息缓存键);
 	if (缓存个人信息) 渲染个人信息(缓存个人信息);
-} catch (e) {
-	// 缓存损坏（如手动改坏）时忽略，等待下面的拉取结果
-	console.error(e);
-}
+})().catch(e => console.error(e)); // 缓存损坏（如手动改坏）时忽略，等待下面的拉取结果
 
 fetch(`https://api.github.com/users/${github用户名}`)
 	.then(
@@ -428,11 +420,7 @@ fetch(`https://api.github.com/users/${github用户名}`)
 	)
 	.then(个人信息 => {
 		// 拉取成功即写入缓存并立即更新页面；拉取失败时保留缓存内容，继续展示旧数据
-		try {
-			localStorage.setItem(个人信息缓存键, JSON.stringify(个人信息));
-		} catch (e) {
-			console.error(e);
-		}
+		写入缓存(个人信息缓存键, 个人信息);
 		渲染个人信息(个人信息);
 	})
 	.catch(e => console.error(e));
@@ -1207,9 +1195,13 @@ addEventListener("click", 事件 => {
 					// 2. 逐个注销
 					for (let registration of registrations) await registration.unregister();
 
-					// 3. 清理所有缓存
+					// 3. 清理所有缓存；站点数据缓存（读取缓存 / 写入缓存）与 SW 无关，需保留
 					const cacheNames = await caches.keys();
-					await Promise.all(cacheNames.map(name => caches.delete(name)));
+					await Promise.all(
+						cacheNames
+							.filter(name => name !== 站点数据缓存名)
+							.map(name => caches.delete(name))
+					);
 					console.log("Service Worker 已移除，缓存已清空");
 				}
 			}

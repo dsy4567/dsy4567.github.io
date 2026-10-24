@@ -70,6 +70,72 @@ function 洗牌(数组) {
 }
 //#endregion
 
+//#region 缓存存储（Cache Storage）
+/** 站点数据缓存名：仅供 读取缓存 / 写入缓存 使用，与 Service Worker 的离线缓存无关 */
+const 站点数据缓存名 = "站点数据";
+/** 缓存条目的 URL 前缀：Cache Storage 以 Request 为键，用同源伪路径承载任意业务键 */
+const 缓存条目前缀 = "/__缓存__/";
+let /** @type {Promise<Cache> | null} */ 站点数据缓存 = null;
+/**
+ * 打开站点数据缓存；失败时不缓存失败的 Promise，便于下次调用重试
+ * @returns {Promise<Cache>}
+ */
+function _打开站点数据缓存() {
+	if (!站点数据缓存) {
+		const 打开 = caches.open(站点数据缓存名).catch(错误 => {
+			if (站点数据缓存 === 打开) 站点数据缓存 = null;
+			throw 错误;
+		});
+		站点数据缓存 = 打开;
+	}
+	return 站点数据缓存;
+}
+/**
+ * 把业务键转换为缓存条目的 Request：键经编码后拼在同源伪路径下，避免键中的特殊字符影响匹配
+ * @param {string} 键
+ * @returns {Request}
+ */
+function _构造缓存条目的请求(键) {
+	return new Request(new URL(缓存条目前缀 + encodeURIComponent(键), location.href).href);
+}
+/**
+ * 从 Cache Storage 读取一个键对应的 JSON 值
+ * 缓存未命中、内容损坏，或当前环境不支持 Cache Storage（非安全上下文）时返回 null
+ * @param {string} 键 - 业务键，如 "最近在听"
+ * @returns {Promise<any | null>} 读取到的值；不可用时为 null
+ */
+async function 读取缓存(键) {
+	if (!("caches" in globalThis)) return null;
+	try {
+		const 响应 = await (await _打开站点数据缓存()).match(_构造缓存条目的请求(键));
+		return 响应 ? await 响应.json() : null;
+	} catch (错误) {
+		console.warn(`读取缓存「${键}」失败`, 错误);
+		return null;
+	}
+}
+/**
+ * 把一个 JSON 可序列化的值写入 Cache Storage，同键会覆盖旧值
+ * 写入失败（如非安全上下文、存储配额不足）时只告警，不影响调用方继续执行
+ * @param {string} 键 - 业务键
+ * @param {any} 值 - 要存储的值，需可被 JSON.stringify 序列化
+ * @returns {Promise<boolean>} 是否写入成功
+ */
+async function 写入缓存(键, 值) {
+	if (!("caches" in globalThis)) return false;
+	try {
+		const 响应 = new Response(JSON.stringify(值), {
+			headers: { "Content-Type": "application/json" },
+		});
+		await (await _打开站点数据缓存()).put(_构造缓存条目的请求(键), 响应);
+		return true;
+	} catch (错误) {
+		console.warn(`写入缓存「${键}」失败`, 错误);
+		return false;
+	}
+}
+//#endregion
+
 //#region 路径工具函数
 let /** @type {Record<string, string>} */ 清理后的路径缓存 = {},
 	/** "/index.html" -> "/" */ re1 = /\/index(\.html)?$/,
