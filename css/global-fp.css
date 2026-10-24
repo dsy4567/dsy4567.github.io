@@ -349,6 +349,8 @@ input {
 /* ==================== 通用工具类 class ==================== */
 .隐藏链接,
 .隐藏文字 {
+	background-color: #000;
+	color: #fff;
 	position: absolute;
 	width: 1px;
 	height: 1px;
