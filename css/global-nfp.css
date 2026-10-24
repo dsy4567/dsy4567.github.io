@@ -41,10 +41,10 @@ div#侧边按钮容器 {
 /* ==================== @keyframes ==================== */
 @keyframes 进度条 {
 	from {
-		width: 0%;
+		transform: scaleX(0);
 	}
 	to {
-		width: 90%;
+		transform: scaleX(0.9);
 	}
 }
 @keyframes 匀速转 {
@@ -483,10 +483,8 @@ nav#导航栏 {
 
 /* ==================== 导航栏和进度条 ==================== */
 .进度条外面 {
-	background-color: transparent;
-	transition:
-		var(--transition-slow) opacity,
-		var(--transition) background-color;
+	background-color: var(--overlay);
+	transition: var(--transition-slow) opacity;
 	opacity: 0;
 	pointer-events: none;
 	position: fixed;
@@ -498,26 +496,20 @@ nav#导航栏 {
 	z-index: 1005;
 }
 .进度条外面.显示 {
-	background-color: var(--overlay);
 	opacity: 1;
 	pointer-events: auto;
 }
 .进度条 {
-	animation-duration: 10s;
-	animation-fill-mode: forwards;
-	animation-iteration-count: 1;
-	animation-timing-function: cubic-bezier(0, 0, 0.3, 1);
 	background-color: var(--accent-color);
-	box-shadow: var(--box-shadow-strong);
+	animation: 10s cubic-bezier(0, 0, 0.3, 1) forwards;
 	position: fixed;
 	top: 0;
 	left: 0;
-	transition:
-		var(--transition-slow) width,
-		var(--transition) background-color;
 	width: 100%;
-	max-width: 100%;
 	height: 2px;
+	transform-origin: left;
+	transition: var(--transition-slow) transform;
+	transform: scaleX(1);
 }
 .进度条外面.显示 > .进度条 {
 	animation-name: 进度条;
