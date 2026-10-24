@@ -287,121 +287,7 @@ async function 渲染文章(当前文章信息) {
 		//#endregion
 
 		//#region 评论区
-		if (当前文章信息.issue) {
-			// 净化模块与 DOMPurify 并行加载，两者均在请求 GitHub API 之前完成
-			const [净化模块] = await Promise.all([
-				import("./purify-comments.js"),
-				添加脚本("/js/lib/purify.min.js"),
-			]);
-			fetch(
-				`https://api.github.com/repos/${github仓库}/issues/${当前文章信息.issue}/comments`
-			)
-				.then(res => {
-					// GitHub API 在限流、异常等情况下返回非 2xx，直接抛错交由 catch 渲染提示，
-					// 避免把错误响应当成评论数据解析
-					if (!res.ok) throw new Error("评论请求失败, 状态码: " + res.status);
-					return new Promise((resolve, reject) => {
-						延迟执行(
-							"关键任务完成",
-							() => {
-								resolve(res.json());
-							},
-							3
-						);
-					});
-				})
-				.then(async j => {
-					// 避免加载太晚导致评论区显示错误
-					if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
-
-					if (typeof j !== "object") j = [];
-					let sect = ce("section");
-					sect.id = "评论区";
-					sect.innerHTML = `
-<h2>
-	<svg data-icon="评论" class="小尺寸"></svg>
-	<span>评论</span>
-</h2>
-<section>
-	<a
-		id="评论链接"
-		href="https://github.com/${github仓库}/issues/${当前文章信息.issue}#issue-comment-box"
-	>在 GitHub 上发表评论</a>
-</section>`;
-					// 评论数据来自 GitHub API，属不可信输入：文本一律 textContent，链接一律属性赋值，不拼接 HTML
-					for (const 评论 of j || []) {
-						const 用户主页 = 解析GitHub链接(评论.user.html_url),
-							头像地址 = 解析GitHub链接(评论.user.avatar_url),
-							评论元素 = ce("article"),
-							用户信息 = ce("div"),
-							头像链接 = ce("a"),
-							头像 = ce("img"),
-							用户名 = ce("span"),
-							用户名链接 = ce("a"),
-							正文 = ce("div"),
-							元数据 = ce("span");
-						评论元素.className = "评论";
-
-						用户信息.className = "用户信息";
-						用户信息.setAttribute("aria-label", "用户信息");
-						if (用户主页) 头像链接.href = 用户主页;
-						头像.className = "头像 小尺寸";
-						头像.alt = 评论.user.login + "的头像";
-						if (头像地址) 头像.src = 头像地址;
-						头像链接.append(头像);
-						头像链接.classList.add("小尺寸");
-						用户名.className = "用户名";
-						if (用户主页) 用户名链接.href = 用户主页;
-						用户名链接.textContent = 评论.user.login;
-						用户名链接.setAttribute("rel", "author");
-						用户名.append(用户名链接);
-						用户信息.append(头像链接, 用户名);
-
-						正文.className = "评论正文";
-						// @ts-ignore DOMPurify 由动态脚本注入
-						正文.append(净化模块.净化评论HTML(DOMPurify, 评论.body));
-
-						元数据.className = "元数据";
-						元数据.innerHTML = `发表于: <time datetime="${评论.created_at}">${new Date(
-							评论.created_at
-						).toLocaleString()}</time> 更新于: <time datetime="${评论.updated_at}">${new Date(
-							评论.updated_at
-						).toLocaleString()}</time>`;
-						评论元素.append(用户信息, 正文, 元数据);
-
-						// 表情反应
-						const 表情映射 = {
-							"+1": "👍",
-							"-1": "👎",
-							laugh: "😀",
-							hooray: "🎉",
-							confused: "😕",
-							heart: "❤️",
-							rocket: "🚀",
-							eyes: "👀",
-						};
-						let 反应文本 = "";
-						for (const [名称, 表情] of Object.entries(表情映射)) {
-							const 数量 = 评论.reactions[名称];
-							if (数量) 反应文本 += 表情 + ": " + 数量 + " ";
-						}
-						if (反应文本) {
-							const 反应 = ce("span");
-							反应.className = "元数据";
-							反应.textContent = 反应文本;
-							评论元素.append(反应);
-						}
-
-						sect.append(评论元素);
-					}
-
-					// 高亮
-					高亮代码(sect);
-					右.append(sect);
-					渲染图标();
-				})
-				.catch(e => 处理评论加载失败(e, 当前文章信息, 动态加载自增计数器拷贝));
-		}
+		if (当前文章信息.issue) 渲染评论区(当前文章信息, 动态加载自增计数器拷贝);
 		//#endregion
 	} catch (e) {
 		console.error(e);
@@ -414,21 +300,248 @@ async function 渲染文章(当前文章信息) {
 	}
 }
 
+/** 评论区的提前触发距离：评论区距视口这么近才请求并渲染评论 */
+const 评论提前触发距离 = "600px";
+/** 每篇文章最多展示的评论条数，超出的部分只追加一条文字提醒 */
+const 最多展示评论数 = 10;
+/** 当前文章页的评论区观察器；换页重建评论区时需重新创建 */
+let /** @type {IntersectionObserver | null} */ 评论区观察器 = null;
+
+/**
+ * 从 GitHub API 的 Link 响应头中取出最后一页的页码
+ * @param {string | null} link - Link 响应头，如 `<...page=2>; rel="next", <...page=3>; rel="last"`
+ * @returns {number} 末页页码；没有分页（只有一页）时为 0
+ */
+function 解析末页页码(link) {
+	for (const 片段 of (link || "").split(",")) {
+		const 匹配 = 片段.match(/<[^>]*[?&]page=(\d+)[^>]*>\s*;\s*rel="last"/);
+		if (匹配) return Number(匹配[1]);
+	}
+	return 0;
+}
+
+/**
+ * 请求文章对应的评论，只下载最后 最多展示评论数 条。
+ * 利用 per_page 限制单页返回量：先取第一页并借 Link 头得知末页，
+ * 末页不足一页时再补齐上一页，从而在不下载全部评论的情况下凑出完整的「最后 10 条」
+ * @param {string} 评论接口 - issues/<编号>/comments 接口地址
+ * @returns {Promise<{ 评论列表: any[], 总数: number }>}
+ */
+async function 请求最后评论(评论接口) {
+	const 每页 = 最多展示评论数,
+		// 单个 issue 的评论接口固定按 ID 升序返回，不支持 sort/direction，只能翻页取末页
+		请求页 = async (/** @type {number} */ 页码) => {
+			const res = await fetch(`${评论接口}?per_page=${每页}&page=${页码}`);
+			// GitHub API 在限流、异常等情况下返回非 2xx，统一抛错交由调用方渲染提示
+			if (!res.ok) throw new Error("评论请求失败, 状态码: " + res.status);
+			return res;
+		},
+		解析评论数组 = (/** @type {Response} */ res) =>
+			new Promise(resolve => {
+				延迟执行("关键任务完成", () => resolve(res.json()), 3);
+			}).then(j => (Array.isArray(j) ? j : []));
+
+	const 首页响应 = await 请求页(1);
+	const 末页页码 = 解析末页页码(首页响应.headers.get("Link"));
+	// 只有一页：首页即为全部评论
+	if (!末页页码) {
+		const 评论列表 = await 解析评论数组(首页响应);
+		return { 评论列表, 总数: 评论列表.length };
+	}
+
+	const 末页响应 = await 请求页(末页页码);
+	const 末页评论 = await 解析评论数组(末页响应),
+		总数 = (末页页码 - 1) * 每页 + 末页评论.length;
+	if (末页评论.length >= 每页) return { 评论列表: 末页评论, 总数 };
+
+	// 末页不满一页：再取上一页拼在后面，凑够最后 每页 条（末页为第 2 页时上一页就是首页）
+	const 上一页评论 =
+		末页页码 === 2
+			? await 解析评论数组(首页响应)
+			: await 解析评论数组(await 请求页(末页页码 - 1));
+	return { 评论列表: 上一页评论.concat(末页评论).slice(-每页), 总数 };
+}
+
+/**
+ * 渲染评论区框架：标题、发表评论链接与「加载中」占位。
+ * 评论正文等评论区滚动接近视口时，才由 加载并渲染评论 请求并写入
+ * @param {文章信息} 当前文章信息
+ * @param {number} 动态加载自增计数器拷贝
+ */
+function 渲染评论区(当前文章信息, 动态加载自增计数器拷贝) {
+	const 右元素 = qs("main > .右", true),
+		issue = Number(当前文章信息.issue);
+	// issue 必须是有效的正整数，避免把非预期内容拼进链接
+	if (!右元素 || !Number.isInteger(issue) || issue <= 0) return;
+	const sect = ce("section");
+	sect.id = "评论区";
+	sect.innerHTML = `
+<h2>
+	<svg data-icon="评论" class="小尺寸"></svg>
+	<span>评论</span>
+</h2>
+<section>
+	<a
+		id="评论链接"
+		href="https://github.com/${github仓库}/issues/${issue}#issue-comment-box"
+	>在 GitHub 上发表评论</a>
+</section>
+<p id="评论加载中提示">加载中</p>`;
+	右元素.append(sect);
+	渲染图标();
+
+	// 换页会重建评论区，先解除对上一篇文章评论区的观察
+	评论区观察器?.disconnect();
+	评论区观察器 = new IntersectionObserver(
+		/** @param {IntersectionObserverEntry[]} 条目列表 */
+		条目列表 => {
+			if (!条目列表.some(条目 => 条目.isIntersecting)) return;
+			评论区观察器?.disconnect();
+			评论区观察器 = null;
+			if (!sect.isConnected) return;
+			加载并渲染评论(sect, issue, 动态加载自增计数器拷贝);
+		},
+		{ rootMargin: `${评论提前触发距离} 0px` }
+	);
+	评论区观察器.observe(sect);
+}
+
+/**
+ * 请求并渲染评论：仅在评论区滚动接近视口时由观察器调用
+ * @param {HTMLElement} 评论区元素 - 已渲染好的评论区框架
+ * @param {number} issue - 已校验的 issue 编号
+ * @param {number} 动态加载自增计数器拷贝
+ */
+async function 加载并渲染评论(评论区元素, issue, 动态加载自增计数器拷贝) {
+	try {
+		// 净化模块与 DOMPurify 并行加载，两者均在请求 GitHub API 之前完成
+		const [净化模块] = await Promise.all([
+			import("./purify-comments.js"),
+			添加脚本("/js/lib/purify.min.js"),
+		]);
+		if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
+		const { 评论列表, 总数 } = await 请求最后评论(
+			`https://api.github.com/repos/${github仓库}/issues/${issue}/comments`
+		);
+		// 避免加载太晚导致评论区显示错误
+		if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
+
+		const 待展示评论 = 评论列表.slice(-最多展示评论数);
+		// 评论区框架已被换页移除时放弃渲染
+		if (!评论区元素.isConnected) return;
+		评论区元素.querySelector("#评论加载中提示")?.remove();
+
+		// 评论数据来自 GitHub API，属不可信输入：文本一律 textContent，链接一律属性赋值，不拼接 HTML
+		for (const 评论 of 待展示评论) {
+			// 用户被删除时 user 可能为 null，按已注销用户兜底
+			const 用户 = 评论.user,
+				用户主页 = 解析GitHub链接(用户?.html_url || ""),
+				头像地址 = 解析GitHub链接(用户?.avatar_url || ""),
+				评论元素 = ce("article"),
+				用户信息 = ce("div"),
+				头像链接 = ce("a"),
+				头像 = ce("img"),
+				用户名 = ce("span"),
+				用户名链接 = ce("a"),
+				正文 = ce("div"),
+				元数据 = ce("span"),
+				创建时间 = ce("time"),
+				更新时间 = ce("time");
+			评论元素.className = "评论";
+
+			用户信息.className = "用户信息";
+			用户信息.setAttribute("aria-label", "用户信息");
+			if (用户主页) 头像链接.href = 用户主页;
+			头像.className = "头像 小尺寸";
+			头像.alt = (用户?.login || "已注销用户") + "的头像";
+			if (头像地址) 头像.src = 头像地址;
+			头像链接.append(头像);
+			头像链接.classList.add("小尺寸");
+			用户名.className = "用户名";
+			if (用户主页) 用户名链接.href = 用户主页;
+			用户名链接.textContent = 用户?.login || "已注销用户";
+			用户名链接.setAttribute("rel", "author");
+			用户名.append(用户名链接);
+			用户信息.append(头像链接, 用户名);
+
+			正文.className = "评论正文";
+			// @ts-ignore DOMPurify 由动态脚本注入
+			正文.append(净化模块.净化评论HTML(DOMPurify, 评论.body));
+
+			元数据.className = "元数据";
+			创建时间.dateTime = 评论.created_at;
+			创建时间.textContent = new Date(评论.created_at).toLocaleString();
+			更新时间.dateTime = 评论.updated_at;
+			更新时间.textContent = new Date(评论.updated_at).toLocaleString();
+			元数据.append("发表于: ", 创建时间, " 更新于: ", 更新时间);
+			评论元素.append(用户信息, 正文, 元数据);
+
+			// 表情反应
+			const 表情映射 = {
+				"+1": "👍",
+				"-1": "👎",
+				laugh: "😀",
+				hooray: "🎉",
+				confused: "😕",
+				heart: "❤️",
+				rocket: "🚀",
+				eyes: "👀",
+			};
+			let 反应文本 = "";
+			for (const [名称, 表情] of Object.entries(表情映射)) {
+				const 数量 = 评论.reactions?.[名称];
+				if (数量) 反应文本 += 表情 + ": " + 数量 + " ";
+			}
+			if (反应文本) {
+				const 反应 = ce("span");
+				反应.className = "元数据";
+				反应.textContent = 反应文本;
+				评论元素.append(反应);
+			}
+
+			评论区元素.append(评论元素);
+		}
+
+		if (总数 > 待展示评论.length) {
+			const 提醒 = ce("p"),
+				全部评论链接 = ce("a");
+			提醒.className = "元数据";
+			提醒.append(`仅展示最后 ${待展示评论.length} 条评论（共 ${总数} 条），`);
+			全部评论链接.href = `https://github.com/${github仓库}/issues/${issue}`;
+			全部评论链接.textContent = "前往 GitHub 查看全部评论";
+			提醒.append(全部评论链接);
+			评论区元素.append(提醒);
+		}
+
+		// 高亮
+		高亮代码(评论区元素);
+	} catch (e) {
+		处理评论加载失败(e, issue, 动态加载自增计数器拷贝);
+	}
+}
+
 /**
  * 评论加载失败时的兜底：在评论区渲染提示信息，并给出指向 GitHub Issue 的链接
  * @param {unknown} e - 失败原因，仅用于控制台输出
- * @param {文章信息} 当前文章信息 - 当前文章信息，用于拼接 GitHub Issue 地址
+ * @param {number} issue - 已校验的 issue 编号，用于拼接 GitHub Issue 地址
  * @param {number} 动态加载自增计数器拷贝 - 发起评论加载时的代次，用于判断页面是否已切换
  */
-function 处理评论加载失败(e, 当前文章信息, 动态加载自增计数器拷贝) {
+function 处理评论加载失败(e, issue, 动态加载自增计数器拷贝) {
 	console.error(e);
 	// 加载期间已切换页面则放弃渲染，避免污染新页面
 	if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
-	const 评论提示 = `<p>评论加载失败，可能是网络异常或 GitHub 接口访问受限，<a href="https://github.com/${github仓库}/issues/${当前文章信息.issue}">前往 GitHub 查看评论</a>。</p>`;
+	const 评论提示 = `评论加载失败，可能是网络异常或 GitHub 接口访问受限，<a href="https://github.com/${github仓库}/issues/${issue}">前往 GitHub 查看评论</a>。`;
+	// 「加载中」占位还在时直接改成失败提示，避免出现两个评论区
+	const 加载中提示 = gd("评论加载中提示");
+	if (加载中提示) {
+		加载中提示.innerHTML = 评论提示;
+		return;
+	}
 	// 评论区已渲染（失败发生在后续步骤）时只补一条提示，避免出现两个评论区
 	const 已有评论区 = gd("评论区");
 	if (已有评论区) {
-		已有评论区.querySelector("section")?.insertAdjacentHTML("afterbegin", 评论提示);
+		// 提示放在「发表评论」section 之后，保持该 section 只包含链接
+		已有评论区.querySelector("section")?.insertAdjacentHTML("afterend", `<p>${评论提示}</p>`);
 		return;
 	}
 	let sect = ce("section");
@@ -439,12 +552,12 @@ function 处理评论加载失败(e, 当前文章信息, 动态加载自增计�
 	<span>评论</span>
 </h2>
 <section>
-	${评论提示}
 	<a
 		id="评论链接"
-		href="https://github.com/${github仓库}/issues/${当前文章信息.issue}#issue-comment-box"
+		href="https://github.com/${github仓库}/issues/${issue}#issue-comment-box"
 	>在 GitHub 上发表评论</a>
-</section>`;
+</section>
+<p>${评论提示}</p>`;
 	qs("main > .右", true)?.append(sect);
 	渲染图标();
 }
