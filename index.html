@@ -466,15 +466,14 @@
 					#置顶仓库容器 {
 						background-color: var(--bg-color);
 						border-radius: var(--border-radius);
-						display: grid;
-						grid-template-columns: repeat(auto-fit, minmax(256px, 1fr));
-						gap: 12px;
+						display: flex;
+						align-items: stretch;
 						overflow: auto;
 						padding: 16px;
 						max-width: 100%;
 					}
 					#置顶仓库容器 > section {
-						place-items: center;
+						min-width: 256px;
 					}
 					.网易云音乐-最近在听-播放排行,
 					.网易云音乐-最近在听-精选歌词 {
