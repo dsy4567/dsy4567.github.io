@@ -968,7 +968,7 @@ body.顶部 .侧边按钮容器-无更多选项#回到顶部 {
 	cursor: pointer;
 	-webkit-tap-highlight-color: transparent;
 	-webkit-touch-callout: none;
-	display: table-caption;
+	list-style: none;
 	user-select: none;
 	white-space: nowrap;
 	width: calc(100% + -10px);
