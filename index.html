@@ -457,8 +457,27 @@
 				</article>
 
 				<style>
-					.网易云音乐-最近在听-精选歌词,
-					.网易云音乐-最近在听-播放排行 {
+					/* 窄屏单列堆叠；宽屏两列：左列个人简介，右列置顶仓库、小玩具与待定，网易云音乐横跨整行 */
+					#main {
+						display: grid;
+						grid-template-columns: minmax(0, 1fr);
+					}
+
+					#置顶仓库容器 {
+						background-color: var(--bg-color);
+						border-radius: var(--border-radius);
+						display: grid;
+						grid-template-columns: repeat(auto-fit, minmax(256px, 1fr));
+						gap: 12px;
+						overflow: auto;
+						padding: 16px;
+						max-width: 100%;
+					}
+					#置顶仓库容器 > section {
+						place-items: center;
+					}
+					.网易云音乐-最近在听-播放排行,
+					.网易云音乐-最近在听-精选歌词 {
 						background-color: var(--bg-color);
 						border-radius: var(--border-radius);
 					}
@@ -479,11 +498,11 @@
 						margin-bottom: 0.5em;
 					}
 					.网易云音乐-最近在听-播放排行 {
-						margin-top: 8px;
-						height: 50vh;
-						max-height: 480px;
 						overflow: auto;
 						padding: 0;
+						margin: 0;
+						height: 50vh;
+						max-height: 480px;
 					}
 					.网易云音乐-最近在听-播放排行项 {
 						overflow: hidden;
@@ -509,9 +528,51 @@
 						padding: 36px;
 						height: 50px;
 					}
+
+					@media only screen and (min-width: 1400px) {
+						#main {
+							grid-template-columns: repeat(2, minmax(0, 1fr));
+							/* 前两行按卡片自身高度，第三行吸收右列剩余空间，第四行放横跨整行的网易云音乐 */
+							grid-template-rows: max-content max-content minmax(0, 1fr) auto;
+						}
+						#个人简介 {
+							grid-column: 1;
+							grid-row: 1 / 4;
+						}
+						#置顶仓库 {
+							grid-column: 2;
+							grid-row: 1;
+						}
+						#小玩具 {
+							grid-column: 2;
+							grid-row: 2;
+						}
+						/* 待定占满右列剩余空间，底边与左侧个人简介对齐 */
+						#待定 {
+							grid-column: 2;
+							grid-row: 3;
+						}
+
+						.网易云音乐-最近在听-播放排行 {
+							height: 50vh;
+							max-height: 360px;
+						}
+
+						#网易云音乐-最近在听 {
+							grid-column: 1 / -1;
+							grid-row: 4;
+							display: grid;
+							grid-template-columns: repeat(2, minmax(0, 1fr));
+							grid-gap: 0 12px;
+							align-items: stretch;
+						}
+						#网易云音乐-最近在听 > h2 {
+							grid-column: 1 / -1;
+						}
+					}
 				</style>
 				<article id="网易云音乐-最近在听" class="加载中">
-					<h2 class="含图标">
+					<h2 class="含图标" id="网易云音乐-最近在听-标题">
 						<svg class="小尺寸" data-icon="网易云音乐"></svg>
 						<span>网易云音乐-最近在听</span>
 					</h2>
@@ -523,6 +584,7 @@
 						<span class="网易云音乐-最近在听-精选歌词-单句"><br /></span>
 						<span class="网易云音乐-最近在听-精选歌词-歌曲信息"><br /></span>
 					</div>
+					<a href="#置顶仓库-标题" class="隐藏链接">跳过排行</a>
 					<ol class="网易云音乐-最近在听-播放排行" aria-label="播放排行">
 						<li class="网易云音乐-最近在听-播放排行项">
 							<span class="网易云音乐-最近在听-播放排行项-歌曲信息">
@@ -569,12 +631,12 @@
 					</ol>
 				</article>
 
-				<article>
-					<h2 class="含图标">
+				<article id="置顶仓库">
+					<h2 class="含图标" id="置顶仓库-标题">
 						<svg class="小尺寸" data-icon="置顶仓库"></svg>
 						<span>置顶仓库</span>
 					</h2>
-					<div class="组" role="list">
+					<div id="置顶仓库容器" role="list">
 						<section role="listitem">
 							<b>
 								<a href="https://github.com/dsy4567/4399-on-vscode"
@@ -603,10 +665,24 @@
 						</section>
 					</div>
 				</article>
-				<article>
-					<h2 class="含图标">
+
+				<article id="小玩具">
+					<h2 class="含图标" id="小玩具-标题">
 						<svg class="小尺寸" data-icon="小游戏"></svg>
-						<span>小游戏</span>
+						<span>小玩具</span>
+					</h2>
+					<ul>
+						<li><a href="/game.html">防沉迷和答辩</a></li>
+						<li>
+							<a href="https://dsy4567.github.io/ikun/">ikun 专属乐器</a>
+						</li>
+					</ul>
+				</article>
+
+				<article id="待定">
+					<h2 class="含图标" id="待定-标题">
+						<svg class="小尺寸" data-icon="小游戏"></svg>
+						<span>待定</span>
 					</h2>
 					<ul>
 						<li><a href="/game.html">防沉迷和答辩</a></li>

@@ -416,19 +416,6 @@ img:is(.特小尺寸, .小尺寸, .中尺寸, .大尺寸) {
 	--height: 128px;
 }
 
-.组 {
-	background-color: var(--bg-color);
-	border-radius: var(--border-radius);
-	display: flex;
-	max-width: 100%;
-	overflow: auto;
-	padding: 16px;
-}
-.组 > section {
-	max-width: 256px;
-	min-width: 256px;
-}
-
 .fill {
 	fill: var(--link-color);
 }
@@ -567,6 +554,7 @@ main > .右 {
 	width: 100%;
 	max-width: calc(var(--main-maxw) - var(--left-maxw));
 	min-height: 100vh;
+	padding-bottom: 16px;
 }
 
 main > #分界线 {
