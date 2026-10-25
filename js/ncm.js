@@ -1226,7 +1226,11 @@ class 网易云音乐小组件 extends HTMLElement {
 
 	/** 点击/回车/空格立即播放本卡片对应的歌曲；数据非法时不播放 */
 	播放() {
-		if (this.歌曲) 网易云音乐.切换音乐(this.歌曲.id, true);
+		const 歌曲 = this.歌曲;
+		if (!歌曲) return;
+		// 与排行播放一样单独上报，用于区分「正文卡片」与侧边播放器的播放来源
+		埋点("song-card-play", { id: 歌曲.id, name: 歌曲.歌名, artist: 歌曲.歌手 });
+		网易云音乐.切换音乐(歌曲.id, true);
 	}
 }
 
