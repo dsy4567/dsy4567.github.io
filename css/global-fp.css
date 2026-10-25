@@ -708,7 +708,7 @@ footer#copyright {
 		z-index: 1;
 		position: relative;
 		margin-top: 0;
-		padding-top: calc(var(--border-radius) * 2);
+		padding-top: var(--border-radius);
 		padding-left: 0;
 		padding-right: 0;
 		overflow-y: unset;
@@ -738,9 +738,6 @@ footer#copyright {
 	@supports (animation-timeline: scroll()) {
 		main > .右 {
 			background-color: transparent;
-		}
-		main > .右 > :first-child {
-			min-height: calc(var(--right-shift) / 2);
 		}
 	}
 }
