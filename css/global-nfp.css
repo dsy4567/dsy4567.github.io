@@ -1038,11 +1038,11 @@ body.顶部 .侧边按钮容器-无更多选项#回到顶部 {
 }
 
 /* 背景模式按钮：填充色反映当前生效的背景（浅色→白、深色→黑、自动→渐变），边框提供轮廓 */
-#切换主题 > #主题控件 > #背景模式 {
+#主题控件 > #背景模式 {
 	background-color: var(--bg-color);
 	border: var(--border);
 }
-html.深色 #切换主题 > #主题控件 > #背景模式[title*="自动"] {
+#主题控件 > #背景模式[title*="自动"] {
 	background-image: linear-gradient(to top left, #000 50%, #fff 50%);
 	background-size: 125% 125%;
 	background-position: 37.5%;
