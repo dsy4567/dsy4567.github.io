@@ -341,6 +341,17 @@ async function 填充精选歌词() {
 async function 处理排行点击(/** @type {number} */ 歌曲id) {
 	if (正在处理点击) return;
 	正在处理点击 = true;
+	// top 取当前展示顺序（1 起），与页面上的 TOP n 一致
+	const 排名 = 展示歌曲.findIndex(项 => 项.song.id === 歌曲id);
+	if (排名 >= 0) {
+		const 项 = 展示歌曲[排名];
+		埋点("ranking-song-play", {
+			id: 歌曲id,
+			name: 项.song.name,
+			artist: 项.song.ar.map(歌手信息 => 歌手信息.name).join(" / "),
+			top: 排名 + 1,
+		});
+	}
 	try {
 		// 直接引用 ncm.js 默认导出的类型，获得精确的类型提示
 		const 网易云音乐 = /** @type {typeof import("./ncm.js").default | undefined} */ (

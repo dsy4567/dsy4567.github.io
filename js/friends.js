@@ -19,6 +19,10 @@ export async function main(/** @type {String} */ 路径) {
 			img.src ||
 			`https://t1.gstatic.cn/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${a.host}&size=16`;
 		img.alt = img.title = a.innerText;
+		// 友链点击用 JS 埋点（记录链接文字与完整地址），避免 data-umami-event 属性干扰外链的新标签页行为
+		a.addEventListener("click", () => {
+			埋点("friend-link-click", { text: a.innerText, url: a.href });
+		});
 	});
 	// if (!location.hash && 已触发动态加载)
 	// 	qs("main .右", true)?.scrollIntoView({

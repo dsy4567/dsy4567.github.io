@@ -505,6 +505,87 @@ function 创建隐藏文字(文本) {
 }
 //#endregion
 
+//#region 统计埋点
+/**
+ * 埋点队列：统计脚本（umami）就绪前产生的事件暂存于此，就绪后按顺序补发。
+ * 脚本被拦截或当前域名不在统计范围内时队列不会补发，因此限制长度，满后丢弃最旧的事件
+ */
+const /** @type {{ 事件名: string, 数据?: Record<string, string | number> }[]} */ 埋点队列 = [];
+const 埋点队列上限 = 50;
+/** 按去抖键挂起的事件：键 → 定时器与待上报内容 */
+const /** @type {Map<string, { 定时器: ReturnType<typeof setTimeout>, 事件名: string, 数据?: Record<string, string | number> }>} */ 挂起埋点 =
+		new Map();
+
+/**
+ * 上报一个自定义统计事件；统计脚本未就绪时先入队，就绪后由 刷新埋点队列 补发。
+ * 事件名与数据键一律使用英文，避免 Umami 后台筛选、导出时出现兼容性问题
+ * @param {string} 事件名 - 英文事件名，不超过 50 字符
+ * @param {Record<string, string | number>} [数据] - 英文键值对，字符串值不超过 500 字符
+ */
+function 埋点(事件名, 数据) {
+	if (!网页访问者不为爬虫) return;
+	const 统计 = window.umami;
+	if (!统计) {
+		if (埋点队列.length >= 埋点队列上限) 埋点队列.shift();
+		// 快照数据：调用方复用同一对象时，补发内容不会随之后的修改而漂移
+		埋点队列.push({ 事件名, 数据: 数据 ? { ...数据 } : undefined });
+		return;
+	}
+	if (数据) 统计.track(事件名, 数据);
+	else 统计.track(事件名);
+}
+
+/**
+ * 延迟上报：同一键在延迟时间内多次调用只报最后一次，用于主题切换这类连续点击
+ * @param {string} 键 - 去抖键，同一键共享计时
+ * @param {string} 事件名 - 英文事件名
+ * @param {Record<string, string | number>} [数据]
+ * @param {number} [延迟=7000] - 静默多久后上报（毫秒）
+ */
+function 延迟埋点(键, 事件名, 数据, 延迟 = 7000) {
+	if (!网页访问者不为爬虫) return;
+	const 旧 = 挂起埋点.get(键);
+	if (旧) clearTimeout(旧.定时器);
+	const 快照 = 数据 ? { ...数据 } : undefined;
+	const 定时器 = setTimeout(() => {
+		挂起埋点.delete(键);
+		埋点(事件名, 快照);
+	}, 延迟);
+	挂起埋点.set(键, { 定时器, 事件名, 数据: 快照 });
+}
+
+/** 立即上报所有挂起的延迟事件；在换页、页面隐藏前调用，避免事件被归到换页后的 URL 上 */
+function 结算挂起埋点() {
+	// 先快照并清空：单条上报抛错也不会把已结算的事件留在 Map 中，避免下次重复上报
+	const 快照 = [...挂起埋点.values()];
+	挂起埋点.clear();
+	for (const 挂起 of 快照) {
+		clearTimeout(挂起.定时器);
+		try {
+			埋点(挂起.事件名, 挂起.数据);
+		} catch {}
+	}
+}
+
+/** 统计脚本加载成功后补发队列中的事件 */
+function 刷新埋点队列() {
+	if (!window.umami) return;
+	// 先出队并快照：单条上报抛错、或 umami 中途消失导致重新入队时，不会重复补发
+	const 快照 = 埋点队列.splice(0);
+	for (const 事件 of 快照)
+		try {
+			埋点(事件.事件名, 事件.数据);
+		} catch {}
+}
+
+/** 统计脚本加载失败时清空队列并取消挂起的定时器，避免事件堆积或 7s 后重新入队 */
+function 清空埋点队列() {
+	埋点队列.length = 0;
+	for (const 挂起 of 挂起埋点.values()) clearTimeout(挂起.定时器);
+	挂起埋点.clear();
+}
+//#endregion
+
 //#region 调度类
 let /** @type {延迟执行状态类型} */ 延迟执行状态 = {
 		DOMContentLoaded: {

@@ -23,6 +23,8 @@ const /** @type {Record<string, string[]>} */ 加载清单 = {
 	移动端界面最大宽度 = 840;
 let 路径 = 获取清理后当前路径(),
 	正在动态加载 = false;
+/** 「复制代码」事件在当前页面代次内是否已上报：直到下次导航只报首次 */
+let 已上报复制代码 = false;
 
 //#region 加载模块、动态加载
 /** 加载失败的模块名集合：因网络等问题导致 import 失败的模块记录在此，下次加载时为其附加随机查询字符串重试 */
@@ -85,6 +87,8 @@ function 动态加载(元素) {
 			if (!元素.popstate && !location.hash) 回到顶部();
 			动态加载自增计数器++;
 			右.innerHTML = 正文;
+			// 文章页写入的埋点标记只对当前文章有效，换页后清除，避免复制代码事件带上旧文章 id
+			delete 右.dataset.articleId;
 			// 动态换页后把焦点移入新正文：键盘/屏幕阅读器用户据此感知内容已更换。
 			// 先让正文容器可编程聚焦；preventScroll 避免打断 popstate 的历史滚动恢复与上面的回到顶部
 			右.tabIndex = -1;
@@ -253,6 +257,10 @@ fetch("/json/theme.json")
 					应用背景模式(下一个);
 					更新模式按钮();
 					提示("背景模式: " + 下一个);
+					// 连续切换只报最终停留的模式；值用英文，便于后台按固定枚举筛选
+					延迟埋点("背景模式", "theme-mode-change", {
+						mode: 下一个 === "自动" ? "auto" : 下一个 === "浅色" ? "light" : "dark",
+					});
 				};
 				更新模式按钮();
 				控件容器.append(模式按钮);
@@ -274,6 +282,10 @@ fetch("/json/theme.json")
 						应用强调色(输入.value);
 						同步选中态();
 						提示("已切换自定义强调色");
+						延迟埋点("强调色", "accent-color-change", {
+							color: 输入.value,
+							preset: "",
+						});
 					};
 				};
 				控件容器.append(调色盘按钮);
@@ -306,6 +318,7 @@ fetch("/json/theme.json")
 						应用强调色(hex);
 						同步选中态();
 						提示("已切换强调色: " + 名字);
+						延迟埋点("强调色", "accent-color-change", { color: hex, preset: 名字 });
 					};
 					待添加元素.push(btn);
 				});
@@ -1055,7 +1068,19 @@ function 设置展开容器可访问名(展开容器) {
 					setTimeout(() => {
 						t2?.classList.remove("已复制");
 					}, 3000);
-					navigator.clipboard.writeText(t2.innerText);
+					// 仅复制成功才上报；每个页面代次只报首次，且只统计文章页（正文带 data-article-id）
+					navigator.clipboard.writeText(t2.innerText).then(
+						() => {
+							if (已上报复制代码) return;
+							const 文章 = t2.closest("[data-article-id]");
+							if (!(文章 instanceof HTMLElement)) return;
+							const 文章id = 文章.dataset.articleId;
+							if (!文章id) return;
+							已上报复制代码 = true;
+							埋点("copy-code", { articleId: 文章id });
+						},
+						() => {}
+					);
 					事件.preventDefault();
 				}
 			});
@@ -1074,7 +1099,13 @@ function 设置展开容器可访问名(展开容器) {
 addEventListener("copy", () => {
 	提示("复制成功");
 });
+// 每次导航重置「复制代码」的首次标记；页面隐藏前结算挂起的去抖事件
+addEventListener("URL发生变化", () => {
+	已上报复制代码 = false;
+});
+addEventListener("pagehide", 结算挂起埋点);
 addEventListener("popstate", 事件 => {
+	结算挂起埋点();
 	// hash 变化执行默认行为
 	if (获取清理后当前路径() === 路径 || 事件.state?.路径 === 路径) return 事件.preventDefault();
 	动态加载({
@@ -1096,6 +1127,8 @@ addEventListener("click", 事件 => {
 
 	if (a.pathname === 当前路径 && a.hash) return;
 	else if (a.host === 本站) {
+		// 换页前先结算挂起的去抖事件，避免被归到新页面的 URL 上
+		结算挂起埋点();
 		事件.preventDefault();
 		动态加载(a);
 	} else a.target = "_blank";

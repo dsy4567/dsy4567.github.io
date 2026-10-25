@@ -196,7 +196,10 @@ async function 渲染文章(当前文章信息) {
 				new URL(当前文章信息.cover || 获取默认封面(当前文章信息.id), location.href).href
 			);
 		}
-		qs("main > .右 > article")?.classList.add("博客正文");
+		const 文章元素 = qs("main > .右 > article", true);
+		if (文章元素) 文章元素.classList.add("博客正文");
+		// 供 main.js 的「复制代码」埋点读取文章 id；挂在正文容器上，外链文章/免构建预览替换 article 后仍可读取
+		右.dataset.articleId = 当前文章信息.id;
 		//#endregion
 
 		//#region 文章编辑历史
@@ -267,6 +270,20 @@ async function 渲染文章(当前文章信息) {
 
 		//#region 收尾
 		显示或隐藏进度条(false);
+
+		// 阅读完成：文末哨兵进入视口即视为读完，每篇文章每次渲染只上报一次。
+		// 哨兵挂在正文容器上（评论区随后才追加，不会排在哨兵之前）
+		const 哨兵 = ce("div");
+		哨兵.style.height = "1px";
+		右.append(哨兵);
+		const 观察器 = new IntersectionObserver(条目 => {
+			if (!条目.some(项 => 项.isIntersecting)) return;
+			观察器.disconnect();
+			// 换页后正文已被替换，过期代次不再上报
+			if (动态加载自增计数器拷贝 !== 动态加载自增计数器) return;
+			埋点("article-read-complete", { articleId: 当前文章信息.id });
+		});
+		观察器.observe(哨兵);
 
 		// if (location.hash)
 		// 滚动到hash位置

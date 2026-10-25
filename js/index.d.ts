@@ -131,9 +131,13 @@ interface Window {
 		/** 待 reCAPTCHA 加载完成后执行的回调队列 */
 		fns?: (() => void)[];
 	};
+	/** Umami 统计脚本注入的全局对象；脚本未加载、被拦截或在非统计域名下不存在 */
+	umami?: {
+		track(): Promise<void>;
+		track(事件名: string, 数据?: Record<string, string | number>): Promise<void>;
+		track(载荷: object | ((属性: any) => any)): Promise<void>;
+	};
 }
-
-var dataLayer: any[];
 var grecaptcha = new Recaptcha();
 var hljs = new Hljs();
 /** LRC 歌词解析器（js/lib/lrc-parser.js）：解析结果按开始时间升序且 start < end，
