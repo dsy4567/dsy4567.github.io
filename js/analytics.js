@@ -15,7 +15,12 @@ const umami_website_id = "0594568b-2cd6-49f0-ab68-ee7893595cb2";
 const 启用统计的域名 = ["dsy4567.icu"];
 
 export default (() => {
-	if (!启用统计的域名.includes(location.hostname)) return;
+	// 站长自查时在控制台 localStorage.setItem("测试-不插入统计脚本", "")，即可不把自己计入统计（刷新生效）
+	if (
+		localStorage.getItem("测试-不插入统计脚本") !== null ||
+		!启用统计的域名.includes(location.hostname)
+	)
+		return;
 
 	// 自定义事件统一由 js/global.js 的 埋点() 上报，本文件只负责加载脚本并在就绪后补发队列
 	const s1 = document.createElement("script");
