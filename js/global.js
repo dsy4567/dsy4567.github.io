@@ -510,17 +510,18 @@ function 创建隐藏文字(文本) {
  * 埋点队列：统计脚本（umami）就绪前产生的事件暂存于此，就绪后按顺序补发。
  * 脚本被拦截或当前域名不在统计范围内时队列不会补发，因此限制长度，满后丢弃最旧的事件
  */
-const /** @type {{ 事件名: string, 数据?: Record<string, string | number> }[]} */ 埋点队列 = [];
+const /** @type {{ 事件名: string, 数据?: Record<string, string | number | boolean> }[]} */ 埋点队列 =
+		[];
 const 埋点队列上限 = 50;
 /** 按去抖键挂起的事件：键 → 定时器与待上报内容 */
-const /** @type {Map<string, { 定时器: ReturnType<typeof setTimeout>, 事件名: string, 数据?: Record<string, string | number> }>} */ 挂起埋点 =
+const /** @type {Map<string, { 定时器: ReturnType<typeof setTimeout>, 事件名: string, 数据?: Record<string, string | number | boolean> }>} */ 挂起埋点 =
 		new Map();
 
 /**
  * 上报一个自定义统计事件；统计脚本未就绪时先入队，就绪后由 刷新埋点队列 补发。
  * 事件名与数据键一律使用英文，避免 Umami 后台筛选、导出时出现兼容性问题
  * @param {string} 事件名 - 英文事件名，不超过 50 字符
- * @param {Record<string, string | number>} [数据] - 英文键值对，字符串值不超过 500 字符
+ * @param {Record<string, string | number | boolean>} [数据] - 英文键值对，字符串值不超过 500 字符
  */
 function 埋点(事件名, 数据) {
 	if (!网页访问者不为爬虫) return;
@@ -539,7 +540,7 @@ function 埋点(事件名, 数据) {
  * 延迟上报：同一键在延迟时间内多次调用只报最后一次，用于主题切换这类连续点击
  * @param {string} 键 - 去抖键，同一键共享计时
  * @param {string} 事件名 - 英文事件名
- * @param {Record<string, string | number>} [数据]
+ * @param {Record<string, string | number | boolean>} [数据]
  * @param {number} [延迟=7000] - 静默多久后上报（毫秒）
  */
 function 延迟埋点(键, 事件名, 数据, 延迟 = 7000) {

@@ -42,7 +42,13 @@ let /** @type {(value?: any) => void} */ 歌单加载完成Resolve = () => {};
  * @param {歌单} 音乐信息
  */
 function 上报播放(音乐信息) {
-	埋点("player-play", { id: 音乐信息.id, name: 音乐信息.歌名, artist: 音乐信息.歌手 });
+	埋点("player-play", {
+		id: 音乐信息.id,
+		name: 音乐信息.歌名,
+		artist: 音乐信息.歌手,
+		// 是否随机播放记在事件属性上，便于按「开启/关闭」筛选播放行为
+		shuffle: 网易云音乐.设置.随机播放,
+	});
 }
 
 let 网易云音乐 = {
