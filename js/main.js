@@ -194,6 +194,30 @@ _global["main.js"] = () => ({
 //#endregion
 
 //#region 主题
+/** 切换背景模式时临时插入的过渡样式：10 秒内没有再次切换就移除，避免长期开启过渡引入意外动画 */
+const 主题过渡样式文本 =
+	"html,body,div,section,article,nav,main > .右::before,main > .右::after{transition:var(--transition) background-color}";
+/** @type {HTMLStyleElement | null} */
+let 主题过渡样式元素 = null;
+/** @type {ReturnType<typeof setTimeout> | undefined} */
+let 主题过渡移除定时器;
+/**
+ * 启用 background-color 过渡并重置「10 秒后移除」的计时器，供切换背景模式前调用
+ */
+function 启用主题过渡() {
+	if (!主题过渡样式元素) {
+		主题过渡样式元素 = ce("style");
+		主题过渡样式元素.textContent = 主题过渡样式文本;
+		document.head.append(主题过渡样式元素);
+		// 强制一次样式计算，确保紧接着的主题切换能命中过渡，而不是瞬间变色
+		void getComputedStyle(document.documentElement).transition;
+	}
+	clearTimeout(主题过渡移除定时器);
+	主题过渡移除定时器 = setTimeout(() => {
+		主题过渡样式元素?.remove();
+		主题过渡样式元素 = null;
+	}, 7000);
+}
 fetch("/json/theme.json")
 	.then(
 		res =>
@@ -225,6 +249,7 @@ fetch("/json/theme.json")
 						"深色",
 					]);
 					const 下一个 = 列表[(列表.indexOf(读取背景模式()) + 1) % 列表.length];
+					启用主题过渡();
 					应用背景模式(下一个);
 					更新模式按钮();
 					提示("背景模式: " + 下一个);

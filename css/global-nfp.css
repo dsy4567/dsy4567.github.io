@@ -383,16 +383,6 @@ abbr {
 	text-decoration: dashed underline var(--accent-color);
 }
 
-html,
-body,
-div,
-section,
-article,
-nav,
-main > .右::after {
-	transition: var(--transition) background-color;
-}
-
 main > .右 :is(.高亮-滚动, .高亮-鼠标):is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
 	opacity: 1;
 }
