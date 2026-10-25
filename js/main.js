@@ -1119,19 +1119,30 @@ addEventListener("click", 事件 => {
 	if (!(目标 instanceof Element)) return;
 	const a = 目标.closest("a");
 	if (!a) return;
-	// 下载链接、以及指定了非 _self 打开方式的链接交给浏览器自行处理，不发起动态加载请求
-	if (a.hasAttribute("download") || (a.target && a.target !== "_self")) return;
+	// 下载链接不发起动态加载，也不算外链点击
+	if (a.hasAttribute("download")) return;
 
 	const 本站 = location.host,
 		当前路径 = location.pathname;
 
+	if (a.host !== 本站) {
+		// 外链点击：记录链接文字与完整地址。自身模块已埋点的链接（data-已埋点，如友链）不重复上报
+		if (!a.dataset.已埋点)
+			埋点("outbound-link-click", { text: a.innerText.trim(), url: a.href });
+		// 已指定其他打开方式的保持原样，其余用新标签页打开
+		if (!a.target || a.target === "_self") a.target = "_blank";
+		return;
+	}
+
+	// 指定了非 _self 打开方式的站内链接交给浏览器自行处理
+	if (a.target && a.target !== "_self") return;
+	// hash 变化执行默认行为
 	if (a.pathname === 当前路径 && a.hash) return;
-	else if (a.host === 本站) {
-		// 换页前先结算挂起的去抖事件，避免被归到新页面的 URL 上
-		结算挂起埋点();
-		事件.preventDefault();
-		动态加载(a);
-	} else a.target = "_blank";
+
+	// 换页前先结算挂起的去抖事件，避免被归到新页面的 URL 上
+	结算挂起埋点();
+	事件.preventDefault();
+	动态加载(a);
 });
 
 //#region 域名迁移

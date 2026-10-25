@@ -20,6 +20,8 @@ export async function main(/** @type {String} */ 路径) {
 			`https://t1.gstatic.cn/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://${a.host}&size=16`;
 		img.alt = img.title = a.innerText;
 		// 友链点击用 JS 埋点（记录链接文字与完整地址），避免 data-umami-event 属性干扰外链的新标签页行为
+		// 标记后 main.js 的通用外链埋点会跳过该链接，避免重复上报
+		a.dataset.已埋点 = "";
 		a.addEventListener("click", () => {
 			埋点("friend-link-click", { text: a.innerText, url: a.href });
 		});
