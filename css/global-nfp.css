@@ -128,9 +128,6 @@ div#侧边按钮容器 {
 		75% {
 			transform: translateY(calc(var(--bg-height) * -0.3));
 		}
-		87.5% {
-			opacity: 0;
-		}
 		100% {
 			opacity: 0;
 			transform: translateY(calc(var(--bg-height) * -0.45));
