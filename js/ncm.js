@@ -38,17 +38,55 @@ let /** @type {HTMLDivElement} */ 网易云音乐元素 = gd("网易云音乐", 
 	/** @type {HTMLImageElement} */ 网易云音乐封面元素 = gd("网易云音乐封面", true);
 let /** @type {(value?: any) => void} */ 歌单加载完成Resolve = () => {};
 /**
- * 上报一次「开始播放一首歌」事件。只在真正换歌时调用：暂停后继续、同曲重播都不算
+ * 上报一次「开始播放一首歌」事件并建立播放会话（供 player-playend 结算）。
+ * 只在真正换歌时调用：暂停后继续、同曲重播都不算
  * @param {歌单} 音乐信息
+ * @param {"user-other"|"user-prev"|"user-next"|"auto"} 来源 - 触发本次播放的入口
  */
-function 上报播放(音乐信息) {
+function 上报播放(音乐信息, 来源) {
 	埋点("player-play", {
 		id: 音乐信息.id,
 		name: 音乐信息.歌名,
 		artist: 音乐信息.歌手,
 		// 是否随机播放记在事件属性上，便于按「开启/关闭」筛选播放行为
 		shuffle: 网易云音乐.设置.随机播放,
+		source: 来源,
 	});
+	当前播放会话 = { 信息: 音乐信息, 暂停已报: false };
+}
+
+/** 当前播放会话：player-play 上报时建立、player-playend 结算时清空；null 表示没有待结算的播放 */
+let /** @type {{ 信息: 歌单, 暂停已报: boolean } | null} */ 当前播放会话 = null;
+/** 暂停超过 1 分钟的上报定时器；恢复播放或换歌时取消 */
+let 暂停超时上报定时器 = -1;
+
+/**
+ * 结算当前播放会话并上报 player-playend。
+ * ended/switch/error 终结会话；pause 不终结（之后仍可报其他原因），每首最多报一次 pause
+ * @param {"ended"|"switch"|"error"|"pause"} 原因
+ */
+function 结算播放(原因) {
+	const 会话 = 当前播放会话;
+	if (!会话) return;
+	if (原因 === "pause") {
+		if (会话.暂停已报) return;
+		会话.暂停已报 = true;
+	} else {
+		当前播放会话 = null;
+		clearTimeout(暂停超时上报定时器);
+	}
+	const Audio = 网易云音乐.正在播放.Audio;
+	const /** @type {Record<string, string | number | boolean>} */ 数据 = {
+			id: 会话.信息.id,
+			name: 会话.信息.歌名,
+			artist: 会话.信息.歌手,
+			reason: 原因,
+			// 听到哪：结算时播到的位置（秒）。switch 在 currentTime 归零前、pause 时音频已冻结，取值均正确
+			played: Math.round(Audio.currentTime),
+		};
+	// 总时长元数据未就绪时为 NaN，省略该键
+	if (Number.isFinite(Audio.duration)) 数据.duration = Math.round(Audio.duration);
+	埋点("player-playend", 数据);
 }
 
 let 网易云音乐 = {
@@ -281,10 +319,16 @@ let 网易云音乐 = {
 			console.error(e);
 		}
 	},
-	async 播放第几首(/** @type {number} */ 索引) {
+	async 播放第几首(
+		/** @type {number} */ 索引,
+		/** @type {"user-other"|"user-prev"|"user-next"|"auto"} */ 来源 = "user-other"
+	) {
 		// 歌单为空或索引越界时无歌可播，提前放弃，避免随后读取 歌单[索引].id 抛错
 		let 音乐信息 = 网易云音乐.歌单[索引];
 		if (!音乐信息) return;
+
+		// 新歌开播，先把旧歌的会话结算为切歌；自然结束已在 onended 先行结算，此处不会重复
+		结算播放("switch");
 
 		if (!网易云音乐.已首次播放) 网易云音乐.已首次播放 = true;
 
@@ -311,7 +355,7 @@ let 网易云音乐 = {
 		网易云音乐.正在播放.Audio.src = 音乐地址;
 		网易云音乐.正在播放.已加载的音乐id = 音乐信息.id;
 		网易云音乐.正在播放.已加载的音乐令牌 = 令牌;
-		上报播放(音乐信息);
+		上报播放(音乐信息, 来源);
 		网易云音乐.正在播放.Audio.autoplay = true;
 		网易云音乐元素 && (网易云音乐元素.title = "网易云音乐 - 正在播放: " + 音乐信息.完整歌名);
 		localStorage.setItem("上次播放", "" + 音乐信息.id);
@@ -334,8 +378,8 @@ let 网易云音乐 = {
 				网易云音乐.正在播放.Audio.src = 音乐地址;
 				网易云音乐.正在播放.已加载的音乐id = 音乐信息.id;
 				网易云音乐.正在播放.已加载的音乐令牌 = 令牌;
-				// 冷启动不经过「播放第几首」，在此补报
-				上报播放(音乐信息);
+				// 冷启动不经过「播放第几首」，在此补报；冷启动即主动点歌
+				上报播放(音乐信息, "user-other");
 			}
 
 			if (网易云音乐.正在播放.Audio.paused) 网易云音乐.正在播放.Audio.play();
@@ -345,7 +389,7 @@ let 网易云音乐 = {
 			console.error(e);
 		}
 	},
-	async 上一首() {
+	async 上一首(/** @type {"user-prev"|"user-next"|"auto"} */ 来源 = "user-prev") {
 		try {
 			clearTimeout(网易云音乐.重试timeout);
 			await 网易云音乐.初始化();
@@ -355,13 +399,13 @@ let 网易云音乐 = {
 				索引 = 网易云音乐.正在播放.索引 - 1;
 				if (索引 < 0) 索引 = 网易云音乐.歌单.length - 1;
 			}
-			await 网易云音乐.播放第几首(索引);
+			await 网易云音乐.播放第几首(索引, 来源);
 		} catch (e) {
 			提示("播放失败");
 			console.error(e);
 		}
 	},
-	async 下一首() {
+	async 下一首(/** @type {"user-prev"|"user-next"|"auto"} */ 来源 = "user-next") {
 		try {
 			clearTimeout(网易云音乐.重试timeout);
 			await 网易云音乐.初始化();
@@ -372,7 +416,7 @@ let 网易云音乐 = {
 				索引 = 网易云音乐.正在播放.索引 + 1;
 				if (索引 > 网易云音乐.歌单.length - 1) 索引 = 0;
 			}
-			await 网易云音乐.播放第几首(索引);
+			await 网易云音乐.播放第几首(索引, 来源);
 		} catch (e) {
 			提示("播放失败");
 			console.error(e);
@@ -667,9 +711,14 @@ let 网易云音乐 = {
 			navigator.mediaSession?.setActionHandler("pause", () =>
 				网易云音乐.正在播放.Audio.pause()
 			);
-			navigator.mediaSession?.setActionHandler("previoustrack", 网易云音乐.上一首);
-			navigator.mediaSession?.setActionHandler("nexttrack", 网易云音乐.下一首);
-			网易云音乐.正在播放.Audio.onended = 网易云音乐.下一首;
+			// 媒体键回调会收到 details 参数，包一层避免它被当作 来源 传入
+			navigator.mediaSession?.setActionHandler("previoustrack", () => 网易云音乐.上一首());
+			navigator.mediaSession?.setActionHandler("nexttrack", () => 网易云音乐.下一首());
+			网易云音乐.正在播放.Audio.onended = () => {
+				// 先结算自然结束，随后的自动切歌在 播放第几首 里已见不到会话，不会误报 switch
+				结算播放("ended");
+				网易云音乐.下一首("auto");
+			};
 			网易云音乐.正在播放.Audio.onloadstart = () => {
 				if (网易云音乐.已首次播放) 网易云音乐.设置闪烁动画(true);
 			};
@@ -683,6 +732,8 @@ let 网易云音乐 = {
 			};
 			网易云音乐.正在播放.Audio.onloadedmetadata = () => {};
 			网易云音乐.正在播放.Audio.onplay = () => {
+				// 恢复播放即作废暂停超时的上报
+				clearTimeout(暂停超时上报定时器);
 				qsa("li.正在播放")?.forEach(元素 => {
 					元素.classList.remove("正在播放");
 				});
@@ -713,6 +764,17 @@ let 网易云音乐 = {
 					"" + !网易云音乐.正在播放.Audio.paused
 				);
 				网易云音乐.播放暂停按钮?.classList.add("激活");
+
+				// 暂停满 1 分钟上报一次 pause；换歌时结算已清会话并取消定时器，
+				// 播放第几首 内部的切歌 pause 因会话已结算为 null 也不会启动
+				const 会话快照 = 当前播放会话;
+				if (!会话快照 || 会话快照.暂停已报) return;
+				clearTimeout(暂停超时上报定时器);
+				暂停超时上报定时器 = window.setTimeout(() => {
+					// 恢复播放（onplay 已清但兜底）、换歌后不再上报
+					if (当前播放会话 !== 会话快照 || !网易云音乐.正在播放.Audio.paused) return;
+					结算播放("pause");
+				}, 60000);
 			};
 			网易云音乐.正在播放.Audio.ontimeupdate = () => {
 				网易云音乐.预加载下一首();
@@ -721,6 +783,9 @@ let 网易云音乐 = {
 			网易云音乐.正在播放.Audio.onerror = e => {
 				// error 可能来自已被新请求替换的旧音频，此时不应计入失败或触发自动切歌
 				if (网易云音乐.正在播放.已加载的音乐令牌 !== 网易云音乐.播放请求令牌) return;
+				// 播不了先按 error 结算旧会话：会话清空后，随后的自动切歌不会再报 switch，
+				// 后台可直接按 reason=error 筛出错误切歌（含连续失败达上限停止切换的场景）
+				结算播放("error");
 				// 连续失败达到歌单长度时停止自动切换，成功播放一次即清零（见 onplaying）
 				网易云音乐.连续失败次数++;
 				console.error(e);
@@ -734,7 +799,8 @@ let 网易云音乐 = {
 						", 将在 3 秒后切换下一首"
 				);
 				clearTimeout(网易云音乐.重试timeout);
-				网易云音乐.重试timeout = window.setTimeout(网易云音乐.下一首, 3000);
+				// 3 秒后自动跳下一首；旧歌已在上面按 error 结算，此处只为给访客留出看到提示的时间
+				网易云音乐.重试timeout = window.setTimeout(() => 网易云音乐.下一首("auto"), 3000);
 			};
 			网易云音乐元素.title =
 				"网易云音乐 - 正在播放: " + 网易云音乐.歌单[网易云音乐.正在播放.索引].完整歌名;
@@ -806,9 +872,10 @@ async function 立即渲染网易云音乐组件() {
 		return btn;
 	}
 
-	创建按钮("上一首", 网易云音乐.上一首, "上一首");
+	// 创建按钮 会把 btn 作为参数传入，包一层避免 btn 被当作 来源 传入
+	创建按钮("上一首", () => 网易云音乐.上一首(), "上一首");
 	网易云音乐.播放暂停按钮 = 创建按钮("播放暂停", 网易云音乐.播放暂停, "暂停", "checkbox");
-	创建按钮("下一首", 网易云音乐.下一首, "下一首");
+	创建按钮("下一首", () => 网易云音乐.下一首(), "下一首");
 	创建按钮(
 		"在网易云音乐中查看",
 		() => {
