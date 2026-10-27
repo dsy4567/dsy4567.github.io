@@ -550,15 +550,6 @@ main > #分界线 {
 	height: calc(100vh - var(--border-width) * 2);
 	transition: var(--transition) background-color;
 }
-main > #分界线::after {
-	content: "";
-	background-color: var(--surface-1);
-	border-radius: var(--border-radius);
-	display: block;
-	width: 100%;
-	height: 100%;
-	position: absolute;
-}
 body.宽屏 > main > #分界线 {
 	margin: 0;
 	position: fixed;
@@ -570,7 +561,6 @@ main > #分界线 > .特小尺寸 {
 	border-radius: 50%;
 	box-shadow: var(--box-shadow-strong);
 	opacity: 0;
-	position: absolute;
 	transition:
 		var(--transition) opacity,
 		var(--transition) transform;
@@ -1104,16 +1094,6 @@ body.顶部 .侧边按钮容器-无更多选项#回到顶部 {
 .网易云音乐-最近在听-精选歌词-单句,
 .网易云音乐-最近在听-精选歌词-歌曲信息 {
 	font-style: italic;
-}
-
-.加载中 .网易云音乐-最近在听-精选歌词-单句,
-.加载中 .网易云音乐-最近在听-精选歌词-歌曲信息,
-.加载中 .网易云音乐-最近在听-播放排行项 {
-	border: 1px solid var(--overlay-strong);
-	background-color: var(--overlay-strong);
-	color: var(--overlay-strong);
-	animation-name: 高频闪烁;
-	animation-duration: 5s;
 }
 
 .网易云音乐-最近在听-播放排行 {
