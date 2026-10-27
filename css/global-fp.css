@@ -6,6 +6,43 @@
 	--hostname: "dsy4567.icu";
 }
 
+/* ==================== 回退字体度量对齐 ==================== */
+@font-face {
+	font-family: "站酷拉丁";
+	src: url(data:font/woff2;base64,d09GMgABAAAAABTgAA0AAAAAKAAAABSNAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHGgGYACCcBEICrpUqVcLghoAATYCJAOEMAQgBYQgB4MfDAcbhh2zolaSWi6B/meCefpNWUBlGAmHoDwYDoVwDKksDBr3/PZ0OOdtYoQksz/QNv/dcccBEkZhIJFmT8FGUDCaY1ZgbdNNl9qLKH/ooly7jPrfreXp/w/JO/O249LiUsPSjldOa4ARCsUCGPGQdLHwtyfc/ODbCe2pfTEnfHpiWPpmJpsFslLxnAn8zxwOPu9zAHLWmDZNF+e5/zdX2pnlQ5BXBmGuwlXIvhrzJ1nIT44mh9mUkuKUs1dItgAgW1ehTsgFVQCWV0UgTJ+vrFCewNgKZarTxAa0QUt72ipGYszrbAzXIj8a6wSZfvQ1AwKAgccdcvegTQcaDABcJ8T/myjDmsDWCaOCBuXQ97D10qVIlSZHoSL5CqAoYqkBZMmCK1WBCpvZmaXrA/q12QA0Td/IJ77xc2iYBERKEl1V7tvYaDgIhPuUutUNQPlmkRzrAgr9AYDfIhqUgtauIWMFFoMRis+nDv3H4iWEUq58zSZY5V9rrLfFTjd87fHe7t1Da74Dn8cX8qX89c85oeXQEMBm5/MWSiVPgbGvih59jTdOa8W35zsZUfxd4GDoYNABsoo53pD+mjv0z1Dn78O/N/3e+DAaADw8fSh4cOZB8r8KCACAQACpAAwAigGUqwPnEMiue5rsP4pICSoladShWpVcebSaxcgQLVmsOJNMMJGaiZHOcO2ydTEYgdRqlDEaNBmpU41aU9VrUa5CsVJlSiCQNYQDAGAaAEAOAOwA1Ftg9hPAGLlXB8Ah0DY+xG3b9Im7xeuEfUvMlsP2uFNK/CBJLNdbjYchzRSf/UOOBN0Sq6GjRml2R+VrTJmaAt0dbwwEz/Y9aczhxhErCaTaQCzSucynO5E3E5/6an+4UafaYXgZxCbaBhLM9FU6oJgbOCL9Swy9I67LfXR+EVzPfrOn3O2zO13cL976wPfurkrSIy0fwh7JxugPmH9OaYpp5UqF42ar9EIw7mvX9jA+OTlEBds7kXleKJvLYWneQitPfOlebFW5dk8RLVlGCPTv9oou8eBWZtJIG/gszOm9ORSLvqFqVoTRvcA20+6WMgxtGja08tjWWL8dch4L5ZTN470Ttuc7fpFHixSXAacpVl++HQTmeuWQofTxjn6rMoVaQrI9JYwLXOk9tgxjPzmU9eGM3ODvNGeTdNim/lKL2GCe9+T2sSMu5XzPeb+4ut3a4DaFbWxs+lpw9KfXhrjdCvmxtmh5LZQqVhmYRw4hc0VlA4uvqhdbJqn0k2ipyhhvjloMtiwzpqEv8lNYoGhVzDDamVXwtwUDMwNfUjLMdNFr5Kw21aHnQKZeUudi1XI3uuSCxGlQLlxNALDQmXE9vsiAmdOQtqX4p4OLUMeA//CM9AE4WZ9reaalIAQXk0EHkQfBImzbGD1Db5YimNAKaKBS2BDrBaXmPasyaCbZpkeWKmaS1UYiySdJ/aaILxcp1glsqPYI3IYYD3G2jpFnKzEHFwF3q7aSEoYNqswz5j1e3xerHeaLCDbCvX3sRImzJjbCX8X2k1H5Ic4YzJYQ54GxyPYbpnN6Hu+Cki3Z/fBMi/jP4RVvi8b8TReHAfj7D/o8YJtWKpYovm03K0nn+W+yJ8VItY0gaXg4YKnFfiequkJsnRn+0I6QXfE//RvJc/T6mRmU8ion18UZi7zlupQbltqV73+4qUX79KT/mQywVWYcjhuuNpvx5mhwc37DTt7w3+47eVfT7XUsOofdt9Zt7EG6tzuLo/ldsd78m+e6Op6CTLZPPRPOWtP/joEG1EDHQqK3GlO/Pq3L8am7YePP7RG/0k/4HCbSXJSyTita5DWeFs/pcYRNniltD2Jlq9nfzuxCPMrcsO60VGrixzXB00N/XVdx5xGDvGnSmmwY0m4uszPNyv9hdoF9ntblqkNDTgHQ9h5VKdBVhlYxxZYetAnpcMrB/rmgKxVcR3H5Q2bERhBpiBK3Bbyn51gXXuLFFkRhoZbe6vkgUklHE/XM2cyIhXsx9Zmej+qHYDknaS7GEc6f9rBPSI6nR84hq2Qbiuuqw206bmBomXo8iCaVC7jAkgixXM4+EmJQc0rUx2ilHUo4bO/hRL4k7mPjR67pZecGMelusq/bpY6gqSkHCrKxhuWb0belyNb9iFfeT4p+ze+WWd+VT6xpacHuYT8F+1oKVq78vMMf5l2JOenslbE3Q6K9kQFeE9LluAgazJPnOQ/juWifMI++42m/pHnMde89ZXbwEZRSoqKb1KiGSV6OCWJ5htFJqEJnB1T3fRqj4YyKfPrY9evVMpYCilGhV/nPrxwKeYrFPrKZihgHqOaPh64SJKxt30IFw27CiktSvVpfD3JQ8iQLinALj3GOPBFOvneR2t+xM99ma0YxRrJPcdlboX9zjxh5RSL4RhLQ0n9EnBgSE6xtDFawJmL858ojx5xX0awzS8wIQ5cDbpxJZz/jwQomaTb8HslwvGQjwmIlL0LVv09+/A3R6DXm0bhOkqFM62HCGafc/7ZFplG6ZBkPDeZ1o7IYqw0n8jPZ9aOg3cbASJ6UZjfnz09ja5rTKjaUYb/xy+5+a3a7J1mXfPNbjFmihWKYaU7i7gd+vPsuNB497oSTC7hcfBGsRVJDX0qFbn6Lz7m7W3mu4f0RXY3ilqoDtXMrOf2wgk5ivIln37G/KVL8konuT3qPPrcrNnQyW+T0ZgELAmkGT2/305t9Illad7Y3Qd5zoz/+y1MUJVsDmw0JDDuTEeWaVAyK8ZkDRNFP8/czMkiU4Vbv6J9tIII6wYFq45Tm9uqUZXS6PHQR/HLOQ5bW5dqOOt+5PrdpSs+OLP7l4Gy0YTzMZFiLFRJVlKv0wbuYiHuvLViqKEu2jQR2/P0OYiLeDr38QQLe8LE+ISKuIATUdKnu0uutQprRxt05+eANwp1GQjte5Gi9TJUd8vRIuPXSsizb3CXFC4NWxFr9h2j8aTFiqKDVS8KMuFmvnLvailDz+eY/f3qxtkExS+ixM1vpxzaw3USJSTIGCcU0sUd2lsST88CIC1mztWKXdwF8xmq4bdYan+5VtFBsdzO9lx8VqLTK/RGgSH1gLrLMigT7+xs5BLmeYzZA4mZ713JoZC/H2r93nlKc0RQAqcHmefEhxDpBeGOIq8Sau87qeg3jtXjvax9sNJyafd9vkbCLpDmnnvdxlZLMsh15TCi/5Vyba+9c6/eaZHhPIxnQ+iG/KEpZUNSz30M/LlbUTBKShSZotzRYzejMs7qx6v/rEH3qoDL672Xnt8JMGsnMyDOYwUwxSchW9d0KvRy6x3oliVkWd4uRMAOCRnRJYLXUPP2qwE1KsnwSytw8qyy74Rq/2rrfLvO0hsWiN1VEMthU2890mBlAYsLksUGRwS7fYsyCrHIfe9uuf+gB92xIXPTBwpP496gFQb63Wcf4nt8YWQCJGJtNomjzkypZJm0s3QN01s7+FoafXuqJCsVI9sGBSHuctLGmVSs9hLHjbkFine3/R4Lsc16rLOyZR1mE8RqbXk7SiJyHHNwADtyqyDC/fLu5JGaV/UNmHWgkbOLSfeG3IJW54FWOY/OMPwWaQGDGZsGqvmyXUUEl/2egZU+mWqYqtlemQ9EtiEj4dWDwtTLqzaNNHSGJAzP2bVPG9K/5sANS3RPC+s72nU0IW77/6Pv4MChgyrS+plAJwzDb0zlJkONrTxjBC7kU4lKnvDg8zA4iD5QWe8Idihf8Z5mDe5T82+yd+H3XZ4hz4mvnndg673RnoOpdz+f/zoZULFrmScuBvRY7jRZZM7OK/jGPZecSpwvkjJxTkVbxjnd+R0yZioDFZvMjOThnbyNRegZNd9p2KJjKb82l8pt6KGguvDV7UWmRPVBkvDNG7hXoWzcpN11xpVUxOF4J/7Ibu8tc3fUSK1Ra0r0aK5anB7d/OP0aXtFS+b8ceyREzlM5HWZZ5GVYxNh/vrGaFi2a+Kp7AXdl57vNSNTDRXciFzeMqdLn/EQHA5aUDsyACLM0/h93Rlh9z4NiYapN+5veF5OGa0/AfOFohWvjaDnUtceKQ8r1juuzqIKh91UFU4VUcvA02xB3cWrA5pBxU3NN/Y9Oj3SHhYs3baMmHJ/M6bEa7G7U49/g5csDg5fBDfZupWrn7gjIdG3KH53vadSOCxGo4z1AR+sAbW4MEcaPCspPhvfBZr1GgEkxEFU6jFpyCqxqktnmRgPoq7iz4jFcZ6Dajk9mWVb0MYlSHU7Nrafh+qX9h4CxegsT0qMTnT8lqXnwPPqjVs37lARf0iXpdF1KA8vWBdUxXC9VUFN6/+EeZbV8PGiTAuQTQH+UAanwVyWIFupR8FsMwtIlbbFvjcpP/0zXTW2IfJr4clIthJRqDvjADhBFh0NNMTKeAoio25Ad7/CySIwnlA+zuFFgVPDVCS7m1yKZyGKnd/O1QK8TxtcH2J97urFvH3IxReCYWO3agdy545w0zP5aNlDwnW4mHJeFdxwdOen0EP0/lp1wl6W9B37se9kJbxn8KWm/35j1I0Xqto4uuw/8kMGmlvsNfiDb3WCLG0y10ng+0axV8yOmvqkM1nhd00yPF4dW74EqG+xk4VPuKGK0no+eLI+ThFbtufvwOgK+ltaQw+FasHSYWndTDzf3w6UJzjX9/+CuUGWQpSj92fONg2IfF3+u/NDYYxST+8nMvPFZG7B2D3c9YXmzROn66JvrsYU8FzvvozqXxItpM243+eDJjbLQBmjIeiP/Hr58Q3f16vHsiRVEeKR53Jl/59S13I+Vdb/cO4e3dap6kozoqljYfM3N6sluF1V9b+vEMmg/HmFw77yYViDAeptp62M5qf5iZh/RUUwh93v2ZT926io37qprMkYa6LMxxS4RYftnvKMWWfV0ftFoYxS54wSYppJgpXVTYVqm7dKRXHvdLJGFfZ+WRaSTbHp5Go3IKcfx1FJKGiHz7WsL7Q7dY+2ThllCkhi5kYqgt5US4HwxReQLm0wBBTUelnjNM33iYClb+yhOaKFcH0PMhSRYoSIxVKQzYpC2nD3SIAx8EQtrZ4bdgF1IZHaeBdGix2jTsi3YBp05Y1WDrkR2WtIX6vR16eJLRZcTGWZ7YZznl6qOMr+CtaGT2he1dPDPPntbN+1JddfA4IBg5pyulrZhezVtW4R696xO/65+fkMTrxeSuFi6DqOozgqYuvtiovOm5EzjwcIKOp6jx/C8RUyqbgGTNqvNBrtu1qHeab49bUo6seAj1VRijmpgLiuKbkjBUZ2Bmqvx72wmlTNfHerBJBlSIm0nm5JylJXTz6Kk7GdFpTrTSRjgzXRl6rSE2fx4FNVFUzwLDxY+c6bqzjmqp/NuMygpN+jsWe/soZ/dtz0monfbsGISkLx2OqqbwkA/vkYj4m5/obTTKSlT6ZBzhfk9hcL8+JSF6d+xGCf1KP3gaxamA+FBTO/Kx3RAHDsya2jv1Lbpx7rnHJjupdzV9ffmHZA8ukwkLi0T6Z2Ddfz5Ye+BQIczgjI7mQ/wDyXGXxonW+1c6ZhY342pYbQxdy4lvvawOE64hDUCqoMYZ16zqERw4vcs+iE5buLApk/6ZrVmSlb8oH5WhCR+eSyEx6dQ0FWn5/MksQTnd2e81Fi3W6Jj5Y3Vj6AxTeV5Y5HSsz+8I2FH3BHawuaoZTXC7CshaW8O2HhYda+a5u7NO7XLO5/OKY+zhexIk1RWZZLcMtFPEDxN+1acNFgMVimLd6qxCVsTHfNnN/0D7K1570HapC3UG9QaU1b8Mr0xQhJfFQv+wxNorLhY+tABeiTaIEI0QK7timP2KANlGoCCKAlR0EYqG1gbFaKgLQMS6okr1CnkWB8U09HR5BvdqaVCDADphhLdlx3GIOzC5OStKw5lm1XWu10fqwl6ZJ0e3nh3CNWut8Mdy8Ss96Meh051fOKHDtZrrIuW0YL0PDkEACrq77qws8M54f+NQnkJAK58cXAAAM++P9g6dGqVb9jObABUKAAABDxJzbGnKt3OurY8XMi0ZqsZLlGvUw0VfAeJgp5qXmhe9JXKB+G5wyENvAZetkwe/U3eq8LroDiY8XsNP+Fi3DrVS2sxAd4/IZ7gNAsTn4jax0NnPjKN5pOIDLmLUUfyBhv3Vrw/12D9yH2v4zGhfhjTR32IF8/8NbUckINXrXBl3TvaMBoj//GKNfsS4TGtT62Hd66I87jtN7EDNz/whsNEjVnoB2go9H6A5ylrOuAl3mSQR1lyaj2eRcmKwrTlvMqtEw7WtgZx3uk1HJeplsYoUxFLeBVBrlh5RY6LnpDCJTMeDQ8/14tQQRUjDN2bxUQhgcS/LTukfhbVh5uWfcdP4gWeJry+5du+bD4mbzZ8tx7HFcCH5YQX6+629bZurOuvkVyYpAKMmvBMO9a0oZE8V4fLWdxO4l0ipJDnhLhH4SZvvfVQCiKjKB1D7D8MAmCauSxI4RCTRrEnaUpNG2zQAWAgMA5B2Hs5BMV2ewhFuBVDMHKNQ3AODEOopAKRLQKg3KhnxDojhfLCWhUlapQq1lSWmFQocsGRN3oO7whlckXTPU4tjQYFHKqt8JCKZQiavGKETBzRp1XE5eTz5cn72d0Hvyd/nAJ/cwSG+eIcsaJNO859S9v2cdSiU4xNDLNCmTZMPt8Wg1eYjtCS7ZQX9Z1Grcq1VrRFVRWyWa425cfmk2vYLFMRAniikKci16pdIWPtmG1SonsciZvNikaQmR6qOFPTXAXUYbpDy8DXizcNgJiElIycgis37jx48uLNhy8//gIEChIsRKgw4YaJEStOvARqiTS0kiTT0b8g+PeRLkOmLNly5MpjQLJizYYtO/a4HDhyQgmKUBAMLHA441kHI3REFxYqS5HBESpCIDSEDub6bRUVBphhMsoXQRkzhImwEDYcdcw22+2wE45BhG6qKaZpM9xL7fYhwoEOC7B98NEufAIu5irwNxWaGaLddM8tt7cbPld4e6u80ehnWPJLrdY+Py7Wx48GQ4IBwcCAf7GfT8g/6Bv00/2xLxdJ3ZWhjs1MBw==)
+		format("woff2");
+	font-weight: 400;
+	font-display: fallback;
+	unicode-range:
+		U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308,
+		U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+	font-family: "站酷回退";
+	src:
+		local("Microsoft YaHei"), local("Microsoft YaHei UI"), local("PingFang SC"),
+		local("Hiragino Sans GB"), local("Noto Sans CJK SC"), local("Noto Sans SC"),
+		local("Source Han Sans SC"), local("WenQuanYi Micro Hei");
+	font-weight: 400;
+	size-adjust: 92.6%;
+	ascent-override: 95.03%;
+	descent-override: 12.96%;
+	line-gap-override: 0%;
+	unicode-range:
+		U+2E80-2EFF, U+3000-303F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FE30-FE4F, U+FF00-FFEF;
+}
+@font-face {
+	font-family: "等宽回退";
+	src:
+		local("Consolas"), local("Menlo"), local("DejaVu Sans Mono"), local("Liberation Mono"),
+		local("Noto Sans Mono"), local("Courier New");
+	font-weight: 400;
+	size-adjust: 99.7%;
+	ascent-override: 98.7%;
+	descent-override: 27.38%;
+	line-gap-override: 0%;
+}
+
 /* ==================== 延后显示元素/本来就需要隐藏的元素 ==================== */
 main > #分界线 {
 	visibility: hidden;
@@ -149,7 +186,7 @@ body {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	font-family: "ZCOOL KuaiLe", sans-serif;
+	font-family: "站酷拉丁", "ZCOOL KuaiLe", "站酷回退", sans-serif;
 	font-weight: 400;
 	line-height: var(--line-height);
 	margin: 0;
@@ -286,7 +323,7 @@ code {
 	background-color: var(--overlay);
 	border: 1px solid transparent;
 	border-radius: 6px;
-	font-family: "Source Code Pro", monospace;
+	font-family: "Source Code Pro", "等宽回退", monospace;
 }
 pre {
 	background-color: transparent;
