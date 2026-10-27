@@ -332,7 +332,7 @@
 		},
 		{
 			"source": "/umi/api/send",
-			"destination": "https://cloud.umami.is/api/send"
+			"destination": "/api/umi-send"
 		}
 	],
 	"framework": null,
