@@ -23,6 +23,7 @@ export default (() => {
 		return;
 
 	// 自定义事件统一由 js/global.js 的 埋点() 上报，本文件只负责加载脚本并在就绪后补发队列
+	// 本文件也可能被未加载 global.js 的非核心页面直接引用，此时队列函数不存在，补发与清空直接跳过
 	const s1 = document.createElement("script");
 	s1.async = true;
 	// 经 vercel.json 的 rewrite 反代，避免直连第三方域名被广告拦截器拦截
@@ -30,8 +31,13 @@ export default (() => {
 	s1.src = "/umi/script.js";
 	s1.setAttribute("data-website-id", umami_website_id);
 	s1.setAttribute("data-host-url", "/umi");
-	s1.addEventListener("load", 刷新埋点队列);
-	s1.addEventListener("error", 清空埋点队列);
+	// 用 typeof 而不是可选调用：未声明的全局标识符即使写成 ?.() 也会在求值时抛出 ReferenceError
+	s1.addEventListener("load", () => {
+		if (typeof 刷新埋点队列 === "function") 刷新埋点队列();
+	});
+	s1.addEventListener("error", () => {
+		if (typeof 清空埋点队列 === "function") 清空埋点队列();
+	});
 	document.body.append(s1);
 
 	const /** @type {HTMLScriptElement} */ s2 = document.createElement("script");
