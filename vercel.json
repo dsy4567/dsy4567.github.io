@@ -325,6 +325,14 @@
 		{
 			"source": "/b/:m*",
 			"destination": "/api/blog-og?id=:m"
+		},
+		{
+			"source": "/umi/script.js",
+			"destination": "https://cloud.umami.is/script.js"
+		},
+		{
+			"source": "/umi/api/send",
+			"destination": "https://cloud.umami.is/api/send"
 		}
 	],
 	"framework": null,

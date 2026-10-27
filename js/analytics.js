@@ -25,8 +25,11 @@ export default (() => {
 	// 自定义事件统一由 js/global.js 的 埋点() 上报，本文件只负责加载脚本并在就绪后补发队列
 	const s1 = document.createElement("script");
 	s1.async = true;
-	s1.src = "https://cloud.umami.is/script.js";
+	// 经 vercel.json 的 rewrite 反代，避免直连第三方域名被广告拦截器拦截
+	// s1.src = "https://cloud.umami.is/script.js";
+	s1.src = "/umi/script.js";
 	s1.setAttribute("data-website-id", umami_website_id);
+	s1.setAttribute("data-host-url", "/umi");
 	s1.addEventListener("load", 刷新埋点队列);
 	s1.addEventListener("error", 清空埋点队列);
 	document.body.append(s1);
