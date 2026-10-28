@@ -72,30 +72,33 @@ export default (() => {
 			if (交互类型.length > 3) 交互类型.length = 3;
 		}
 		标记关键事件();
+		// scroll 已记入 interaction1~3 后，后续滚动只会被去重，解除这个最高频的监听
+		if (类型 === "scroll") 解除滚动监听();
 	};
 
+	/** @param {PointerEvent} 事件 */
+	const 指针按下监听 = 事件 =>
+		事件.isTrusted &&
+		记录交互(
+			事件.pointerType === "touch"
+				? "touchdown"
+				: 事件.pointerType === "pen"
+					? "pendown"
+					: "mousedown"
+		);
 	// 鼠标会同时派发 mousedown 与 pointerdown，这里只用 pointerdown 并按 pointerType 归类，避免重复记录
-	addEventListener(
-		"pointerdown",
-		事件 =>
-			事件.isTrusted &&
-			记录交互(
-				事件.pointerType === "touch"
-					? "touchdown"
-					: 事件.pointerType === "pen"
-						? "pendown"
-						: "mousedown"
-			),
-		{ capture: true, passive: true }
-	);
-	addEventListener("keydown", 事件 => 事件.isTrusted && 记录交互("keyboarddown"), true);
+	addEventListener("pointerdown", 指针按下监听, { capture: true, passive: true });
+
+	/** @param {KeyboardEvent} 事件 */
+	const 键盘按下监听 = 事件 => 事件.isTrusted && 记录交互("keyboarddown");
+	addEventListener("keydown", 键盘按下监听, true);
+
+	/** @param {Event} 事件 */
+	const 滚动监听 = 事件 => 事件.isTrusted && 记录交互("scroll");
 	// scroll 延迟 500ms 再监听：首屏 CLS 期间的布局变动会触发滚动，等页面稳定后再记录；
 	// 程序化滚动同样会产生 isTrusted 的 scroll，此处接受该噪音
-	setTimeout(() => {
-		addEventListener("scroll", 事件 => 事件.isTrusted && 记录交互("scroll"), {
-			capture: true,
-			passive: true,
-		});
+	const 滚动监听定时器 = setTimeout(() => {
+		addEventListener("scroll", 滚动监听, { capture: true, passive: true });
 	}, 500);
 
 	/** 里程碑（秒）：页面可见累计时长达到、且本轮文档已发生关键事件时各上报一次 */
@@ -177,11 +180,13 @@ export default (() => {
 			挂起下标 = null;
 			上报里程碑(实际秒);
 		}
+		检查是否结束();
 		安排里程碑();
 	}
 
 	function 检查里程碑() {
 		结算并推进();
+		检查是否结束();
 		安排里程碑();
 	}
 
@@ -194,7 +199,7 @@ export default (() => {
 		里程碑定时器 = setTimeout(检查里程碑, Math.max(剩余, 0));
 	}
 
-	document.addEventListener("visibilitychange", () => {
+	const 可见性变更监听 = () => {
 		if (document.visibilityState === "visible") {
 			可见开始 = performance.now();
 			安排里程碑();
@@ -203,19 +208,49 @@ export default (() => {
 			clearTimeout(里程碑定时器);
 			里程碑定时器 = undefined;
 		}
-	});
+	};
+	document.addEventListener("visibilitychange", 可见性变更监听);
 
 	// bfcache 期间脚本被冻结，冻结时长不计入可见时长
-	addEventListener("pagehide", () => {
+	const 页面隐藏监听 = () => {
 		结算可见();
 		clearTimeout(里程碑定时器);
 		里程碑定时器 = undefined;
-	});
-	addEventListener("pageshow", 事件 => {
+	};
+	addEventListener("pagehide", 页面隐藏监听);
+	/** @param {PageTransitionEvent} 事件 */
+	const 页面显示监听 = 事件 => {
 		if (!事件.persisted) return;
 		可见开始 = document.visibilityState === "visible" ? performance.now() : null;
 		安排里程碑();
-	});
+	};
+	addEventListener("pageshow", 页面显示监听);
+
+	/** 已记录 scroll 类型后，后续滚动不会再改变 interaction1~3，解除这个高频监听 */
+	function 解除滚动监听() {
+		removeEventListener("scroll", 滚动监听, true);
+		clearTimeout(滚动监听定时器);
+	}
+
+	/**
+	 * 所有里程碑都已结算（最后一个也不再挂起）后解除全部监听，避免继续为空转的事件回调消耗性能。
+	 * 交互监听在此之前一直保留，因为 interaction1~3 仍需随每次上报采样
+	 */
+	function 解除监听() {
+		removeEventListener("pointerdown", 指针按下监听, true);
+		removeEventListener("keydown", 键盘按下监听, true);
+		解除滚动监听();
+		document.removeEventListener("visibilitychange", 可见性变更监听);
+		removeEventListener("pagehide", 页面隐藏监听);
+		removeEventListener("pageshow", 页面显示监听);
+		clearTimeout(里程碑定时器);
+		里程碑定时器 = undefined;
+	}
+
+	/** 所有里程碑都已结算（已上报或抛弃）时解除监听 */
+	function 检查是否结束() {
+		if (里程碑下标 >= 里程碑.length && 挂起下标 === null) 解除监听();
+	}
 
 	安排里程碑();
 	//#endregion
