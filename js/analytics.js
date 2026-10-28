@@ -67,9 +67,11 @@ export default (() => {
 	const /** @type {string[]} */ 交互类型 = [];
 	/** @param {string} 类型 */
 	const 记录交互 = 类型 => {
-		if (交互类型.includes(类型)) return;
-		交互类型.unshift(类型);
-		if (交互类型.length > 3) 交互类型.length = 3;
+		if (!交互类型.includes(类型)) {
+			交互类型.unshift(类型);
+			if (交互类型.length > 3) 交互类型.length = 3;
+		}
+		标记关键事件();
 	};
 
 	// 鼠标会同时派发 mousedown 与 pointerdown，这里只用 pointerdown 并按 pointerType 归类，避免重复记录
@@ -87,24 +89,32 @@ export default (() => {
 		{ capture: true, passive: true }
 	);
 	addEventListener("keydown", 事件 => 事件.isTrusted && 记录交互("keyboarddown"), true);
-	// scroll 延迟 3s 再监听：首屏 CLS 期间的布局变动会触发滚动，等页面稳定后再记录；
+	// scroll 延迟 500ms 再监听：首屏 CLS 期间的布局变动会触发滚动，等页面稳定后再记录；
 	// 程序化滚动同样会产生 isTrusted 的 scroll，此处接受该噪音
 	setTimeout(() => {
 		addEventListener("scroll", 事件 => 事件.isTrusted && 记录交互("scroll"), {
 			capture: true,
 			passive: true,
 		});
-	}, 3000);
+	}, 500);
 
-	/** 里程碑（秒）：页面可见累计时长达到时各上报一次 */
-	const 里程碑 = [15, 45];
+	/** 里程碑（秒）：页面可见累计时长达到、且本轮文档已发生关键事件时各上报一次 */
+	const 里程碑 = [7, 20, 60];
 	/** 已累计的可见毫秒数，跨 SPA 换页持续累计 */
 	let 已累计可见 = 0;
 	/** 本次可见起点（performance.now()）；页面隐藏时为 null */
 	let /** @type {number | null} */ 可见开始 =
 			document.visibilityState === "visible" ? performance.now() : null;
-	/** 下一个待触发的里程碑下标 */
+	/** 下一个待结算的里程碑下标 */
 	let 里程碑下标 = 0;
+	/**
+	 * 已到达但缺少关键事件的挂起里程碑下标；至多一个。
+	 * 下一个里程碑到达时若仍在挂起，即被顶替（超时抛弃，永不上报）
+	 * @type {number | null}
+	 */
+	let 挂起下标 = null;
+	/** 本轮文档是否已发生过关键事件（任一已记录交互），跨 SPA 换页保留 */
+	let 已发生关键事件 = false;
 	let /** @type {ReturnType<typeof setTimeout> | undefined} */ 里程碑定时器;
 
 	/** 把当前这段可见时间结算进 已累计可见 */
@@ -116,7 +126,7 @@ export default (() => {
 
 	/**
 	 * 上报一个里程碑
-	 * @param {number} 里程碑秒 - 15 或 45
+	 * @param {number} 里程碑秒 - 正常到达时为名义值，挂起补报时为实际可见累计秒
 	 */
 	function 上报里程碑(里程碑秒) {
 		埋点("page-engaged", {
@@ -131,16 +141,47 @@ export default (() => {
 		});
 	}
 
-	/** 结算已可见时间，并尽可能多地触发已到达的里程碑（定时器被延迟时可能一次跨过多个） */
-	function 检查里程碑() {
+	/**
+	 * 结算当前可见时间，并按「时间到达 + 已发生关键事件」推进一步。
+	 * 定时器被延迟时可能一次跨过多个里程碑，此时只保留最新一条：
+	 * 未发生关键事件则最新一条挂起、更早的视为超时抛弃；已发生则只按名义值上报最新一条
+	 */
+	function 结算并推进() {
 		if (document.visibilityState === "visible") {
 			结算可见();
 			可见开始 = performance.now();
 		}
+		/** 本次结算中最后到达的里程碑下标；-1 表示没有新到达 */
+		let 最新到达下标 = -1;
 		while (里程碑下标 < 里程碑.length && 已累计可见 >= 里程碑[里程碑下标] * 1000) {
-			上报里程碑(里程碑[里程碑下标]);
+			最新到达下标 = 里程碑下标;
 			里程碑下标++;
 		}
+		if (最新到达下标 < 0) return;
+		if (已发生关键事件) 上报里程碑(里程碑[最新到达下标]);
+		else 挂起下标 = 最新到达下标;
+	}
+
+	/**
+	 * 记录本轮文档首次发生关键事件。
+	 * 若此前已有到达但未上报的挂起里程碑，立即按实际可见累计秒补报；
+	 * 必须先用「尚未发生关键事件」的状态推进，再置位并补报，顺序不能反
+	 */
+	function 标记关键事件() {
+		if (已发生关键事件) return;
+		结算并推进();
+		已发生关键事件 = true;
+		if (挂起下标 !== null) {
+			const 实际秒 = Math.floor(已累计可见 / 1000);
+			// 先清空再上报：单条上报抛错也不会让挂起项在关键事件已置位后残留
+			挂起下标 = null;
+			上报里程碑(实际秒);
+		}
+		安排里程碑();
+	}
+
+	function 检查里程碑() {
+		结算并推进();
 		安排里程碑();
 	}
 
