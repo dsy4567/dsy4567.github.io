@@ -67,6 +67,12 @@ const 提前触发距离 = "-128px";
 /** 预加载邻居项数：最后一个可见项下方再提前加载这么多项的大图，使它们随可见项一同就绪 */
 const 预加载邻居项数 = 2;
 
+/** 播放排行距底部不超过该像素即算「滚动到底部」：滚动位置可能是小数，留少量容差 */
+const 到底部容差 = 8;
+
+/** 本次浏览是否已上报 ranking-scroll-bottom：每次浏览只报一次 */
+let 已上报滚动到底部 = false;
+
 /** 封面平移动画的公共相位基准毫秒（首个动画启动时确立）：所有封面据此对齐进度 */
 let 动画基准毫秒 = 0;
 
@@ -423,6 +429,22 @@ function 记录项可见性(/** @type {IntersectionObserverEntry[]} */ 条目列
 	更新加载范围();
 }
 
+/**
+ * 监听播放排行滚动到底部：到达后上报 ranking-scroll-bottom 并解除监听，每次浏览只报一次。
+ * 只在滚动事件里判断，内容不足一屏而无法滚动时不会误报
+ * @param {HTMLElement} 排行容器
+ */
+function 监听滚动到底部(排行容器) {
+	if (已上报滚动到底部) return;
+	const 滚动监听 = () => {
+		if (排行容器.scrollHeight - 排行容器.scrollTop - 排行容器.clientHeight > 到底部容差) return;
+		已上报滚动到底部 = true;
+		埋点("ranking-scroll-bottom");
+		排行容器.removeEventListener("scroll", 滚动监听);
+	};
+	排行容器.addEventListener("scroll", 滚动监听, { passive: true });
+}
+
 /** 加载大图：完成后换入大图并对齐公共相位（大图就绪时 CSS 动画才成立，此刻写入相位可避免与其他封面错位） */
 function 加载封面大图(/** @type {HTMLImageElement} */ 封面) {
 	const 大图地址 = 封面.dataset.大图地址;
@@ -561,6 +583,7 @@ async function 渲染最近在听() {
 		定位并播放(事件);
 	};
 	排行容器.addEventListener("keydown", 键盘定位并播放);
+	监听滚动到底部(排行容器);
 
 	await schedulerYield();
 	await 填充精选歌词();
