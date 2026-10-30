@@ -646,6 +646,32 @@ function 设置展开容器可访问名(展开容器) {
 				document.documentElement.scrollTo({ top: 0, behavior: 行为 });
 				document.activeElement.scrollIntoView({ block: "nearest", behavior: 行为 });
 			});
+			// WIP: 移动端左栏滚动到底部时给 body 加类名，让末项淡出、正文与页脚下移（样式见 global-nfp.css）
+			if (左栏 && false) {
+				const 左栏到底类名 = "左栏滚动到底部",
+					移动端媒体查询 = matchMedia(`(max-width: ${移动端界面最大宽度}px)`);
+				/**
+				 * 按左栏滚动位置与当前断点更新「到底部」类名：
+				 * 未在移动端或已离开底部时立即移除，不做延迟，状态即刻复原
+				 */
+				const 更新左栏是否到底 = () => {
+					if (!移动端媒体查询.matches) {
+						document.body.classList.remove(左栏到底类名);
+						return;
+					}
+					// 内容不足一屏时不存在「底部」，不应触发；比较时留 1px 余量兼容小数滚动位置
+					document.body.classList.toggle(
+						左栏到底类名,
+						左栏.scrollHeight > 左栏.clientHeight &&
+							左栏.scrollTop + 左栏.clientHeight >= 左栏.scrollHeight - 1
+					);
+				};
+				// 滚动中只读滚动位置并写类名，同一状态下 toggle 不产生 DOM 变更，无需节流
+				左栏.addEventListener("scroll", 更新左栏是否到底, { passive: true });
+				// 旋转屏幕、拖动窗口宽度跨过断点时重新判定，避免非移动端残留平移
+				addEventListener("resize", 更新左栏是否到底, { passive: true });
+				更新左栏是否到底();
+			}
 			//#endregion
 
 			//#region reCAPTCHA 获取邮箱/tg

@@ -590,10 +590,6 @@ body.宽屏 > main .右 {
 }
 
 /* ==================== 左栏 ==================== */
-main > .左 {
-	transition: var(--transition) background-color;
-}
-
 section#我 > .头像 {
 	transition: var(--transition) transform;
 }
@@ -1323,6 +1319,29 @@ code.hljs.已复制:hover::before {
 			animation-timeline: scroll(root);
 			animation-range: 1px var(--cover-scroll-range);
 		}
+	}
+
+	/* 左栏滚动到底部：末项淡出，正文与页脚下移。类名由 main.js 设置。
+	   过渡写在基础选择器而非状态规则上，移除类名时过渡仍然生效，复原同样平滑 */
+	main > .左 > :last-child {
+		transition:
+			var(--transition) opacity,
+			var(--transition) transform;
+	}
+	main > .右,
+	footer {
+		transition: var(--transition) transform;
+	}
+	body.左栏滚动到底部 > main > .左 > :last-child {
+		opacity: 0.7;
+	}
+	body.左栏滚动到底部 > main > .右,
+	body.左栏滚动到底部 > footer {
+		transform: translateY(25vh);
+	}
+	body.左栏滚动到底部 > main > .右::before,
+	body.左栏滚动到底部 > main > .右::after {
+		opacity: 0;
 	}
 }
 
