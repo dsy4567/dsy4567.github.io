@@ -5,3 +5,4 @@ todo.txt
 .ssl
 .well-known/appspecific/com.chrome.devtools.json
 *.secret
+.trae-html-share-packages/
