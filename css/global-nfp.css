@@ -94,6 +94,14 @@ div#侧边按钮容器 {
 	}
 }
 @supports (animation-timeline: scroll()) {
+	@keyframes 左栏向上滚动图标 {
+		0% {
+			opacity: 1;
+		}
+		24%, 100% {
+			opacity: 0;
+		}
+	}
 	@keyframes 顶部大图背景 {
 		0% {
 			/* 平移窗口围绕图片中线对称：起点在中线前 平移量/2 处，横图平移量为 0，此处即 0 */
@@ -513,6 +521,9 @@ nav#导航栏 {
 	:root {
 		--cover-scroll-range: calc(var(--bg-height) + var(--bg-top));
 	}
+	body > #左栏向上滚动 {
+		animation-name: 左栏向上滚动图标;
+	}
 	/* 封面平移动画落在 .顶部大图层 > img 上：图片按自身高度溢出容器，平移量用 cqh 引用容器高度 */
 	body > #顶部大图 {
 		animation-name: 顶部大图桌面端;
@@ -520,6 +531,7 @@ nav#导航栏 {
 	}
 	/* fill-mode 必须放在 @supports 内：不支持滚动时间线时动画时长为 0s，
 	   若同时带上 both 会直接停在 100% 关键帧（移动端大图永久不可见） */
+	body > #左栏向上滚动,
 	body > #顶部大图,
 	.顶部大图层 > img {
 		animation-fill-mode: both;
@@ -532,6 +544,7 @@ nav#导航栏 {
 		--cover-travel: min(var(--cover-overflow), var(--cover-scroll-range));
 		animation-name: 顶部大图背景;
 	}
+	body > #左栏向上滚动,
 	body > #顶部大图,
 	.顶部大图层 > img,
 	main .左,
@@ -613,6 +626,30 @@ section#我 > .头像:hover {
 	margin-left: 0px;
 	padding: 0 8px;
 	white-space: nowrap;
+}
+
+/* 移动端左栏滚动到底部后，正文与页脚下移 25vh 露出的空白带里的「向上滚动」入口，点击回到顶部。
+   元素由 main.js 动态创建并挂到 body，避免成为 .左 的子元素而干扰末项的 :last-child 选择器；
+   默认隐藏，仅在移动端且 body 带「左栏滚动到底部」类名时显示 */
+#左栏向上滚动 {
+	background-color: transparent;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: 25vh;
+	padding: 0;
+	position: absolute;
+	/* 水平居中；垂直居中在左栏可见区域下缘再往下半个 25vh 空白带 */
+	left: 0;
+	top: calc(var(--bg-top) + var(--bg-height));
+	transform: translate(0) scale(0);
+	opacity: 0;
+	pointer-events: none;
+	transition:
+		var(--transition) opacity,
+		var(--transition) transform;
+	z-index: 0;
 }
 
 /* ==================== 页脚 ==================== */
@@ -1343,6 +1380,12 @@ code.hljs.已复制:hover::before {
 	body.左栏滚动到底部 > main > .右::before,
 	body.左栏滚动到底部 > main > .右::after {
 		opacity: 0;
+	}
+	/* 空白带里的「向上滚动」入口随类名淡入（基础样式见上方「左栏」小节） */
+	body.左栏滚动到底部 > #左栏向上滚动 {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translate(0);
 	}
 }
 

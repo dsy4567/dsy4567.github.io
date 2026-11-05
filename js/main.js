@@ -646,8 +646,8 @@ function 设置展开容器可访问名(展开容器) {
 				document.documentElement.scrollTo({ top: 0, behavior: 行为 });
 				document.activeElement.scrollIntoView({ block: "nearest", behavior: 行为 });
 			});
-			// WIP: 移动端左栏滚动到底部时给 body 加类名，让末项淡出、正文与页脚下移（样式见 global-nfp.css）
-			if (左栏 && false) {
+			// 移动端左栏滚动到底部时给 body 加类名，让末项淡出、正文与页脚下移（样式见 global-nfp.css）
+			if (左栏) {
 				const 左栏到底类名 = "左栏滚动到底部",
 					移动端媒体查询 = matchMedia(`(max-width: ${移动端界面最大宽度}px)`);
 				/**
@@ -671,6 +671,18 @@ function 设置展开容器可访问名(展开容器) {
 				// 旋转屏幕、拖动窗口宽度跨过断点时重新判定，避免非移动端残留平移
 				addEventListener("resize", 更新左栏是否到底, { passive: true });
 				更新左栏是否到底();
+
+				// 下移 25vh 露出的空白带里的「向上滚动」入口。挂到 body 而非 .左：
+				// 作为 .左 的子元素会抢走 :last-child 选择器，让上面的「末项淡出」淡错元素；
+				// 动态创建也免去改各页 HTML 与重跑博客页构建
+				if (!gd("左栏向上滚动")) {
+					const 向上滚动图标 = ce("div");
+					向上滚动图标.id = "左栏向上滚动";
+					向上滚动图标.innerHTML = '<svg class="中尺寸" data-icon="向上滚动"></svg>';
+					document.body.append(向上滚动图标);
+					向上滚动图标.addEventListener("click", 回到顶部);
+					渲染图标({ 要渲染图标的元素: 向上滚动图标.getElementsByTagName("svg") });
+				}
 			}
 			//#endregion
 
