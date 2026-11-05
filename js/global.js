@@ -776,42 +776,122 @@ DOMContentLoaded
 //#region 图标相关
 /** 图标数据：图标名 → SVG 字符串，由 main.js 拉取 /json/icon.json 后赋值 @type {Record<string, string | undefined>} */
 let 图标 = {};
-/** (图标名 + class) → 已解析的 <template> 缓存，避免同一图标的 SVG 字符串被重复 HTML 解析 */
-const 图标模板 = /** @type {Record<string, HTMLTemplateElement>} */ ({});
-/** 匹配图标模板字符串中的尺寸类（小尺寸 / 特小尺寸），用于替换为元素自己的 class */
-const 尺寸类正则 = /特?小尺寸/;
+/**
+ * 图标字符串的解析结果：symbol 侧只留 viewBox 与内部结构，占位元素侧留类、根属性和无障碍信息。
+ * 同一图标的字符串只解析一次，各根（文档 / 各个 ShadowRoot）共用这份内容并各自克隆。
+ * @typedef {{ 视图框: string | null, 附加属性: Record<string, string>, 类: string[], 尺寸类: string[], 隐藏: boolean, 内容: DocumentFragment }} 图标定义项
+ */
+const /** @type {Record<string, 图标定义项 | undefined>} */ 图标定义 = {};
+/**
+ * 图标根（Document 或 ShadowRoot）→ 该根内的隐藏 sprite 与其已建符号。
+ * use 的片段标识符按 tree scope 解析，shadow 内看不到文档级符号，故每个根各建一份。
+ * @type {WeakMap<Document | ShadowRoot, { 精灵: SVGSVGElement, 符号: Map<string, SVGSymbolElement> }>}
+ */
+const 图标精灵 = new WeakMap();
+/** SVG 命名空间，创建 symbol / use 时使用 */
+const SVG命名空间 = "http://www.w3.org/2000/svg";
+/** 匹配图标定义中的完整尺寸类 token（特小尺寸 / 小尺寸 / 中尺寸 / 大尺寸），构建符号时与其余类分开处理 */
+const 尺寸类正则 = /^(?:特?小|中|大)尺寸$/;
 /** 匹配标题标签（h1~h6），用于判断图标是否直接位于标题内 */
 const 标题标签正则 = /^H[1-6]$/;
-/** 在新增元素时调用，以确保图标正常显示、点击事件正常触发 @param {渲染图标选项} 选项 */
+/**
+ * 解析图标定义（带缓存）
+ * @param {string} 名
+ * @returns {图标定义项 | undefined}
+ */
+function _解析图标定义(名) {
+	if (图标定义[名]) return 图标定义[名];
+	const h = 图标[名];
+	if (!h) return;
+	const 模板 = ce("template");
+	模板.innerHTML = h;
+	const 源 = 模板.content.firstElementChild;
+	if (!源) return;
+	const 类名们 = (源.getAttribute("class") || "").split(/\s+/).filter(Boolean),
+		附加属性 = /** @type {Record<string, string>} */ ({});
+	for (const { name, value } of Array.from(源.attributes))
+		if (name !== "class" && name !== "aria-hidden" && name !== "viewBox") 附加属性[name] = value;
+	const 内容 = document.createDocumentFragment();
+	内容.append(...Array.from(源.childNodes));
+	图标定义[名] = {
+		视图框: 源.getAttribute("viewBox"),
+		附加属性,
+		类: 类名们.filter(类名 => !尺寸类正则.test(类名)),
+		尺寸类: 类名们.filter(类名 => 尺寸类正则.test(类名)),
+		隐藏: 源.getAttribute("aria-hidden") === "true",
+		内容,
+	};
+	return 图标定义[名];
+}
+/**
+ * 取得某个根（文档或 ShadowRoot）的图标精灵；精灵被清空（如重建 shadow 内容）时重新挂回
+ * @param {Document | ShadowRoot} 根
+ * @returns {{ 精灵: SVGSVGElement, 符号: Map<string, SVGSymbolElement> }}
+ */
+function _取图标精灵(根) {
+	let 记录 = 图标精灵.get(根);
+	if (!记录) {
+		const 精灵 = /** @type {SVGSVGElement} */ (document.createElementNS(SVG命名空间, "svg"));
+		精灵.setAttribute("aria-hidden", "true");
+		精灵.style.display = "none";
+		记录 = { 精灵, 符号: new Map() };
+		图标精灵.set(根, 记录);
+	}
+	if (记录.精灵.getRootNode() !== 根)
+		// 根的子树可能被整体重建（如 ncm 小组件重设 shadow.innerHTML），此时精灵已脱离该根，需重新挂回
+		if (根 instanceof Document) (根.body || 根.documentElement).append(记录.精灵);
+		else 根.prepend(记录.精灵);
+	return 记录;
+}
+/**
+ * 在指定根内取得（必要时创建）图标的 symbol
+ * @param {Document | ShadowRoot} 根
+ * @param {string} 名
+ * @param {图标定义项} 定义
+ * @returns {SVGSymbolElement | undefined}
+ */
+function _确保图标符号(根, 名, 定义) {
+	const 记录 = _取图标精灵(根);
+	let 符号 = 记录.符号.get(名);
+	if (符号) return 符号;
+	符号 = /** @type {SVGSymbolElement} */ (document.createElementNS(SVG命名空间, "symbol"));
+	符号.id = "图标-" + 名;
+	if (定义.视图框) 符号.setAttribute("viewBox", 定义.视图框);
+	符号.append(定义.内容.cloneNode(true));
+	记录.精灵.append(符号);
+	记录.符号.set(名, 符号);
+	return 符号;
+}
+/** 在新增元素时调用，为其补上 <use> 图标；占位元素本身保留，不再被替换 @param {渲染图标选项} 选项 */
 function 渲染图标(选项 = {}) {
 	const 全部元素 = /** @type {ArrayLike<SVGSVGElement>} */ (
 		选项.要渲染图标的元素?.[0] ? 选项.要渲染图标的元素 : qsa("svg[data-icon]")
 	);
 	批量低阻塞操作(全部元素, 元素 => {
-		if (!元素.dataset.icon) return;
-		// 批量处理是异步分批的，期间元素可能已被并发的其他“渲染图标”调用替换或移出文档，
-		// 对游离元素克隆替换纯属浪费，直接跳过
+		const 名 = 元素.dataset.icon;
+		if (!名) return;
+		// 批量处理是异步分批的，期间元素可能已被并发的其他操作移出文档，对游离元素补图标纯属浪费
 		if (!元素.isConnected) return;
-		const 名 = 元素.dataset.icon,
-			c = 元素.getAttribute("class") || "",
-			键 = 名 + "|" + c;
-		let 模板 = 图标模板[键];
-		if (!模板) {
-			const h = c ? 图标[名]?.replace(尺寸类正则, c) : 图标[名];
-			if (!h) return;
-			模板 = ce("template");
-			模板.innerHTML = h;
-			图标模板[键] = 模板;
-		}
-		// cloneNode 走原生结构克隆，比 outerHTML 的“字符串 → HTML 解析 → 重建子树”快得多；
-		// replaceWith 对游离节点是静默无操作，不会像 outerHTML 那样抛 DOMException
-		const 片段 = /** @type {DocumentFragment} */ (模板.content.cloneNode(true));
-		// 需在 replaceWith 前取出根元素：片段插入后会清空，此后 firstElementChild 变成 null
-		const 新图标 = 片段.firstElementChild;
-		元素.replaceWith(片段);
+		const 定义 = _解析图标定义(名);
+		if (!定义) return;
+		// 先保证 symbol 已建好再挂 use，避免依赖“后插入的符号能刷新已存在的 use”这一时序
+		const 根 = /** @type {Document | ShadowRoot} */ (元素.getRootNode());
+		const 符号 = _确保图标符号(根, 名, 定义);
+		if (!符号) return;
+		// use 实例的继承来自宿主（外层 svg），symbol 上的类不作用于实例，
+		// 故图标定义里的尺寸兜底、fill/stroke 等类和根属性都补到占位元素上
+		if (!元素.getAttribute("class")) 元素.classList.add(...定义.尺寸类);
+		元素.classList.add(...定义.类);
+		for (const [属性名, 属性值] of Object.entries(定义.附加属性)) 元素.setAttribute(属性名, 属性值);
+		if (定义.隐藏 && !元素.hasAttribute("aria-hidden")) 元素.setAttribute("aria-hidden", "true");
+		const use = /** @type {SVGUseElement} */ (document.createElementNS(SVG命名空间, "use"));
+		use.setAttribute("href", "#" + 符号.id);
+		元素.append(use);
+		// data-icon 同时充当“已渲染”标记，删掉后重复调用不会再处理该元素
+		元素.removeAttribute("data-icon");
 		// 标题图标：图标若是 h1~h6 的直接子元素，就由 JS 给标题打类，
 		// 让 CSS 无需依赖 :has() 也能识别这类标题（Chrome 86 不支持 :has()）
-		const 父元素 = 新图标?.parentElement;
+		const 父元素 = 元素.parentElement;
 		if (父元素 && 标题标签正则.test(父元素.tagName)) 父元素.classList.add("含图标");
 	});
 }

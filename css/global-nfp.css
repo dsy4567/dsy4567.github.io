@@ -566,7 +566,8 @@ main > #分界线 > .特小尺寸 {
 		var(--transition) transform;
 	z-index: 1;
 }
-main > #分界线 > .特小尺寸 > path {
+/* 图标改为 symbol + use 后，path 位于 use 的 shadow 树内，文档选择器只能命中 use */
+main > #分界线 > .特小尺寸 > use {
 	transform: translateX(-2px);
 }
 main > #分界线:hover > .特小尺寸,
