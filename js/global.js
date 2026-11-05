@@ -838,8 +838,9 @@ function _取图标精灵(根) {
 		图标精灵.set(根, 记录);
 	}
 	if (记录.精灵.getRootNode() !== 根)
-		// 根的子树可能被整体重建（如 ncm 小组件重设 shadow.innerHTML），此时精灵已脱离该根，需重新挂回
-		if (根 instanceof Document) (根.body || 根.documentElement).append(记录.精灵);
+		// 根的子树可能被整体重建（如 ncm 小组件重设 shadow.innerHTML），此时精灵已脱离该根，需重新挂回；
+		// 统一放在最前面，让定义位于使用之前，也避免精灵成为正文末尾的额外子元素
+		if (根 instanceof Document) (根.body || 根.documentElement).prepend(记录.精灵);
 		else 根.prepend(记录.精灵);
 	return 记录;
 }
