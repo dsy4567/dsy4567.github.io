@@ -114,8 +114,12 @@ div#侧边按钮容器 {
 		0% {
 			opacity: 1;
 		}
-		24%, 100% {
+		/* 先与左栏同步渐隐，保持隐藏，再随顶部大图渐隐而渐显 */
+		24%, 62.5% {
 			opacity: 0;
+		}
+		100% {
+			opacity: 1;
 		}
 	}
 	@keyframes 顶部大图背景 {
@@ -536,9 +540,6 @@ nav#导航栏 {
 	/* 封面滚动动画的滚动范围：封面、封面背景层、左栏及其阴影共用同一段进度，完成时刻才会一致。 */
 	:root {
 		--cover-scroll-range: calc(var(--bg-height) + var(--bg-top));
-	}
-	body > #左栏向上滚动 {
-		animation-name: 左栏向上滚动图标;
 	}
 	/* 封面平移动画落在 .顶部大图层 > img 上：图片按自身高度溢出容器，平移量用 cqh 引用容器高度 */
 	body > #顶部大图 {
@@ -1374,6 +1375,10 @@ code.hljs.已复制:hover::before {
 		body > #顶部大图 {
 			animation-name: 顶部大图移动端;
 		}
+		/* 「向上滚动」图标仅移动端使用：动画放在移动端断点内，桌面端保持基础样式的隐藏状态 */
+		body > #左栏向上滚动 {
+			animation-name: 左栏向上滚动图标;
+		}
 		main > .左::before {
 			animation-name: 左栏阴影上移动端;
 			pointer-events: auto;
@@ -1424,6 +1429,15 @@ code.hljs.已复制:hover::before {
 		opacity: 1;
 		pointer-events: auto;
 		transform: translate(0);
+	}
+	/* 不支持滚动时间线时无法随滚动渐隐/渐显，故只在页面顶部（body 带「顶部」类）保留，
+	   离开顶部立即用透明度隐藏，不播放过渡 */
+	@supports not (animation-timeline: scroll()) {
+		body:not(.顶部) > #左栏向上滚动 {
+			opacity: 0;
+			pointer-events: none;
+			transition: none;
+		}
 	}
 }
 
