@@ -680,7 +680,9 @@ function 设置展开容器可访问名(展开容器) {
 					向上滚动图标.id = "左栏向上滚动";
 					向上滚动图标.innerHTML = '<svg class="中尺寸" data-icon="向上滚动"></svg>';
 					document.body.append(向上滚动图标);
-					向上滚动图标.addEventListener("click", 回到顶部);
+					向上滚动图标.addEventListener("click", () => {
+						滚动到可见区域("#main", true);
+					});
 					渲染图标({ 要渲染图标的元素: 向上滚动图标.getElementsByTagName("svg") });
 				}
 			}
