@@ -428,7 +428,7 @@ div.通知 {
 	animation-name: 显示;
 	/* animation-name: 隐藏; */
 	box-shadow: var(--box-shadow-strong);
-	background-color: var(--surface-1);
+	background-color: var(--surface-2);
 	border: var(--border);
 	border-radius: var(--border-radius);
 	opacity: 0;
