@@ -179,16 +179,6 @@ div#侧边按钮容器 {
 			opacity: 0;
 		}
 	}
-	@keyframes 左栏下透明遮罩移动端 {
-		0%,
-		24% {
-			border-top: 0 solid transparent;
-		}
-		24.01%,
-		100% {
-			border-top: min(var(--left-height), var(--maxh)) solid transparent;
-		}
-	}
 	@keyframes 右栏背景移动端 {
 		0% {
 			opacity: 1;
@@ -565,8 +555,7 @@ nav#导航栏 {
 	body > #顶部大图,
 	.顶部大图层 > img,
 	main .左,
-	main > .左::before,
-	main > .左::after {
+	main > .左::before {
 		animation-timeline: scroll(root);
 		animation-range: 0 var(--cover-scroll-range);
 	}
@@ -1329,25 +1318,19 @@ code.hljs.已复制:hover::before {
 /* ==================== 移动端 ==================== */
 /* 该数值同时存在于 main.js */
 @media only screen and (max-width: 840px) {
-	main > .左::before,
-	main > .左::after {
+	main > .左::before {
 		--width: min(calc(100% - 36px), var(--left-maxw));
+		box-shadow: var(--box-shadow-strong);
 		content: "";
 		display: block;
 		margin-left: calc((100% - var(--width)) / 2);
 		position: sticky;
+		top: 0;
 		left: 0;
+		transform: translateY(-64px);
 		width: var(--width);
 		pointer-events: auto;
 		z-index: 9;
-	}
-	main > .左::before {
-		box-shadow: var(--box-shadow-strong);
-		top: 0;
-		transform: translateY(-64px);
-	}
-	main > .左::after {
-		bottom: 0;
 	}
 
 	@supports (animation-timeline: scroll()) {
@@ -1381,10 +1364,6 @@ code.hljs.已复制:hover::before {
 		}
 		main > .左::before {
 			animation-name: 左栏阴影上移动端;
-			pointer-events: auto;
-		}
-		main > .左::after {
-			animation-name: 左栏下透明遮罩移动端;
 			pointer-events: auto;
 		}
 		main .左 {
