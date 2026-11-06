@@ -1422,7 +1422,7 @@ code.hljs.已复制:hover::before {
 	}
 	body.左栏滚动到底部 > main > .右::before,
 	body.左栏滚动到底部 > main > .右::after {
-		opacity: 0;
+		opacity: 0 !important;
 	}
 	/* 空白带里的「向上滚动」入口随类名淡入（基础样式见上方「左栏」小节） */
 	body.左栏滚动到底部 > #左栏向上滚动 {
