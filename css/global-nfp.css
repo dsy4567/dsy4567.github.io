@@ -94,6 +94,22 @@ div#侧边按钮容器 {
 	}
 }
 @supports (animation-timeline: scroll()) {
+	@keyframes 顶部透明遮罩移动端 {
+		0%, 24% {
+			transform: translateY(0);
+		}
+		24.01%, 100% {
+			transform: translateY(var(--top-mask-height));
+		}
+	}
+	@keyframes 顶部透明遮罩移动端_左栏滚动到底部 {
+		0%, 24% {
+			transform: translateY(0);
+		}
+		24.01%, 100% {
+			transform: translateY(var(--top-mask-height-2));
+		}
+	}
 	@keyframes 左栏向上滚动图标 {
 		0% {
 			opacity: 1;
@@ -1334,9 +1350,29 @@ code.hljs.已复制:hover::before {
 	}
 
 	@supports (animation-timeline: scroll()) {
+		body {
+			--top-mask-height-2: calc(var(--cover-scroll-range) + 25vh);
+			--top-mask-height: calc(var(--cover-scroll-range));
+		}
+		body::before {
+			content: "";
+			animation-name: 顶部透明遮罩移动端;
+			animation-fill-mode: both;
+			width: 100%;
+			height: var(--top-mask-height);
+			position: absolute;
+			top: calc(var(--top-mask-height) * -1);
+			left: 0;
+			transform: translateY(0);
+			z-index: 9;
+		}
+		body.左栏滚动到底部::before {
+			animation-name: 顶部透明遮罩移动端_左栏滚动到底部;
+			height: var(--top-mask-height-2);
+			top: calc(var(--top-mask-height-2) * -1);
+		}
 		body > #顶部大图 {
 			animation-name: 顶部大图移动端;
-			animation-range: 0 var(--cover-scroll-range);
 		}
 		main > .左::before {
 			animation-name: 左栏阴影上移动端;
@@ -1353,9 +1389,11 @@ code.hljs.已复制:hover::before {
 			animation-name: 右栏背景移动端;
 		}
 		main .左,
-		main .右::before {
+		main .右::before,
+		body::before,
+		body > #顶部大图 {
 			animation-timeline: scroll(root);
-			animation-range: 1px var(--cover-scroll-range);
+			animation-range: 0px var(--cover-scroll-range);
 		}
 	}
 
