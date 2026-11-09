@@ -440,6 +440,11 @@ div.通知 {
 	word-break: break-all;
 	z-index: 1008;
 }
+/* 不可见提示仅供读屏播报：覆盖显示/隐藏动画，避免部分浏览器在动画首帧闪现；!important 用于盖过后置的行内 animation-name */
+div.通知.不可见 {
+	animation: none !important;
+	opacity: 0;
+}
 
 .悬浮卡片 {
 	background-color: var(--surface-1);

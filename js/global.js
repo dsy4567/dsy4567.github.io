@@ -482,8 +482,7 @@ function 提示(m, 不可见 = false) {
 	元素.classList.add("通知");
 	元素.ariaLive = "assertive";
 	元素.role = "alert";
-	// .通知 的「显示」动画 animation-fill-mode: forwards 会盖过普通行内 opacity，故置透明须用 !important
-	if (不可见) 元素.style.setProperty("opacity", "0", "important");
+	if (不可见) 元素.classList.add("不可见");
 	document.body.append(元素);
 	setTimeout(function () {
 		元素.style.animationName = "隐藏";
