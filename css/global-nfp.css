@@ -314,9 +314,10 @@ div#侧边按钮容器 {
 		--overlay: #0000 !important;
 		--overlay-strong: #0000 !important;
 		--selection-bg: #0000 !important;
-		--accent-color: #000 !important;
+		--accent-color: #00f !important;
 		--accent-color-transparent: #0000 !important;
 		--accent-text-color: #fff !important;
+		--link-color: #00f !important;
 		color-scheme: light !important;
 	}
 	a::after {
@@ -329,7 +330,7 @@ div#侧边按钮容器 {
 		content: "" !important;
 	}
 	main > .右 :is(h1, h2, h3, h4, h5, h6):not(.含图标)::before {
-		opacity: 0;
+		opacity: 0 !important;
 	}
 	main {
 		flex-direction: column !important;
@@ -361,8 +362,13 @@ div#侧边按钮容器 {
 		position: relative !important;
 		border-bottom: 1px solid #000;
 	}
-	x-spoiler {
-		color: #fff;
+	x-spoiler,
+	x-spoiler:hover,
+	x-spoiler:focus-visible {
+		color: #000;
+		outline: 1px solid #000;
+		background-color: #fff;
+		transition: none;
 	}
 	pre {
 		background-color: #fff !important;
