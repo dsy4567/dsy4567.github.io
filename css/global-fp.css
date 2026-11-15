@@ -329,6 +329,8 @@ code {
 	border: var(--border);
 	border-radius: 6px;
 	font-family: "Source Code Pro", "等宽回退", monospace;
+	font-size: 0.875em !important;
+	padding: 0 4px;
 }
 pre {
 	background-color: transparent;
