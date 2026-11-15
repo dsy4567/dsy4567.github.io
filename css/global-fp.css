@@ -137,17 +137,22 @@ section#我 > br {
 html {
 	scrollbar-color: var(--overlay) transparent;
 }
-::-webkit-scrollbar {
-	background-color: transparent;
-	width: 8px;
-	height: 8px;
-}
-::-webkit-scrollbar-thumb {
-	background-color: var(--overlay);
-	border-radius: var(--border-radius);
-}
-::-webkit-scrollbar-corner {
-	background-color: transparent;
+@supports not (scrollbar-color: #000) {
+	/* 高对比度使用默认滚动条样式 */
+	@media not (forced-colors: active) {
+		::-webkit-scrollbar {
+			background-color: transparent;
+			width: 8px;
+			height: 8px;
+		}
+		::-webkit-scrollbar-thumb {
+			background-color: var(--overlay);
+			border-radius: var(--border-radius);
+		}
+		::-webkit-scrollbar-corner {
+			background-color: transparent;
+		}
+	}
 }
 
 /* ==================== html/body/通用元素 ==================== */
@@ -321,7 +326,7 @@ blockquote {
 }
 code {
 	background-color: var(--overlay);
-	border: 1px solid transparent;
+	border: var(--border);
 	border-radius: 6px;
 	font-family: "Source Code Pro", "等宽回退", monospace;
 }
@@ -377,6 +382,11 @@ tr:last-child > * {
 }
 th {
 	background-color: var(--overlay);
+}
+table,
+th,
+td {
+	border-color: var(--overlay);
 }
 
 input {
@@ -598,9 +608,9 @@ main > #分界线 {
 	--border-width: 16px;
 	--margin-x: calc((var(--border-width) * 2 + var(--width) - 24px) * -0.5);
 	--width: 4px;
-	border: var(--border-width) solid var(--bg-color);
 	border: var(--border-width) solid transparent;
 	box-sizing: content-box;
+	forced-color-adjust: none;
 	margin-top: var(--main-top);
 	margin-left: var(--margin-x);
 	margin-right: var(--margin-x);
@@ -615,7 +625,8 @@ main > #分界线 > .特小尺寸 {
 }
 main > #分界线::after {
 	content: "";
-	background-color: var(--surface-1);
+	background-color: var(--border-color);
+	border: var(--border);
 	border-radius: var(--border-radius);
 	display: block;
 	width: 100%;
@@ -682,7 +693,7 @@ section#我 > #关注被关注码龄 {
 
 footer#copyright {
 	background-color: var(--surface-1);
-	border-top: 1px solid transparent;
+	border-top: var(--border);
 	border-radius: var(--border-radius) var(--border-radius) 0 0;
 	padding: 16px 0;
 	margin: 32px 0 0;

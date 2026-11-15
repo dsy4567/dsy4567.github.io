@@ -95,18 +95,22 @@ div#侧边按钮容器 {
 }
 @supports (animation-timeline: scroll()) {
 	@keyframes 顶部透明遮罩移动端 {
-		0%, 24% {
+		0%,
+		24% {
 			transform: translateY(0);
 		}
-		24.01%, 100% {
+		24.01%,
+		100% {
 			transform: translateY(var(--top-mask-height));
 		}
 	}
 	@keyframes 顶部透明遮罩移动端_左栏滚动到底部 {
-		0%, 24% {
+		0%,
+		24% {
 			transform: translateY(0);
 		}
-		24.01%, 100% {
+		24.01%,
+		100% {
 			transform: translateY(var(--top-mask-height-2));
 		}
 	}
@@ -115,7 +119,8 @@ div#侧边按钮容器 {
 			opacity: 1;
 		}
 		/* 先与左栏同步渐隐，保持隐藏，再随顶部大图渐隐而渐显 */
-		24%, 62.5% {
+		24%,
+		62.5% {
 			opacity: 0;
 		}
 		100% {
@@ -241,43 +246,63 @@ div#侧边按钮容器 {
 
 /* ==================== @media ==================== */
 @media (forced-colors: active) {
+	:root {
+		--bg-color: #000 !important;
+		--border-color: #fff !important;
+		--surface-1: #000 !important;
+		--surface-2: #000 !important;
+		--text-color: #fff !important;
+		--overlay: #0000 !important;
+		--overlay-soft: #000 !important;
+		--overlay-soft: #000 !important;
+		--overlay-soft: #0008 !important;
+		--link-color: #ffff00 !important;
+		--accent-color: #ffff00 !important;
+		--accent-color-transparent: #0000 !important;
+		--accent-text-color: #fff !important;
+	}
 	a:hover {
-		outline: 2px solid #0000ff;
+		outline: 2px solid var(--accent-color);
 	}
-	svg.fill {
-		fill: #0000ff !important;
-	}
-	svg.stroke {
-		stroke: #0000ff !important;
+	html {
+		scrollbar-color: unset !important;
 	}
 }
 @media (prefers-color-scheme: light) {
 	@media (forced-colors: active) {
-		a:hover {
-			outline: 2px solid #0000ff;
-		}
-		svg.fill {
-			fill: #0000ff !important;
-		}
-		svg.stroke {
-			stroke: #0000ff !important;
-		}
-	}
-}
-@media (prefers-color-scheme: dark) {
-	@media (forced-colors: active) {
-		a:hover {
-			outline: 2px solid #ffff00;
-		}
-		svg.fill {
-			fill: #ffff00 !important;
-		}
-		svg.stroke {
-			stroke: #ffff00 !important;
+		:root {
+			--bg-color: #fff !important;
+			--surface-1: #fff !important;
+			--surface-2: #fff !important;
+			--text-color: #000 !important;
+			--overlay: #0000 !important;
+			--overlay-strong: #fff !important;
+			--selection-bg: #000 !important;
+			--link-color: #0000ff !important;
+			--accent-color: #0000ff !important;
+			--accent-color-transparent: #0000 !important;
+			--accent-text-color: #000 !important;
 		}
 	}
 }
-@media (prefers-reduced-data: reduce) {
+@media (prefers-contrast: more) {
+	:root {
+		--border-color: var(--border-color-strong) !important;
+	}
+	div#侧边按钮容器 {
+		--border: 1px solid var(--border-color-strong) !important;
+		--border-soft: var(--border) !important;
+	}
+	blockquote {
+		border-color: var(--accent-color) !important;
+	}
+	table,
+	th,
+	td,
+	hr,
+	.元数据 {
+		border-color: var(--border-color-strong) !important;
+	}
 }
 @media print {
 	html,
@@ -582,6 +607,7 @@ body.宽屏 > main > #分界线 {
 }
 main > #分界线 > .特小尺寸 {
 	background-color: var(--surface-1);
+	border: var(--border);
 	border-radius: 50%;
 	box-shadow: var(--box-shadow-strong);
 	opacity: 0;
